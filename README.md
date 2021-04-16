@@ -11,9 +11,10 @@ Temos dentro desse projetos, diversos projetos integrados, sendo:
 - Projeto de dissertação PROFMAT/CAP/UFSJ, da orientanda [Juliane Nassaralla Almeida](http://lattes.cnpq.br/5176118169651142);
 - Grupo de Iniciação Científica em Estatística/R:
   - [Amanda Kelly Costa](https://www.linkedin.com/in/amandakellycosta/) 
-  - [Lívia Amorim](https://www.linkedin.com/in/líviasdias/)
+  - [Lívia Dias de Sá Amorim](https://www.linkedin.com/in/líviasdias/)
   - [Gustavo do Remédios da Silva Paula](https://www.linkedin.com/in/gustavo-dos-remédios-da-silva-paula-995a04181)
   - [Dailon Vinicius Barbosa de Fátima](linkedin.com/in/dailon-vinicius-6502a9207)
+  - [André Felipe Duarte Gonçalves](https://www.linkedin.com/in/andrefdg/)
 
 ## Propostas da GUI
 
