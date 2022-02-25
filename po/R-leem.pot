@@ -1,0 +1,209 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: leem 0.1.0\n"
+"POT-Creation-Date: 2022-02-25 15:22\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "leem package"
+msgstr ""
+
+msgid "Configurations of the data"
+msgstr ""
+
+msgid "Comma as decimal points"
+msgstr ""
+
+msgid "Separator of variables:"
+msgstr ""
+
+msgid "Enter the data"
+msgstr ""
+
+msgid "No data set has been entered!"
+msgstr ""
+
+msgid "Choose directory..."
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "Open file (.txt or .csv)..."
+msgstr ""
+
+msgid "Restart"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Data set..."
+msgstr ""
+
+msgid "Data"
+msgstr ""
+
+msgid "Calculate"
+msgstr ""
+
+msgid "Insert Model"
+msgstr ""
+
+msgid "Plot"
+msgstr ""
+
+msgid "Analysis"
+msgstr ""
+
+msgid "Mathematics"
+msgstr ""
+
+msgid "Elementary school"
+msgstr ""
+
+msgid "Higher education"
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid "leem"
+msgstr ""
+
+msgid "Authors"
+msgstr ""
+
+msgid "Contact"
+msgstr ""
+
+msgid "1st and 2nd degree functions"
+msgstr ""
+
+msgid "Coefficients"
+msgstr ""
+
+msgid "Limit of axes"
+msgstr ""
+
+msgid "xlimits"
+msgstr ""
+
+msgid "8"
+msgstr ""
+
+msgid "ylimits"
+msgstr ""
+
+msgid "4"
+msgstr ""
+
+msgid "a"
+msgstr ""
+
+msgid "1"
+msgstr ""
+
+msgid "b"
+msgstr ""
+
+msgid "-2"
+msgstr ""
+
+msgid "c"
+msgstr ""
+
+msgid "-3"
+msgstr ""
+
+msgid "1st degree function Additional"
+msgstr ""
+
+msgid "Interpretation of intercept (c)"
+msgstr ""
+
+msgid "Interpretation of the angular coefficient (b)"
+msgstr ""
+
+msgid "2st degree function Additional"
+msgstr ""
+
+msgid "Root(s)"
+msgstr ""
+
+msgid "Maximum or minimum"
+msgstr ""
+
+msgid "Results"
+msgstr ""
+
+msgid "The results..."
+msgstr ""
+
+msgid "Minimum point"
+msgstr ""
+
+msgid "Maximun point"
+msgstr ""
+
+msgid "(1st degree function)"
+msgstr ""
+
+msgid "(2st degree function)"
+msgstr ""
+
+msgid "Angular coefficient:"
+msgstr ""
+
+msgid "Intercept:"
+msgstr ""
+
+msgid "Interpretation of"
+msgstr ""
+
+msgid "For each increase of one unit of x, \n an increase/decrease will occur from"
+msgstr ""
+
+msgid "to y."
+msgstr ""
+
+msgid "When x = 0, y will assume"
+msgstr ""
+
+msgid ". Otherwise, the intercection point \n between the line and the y-axis is (0,"
+msgstr ""
+
+msgid "Maximum/Minimum point:"
+msgstr ""
+
+msgid "Root(s):"
+msgstr ""
+
+msgid "Results..."
+msgstr ""
+
+msgid "Function:"
+msgstr ""
+
+msgid "To contact the maintainer, \n please send an email to \n ben.deivide@ufsj.edu.br"
+msgstr ""
+
+msgid "Author"
+msgstr ""
+
+msgid "Juliane Nassarala Almeida (PROFMAT/UFSJ) \n julianenassaralla@gmail.com"
+msgstr ""
+
+msgid "Ben Dêivide de Oliveira Batista (UFSJ) \n ben.deivide@ufsj.edu.br"
+msgstr ""
+
+msgid "Alexandre Celesino Leite Almeida (UFSJ)\n celestino@ufsj.edu.br"
+msgstr ""

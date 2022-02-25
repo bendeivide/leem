@@ -1,0 +1,30 @@
+Package: leem
+Type: Package
+Title: Laboratory of Teaching to Statistics and Mathematics
+Version: 0.1.0
+Authors@R: c(
+    person("Ben", "Deivide", email = "ben.deivide@gmail.com", 
+    role = c("aut", "cre"), comment = c(ORCID = '0000-0001-7019-8794')),
+    person("Alexandre", "Celestino", email = "celestino@ufsj.edu.br", 
+    role = c("ctb"), comment = c(ORCID = '0000-0003-3475-3863')),
+    person("Juliane", "Nassarala", email = "julianenassaralla@gmail.com", 
+    role = c("ctb")))
+Description: An educational package for the teaching of statistics 
+    and mathematics in primary and higher education. The objective is 
+    to assist in teaching/learning for both student study planning 
+    and teacher teaching strategies. The leem package will try to bring, 
+    in a simple and at the same time in-depth, 
+    knowledge of statistics and mathematics to everyone 
+    who wants to study these areas of knowledge. The main function of the 
+    package is 'leem' function.
+Imports:
+        tcltk,
+        tkrplot,
+        grDevices,
+        graphics,
+        utils
+License: GPL (>= 2)
+URL: https://bendeivide.github.io/project/leem/, https://github.com/bendeivide/leem
+BugReports: https://github.com/bendeivide/leem/issues
+LazyData: TRUE
+RoxygenNote: 7.1.2

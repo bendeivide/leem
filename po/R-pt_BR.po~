@@ -1,0 +1,230 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: leem 0.1.0\n"
+"POT-Creation-Date: 2022-02-25 15:22\n"
+"PO-Revision-Date: 2022-02-25 14:17-0300\n"
+"Last-Translator: U-DESKTOP-O4D8283\\bende <ben.deivide@ufsj.edu.br>\n"
+"Language-Team: Language C\n"
+"Language: C\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "leem package"
+msgstr "Pacote leem"
+
+msgid "Configurations of the data"
+msgstr "Configurações dos dados"
+
+msgid "Comma as decimal points"
+msgstr "Vírgula como separador decimal"
+
+msgid "Separator of variables:"
+msgstr "Separador de variáveis"
+
+msgid "Enter the data"
+msgstr "Entre com os dados"
+
+msgid "No data set has been entered!"
+msgstr "Nenhum dado foi inserido!"
+
+msgid "Choose directory..."
+msgstr "Escolha o diretório..."
+
+msgid "File"
+msgstr "Arquivo"
+
+msgid "Open file (.txt or .csv)..."
+msgstr "Abra o arquivo (.txt ou .csv)"
+
+msgid "Restart"
+msgstr "Reiniciando"
+
+msgid "Edit"
+msgstr "Edite"
+
+msgid "Data set..."
+msgstr "Conjunto de dados..."
+
+msgid "Data"
+msgstr "Dado"
+
+msgid "Calculate"
+msgstr "Calcular"
+
+msgid "Insert Model"
+msgstr "Insira o modelo"
+
+msgid "Plot"
+msgstr "Gráfico"
+
+msgid "Analysis"
+msgstr "Análise"
+
+msgid "Mathematics"
+msgstr "Matemática"
+
+msgid "Elementary school"
+msgstr "Ensino básico"
+
+msgid "Higher education"
+msgstr "Ensino superior"
+
+msgid "Statistics"
+msgstr "Estatística"
+
+msgid "About"
+msgstr "Sobre"
+
+msgid "leem"
+msgstr "leem"
+
+msgid "Authors"
+msgstr "Autores"
+
+msgid "Contact"
+msgstr "Contato"
+
+msgid "1st and 2nd degree functions"
+msgstr "Funções do 1º e 2º grau"
+
+msgid "Coefficients"
+msgstr "Coeficientes"
+
+msgid "Limit of axes"
+msgstr "Limite dos eixos"
+
+msgid "xlimits"
+msgstr "limite-x"
+
+msgid "8"
+msgstr ""
+
+msgid "ylimits"
+msgstr "limite-y"
+
+msgid "4"
+msgstr ""
+
+msgid "a"
+msgstr ""
+
+msgid "1"
+msgstr ""
+
+msgid "b"
+msgstr ""
+
+msgid "-2"
+msgstr ""
+
+msgid "c"
+msgstr ""
+
+msgid "-3"
+msgstr ""
+
+msgid "1st degree function Additional"
+msgstr "Função do 1º grau"
+
+msgid "Interpretation of intercept (c)"
+msgstr "Interpretação do intercepto (c)"
+
+msgid "Interpretation of the angular coefficient (b)"
+msgstr "Interpretação do coeficiente angular (b)"
+
+msgid "2st degree function Additional"
+msgstr "Função do 2º grau"
+
+msgid "Root(s)"
+msgstr "Raiz(es)"
+
+msgid "Maximum or minimum"
+msgstr "Máximo ou mínimo"
+
+msgid "Results"
+msgstr "Resultados"
+
+msgid "The results..."
+msgstr "Resultados..."
+
+msgid "Minimum point"
+msgstr "Ponto de mínimo"
+
+msgid "Maximun point"
+msgstr "Ponto de máximo"
+
+msgid "(1st degree function)"
+msgstr "(Função do 1º grau)"
+
+msgid "(2st degree function)"
+msgstr "(Função do 2º grau)"
+
+msgid "Angular coefficient:"
+msgstr "Coeficiente angular:"
+
+msgid "Intercept:"
+msgstr "Intercepto"
+
+msgid "Interpretation of"
+msgstr "Interpretação de"
+
+msgid "When x = 0, y will assume"
+msgstr "Quando x = 0, y assumirá"
+
+msgid ""
+". Otherwise, the intercection point \n"
+" between the line and the y-axis is (0,"
+msgstr ""
+". Por outro lado, o ponto de intersecção \n"
+" entre a reta e o eixo y é (0,"
+
+msgid "Maximum/Minimum point:"
+msgstr "Ponto de máximo/mínimo"
+
+msgid "Root(s):"
+msgstr "Raiz(es)"
+
+msgid "Results..."
+msgstr "Resultados..."
+
+msgid "Function:"
+msgstr "Função:"
+
+msgid ""
+"To contact the maintainer, \n"
+" please send an email to \n"
+" ben.deivide@ufsj.edu.br"
+msgstr ""
+"Para entrar em contato com o mantenedor, \n"
+" envie um e-mail para \n"
+" ben.deivide@ufsj.edu.br"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid ""
+"Juliane Nassarala Almeida (PROFMAT/UFSJ) \n"
+" julianenassaralla@gmail.com"
+msgstr ""
+
+msgid ""
+"Ben Dêivide de Oliveira Batista (UFSJ) \n"
+" ben.deivide@ufsj.edu.br"
+msgstr ""
+
+msgid ""
+"Alexandre Celesino Leite Almeida (UFSJ)\n"
+" celestino@ufsj.edu.br"
+msgstr ""
+
+msgid ""
+"For each increase of one unit of x, \n"
+" an increase/decrease will occur from"
+msgstr ""
+"Para cada acréscimo de uma unidade de x, \n"
+" haverá um acréscimo/decréscimo de"
+
+msgid "to y."
+msgstr "para y."

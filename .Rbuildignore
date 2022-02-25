@@ -1,0 +1,10 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+transitorio
+README.md
+README.html
+_Suporte
+.gitignore
+images
+LEEM
+
