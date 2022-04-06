@@ -7,4 +7,7 @@ _Suporte
 .gitignore
 images
 LEEM
-
+logo\.png
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
