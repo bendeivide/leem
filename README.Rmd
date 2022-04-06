@@ -14,25 +14,27 @@ knitr::opts_chunk$set(
 
 # leem <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
-Esse projeto tem por objetivo de criar uma interface gráfica ao usuário no [R](http://r-project.org/), usando o pacote [shiny](https://shiny.rstudio.com/) e o pacote *tcltk* da base do [R](http://r-project.org/). Tentaremos apresentar temas simples e complexos de forma interativa, para que o professor dessas área possam abordar o tema de modo mais facilmente.
+Esse projeto tem por objetivo de criar uma interface gráfica ao usuário no [R](http://r-project.org/), usando os pacotes [tcltk](http://r-project.org/) e [shiny](https://shiny.rstudio.com/). Tentaremos apresentar temas simples e complexos de forma interativa, para que o professor dessas área possam abordar o tema de modo mais facilmente.
 
-## Installation
+A versão lançada no [CRAN](https://CRAN.R-project.org) está disponível, por enquanto, com a interface em `tcltk`.
 
-You can install the released version of statscience from
-[CRAN](https://CRAN.R-project.org) with:
+## Instalação
+
+A versão lançada do pacote `leem` está disponível no 
+[CRAN](https://CRAN.R-project.org), e pode ser instalado com as seguintes linhas de comando:
 
 ``` r
 install.packages("leem")
 ```
 
-And the development version from [GitHub](https://github.com/) with:
+E a versão em desenvolvimento no [GitHub](https://github.com/) com:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("bendeivide/leem")
 ```
 
-## Example
+## Exemplos
 
 ``` r
 library(leem)
