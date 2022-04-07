@@ -1,4 +1,5 @@
 # Construtor
+#' @export
 new_leem <- function(x = vector(), variable = "discrete") {
   stopifnot("The x argument should be vector!" = is.vector(x))
   if(!any(variable == c("discrete", "continuous"))) stop("The variable argument must be 'discrete' or 'continuous'.")
@@ -6,11 +7,13 @@ new_leem <- function(x = vector(), variable = "discrete") {
 }
 
 # Generico
+#' @export
 tabfreq <- function(dados, ...) {
   UseMethod("tabfreq")
 }
 
 # Tabela em distribuicao de frequencias
+#' @export
 tabfreq.leem <- function(dados, k = NULL){
   if (attr(dados, "variable") == "discrete") {
     return("Em construção...")
@@ -132,12 +135,13 @@ tabfreq.leem <- function(dados, k = NULL){
 #tab2$estat$LS_classes
 
 # Generico
+#' @export
 ogive <- function(x, ...) {
   UseMethod("ogive")
 }
 
 ## Grafico de ogiva
-
+#' @export
 ogive.leem <- function(x, decreasing = FALSE, bars = TRUE,
                   bg = TRUE,
                   main = NULL,
@@ -266,10 +270,11 @@ ogive.leem <- function(x, decreasing = FALSE, bars = TRUE,
 
 
 # Generico
+#' @export
 polyfreq <- function(x, ...) {
   UseMethod("polyfreq")
 }
-
+#' @export
 polyfreq.leem <- function(x,
                          type = "b",
                          bars = TRUE,
@@ -352,6 +357,7 @@ polyfreq.leem <- function(x,
 #polyfreq(tab2, lty = 5, type = "b", bars = FALSE)
 
 # Histograma
+#' @export
 hist.leem <- function(x,
                       bg = TRUE,
                       main = NULL,
