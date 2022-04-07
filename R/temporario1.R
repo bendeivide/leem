@@ -142,13 +142,14 @@ ogive <- function(x, ...) {
 
 ## Grafico de ogiva
 #' @export
-ogive.leem <- function(x, decreasing = FALSE, bars = TRUE,
+ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
+                  bars = TRUE,
+                  histogram = TRUE,
                   bg = TRUE,
                   main = NULL,
                   xlab = NULL,
                   ylab = NULL,
                   panel.first = grid(),
-                  gridcol = "lightgray",
                   bgcol = "gray",
                   bgborder = NA,
                   barcol = "yellow",
@@ -162,11 +163,80 @@ ogive.leem <- function(x, decreasing = FALSE, bars = TRUE,
                   ) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (!is.logical(both)) stop("The both argument must be logical!", call. = FALSE,
+                                    domain = "R-leem")
   if (attr(x, "variable") == "discrete") return("Em construção...")
   if (attr(x, "variable") == "continuous") {
     if (!is.logical(decreasing)) stop("The decreasing argument must be logical!", call. = FALSE,
                                       domain = "R-leem")
-    if (!decreasing) {
+    if (both) {
+      xvar <- c(x$estat$LI_classes[1], x$estat$LS_classes)
+      yvar <- c(0, x$tabela$Fac1)
+      yvar2 <- c(x$tabela$Fac2, 0)
+
+      # Limiares
+      xlim <- c(min(xvar), max(xvar))
+      ylim <- c(0, 1.2 * max(yvar))
+
+      # Area de plotagem
+      plot.new()
+      plot.window(xlim, ylim)
+
+      # Labels
+      if (is.null(main)) {
+        main <- gettext("Ogives", domain = "R-leem")
+      }
+      if (is.null(xlab)) {
+        xlab <- gettext("Classes", domain = "R-leem")
+      }
+      if (is.null(ylab)) {
+        ylab <- gettext("Frequency", domain = "R-leem")
+      }
+      title(main = main, xlab = xlab, ylab = ylab)
+
+      if(bg) {
+        rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col =
+               bgcol, border = bgborder)
+      }
+
+      # Grid
+      panel.first
+
+      # Inserindo barras
+      if (bars) {
+        if(length(barcol) > 1) {
+          barcol1 <- barcol[1]
+          barcol2 <- barcol[2]
+        } else barcol1 <- barcol2 <- barcol
+        rect(x$estat$LI_classes,
+             0,
+             x$estat$LS_classes,
+             x$tabela$Fac1, col = barcol1, border = barborder)
+
+        rect(x$estat$LI_classes,
+             0,
+             x$estat$LS_classes,
+             x$tabela$Fac2, col = barcol2, border = barborder)
+      }
+      if (histogram) {
+        xvar3 <- x$estat$LI_classes
+        xvar4 <- x$estat$LS_classes
+        yvar3 <- x$tabela$Fi
+        rect(xvar3,
+             0,
+             xvar4,
+             yvar3, col = barcol, border = barborder)
+
+      }
+      # Pontos
+      points(xvar, yvar, col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+      points(xvar, yvar2, col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+
+      # Eixos
+      axis(1, at = xvar)
+      axis(2)
+    }
+    if (decreasing == TRUE & both == FALSE) {
       xvar <- c(x$estat$LI_classes[1], x$estat$LS_classes)
       yvar <- c(0, x$tabela$Fac1)
 
@@ -213,7 +283,8 @@ ogive.leem <- function(x, decreasing = FALSE, bars = TRUE,
       # Eixos
       axis(1, at = xvar)
       axis(2)
-    } else{
+    }
+    if (decreasing == FALSE & both == FALSE) {
       xvar <- c(x$estat$LI_classes, max(x$estat$LS_classes))
       yvar <- c(x$tabela$Fac2, 0)
 
