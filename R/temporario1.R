@@ -2,6 +2,8 @@
 #' @export
 new_leem <- function(x = vector(), variable = "discrete") {
   stopifnot("The x argument should be vector!" = is.vector(x))
+  if (variable == 1) variable <- "discrete"
+  if (variable == 2) variable <- "continuous"
   if(!any(variable == c("discrete", "continuous"))) stop("The variable argument must be 'discrete' or 'continuous'.")
   structure(x, class = "leem", variable = variable)
 }
@@ -64,7 +66,6 @@ tabfreq.leem <- function(dados, k = NULL){
         "Numero_de_grupos" = length(groups),
         "Valor_minimo" = x1,
         "Valor_maximo" = xn,
-        "Mean" = mean(dados),
         "raw_data" = dados
       )
     }
@@ -163,6 +164,7 @@ tabfreq.leem <- function(dados, k = NULL){
   fac22p <- round((fac22/n)*100, 2)
   # Estatisticas
   estat <- list(
+    "Numero_amostra" = n,
     "Numero_de_classes" = k,
     "Amplitude_total" = At,
     "Valor_minimo" = x1,
@@ -192,25 +194,6 @@ tabfreq.leem <- function(dados, k = NULL){
   }
 }
 
-
-# Dados
-# set.seed(10)
-# x <- rnorm(36, 100, 50)
-# y <- rbinom(36, 10, 0.8)
-# y <- rep(letters[1:4], 1:4)
-# x <- new_leem(rnorm(36, 100, 50), variable = "continuous")
-# #y <- new_leem(rbinom(36, 10, 0.8), variable = "discrete")
-# y |> new_leem(variable = "discrete") |> tabfreq() |> ogive()
-# y |> new_leem(variable = "discrete") |> tabfreq() |> ogive(bars = TRUE, decreasing = FALSE)
-# y |> new_leem(variable = "discrete") |> tabfreq() |> polyfreq(bars=FALSE)
-# y |> new_leem(variable = "discrete") |> tabfreq() |> hist()
-# x |> new_leem(variable = "continuous") |> tabfreq() |> hist()
-# x |>
-#   new_leem(variable = "continuous") |>
-#     tabfreq() |>
-#       ogive(decreasing = FALSE, hist = TRUE, bars = TRUE, histcol = heat.colors(6),
-#             histborder = "black",
-#             barcol = c("purple"))
 
 # Generico
 #' @export
