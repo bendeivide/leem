@@ -259,3 +259,12 @@ msgstr "Histograma de frequências"
 msgid "Stick plot"
 msgstr "Gráfico de hastes ou bastão"
 
+msgid "Mean"
+msgstr "Média"
+
+msgid "Median"
+msgstr "Mediana"
+
+msgid "Mode"
+msgstr "Moda"
+

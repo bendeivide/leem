@@ -263,7 +263,7 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 
 
         # Limiares
-        xlim <- c(min(xvaraux) - 1, max(xvaraux) + 1)
+        xlim <- c(min(xvaraux), max(xvaraux))
         ylim <- c(0, 1.2 * max(c(yvar, yvar1, yvar2)))
 
         # Area de plotagem
@@ -333,7 +333,7 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
         yvar2 <- x$tabela$Fac2
 
         # Limiares
-        xlim <- c(min(xvaraux) - 1, max(xvaraux) + 1)
+        xlim <- c(min(xvaraux), max(xvaraux))
         ylim <- c(0, 1.2 * max(c(yvar, yvar1, yvar2)))
 
         # Area de plotagem
@@ -363,6 +363,10 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 
         # Inserindo barras
         if (bars) {
+          if(length(barcol) > 1) {
+            barcol1 <- barcol[1]
+            barcol2 <- barcol[2]
+          } else barcol1 <- barcol2 <- barcol
           rect(xvar - 0.5,
                0,
                xvar + 0.5,
@@ -396,7 +400,7 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
         yvar2 <- x$tabela$Fac2
 
         # Limiares
-        xlim <- c(min(xvaraux) - 1, max(xvaraux) + 1)
+        xlim <- c(min(xvaraux), max(xvaraux))
         ylim <- c(0, 1.2 * max(c(yvar, yvar1, yvar2)))
 
         # Area de plotagem
@@ -426,6 +430,10 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 
         # Inserindo barras
         if (bars) {
+          if(length(barcol) > 1) {
+            barcol1 <- barcol[1]
+            barcol2 <- barcol[2]
+          } else barcol1 <- barcol2 <- barcol
           rect(xvar - 0.5,
                0,
                xvar + 0.5,
@@ -640,6 +648,7 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
       axis(2)
     }
   }
+  invisible(x)
 }
 
 
@@ -783,6 +792,7 @@ polyfreq.leem <- function(x,
       stop("Em desenvolvimento!")
     }
   }
+  invisible(x)
 }
 
 
@@ -902,6 +912,7 @@ hist.leem <- function(x,
     axis(1, at = xvar)
     axis(2)
   }
+  invisible(x)
 }
 
 # Grafico de hastes ou bastao
@@ -914,10 +925,10 @@ stickplot <- function(x,
                       panel.first = grid(col = "white"),
                       bgcol = "gray",
                       bgborder = NA,
-                      pcol = "black",
+                      lcol = "black",
+                      pcol = lcol,
                       pty = 19,
                       pwd = 3,
-                      lcol = "black",
                       lty = 1,
                       lwd = 2,
                       ...) {
@@ -976,6 +987,7 @@ stickplot <- function(x,
       stop("Em desenvolvimento!")
     }
   }
+  invisible(x)
 }
 
 
@@ -1105,9 +1117,10 @@ barplot.leem <- function(x,
            yvar, col = barcol, border = barborder)
     }
   }
+  invisible(x)
 }
 
-# Implementar depois
+# Impressao da classe 'leem'
 #' @export
 print.leem <- function(x, ...) {
   if (attr(x, "table") == "tabfreq") {
@@ -1115,4 +1128,95 @@ print.leem <- function(x, ...) {
   } else {
     print(x)
   }
+}
+
+
+# Inserindo medidas nos graficos
+
+#' @export
+insert <- function(x, ...) {
+  UseMethod("insert")
+}
+
+#' @export
+insert.leem <- function(x, type = "mean",
+                        lty = 1,
+                        lcol = "black",
+                        tcol = lcol,
+                        acol = lcol,
+                        parrow = 0.5,
+                        larrow = 0.2,
+                        ptext = 0.6,
+                        side = "right",
+                        lwd = 2,
+                        lwdarrow = lwd,
+                        ...) {
+  # https://vanderleidebastiani.github.io/tutoriais/Graficos_com_R.html#Adicionando_segmentos
+  if (type == "mean") {
+    abline(v = mean(x),
+           lty = lty, lwd = lwd, col = lcol)
+    # par("usr")[i] => [i] -> c(x1, x2, y1, y2)
+    if (side == "right") {
+      x0 <- mean(x) + mean(x) * larrow
+      y0 <- max(x$tabela$Fi) * parrow
+      arrows(x0 = x0, y0 = y0,
+             x1 = mean(x), y1 = max(x$tabela$Fi) * parrow,
+             length = 0.1, col = acol, lwd = lwdarrow)
+
+      text(x = mean(x) + 1.1 * mean(x) * larrow, y = ptext + y0,
+           labels = gettext("Mean", domain = "R-leem"), col = tcol)
+
+      # ?plotmath
+      text(x = mean(x) + 1.1 * mean(x) * larrow, y = y0 - ptext,
+           labels = bquote(bar(x) ==.(format(mean(x, rouding = 4), digits = 4))), col = tcol)
+    }
+    if (side == "left") {
+      x0 <- mean(x) - mean(x) * larrow
+      y0 <- max(x$tabela$Fi) * parrow
+      arrows(x0 = x0, y0 = y0,
+             x1 = mean(x), y1 = y0,
+             length = 0.1, col = acol, lwd = lwdarrow)
+
+      text(x = mean(x) - 1.1 * mean(x) * larrow, y = ptext + y0,
+           labels = gettext("Mean", domain = "R-leem"), col = tcol)
+
+      # ?plotmath
+      text(x = mean(x) - 1.1 * mean(x) * larrow, y = y0 - ptext,
+           labels = bquote(bar(x) ==.(format(mean(x, rouding = 4), digits = 4))), col = tcol)
+    }
+  }
+  if (type == "median") {
+    abline(v = median(x),
+           lty = lty, lwd = lwd, col = lcol)
+    # par("usr")[i] => [i] -> c(x1, x2, y1, y2)
+    if (side == "right") {
+      x0 <- median(x) + median(x) * larrow
+      y0 <- max(x$tabela$Fi) * parrow
+      arrows(x0 = x0, y0 = y0,
+             x1 = median(x), y1 = max(x$tabela$Fi) * parrow,
+             length = 0.1, col = acol, lwd = lwdarrow)
+
+      text(x = median(x) + 1.1 * median(x) * larrow, y =  ptext + y0,
+           labels = gettext("Median", domain = "R-leem"), col = tcol)
+
+      # ?plotmath
+      text(x = median(x) + 1.1 * median(x) * larrow, y = y0 - ptext,
+           labels = bquote(bar(x) ==.(format(median(x, rouding = 4), digits = 4))), col = tcol)
+    }
+    if (side == "left") {
+      x0 <- median(x) - median(x) * larrow
+      y0 <- max(x$tabela$Fi) * parrow
+      arrows(x0 = x0, y0 = max(x$tabela$Fi) * parrow,
+             x1 = median(x), y1 = max(x$tabela$Fi) * parrow,
+             length = 0.1, col = acol, lwd = lwdarrow)
+
+      text(x = median(x) - 1.1 * median(x) * larrow, y = ptext + y0,
+           labels = gettext("Median", domain = "R-leem"), col = tcol)
+
+      # ?plotmath
+      text(x = median(x) - 1.1 * median(x) * larrow, y = y0 - ptext,
+           labels = bquote(bar(x) ==.(format(median(x, rouding = 4), digits = 4))), col = tcol)
+    }
+  }
+  invisible(x)
 }

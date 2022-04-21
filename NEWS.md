@@ -50,15 +50,17 @@
     - Mean: `mean()`
       - [X] grouped data
       - [X] raw data
-      - [ ] Insert in plot
+      - [X] Insert into plots
     - Median: `median()`
-      - [X] grouped data
+       - [X] grouped data
       - [X] raw data
-      - [ ] Insert in plot
+      - [X] Insert into plots
     -  [ ] Mode: `mfreq()`
   - [X] *Output*: `print.leem()` 
     
 # leem 0.3.0
 
 - [ ] Gradient colors of graphics take into account the weight of frequencies
-- [ ] Inserir sombras nas barras, dando o aspecto 3d
+- [ ] Create 3d plots 
+  - [] Insert shadows on the bars, giving them a 3d appearance
+

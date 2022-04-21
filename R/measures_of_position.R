@@ -15,7 +15,7 @@ mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, 
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$estat$raw_data)
     if (numchar) {
-      average <- round(mean(x = unclass(x$estat$raw_data),
+      average <- round(mean(x = x$estat$raw_data,
                             trim = trim,
                             na.rm = na.rm), digits = rounding)
       resume <- list(average = average, table = x$tabela, rawdata = x$estat$raw_data)
@@ -41,7 +41,7 @@ mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, 
         return(average)
       }
     } else {
-      average <- round(mean(x = unclass(x$estat$raw_data),
+      average <- round(mean(x = x$estat$raw_data,
                             trim = trim,
                             na.rm = na.rm), digits = rounding)
       resume <- list(average = average, table = x$tabela, rawdata = x$estat$raw_data)
@@ -62,7 +62,7 @@ median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details 
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$estat$raw_data)
     if (numchar) {
-      mediana <- round(median(x = unclass(x$estat$raw_data),
+      mediana <- round(median(x = x$estat$raw_data,
                             na.rm = na.rm), digits = rounding)
       resume <- list(median = mediana, table = x$tabela, rawdata = x$estat$raw_data)
       if (details) {
@@ -92,7 +92,7 @@ median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details 
       }
     }
     if (grouped == FALSE){
-      mediana <- round(median(x = unclass(x$estat$raw_data),
+      mediana <- round(median(x = x$estat$raw_data,
                               na.rm = na.rm), digits = rounding)
       resume <- list(median = mediana, table = x$tabela, rawdata = x$estat$raw_data)
       if (details) {
