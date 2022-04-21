@@ -16,7 +16,8 @@ tabfreq <- function(dados, ...) {
 
 # Tabela em distribuicao de frequencias
 #' @export
-tabfreq.leem <- function(dados, k = NULL){
+tabfreq.leem <- function(dados, k = NULL, ordered = NULL){
+  if (class(dados) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (attr(dados, "variable") == "discrete") {
     # numeric ou character
     numchar <- is.numeric(dados)
@@ -24,10 +25,17 @@ tabfreq.leem <- function(dados, k = NULL){
     n <- length(dados)
     # Dist freq
     aux <- table(dados)
-    groups <- if (numchar) {
-      as.numeric(names(aux))
+    if (numchar) {
+      groups <- as.numeric(names(aux))
     } else{
-      as.character(names(aux))
+      if (is.null(ordered)) {
+        groups <- as.character(names(aux))
+      } else {
+        pos <- match(as.character(names(aux)), ordered)
+        aux <- aux[pos]
+        groups <- as.character(names(aux))
+      }
+
     }
 
     names(aux) <- NULL
@@ -61,12 +69,14 @@ tabfreq.leem <- function(dados, k = NULL){
     # Fac (acima de) percentual
     fac22p <- round((fac22/n)*100, 2)
     # Estatisticas
+    dados2 <- dados
+    attributes(dados2) <- NULL
     if (numchar) {
       estat <- list(
         "Numero_de_grupos" = length(groups),
         "Valor_minimo" = x1,
         "Valor_maximo" = xn,
-        "raw_data" = dados
+        "raw_data" = dados2
       )
     }
     # Tabela de frequencias
@@ -82,6 +92,7 @@ tabfreq.leem <- function(dados, k = NULL){
 
     attr(listres, "variable") <- attr(dados, "variable")
     attr(listres, "table") <- "tabfreq"
+    if (!is.null(ordered)) attr(listres, "levels") <- "ordered"
     class(listres) <- "leem"
     return(listres)
   }
@@ -136,7 +147,7 @@ tabfreq.leem <- function(dados, k = NULL){
   fi <- freq(dados, vi, vs, k)
   # Construindo as classes
   classe <- paste(round(vi, 2), "|--- ", round(vs, 2))
-  classe[k] <- paste(round(vi[k], 2), "|---|", round(vs[k], 2))
+  classe[k] <- paste(round(vi[k], 2), "|--- ", round(vs[k], 2))
   classe
   # Ponto medio
   pm <- (vi + vs)/2
@@ -163,6 +174,8 @@ tabfreq.leem <- function(dados, k = NULL){
   # Fac (acima de) percentual
   fac22p <- round((fac22/n)*100, 2)
   # Estatisticas
+  dados2 <- dados
+  attributes(dados2) <- NULL
   estat <- list(
     "Numero_amostra" = n,
     "Numero_de_classes" = k,
@@ -172,7 +185,7 @@ tabfreq.leem <- function(dados, k = NULL){
     "LI_da_1_Classe" = LI1,
     "LI_classes" = vi,
     "LS_classes" = vs,
-    "raw_data" = dados
+    "raw_data" = dados2
   )
   # Tabela de frequencias
   tabela <- data.frame(Classe = classe, Fi = fi,
@@ -210,7 +223,7 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
                   main = NULL,
                   xlab = NULL,
                   ylab = NULL,
-                  panel.first = grid(),
+                  panel.first = grid(col = "white"),
                   bgcol = "gray",
                   bgborder = NA,
                   barcol = "yellow",
@@ -644,7 +657,7 @@ polyfreq.leem <- function(x,
                          main = NULL,
                          xlab = NULL,
                          ylab = NULL,
-                         panel.first = grid(),
+                         panel.first = grid(col = "white"),
                          gridcol = "lightgray",
                          bgcol = "gray",
                          bgborder = NA,
@@ -780,8 +793,7 @@ hist.leem <- function(x,
                       main = NULL,
                       xlab = NULL,
                       ylab = NULL,
-                      panel.first = grid(),
-                      gridcol = "lightgray",
+                      panel.first = grid(col = "white"),
                       bgcol = "gray",
                       bgborder = NA,
                       barcol = "yellow",
@@ -790,6 +802,7 @@ hist.leem <- function(x,
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
+    warning("Coerced to Histogram!", call. = FALSE, domain = "R-leem")
     numchar <- is.numeric(x$tabela$Groups)
     if (numchar) {
       xmin <- x$tabela$Groups[1]
@@ -804,7 +817,7 @@ hist.leem <- function(x,
 
 
       # Limiares
-      xlim <- c(min(xvaraux) - 1, max(xvaraux) + 1)
+      xlim <- c(min(xvaraux), max(xvaraux))
       ylim <- c(0, 1.2 * max(yvar))
 
       # Area de plotagem
@@ -891,4 +904,215 @@ hist.leem <- function(x,
   }
 }
 
+# Grafico de hastes ou bastao
+#' @export
+stickplot <- function(x,
+                      bg = TRUE,
+                      main = NULL,
+                      xlab = NULL,
+                      ylab = NULL,
+                      panel.first = grid(col = "white"),
+                      bgcol = "gray",
+                      bgborder = NA,
+                      pcol = "black",
+                      pty = 19,
+                      pwd = 3,
+                      lcol = "black",
+                      lty = 1,
+                      lwd = 2,
+                      ...) {
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
+  if (attr(x, "variable") == "continuous") stop("The function only applies to discrete variables.", call. = FALSE, domain = "R-leem")
+  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (attr(x, "variable") == "discrete") {
+    numchar <- is.numeric(x$tabela$Groups)
+    if (numchar) {
+      xmin <- x$tabela$Groups[1]
+      xmax <- max(x$tabela$Groups)
+      xvar <- x$tabela$Groups
+      yvar <- x$tabela$Fi
 
+
+
+      # Limiares
+      xlim <- c(xmin - 0.5, xmax + 0.5)
+      ylim <- c(0, 1.2 * max(yvar))
+
+      # Area de plotagem
+      plot.new()
+      plot.window(xlim, ylim)
+
+      # Labels
+      if (is.null(main)) {
+        main <- gettext("Stick plot", domain = "R-leem")
+      }
+      if (is.null(xlab)) {
+        xlab <- gettext("Groups", domain = "R-leem")
+      }
+      if (is.null(ylab)) {
+        ylab <- gettext("Frequency", domain = "R-leem")
+      }
+
+      title(main = main, xlab = xlab, ylab = ylab)
+
+      if(bg) {
+        rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col =
+               bgcol, border = bgborder)
+      }
+
+      # Eixos
+      axis(1, at = xvar)
+      axis(2)
+
+      # Grid
+      panel.first
+
+      # Inserindo hastes
+      lines(x$tabela$Groups, x$tabela$Fi, type = "h",
+            lty = lty, lwd = lwd, col = lcol)
+      points(x$tabela$Groups, x$tabela$Fi, pch  = pty, lwd = pwd,
+             col = pcol)
+    } else {
+      stop("Em desenvolvimento!")
+    }
+  }
+}
+
+
+# Grafico de barras
+#' @export
+barplot.leem <- function(x,
+                         bg = TRUE,
+                         main = NULL,
+                         xlab = NULL,
+                         ylab = NULL,
+                         panel.first = grid(col = "white"),
+                         bgcol = "gray",
+                         bgborder = NA,
+                         barcol = "yellow",
+                         barborder = "gray",
+                         posx1 = 0,
+                         posx2 = 0,
+                         xangf = 0,
+                         labels = NULL,
+                         ...) {
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
+  if (attr(x, "variable") == "continuous") stop("The function only applies to discrete variables.", call. = FALSE, domain = "R-leem")
+  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (attr(x, "variable") == "discrete") {
+    numchar <- is.numeric(x$tabela$Groups)
+    if (numchar) {
+      xmin <- x$tabela$Groups[1]
+      xmax <- max(x$tabela$Groups)
+      xvar <- x$tabela$Groups
+      xvaraux <-  c(xmin - 1, x$tabela$Groups, xmax + 1)
+      xvar1 <- xvaraux - 0.5
+      xvar2 <- xvaraux + 0.5
+      yvar <- x$tabela$Fi
+      yvar1 <- x$tabela$Fac1
+      yvar2 <- x$tabela$Fac2
+
+
+      # Limiares
+      xlim <- c(min(xvaraux), max(xvaraux))
+      ylim <- c(0, 1.2 * max(yvar))
+
+      # Area de plotagem
+      plot.new()
+      plot.window(xlim, ylim)
+
+      # Labels
+      if (is.null(main)) {
+        main <- gettext("Bar plot", domain = "R-leem")
+      }
+      if (is.null(xlab)) {
+        xlab <- gettext("Groups", domain = "R-leem")
+      }
+      if (is.null(ylab)) {
+        ylab <- gettext("Frequency", domain = "R-leem")
+      }
+
+      title(main = main, xlab = xlab, ylab = ylab)
+
+      if(bg) {
+        rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col =
+               bgcol, border = bgborder)
+      }
+
+      # Eixos
+      axis(1, at = xvar)
+      axis(2)
+
+      # Grid
+      panel.first
+
+      # Inserindo barras
+      rect(xvar - 0.5,
+           0,
+           xvar + 0.5,
+           yvar, col = barcol, border = barborder)
+    } else {
+      ngroups <- length(x$tabela$Groups)
+      aux <- 1:ngroups
+      xvar <- x$tabela$Groups
+      xvaraux <-  c(0, aux, ngroups + 1)
+      xvar1 <- xvaraux - 0.5
+      xvar2 <- xvaraux + 0.5
+      yvar <- x$tabela$Fi
+      yvar1 <- x$tabela$Fac1
+      yvar2 <- x$tabela$Fac2
+
+
+      # Limiares
+      xlim <- c(min(xvaraux), max(xvaraux))
+      ylim <- c(0, 1.2 * max(yvar))
+
+      # Area de plotagem
+      plot.new()
+      plot.window(xlim, ylim)
+
+      # Labels
+      if (is.null(main)) {
+        main <- gettext("Bar plot", domain = "R-leem")
+      }
+      if (is.null(xlab)) {
+        xlab <- gettext("Groups", domain = "R-leem")
+      }
+      if (is.null(ylab)) {
+        ylab <- gettext("Frequency", domain = "R-leem")
+      }
+
+      title(main = main, xlab = xlab, ylab = ylab)
+
+      if(bg) {
+        rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col =
+               bgcol, border = bgborder)
+      }
+
+      # Eixos
+      axis(1, at = aux, labels = FALSE)
+      if (is.null(labels)) labels <- xvar
+      text(x = aux + posx1,  y = par("usr")[3] + posx2, labels = labels, srt = xangf, pos = 1, xpd = TRUE)
+      axis(2)
+
+      # Grid
+      panel.first
+
+      # Inserindo barras
+      rect(aux - 0.5,
+           0,
+           aux + 0.5,
+           yvar, col = barcol, border = barborder)
+    }
+  }
+}
+
+# Implementar depois
+#' @export
+print.leem <- function(x, ...) {
+  if (attr(x, "table") == "tabfreq") {
+    print(x$tabela)
+  } else {
+    print(x)
+  }
+}

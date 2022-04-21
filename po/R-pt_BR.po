@@ -228,3 +228,34 @@ msgid ""
 "Alexandre Celesino Leite Almeida (UFSJ)\n"
 " celestino@ufsj.edu.br"
 msgstr ""
+
+msgid "Ogives"
+msgstr "Gráfico de ogivas"
+
+msgid "Groups"
+msgstr "Grupos"
+
+msgid "Frequency"
+msgstr "Frequência"
+
+msgid "Ogive larger than"
+msgstr "Ogiva crescente"
+
+msgid "Ogive less than"
+msgstr "Ogiva decrescente"
+
+msgid "Classes"
+msgstr "Classes"
+
+msgid "Polygon"
+msgstr "Polígono de frequências"
+
+msgid "Bar plot"
+msgstr "Gráfico de barras"
+
+msgid "Histogram"
+msgstr "Histograma de frequências"
+
+msgid "Stick plot"
+msgstr "Gráfico de hastes ou bastão"
+
