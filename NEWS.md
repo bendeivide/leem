@@ -62,5 +62,5 @@
 
 - [ ] Gradient colors of graphics take into account the weight of frequencies
 - [ ] Create 3d plots 
-  - [] Insert shadows on the bars, giving them a 3d appearance
+  - [ ] Insert shadows on the bars, giving them a 3d appearance
 
