@@ -992,6 +992,11 @@ stickplot <- function(x,
 
 
 # Grafico de barras
+# rotate_x <- function(data, column_to_plot, labels_vec, rot_angle) {
+#   plt <- barplot(data[[column_to_plot]], col='steelblue', xaxt="n")
+#   text(plt, par("usr")[3], labels = labels_vec, srt = rot_angle, adj = c(1.1,1.1), xpd = TRUE, cex=0.6)
+# }
+# rotate_x(mtcars, 'mpg', row.names(mtcars), 45)
 #' @export
 barplot.leem <- function(x,
                          bg = TRUE,
@@ -1123,7 +1128,7 @@ barplot.leem <- function(x,
 # Impressao da classe 'leem'
 #' @export
 print.leem <- function(x, ...) {
-  if (attr(x, "table") == "tabfreq") {
+  if (!is.null(attr(x, "table"))) {
     print(x$tabela)
   } else {
     print(x)
