@@ -10,7 +10,7 @@
 
 #' @export
 mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FALSE, ...){
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE)
   if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$estat$raw_data)
@@ -105,27 +105,49 @@ median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details 
 }
 
 # Mode
-
 #' @export
-mfreq <- function(x, ...) {
-  UseMethod("mfreq")
-}
+mfreq <- function(x, details = FALSE) {
 
-# mfreq.mode <- function(x, ...) {
-#   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
-#   if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
-#   if (attr(x, "variable") == "discrete") {
-#     numchar <- is.numeric(x$estat$raw_data)
-#     if (numchar) {
-#       if ()
-#       return(average)
-#     } else {
-#       stop("Measure not used for this data type!", call. = FALSE,
-#            domain = "R-leem")
-#     }
-#   }
-#   if (variable == "continuous") {
-#     stop("Em desenvolvimento!", call. = FALSE,
-#          domain = "R-leem")
-#   }
-# }
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE)
+  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (attr(x, "variable") == "discrete") {
+    numchar <- is.numeric(x$estat$raw_data)
+    if (numchar == 0) {
+     if (all(x$tabela$Fi == x$tabela$Fi[1])) {
+       mo <- "The data set has no mode!"
+     } else {
+       pos <- which(x$tabela$Fi == max(x$tabela$Fi))
+       mo <- x$tabela$Groups[pos]
+     }
+    } else {
+      if (all(x$tabela$Fi == x$tabela$Fi[1])) {
+        mo <- "The data set has no mode!"
+      } else {
+        pos <- which(x$tabela$Fi == max(x$tabela$Fi))
+        mo <- as.numeric(x$tabela$Groups[pos])
+      }
+    }
+    resume <- list(mode = mo, table = x$tabela, rawdata = x$estat$raw_data)
+    if (details) {
+      return(resume)
+    } else {
+      return(mo)
+    }
+  }
+  if (attr(x, "variable") == "continuous") {
+    pos <- which.max(x$tabela$Fi)
+    if (pos == 1) {
+      aux1 <- 0
+    } else{
+      aux1 <- x$tabela$Fi[pos - 1]
+    }
+    if(pos == x$estat$Numero_de_classes){
+      aux2 <- 0
+    } else{
+      aux2 <- x$tabela$Fi[pos + 1]
+    }
+    del1 <- x$tabela$Fi[pos] - aux1
+    del2 <- x$tabela$Fi[pos] - aux2
+    mo <- x$estat$LI_classes[pos] + (del1 / (del1 + del2)) * x$estat$Ampl_clas
+  }
+}
