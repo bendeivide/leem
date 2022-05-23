@@ -1,6 +1,12 @@
 # Calculate of variance
 #' @export
 variance <- function (x, rounding = 2, na.rm = FALSE, details = FALSE, grouped = TRUE) {
+  if (!is.logical(details)) stop("The 'details' argument must be logical!",
+                                 call. = FALSE, domain = "R-leem")
+  if (!is.logical(grouped)) stop("The 'grouped' argument must be logical!",
+                                 call. = FALSE, domain = "R-leem")
+  if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
+                               call. = FALSE, domain = "R-leem")
   if (class(x) != "leem")
     stop("Use the 'new_leem()' function to create an object of class leem!",
          call. = FALSE)
@@ -58,7 +64,14 @@ variance <- function (x, rounding = 2, na.rm = FALSE, details = FALSE, grouped =
 #' @export
 sdev <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
                  grouped = TRUE) {
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE)
+  if (!is.logical(details)) stop("The 'details' argument must be logical!",
+                               call. = FALSE, domain = "R-leem")
+  if (!is.logical(grouped)) stop("The 'grouped' argument must be logical!",
+                                 call. = FALSE, domain = "R-leem")
+  if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
+                                 call. = FALSE, domain = "R-leem")
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
+                               call. = FALSE, domain = "R-leem")
   if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$estat$raw_data)

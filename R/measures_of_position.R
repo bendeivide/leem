@@ -10,7 +10,8 @@
 
 #' @export
 mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FALSE, ...){
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE)
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
+                               call. = FALSE, domain = "R-leem")
   if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$estat$raw_data)
