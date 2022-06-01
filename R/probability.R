@@ -175,8 +175,10 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- round(pt(qq, df = nu, lower.tail = T), digits=rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2)
+          axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
+               col="red", font = 2, lwd.ticks = 1)
+          axis(side=1, at=as.character(c(-6, qqaux)), tick = TRUE, lwd = 1,
+               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
                  legend=substitute(P(T<=q)==Pr~"\n\n"~gl==nu, list(q=qq, Pr=Pr, nu = nu)))
@@ -215,8 +217,10 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- round(pt(qq, df = nu, lower.tail = F), digits=rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2)
+          axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
+               col="red", font = 2, lwd.ticks = 1)
+          axis(side=1, at=as.character(c(qqaux, 6)), tick = TRUE, lwd = 1,
+               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
                  legend=substitute(P(T~`>`~q)==Pr~"\n\n"~gl==nu, list(q=qq, Pr=Pr, nu = nu)))
