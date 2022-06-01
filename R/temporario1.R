@@ -1128,7 +1128,12 @@ barplot.leem <- function(x,
 # Impressao da classe 'leem'
 #' @export
 print.leem <- function(x, ...) {
-  if (!is.null(attr(x, "table"))) print(x$tabela) else print(unclass(x))
+  if (!is.null(attr(x, "table"))) {
+    print(x$tabela)
+  } else {
+    attributes(x) <- NULL
+    print(x)
+  }
 }
 
 
