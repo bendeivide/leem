@@ -1,5 +1,7 @@
 # Probability
-#' @importFrom manipulate manipulate slider
+#' @import manipulate
+#' @import tkRplotR
+#  @import shiny
 #' @export
 p <- function(q, dist = "t-student", lower.tail = TRUE,
               rounding = 4, porcentage = FALSE, gui = "plot", ...) {
@@ -34,22 +36,22 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
             abline(v = qq, lty=2, col = "red")
             if (attr(q, "region") == "region2") {
               legend("topleft", bty="n", fill="red",
-                     legend=substitute(P(t1~"< X < "~t2)==Pr~"\n\n"~gl==nu,
+                     legend=substitute(P(t1~"< T < "~t2)==Pr~"\n\n"~gl==nu,
                                        list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
             }
             if (attr(q, "region") == "region4") {
               legend("topleft", bty="n", fill="red",
-                     legend=substitute(P(t1~"<= X <= "~t2)==Pr~"\n\n"~gl==nu,
+                     legend=substitute(P(t1~"<= T <= "~t2)==Pr~"\n\n"~gl==nu,
                                        list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
             }
             if (attr(q, "region") == "region7") {
               legend("topleft", bty="n", fill="red",
-                     legend=substitute(P(t1~"<= X < "~t2)==Pr~"\n\n"~gl==nu,
+                     legend=substitute(P(t1~"<= T < "~t2)==Pr~"\n\n"~gl==nu,
                                        list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
             }
             if (attr(q, "region") == "region8") {
               legend("topleft", bty="n", fill="red",
-                     legend=substitute(P(t1~"< X <= "~t2)==Pr~"\n\n"~gl==nu,
+                     legend=substitute(P(t1~"< T <= "~t2)==Pr~"\n\n"~gl==nu,
                                        list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
             }
           }
@@ -73,6 +75,140 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
                                    df = manipulate::slider(1, 200, nu))
             prob <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
           }
+          if (gui == "tcltk") {
+            # Desabilitar warnings global
+            # options(warn = - 1)
+            nu <- argaddit$df
+            plotcurveaux <- function(q1 = q[1], q2 = q[2], df = nu, ...) {
+              q[1] <- q1
+              q[2] <- q2
+              plotcurve(q, df)
+            }
+            tk_q1 <- tclVar(q[1])
+            tk_q2 <- tclVar(q[2])
+            tk_df <- tclVar(nu)
+            ##
+            # Disabled GUI (Type I)
+            oldmode <- tclServiceMode(FALSE)
+            # Logo
+            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+
+            # Plot
+            tk_plot <- tktoplevel()
+
+            #Icon main toplevel window
+            tcl("wm", "iconphoto", tk_plot, "-default", "::image::iconleem")
+
+            # Title
+            tkwm.title(tk_plot,
+                       gettext("leem package", domain = "R-leem"))
+
+            tk_plot <- tkRplotR::tkRplot(tk_plot, function(...) {
+              q1 <- as.numeric(tclvalue(tk_q1))
+              q2 <- as.numeric(tclvalue(tk_q2))
+              nu <- as.numeric(tclvalue(tk_df))
+              plotcurveaux(q1 = q1, q2 = q2, df = nu)
+            })
+            s02 <- tkscale(
+              tk_plot,
+              from = q[2],
+              to = 6,
+              label = 'q2',
+              variable = tk_q2,
+              showvalue = TRUE,
+              resolution = 1,
+              repeatdelay = 200,
+              repeatinterval = 100,
+              orient = "hor"
+            )
+            s01 <- tkscale(
+              tk_plot,
+              from = -6,
+              to = q[2],
+              label = 'q1',
+              variable = tk_q1,
+              showvalue = TRUE,
+              resolution = 1,
+              repeatdelay = 200,
+              repeatinterval = 100,
+              orient = "hor"
+            )
+            s03 <- tkscale(
+              tk_plot,
+              from = 1,
+              to = 200,
+              label = 'df',
+              variable = tk_df,
+              showvalue = TRUE,
+              resolution = 1,
+              repeatdelay = 200,
+              repeatinterval = 100,
+              orient = "hor"
+            )
+            tkpack(s01, s02, s03,
+                   side = "top",
+                   expand = TRUE,
+                   before = tk_plot$env$canvas,
+                   fill = "both")
+            # Activate GUI
+            finish <- tclServiceMode(oldmode)
+            prob <- round(pt(q[2], df = nu,
+                             lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
+
+          }
+          if (gui == "shiny") {
+            # require(shiny)
+            # nu <- argaddit$df
+            # prob <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
+            # plotcurveaux <- function(q1 = q[1], q2 = q[2], df, ...) {
+            #   q[1] <- q1
+            #   q[2] <- q2
+            #   plotcurve(q, df)
+            # }
+            # shinyaux <- function(...) {
+            #   require(shiny)
+            #   # Define UI for application that draws a histogram
+            #   ui <- fluidPage(
+            #
+            #     # Application title
+            #     titlePanel(gettext("t-Student distribution", domain = "R-leem")),
+            #
+            #     # Sidebar with a slider input for number of bins
+            #     sidebarLayout(
+            #       sidebarPanel(
+            #         sliderInput("q1",
+            #                     "Lower limit:",
+            #                     min = -6,
+            #                     max = q[2],
+            #                     value = q[1])
+            #       ),
+            #
+            #       # Show a plot of the generated distribution
+            #       mainPanel(
+            #         plotOutput("distPlot")
+            #       )
+            #     )
+            #   )
+            #
+            #   # Define server logic required to draw a histogram
+            #   server <- function(input, output) {
+            #     prob <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
+            #     plotcurveaux <- function(q1 = q[1], q2 = q[2], df, ...) {
+            #       q[1] <- q1
+            #       q[2] <- q2
+            #       plotcurve(q, df)
+            #     }
+            #     output$distPlot <- renderPlot({
+            #       plotcurveaux(q1 = input$q1, q2=q[2], df=nu)
+            #     })
+            #   }
+            #
+            #   # Run the application
+            #   shinyApp(ui = ui, server = server)
+            # }
+            # shinyaux()
+          }
+
       }
     }
     if (any(attr(q, "region") == regiona)) {
@@ -157,12 +293,14 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
       if (!any(names(argaddit) == "df")) stop("Insira o argumento 'df'!", call. = FALSE)
       if (lower.tail) {
         plotcurve <- function(q, nu) {
-          curve(dt(x, df = nu), -6, 6, ylab = expression(f[T](t)),
-                xlab="T", ylim = c(0, 1.2 * max(fy)), panel.first = grid(col = "gray"))
           x <- seq(-6, q, by=0.01)
           y <- seq(q, 6, by=0.01)
           fx <- dt(x, df = nu)
           fy <- dt(y, df = nu)
+
+          curve(dt(x, df = nu), -6, 6, ylab = expression(f[T](t)),
+                xlab="T", ylim = c(0, 1.2 * max(fx)), panel.first = grid(col = "gray"))
+
           polygon(c(x, rev(x)),
                   c(fx, rep(0, length(fx))),
                   col="red")
@@ -199,12 +337,13 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
         }
       } else {
         plotcurve <- function(q, nu) {
-          curve(dt(x, df = nu), -6, 6, ylab = expression(f[T](t)),
-                xlab="T", ylim = c(0, 1.2 * max(fy)), panel.first = grid(col = "gray"))
           x <- seq(q, 6, by=0.01)
           y <- seq(-6, q, by=0.01)
           fx <- dt(x, df = nu)
           fy <- dt(y, df = nu)
+          curve(dt(x, df = nu), -6, 6, ylab = expression(f[T](t)),
+                xlab="T", ylim = c(0, 1.2 * max(fy)), panel.first = grid(col = "gray"))
+
           polygon(c(x, rev(x)),
                   c(fx, rep(0, length(fx))),
                   col="red")
@@ -228,7 +367,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
         if (gui == "plot") {
           # Probability
           nu <- argaddit$df
-          prob <- pt(q = q, df = nu)
+          prob <- pt(q = q, df = nu, lower.tail = FALSE)
           # Plot
           plotcurve(q, nu)
         }
@@ -333,11 +472,11 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
       }
     }
   }
-
   prob <- round(prob, rounding)
   if (porcentage == TRUE) prob <- prob * 100
   return(prob)
 }
+
 
 
 
