@@ -13,7 +13,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
     if (any(attr(q, "region") == regionb)) {
       if (dist == "t-student") {
         if (!any(names(argaddit) == "df")) stop("Insira o argumento 'df'!", call. = FALSE)
-          plotcurve <- function(q, nu) {
+          plotcurve <- function(q, nu, ...) {
             x <- seq(q[1], q[2], by=0.01)
             y <- seq(-6, 6, by=0.01)
             fx <- dt(x, df = nu)
@@ -76,17 +76,28 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
             prob <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
           }
           if (gui == "tcltk") {
+            # Environment of package
+            envleem <- new.env(parent = base::emptyenv())
+            assign("tk_q1", NULL, envir = envleem)
+            assign("tk_q2", NULL, envir = envleem)
+            assign("tk_df", NULL, envir = envleem)
             # Desabilitar warnings global
-            # options(warn = - 1)
+            war <- options(warn = - 1)
+            on.exit(options(war))
+
             nu <- argaddit$df
-            plotcurveaux <- function(q1 = q[1], q2 = q[2], df = nu, ...) {
+            plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
               q[1] <- q1
               q[2] <- q2
-              plotcurve(q, df)
+              plotcurve(q, nu)
             }
-            tk_q1 <- tclVar(q[1])
-            tk_q2 <- tclVar(q[2])
-            tk_df <- tclVar(nu)
+            tk_q1 <<- tclVar(q[1])
+            tk_q2 <<- tclVar(q[2])
+            tk_df <<- tclVar(nu)
+
+            # q1 <- NULL
+            # q2 <- NULL
+            # nu <- NULL
             ##
             # Disabled GUI (Type I)
             oldmode <- tclServiceMode(FALSE)
@@ -94,23 +105,26 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
             tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
 
             # Plot
-            tk_plot <- tktoplevel()
+            tkplot <- tktoplevel()
 
             #Icon main toplevel window
-            tcl("wm", "iconphoto", tk_plot, "-default", "::image::iconleem")
+            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
 
             # Title
-            tkwm.title(tk_plot,
-                       gettext("leem package", domain = "R-leem"))
+            tkwm.title(tkplot,
+                       gettext("leem package: t Distribution", domain = "R-leem"))
 
-            tk_plot <- tkRplotR::tkRplot(tk_plot, function(...) {
+            tkpack(tklabel(tkplot, text = "Parameters"))
+
+            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+                                         height = 500, fun = function(...) {
               q1 <- as.numeric(tclvalue(tk_q1))
               q2 <- as.numeric(tclvalue(tk_q2))
               nu <- as.numeric(tclvalue(tk_df))
-              plotcurveaux(q1 = q1, q2 = q2, df = nu)
+              plotcurveaux(q1 = q1, q2 = q2, nu = nu)
             })
-            s02 <- tkscale(
-              tk_plot,
+            s02 <- tcltk::tkscale(
+              tkplot,
               from = q[2],
               to = 6,
               label = 'q2',
@@ -121,8 +135,8 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
               repeatinterval = 100,
               orient = "hor"
             )
-            s01 <- tkscale(
-              tk_plot,
+            s01 <- tcltk::tkscale(
+              tkplot,
               from = -6,
               to = q[2],
               label = 'q1',
@@ -134,7 +148,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
               orient = "hor"
             )
             s03 <- tkscale(
-              tk_plot,
+              tkplot,
               from = 1,
               to = 200,
               label = 'df',
@@ -148,7 +162,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
             tkpack(s01, s02, s03,
                    side = "top",
                    expand = TRUE,
-                   before = tk_plot$env$canvas,
+                   before = tkplot$env$canvas,
                    fill = "both")
             # Activate GUI
             finish <- tclServiceMode(oldmode)
