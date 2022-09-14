@@ -62,6 +62,11 @@
 
 .onLoad <- function(libname, pkgname){
   if (!requireNamespace("tkRplotR", quietly = TRUE)) install.packages("tkRplotR")
+
+}
+
+.onLoad <- function(libname, pkgname){
+
   if (!requireNamespace("manipulate", quietly = TRUE)) install.packages("manipulate", repos=c("http://rstudio.org/_packages",
                                                                                               "http://cran.rstudio.com",dependencies=TRUE))
 }
