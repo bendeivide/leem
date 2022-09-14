@@ -26,5 +26,5 @@ Imports:
 License: GPL (>= 2)
 URL: https://bendeivide.github.io/project/leem/, https://github.com/bendeivide/leem
 BugReports: https://github.com/bendeivide/leem/issues
-LazyData: TRUE
+LazyData: FALSE
 RoxygenNote: 7.2.0
