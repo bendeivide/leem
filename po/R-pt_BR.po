@@ -268,3 +268,14 @@ msgstr "Mediana"
 msgid "Mode"
 msgstr "Moda"
 
+msgid "Use the 'new_leem()' function to create an object of class leem!""
+msgstr "Use a função 'new_leem()' para criar um objeto de classe 'leem'!"
+
+msgid "The argument should be numerical!"
+msgstr "O argumento deve ser numérico!"
+
+msgid "The k argument should be greater than 1!"
+msgstr "O argumento k deve ser maior que 1!"
+
+
+

@@ -28,12 +28,13 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
                     col="red")
             abline(v=0, lty=2)
             qq <- round(q, digits=2)
+            qqaux <- qq
             Pr <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
             Pr <- gsub("\\.", ",", Pr)
             qq <- gsub("\\.", ",", qq)
-            axis(side=1, at=qq, labels=qq,
+            axis(side=1, at=qqaux, labels=qqaux,
                  col="red", font = 2)
-            abline(v = qq, lty=2, col = "red")
+            abline(v = qqaux, lty=2, col = "red")
             if (attr(q, "region") == "region2") {
               legend("topleft", bty="n", fill="red",
                      legend=substitute(P(t1~"< T < "~t2)==Pr~"\n\n"~gl==nu,
@@ -78,12 +79,19 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           if (gui == "tcltk") {
             # Environment of package
             envleem <- new.env(parent = base::emptyenv())
-            assign("tk_q1", NULL, envir = envleem)
-            assign("tk_q2", NULL, envir = envleem)
-            assign("tk_df", NULL, envir = envleem)
+            leemget <- function(x) {
+              get(x, envir= envleem, inherits=FALSE )
+            }
+            leemset <- function(x, value) {
+              assign(x, value, envir= envleem)
+            }
+            globalvariables <- function(x, value) {
+              assign(x, value, envir= .GlobalEnv)
+            }
             # Desabilitar warnings global
-            war <- options(warn = - 1)
-            on.exit(options(war))
+            #options(warn = - 1)
+            # war <- options(warn = - 1)
+            # on.exit(options(war))
 
             nu <- argaddit$df
             plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
@@ -91,9 +99,11 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
               q[2] <- q2
               plotcurve(q, nu)
             }
-            tk_q1 <<- tclVar(q[1])
-            tk_q2 <<- tclVar(q[2])
-            tk_df <<- tclVar(nu)
+            tk_q1 <- leemset("tk_q1", tclVar(q[1]))
+            tk_q2 <- leemset("tk_q2", tclVar(q[2]))
+            tk_df <- leemset("tk_df", tclVar(nu))
+            sapply(c("tk_q1", "tk_q2", "tk_df"),
+                   function(x) globalvariables(x, leemget(x)))
 
             # q1 <- NULL
             # q2 <- NULL
@@ -166,12 +176,32 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
                    fill = "both")
             # Activate GUI
             finish <- tclServiceMode(oldmode)
+            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+              response <- tk_messageBox(
+                title = gettext("Tell me something:", domain = "R-leem"),
+                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+                icon = "question",
+                type = "yesno"
+              )
+              if (response == "yes") {
+                if (exists("tk_q1", envir = .GlobalEnv)) {
+                  rm("tk_q1", "tk_q2", "tk_df", envir = .GlobalEnv)
+                }
+                tkdestroy(tkplot)
+              }
+            })
+
+
             prob <- round(pt(q[2], df = nu,
                              lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
 
           }
           if (gui == "shiny") {
-            # require(shiny)
+            # # Environment of package
+            # envleem <- new.env(parent = base::emptyenv())
+            # assign("shinyaux", NULL, envir = envleem)
+            # assign("tk_q2", NULL, envir = envleem)
+            # assign("tk_df", NULL, envir = envleem)
             # nu <- argaddit$df
             # prob <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
             # plotcurveaux <- function(q1 = q[1], q2 = q[2], df, ...) {
@@ -179,7 +209,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
             #   q[2] <- q2
             #   plotcurve(q, df)
             # }
-            # shinyaux <- function(...) {
+            # shinyaux <<- function(...) {
             #   require(shiny)
             #   # Define UI for application that draws a histogram
             #   ui <- fluidPage(
