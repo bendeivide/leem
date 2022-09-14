@@ -68,6 +68,6 @@
 .onLoad <- function(libname, pkgname){
 
   if (!requireNamespace("manipulate", quietly = TRUE)) install.packages("manipulate", repos=c("http://rstudio.org/_packages",
-                                                                                              "http://cran.rstudio.com", "http://cran.rstudio.com/bin/windows/contrib/4.1/manipulate_1.0.1.zip"),dependencies=TRUE)
+                                                                                              "http://cran.rstudio.com"),dependencies=TRUE)
 }
 
