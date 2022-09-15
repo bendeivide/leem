@@ -14,12 +14,12 @@ mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, 
                                call. = FALSE, domain = "R-leem")
   if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
-    numchar <- is.numeric(x$estat$raw_data)
+    numchar <- is.numeric(x$statistics$raw_data)
     if (numchar) {
-      average <- round(mean(x = x$estat$raw_data,
+      average <- round(mean(x = x$statistics$raw_data,
                             trim = trim,
                             na.rm = na.rm), digits = rounding)
-      resume <- list(average = average, table = x$tabela, rawdata = x$estat$raw_data)
+      resume <- list(average = average, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
       } else {
@@ -34,18 +34,18 @@ mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, 
   if (attr(x, "variable") == "continuous") {
     if (grouped) {
       # Implementar o argumento 'trim' depois!
-      average <- round(sum(x$tabela$PM * x$tabela$Fi) / sum(x$tabela$Fi), rounding)
-      resume <- list(average = average, table = x$tabela, rawdata = x$estat$raw_data)
+      average <- round(sum(x$table$PM * x$table$Fi) / sum(x$table$Fi), rounding)
+      resume <- list(average = average, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
       } else {
         return(average)
       }
     } else {
-      average <- round(mean(x = x$estat$raw_data,
+      average <- round(mean(x = x$statistics$raw_data,
                             trim = trim,
                             na.rm = na.rm), digits = rounding)
-      resume <- list(average = average, table = x$tabela, rawdata = x$estat$raw_data)
+      resume <- list(average = average, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
       } else {
@@ -61,11 +61,11 @@ median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details 
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
-    numchar <- is.numeric(x$estat$raw_data)
+    numchar <- is.numeric(x$statistics$raw_data)
     if (numchar) {
-      mediana <- round(median(x = x$estat$raw_data,
+      mediana <- round(median(x = x$statistics$raw_data,
                             na.rm = na.rm), digits = rounding)
-      resume <- list(median = mediana, table = x$tabela, rawdata = x$estat$raw_data)
+      resume <- list(median = mediana, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
       } else {
@@ -79,13 +79,13 @@ median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details 
   if (attr(x, "variable") == "continuous") {
     if (grouped) {
       # Implementar o argumento 'trim' depois!
-      classem <- x$tabela$Fac1 < x$estat$Numero_amostra / 2
+      classem <- x$table$Fac1 < x$statistics$Numero_amostra / 2
       posm <- which(classem == FALSE)[1]
-      l1m <- x$estat$LI_da_1_Classe + x$estat$Ampl_clas * (posm - 1)
-      fant <- if (posm == 1) 0 else x$tabela$Fac1[posm - 1]
-      fi <- x$tabela$Fi[posm]
-      mediana <- round(l1m + ((x$estat$Numero_amostra / 2 -  fant) / fi ) * x$estat$Ampl_clas, digits = rounding)
-      resume <- list(median = mediana, table = x$tabela, rawdata = x$estat$raw_data)
+      l1m <- x$statistics$LI_da_1_Classe + x$statistics$Ampl_clas * (posm - 1)
+      fant <- if (posm == 1) 0 else x$table$Fac1[posm - 1]
+      fi <- x$table$Fi[posm]
+      mediana <- round(l1m + ((x$statistics$Numero_amostra / 2 -  fant) / fi ) * x$statistics$Ampl_clas, digits = rounding)
+      resume <- list(median = mediana, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
       } else {
@@ -93,9 +93,9 @@ median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details 
       }
     }
     if (grouped == FALSE){
-      mediana <- round(median(x = x$estat$raw_data,
+      mediana <- round(median(x = x$statistics$raw_data,
                               na.rm = na.rm), digits = rounding)
-      resume <- list(median = mediana, table = x$tabela, rawdata = x$estat$raw_data)
+      resume <- list(median = mediana, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
       } else {
@@ -137,26 +137,26 @@ mfreq <- function (x, details = FALSE, na.rm = FALSE, rounding = 2, grouped = TR
   if (class(x) == "leem" & is.null(attr(x, "table")))
     x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
-    numchar <- is.numeric(x$estat$raw_data)
+    numchar <- is.numeric(x$statistics$raw_data)
     if (numchar == 0) {
-      if (all(x$tabela$Fi == x$tabela$Fi[1])) {
+      if (all(x$table$Fi == x$table$Fi[1])) {
         mo <- "The data set has no mode!"
       }
       else {
-        pos <- which(x$tabela$Fi == max(x$tabela$Fi))
-        mo <- x$tabela$Groups[pos]
+        pos <- which(x$table$Fi == max(x$table$Fi))
+        mo <- x$table$Groups[pos]
       }
     }
     else {
-      if (all(x$tabela$Fi == x$tabela$Fi[1])) {
+      if (all(x$table$Fi == x$table$Fi[1])) {
         mo <- "The data set has no mode!"
       }
       else {
-        pos <- which(x$tabela$Fi == max(x$tabela$Fi))
-        mo <- round(as.numeric(x$tabela$Groups[pos]), rounding)
+        pos <- which(x$table$Fi == max(x$table$Fi))
+        mo <- round(as.numeric(x$table$Groups[pos]), rounding)
       }
     }
-    resume <- list(mode = mo, table = x$tabela, rawdata = x$estat$raw_data)
+    resume <- list(mode = mo, table = x$table, rawdata = x$statistics$raw_data)
     if (details) {
       return(resume)
     }
@@ -166,7 +166,7 @@ mfreq <- function (x, details = FALSE, na.rm = FALSE, rounding = 2, grouped = TR
   }
   if (attr(x, "variable") == "continuous") {
     if (grouped) {
-      pos <- which(x$tabela$Fi == max(x$tabela$Fi))
+      pos <- which(x$table$Fi == max(x$table$Fi))
       compos <- length(pos)
       mo <- vector(mode = "integer", length = compos)
       j <- 1
@@ -175,23 +175,23 @@ mfreq <- function (x, details = FALSE, na.rm = FALSE, rounding = 2, grouped = TR
           aux1 <- 0
         }
         else {
-          aux1 <- x$tabela$Fi[i - 1]
+          aux1 <- x$table$Fi[i - 1]
         }
-        if (i == x$estat$Numero_de_classes) {
+        if (i == x$statistics$nclasses) {
           aux2 <- 0
         }
         else {
-          aux2 <- x$tabela$Fi[i + 1]
+          aux2 <- x$table$Fi[i + 1]
         }
-        del1 <- x$tabela$Fi[i] - aux1
-        del2 <- x$tabela$Fi[i] - aux2
-        mo[j] <- x$estat$LI_classes[i] + (del1/(del1 + del2)) *
-          x$estat$Ampl_clas
+        del1 <- x$table$Fi[i] - aux1
+        del2 <- x$table$Fi[i] - aux2
+        mo[j] <- x$statistics$lower_lim[i] + (del1/(del1 + del2)) *
+          x$statistics$len_class_interval
         j <- j + 1
 
       }
       mo <- round(mo, rounding)
-      resume <- list(mode = mo, table = x$tabela, rawdata = x$estat$raw_data)
+      resume <- list(mode = mo, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
       }
@@ -199,17 +199,17 @@ mfreq <- function (x, details = FALSE, na.rm = FALSE, rounding = 2, grouped = TR
         return(mo)
       }
     } else {
-      x <- x$estat$raw_data
+      x <- x$statistics$raw_data
       x <- new_leem(x, 1)
       x <- tabfreq(x)
-      if (all(x$tabela$Fi == x$tabela$Fi[1])) {
+      if (all(x$table$Fi == x$table$Fi[1])) {
         mo <- "The data set has no mode!"
       }
       else {
-        pos <- which(x$tabela$Fi == max(x$tabela$Fi))
-        mo <- round(x$tabela$Groups[pos], rounding)
+        pos <- which(x$table$Fi == max(x$table$Fi))
+        mo <- round(x$table$Groups[pos], rounding)
       }
-      resume <- list(mode = mo, table = x$tabela, rawdata = x$estat$raw_data)
+      resume <- list(mode = mo, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
       }
