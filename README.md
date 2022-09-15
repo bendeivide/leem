@@ -26,6 +26,9 @@ install.packages("leem")
 E a versão em desenvolvimento no [GitHub](https://github.com/) com:
 
 ``` r
+# Instalar os pacotes dependentes
+pkgs <- c("manipulate", "tkRplotR")
+install.packages(pkgs)
 # install.packages("devtools")
 devtools::install_github("bendeivide/leem")
 ```
