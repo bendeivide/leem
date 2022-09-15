@@ -23,7 +23,7 @@ th(
 
 \item{y}{an optional (non-empty) numeric vector of data values.}
 
-\item{test}{character value. The options are: \code{"ttest"}, \code{"ztest"}, \code{"ptest"}, \code{"chitest"}, \code{"ftest"}, \code{"anova"}, \code{"friedman"}, \code{"kruskal"}, \code{"mann–whitney"}.}
+\item{test}{character value. The options are: \code{"ttest"}, \code{"ztest"}, \code{"ptest"}, \code{"chitest"}, \code{"ftest"}, \code{"anova"}, \code{"friedman"}, \code{"kruskal"}, \code{"mann whitney"}.}
 
 \item{h0}{numeric value. The hypothesized parameter.}
 

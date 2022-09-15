@@ -4,7 +4,7 @@
 #'
 #' @param x R object. See in details.
 #' @param y an optional (non-empty) numeric vector of data values.
-#' @param test character value. The options are: \code{"ttest"}, \code{"ztest"}, \code{"ptest"}, \code{"chitest"}, \code{"ftest"}, \code{"anova"}, \code{"friedman"}, \code{"kruskal"}, \code{"mann–whitney"}.
+#' @param test character value. The options are: \code{"ttest"}, \code{"ztest"}, \code{"ptest"}, \code{"chitest"}, \code{"ftest"}, \code{"anova"}, \code{"friedman"}, \code{"kruskal"}, \code{"mann whitney"}.
 #' @param h0 numeric value. The hypothesized parameter.
 #' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.
 #' @param alpha significance level of the test

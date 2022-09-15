@@ -19,6 +19,7 @@ Description: An educational package for the teaching of statistics
     package is 'leem' function.
 Imports:
         tcltk,
+        tkrplot,
         tkRplotR,
         manipulate,
         crayon,
