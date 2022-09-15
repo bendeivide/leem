@@ -1,3 +1,12 @@
+
+newleem <- function(x = vector(), variable = "discrete") {
+  # stopifnot("The x argument should be vector!" = is.vector(x))
+  # if (variable == 1) variable <- "discrete"
+  # if (variable == 2) variable <- "continuous"
+  # if(!any(variable == c("discrete", "continuous"))) stop("The variable argument must be 'discrete' or 'continuous'.")
+  # structure(x, class = "leem", variable = variable)
+}
+
 # Constructor of object of leem class
 #
 # @param x R object (vector as data structure).
@@ -12,11 +21,3 @@
 # # Example 2 (Pipe operator)
 # rnorm(36, 100, 4) |> new_leem(variable = 2)
 #
-#' @export
-new_leem <- function(x = vector(), variable = "discrete") {
-  stopifnot("The x argument should be vector!" = is.vector(x))
-  if (variable == 1) variable <- "discrete"
-  if (variable == 2) variable <- "continuous"
-  if(!any(variable == c("discrete", "continuous"))) stop("The variable argument must be 'discrete' or 'continuous'.")
-  structure(x, class = "leem", variable = variable)
-}
