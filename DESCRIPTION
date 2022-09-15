@@ -20,6 +20,8 @@ Description: An educational package for the teaching of statistics
 Imports:
         tcltk,
         tkRplotR,
+        manipulate,
+        crayon,
         grDevices,
         graphics,
         utils
