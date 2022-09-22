@@ -5,6 +5,7 @@
 #' @param data R object (data structure vector) of class leem. Use \code{new_leem()} function.
 #' @param k Number of classes. Default is \code{NULL}.
 #' @param ordered Ordered vector of the same length and elements of data object. Default is \code{NULL}.
+#' @param namereduction Logical argument. If \code{TRUE} (default), the group names are reduzed the 10 characters. If \code{FALSE}, otherwise.
 #' @return The result of \code{tabfreq()} is a list. This list has two elements: \code{table} and \code{statistics}. The first is the data frequency table, and the second represents some useful statistics for methods of leem class.
 #' @examples
 #' # Example 1
@@ -24,6 +25,10 @@
 #' # Details
 #' tab$table
 #' tab$statistics
+#'
+#' # Example 3 - ordered categories ("d","a", "b", "c")
+#' w <- rep(letters[1:4], 1:4)
+#' w |> new_leem(variable = "discrete") |> tabfreq(ordered = c("d","a", "b", "c"))
 #' @usage
 #' tabfreq(dados, ...)
 #'
@@ -39,7 +44,7 @@ tabfreq <- function(dados, ...) {
 
 
 #' @export
-tabfreq.leem <- function(data, k = NULL, ordered = NULL){
+tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE){
   if (class(data) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE,
                                    domain = "R-leem")
 
@@ -55,10 +60,12 @@ tabfreq.leem <- function(data, k = NULL, ordered = NULL){
     } else{
       if (is.null(ordered)) {
         groups <- as.character(names(aux))
+        if (namereduction) groups <- subtnames(groups)
       } else {
         pos <- match(as.character(names(aux)), ordered)
         aux <- aux[pos]
         groups <- as.character(names(aux))
+        if (namereduction) groups <- subtnames(groups)
       }
 
     }

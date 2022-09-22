@@ -17,15 +17,15 @@ ogive(x, decreasing = FALSE, both = FALSE, bars = FALSE,
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
 
-\item{decreasing}{Logic argument. Default is \code{FALSE}. If \code{decreasing = FALSE}, it represents the "ogive larger than", if \code{decreasing = TRUE}, it represents the "ogive less than".}
+\item{decreasing}{Logical argument. Default is \code{FALSE}. If \code{decreasing = FALSE}, it represents the "ogive larger than", if \code{decreasing = TRUE}, it represents the "ogive less than".}
 
-\item{both}{Logic argument. Default is \code{FALSE}. If \code{both = TRUE}, both o will be plotted. If \code{both = FALSE} otherside.}
+\item{both}{Logical argument. Default is \code{FALSE}. If \code{both = TRUE}, both o will be plotted. If \code{both = FALSE} otherside.}
 
-\item{bars}{Logic argument. Default is \code{FALSE}. If \code{bars = TRUE}, the bars of the accumulated frequency will be inserted to plot, according to the \code{decreasing} argument. If \code{bars = FALSE} otherside.}
+\item{bars}{Logical argument. Default is \code{FALSE}. If \code{bars = TRUE}, the bars of the accumulated frequency will be inserted to plot, according to the \code{decreasing} argument. If \code{bars = FALSE} otherside.}
 
-\item{histogram}{Logic argument. Default is \code{FALSE}. If \code{histogram = TRUE}, the histogram will be inserted to plot.}
+\item{histogram}{Logical argument. Default is \code{FALSE}. If \code{histogram = TRUE}, the histogram will be inserted to plot.}
 
-\item{bg}{Logic argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.}
+\item{bg}{Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.}
 
 \item{main}{Insert the plot title. The default is \code{NULL}.}
 

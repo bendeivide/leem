@@ -4,7 +4,7 @@
 
 # leem 0.2.0
 
-- **Functions for Basics Statistics**
+- **Functions for Basic Statistics**
   - [ ] *Tables grouped and raw datas*: `tabfreq()`
     - [X] continuous
     - [X] discrete
@@ -12,7 +12,8 @@
       - categorical 
         - ordered
         - no ordered
-    - Pendency: change variable names
+    - [X] Pendency: change variable names
+    - [X] Help document
   - [ ] *Plots*
     - [X] Translated labels, title, ...
     - [ ] Histogram:

@@ -44,9 +44,12 @@ leem()
 
 Temos dentro desse projetos, diversos projetos integrados, sendo:
 
--   Projeto de dissertação PROFMAT/CAP/UFSJ, da orientanda [Juliane
-    Nassaralla Almeida](http://lattes.cnpq.br/5176118169651142);
+-   Projeto de dissertação PROFMAT/CAP/UFSJ (Concluído), da orientanda
+    [Juliane Nassaralla
+    Almeida](http://lattes.cnpq.br/5176118169651142);
+
 -   Grupo de Iniciação Científica em Estatística/R:
+
     -   [Amanda Kelly
         Costa](https://www.linkedin.com/in/amandakellycosta/)
     -   [Lívia Dias de Sá
@@ -57,6 +60,28 @@ Temos dentro desse projetos, diversos projetos integrados, sendo:
         Fátima](linkedin.com/in/dailon-vinicius-6502a9207)
     -   [André Felipe Duarte
         Gonçalves](https://www.linkedin.com/in/andrefdg/)
+
+-   Disciplina de Estatística Computacional (2022.1)
+
+    -   [Gustavo Duque T. M. Elias \| Eng.
+        Civil](https://gustavodtme.github.io/)
+    -   [Ana Bárbara A. Mól \| Eng
+        Civil](https://anabmol.github.io/discestcomp)
+    -   [Ana Flávia M. M.
+        Andrade](https://anaf08.github.io/discestcomp/)
+    -   [Marco Antônio C. da Silva \| Eng
+        Civil](https://mac8320.github.io/)
+
+-   Disciplina de Estatística e Probabilidade (Eng. Mecatrônica/2022.2)
+
+    -   [André Barboza \| Eng. Mecatrônica]()
+    -   [Nicholas de Carvalho \| Eng Mecatrônica]()
+    -   [Maria Fernanda de Oliveira \| Eng. Mecatrônica]()
+    -   [yuri Fonseca \| Eng. Mecatrônica]()
+
+-   Iniciação Científica (2022.2)
+
+    -   [Rodrigo Ronchi \| Eng. Química]()
 
 ## Propostas da GUI
 

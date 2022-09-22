@@ -6,6 +6,18 @@
 # y |> new_leem(variable = "discrete") |> tabfreq() |> mean()
 #x |> new_leem(variable = "continuous") |> tabfreq() |> mean()
 
+
+# set.seed(10)
+# x <- rnorm(36, 100, 50)
+# set.seed(10)
+# y <- rbinom(36, 10, 0.8)
+# w <- rep(letters[1:4], 1:4)
+# (tab1 <- y |> new_leem(variable = "discrete") |> tabfreq())
+# (tab2 <- x |> new_leem(variable = "continuous") |> tabfreq())
+# y |> new_leem(variable = "discrete") |> tabfreq() |> mfreq()
+# x |> new_leem(variable = "continuous") |> tabfreq() |> mfreq()
+# w |> new_leem(variable = "discrete") |> tabfreq() |> mfreq()
+
 # Mean
 
 #' @export

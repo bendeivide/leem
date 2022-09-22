@@ -3,11 +3,11 @@
 #' Generic function that plots the culmulative frequency curve.
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
-#' @param decreasing Logic argument. Default is \code{FALSE}. If \code{decreasing = FALSE}, it represents the "ogive larger than", if \code{decreasing = TRUE}, it represents the "ogive less than".
-#' @param both Logic argument. Default is \code{FALSE}. If \code{both = TRUE}, both o will be plotted. If \code{both = FALSE} otherside.
-#' @param bars Logic argument. Default is \code{FALSE}. If \code{bars = TRUE}, the bars of the accumulated frequency will be inserted to plot, according to the \code{decreasing} argument. If \code{bars = FALSE} otherside.
-#' @param histogram Logic argument. Default is \code{FALSE}. If \code{histogram = TRUE}, the histogram will be inserted to plot.
-#' @param bg Logic argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.
+#' @param decreasing Logical argument. Default is \code{FALSE}. If \code{decreasing = FALSE}, it represents the "ogive larger than", if \code{decreasing = TRUE}, it represents the "ogive less than".
+#' @param both Logical argument. Default is \code{FALSE}. If \code{both = TRUE}, both o will be plotted. If \code{both = FALSE} otherside.
+#' @param bars Logical argument. Default is \code{FALSE}. If \code{bars = TRUE}, the bars of the accumulated frequency will be inserted to plot, according to the \code{decreasing} argument. If \code{bars = FALSE} otherside.
+#' @param histogram Logical argument. Default is \code{FALSE}. If \code{histogram = TRUE}, the histogram will be inserted to plot.
+#' @param bg Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.
 #' @param main Insert the plot title. The default is \code{NULL}.
 #' @param xlab Insert the title of the x-axis graphic label. The default is \code{NULL}.
 #' @param ylab Insert the title of the y-axis graphic label. The default is \code{NULL}.
@@ -288,9 +288,10 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
         axis(1, at = xvaraux)
         axis(2)
       }
-
+      # Alert
+      cat(note(gettext("\n Note: The ogive graph has interpretation problems for the discrete quantitative variable", domain = "R-leem")))
     } else {
-      stop("Em desencolvimento!")
+      cat(warn(gettext("\n Warning: The ogive graph is not used for this data type!", domain = "R-leem")), "\n")
     }
 
   }
@@ -493,8 +494,8 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
 #' @param type Type of plot. The default is \code{type = "b"}, i.e., line and points. See \code{\link{graphical parameter}} for details.
-#' @param bars Logic argument. Default is \code{FALSE}. If \code{bars = TRUE}, the histogram will be inserted to plot.
-#' @param bg Logic argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.
+#' @param bars Logical argument. Default is \code{FALSE}. If \code{bars = TRUE}, the histogram will be inserted to plot.
+#' @param bg Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.
 #' @param main Insert the plot title.  The default is \code{NULL}.
 #' @param xlab Insert the title of the x-axis graphic label. The default is \code{NULL}.
 #' @param ylab Insert the title of the y-axis graphic label. The default is \code{NULL}.
@@ -513,6 +514,7 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 #' @examples
 #' # Example 1
 #' library(leem)
+#' rnorm(36, 100, 50) |> new_leem(variable = "continuous") |> tabfreq() |> polyfreq()
 #'
 #' @usage
 #' polyfreq(x, ...)
@@ -550,14 +552,14 @@ polyfreq.leem <- function(x,
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
   if (attr(x, "variable") == "continuous") {
-    xvar1 <- c(min(x$estat$LI_classes) - x$estat$Ampl_clas, x$estat$LI_classes,
-               max(x$estat$LI_classes) + x$estat$Ampl_clas)
-    xvar2 <- c(min(x$estat$LS_classes) - x$estat$Ampl_clas, x$estat$LS_classes,
-               max(x$estat$LS_classes) + x$estat$Ampl_clas)
-    yvar <- c(0, x$tabela$Fi, 0)
-    pm <- c(min(x$estat$LI_classes) - x$estat$Ampl_clas / 2,
-            x$tabela$PM,
-            max(x$estat$LS_classes) + x$estat$Ampl_clas / 2)
+    xvar1 <- c(min(x$statistics$lower_lim) - x$statistics$len_class_interval, x$statistics$lower_lim,
+               max(x$statistics$lower_lim) + x$statistics$len_class_interval)
+    xvar2 <- c(min(x$statistics$upper_lim) - x$statistics$len_class_interval, x$statistics$upper_lim,
+               max(x$statistics$upper_lim) + x$statistics$len_class_interval)
+    yvar <- c(0, x$table$Fi, 0)
+    pm <- c(min(x$statistics$lower_lim) - x$statistics$len_class_interval / 2,
+            x$table$PM,
+            max(x$statistics$upper_lim) + x$statistics$len_class_interval / 2)
     # Limiares
     xlim <- c(min(xvar1), max(xvar2))
     ylim <- c(0, 1.2 * max(yvar))
@@ -603,17 +605,17 @@ polyfreq.leem <- function(x,
     points(pm, yvar, col = lpcol, type = type,  lwd = lwd, pch = pch, lty = lty)
   }
   if (attr(x, "variable") == "discrete") {
-    numchar <- is.numeric(x$tabela$Groups)
+    numchar <- is.numeric(x$table$Groups)
     if (numchar) {
-      xmin <- x$tabela$Groups[1]
-      xmax <- max(x$tabela$Groups)
-      xvar <- x$tabela$Groups
-      xvaraux <-  c(xmin - 1, x$tabela$Groups, xmax + 1)
+      xmin <- x$table$Groups[1]
+      xmax <- max(x$table$Groups)
+      xvar <- x$table$Groups
+      xvaraux <-  c(xmin - 1, x$table$Groups, xmax + 1)
       xvar1 <- xvaraux - 0.5
       xvar2 <- xvaraux + 0.5
-      yvar <- x$tabela$Fi
-      yvar1 <- x$tabela$Fac1
-      yvar2 <- x$tabela$Fac2
+      yvar <- x$table$Fi
+      yvar1 <- x$table$Fac1
+      yvar2 <- x$table$Fac2
 
 
       # Limiares
@@ -658,8 +660,10 @@ polyfreq.leem <- function(x,
       }
       # Pontos
       points(xvaraux, c(0, yvar, 0), col = lpcol, type = type,  lwd = lwd, pch = pch, lty = lty)
+      # Alert
+      cat(note(gettext("\n Note: The polygon graph has interpretation problems for the discrete quantitative variable", domain = "R-leem")))
     } else {
-      stop("Em desenvolvimento!")
+      cat(warn(gettext("\n Warning: The polygon graph is not used for this data type!", domain = "R-leem")), "\n")
     }
   }
   invisible(x)

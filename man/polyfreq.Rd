@@ -18,9 +18,9 @@ polyfreq.leem <- function(x, type = "b", bars = TRUE, bg = TRUE, main = NULL,
 
 \item{type}{Type of plot. The default is \code{type = "b"}, i.e., line and points. See \code{\link{graphical parameter}} for details.}
 
-\item{bars}{Logic argument. Default is \code{FALSE}. If \code{bars = TRUE}, the histogram will be inserted to plot.}
+\item{bars}{Logical argument. Default is \code{FALSE}. If \code{bars = TRUE}, the histogram will be inserted to plot.}
 
-\item{bg}{Logic argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.}
+\item{bg}{Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.}
 
 \item{main}{Insert the plot title.  The default is \code{NULL}.}
 
@@ -56,5 +56,6 @@ Generic function that plots the frequency polygon curve.
 \examples{
 # Example 1
 library(leem)
+rnorm(36, 100, 50) |> new_leem(variable = "continuous") |> tabfreq() |> polyfreq()
 
 }
