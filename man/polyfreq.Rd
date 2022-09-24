@@ -7,11 +7,11 @@
 polyfreq(x, ...)
 
 ## Leem S3 method:
-polyfreq.leem <- function(x, type = "b", bars = TRUE, bg = TRUE, main = NULL,
+polyfreq.leem(x, type = "b", bars = TRUE, bg = TRUE, main = NULL,
                     xlab = NULL, ylab = NULL, grids = grid(col = "white"),
-                    gridcol = "lightgray", bgcol = "gray", bgborder = NA,
-                    barcol = "yellow", barborder = "gray", lpcol = "black",
-                    lwd = 2, pch = 19, lty = 2)
+                    bgcol = "gray", bgborder = NA, barcol = "yellow",
+                    barborder = "gray", lpcol = "black", lwd = 2, pch = 19,
+                    lty = 2)
 }
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}

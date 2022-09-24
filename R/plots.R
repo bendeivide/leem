@@ -520,11 +520,11 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 #' polyfreq(x, ...)
 #'
 #' ## Leem S3 method:
-#' polyfreq.leem <- function(x, type = "b", bars = TRUE, bg = TRUE, main = NULL,
+#' polyfreq.leem(x, type = "b", bars = TRUE, bg = TRUE, main = NULL,
 #'                     xlab = NULL, ylab = NULL, grids = grid(col = "white"),
-#'                     gridcol = "lightgray", bgcol = "gray", bgborder = NA,
-#'                     barcol = "yellow", barborder = "gray", lpcol = "black",
-#'                     lwd = 2, pch = 19, lty = 2)
+#'                     bgcol = "gray", bgborder = NA, barcol = "yellow",
+#'                     barborder = "gray", lpcol = "black", lwd = 2, pch = 19,
+#'                     lty = 2)
 #'
 #' @export
 polyfreq <- function(x, ...) {
@@ -539,7 +539,6 @@ polyfreq.leem <- function(x,
                           xlab = NULL,
                           ylab = NULL,
                           grids = grid(col = "white"),
-                          gridcol = "lightgray",
                           bgcol = "gray",
                           bgborder = NA,
                           barcol = "yellow",
@@ -665,6 +664,152 @@ polyfreq.leem <- function(x,
     } else {
       cat(warn(gettext("\n Warning: The polygon graph is not used for this data type!", domain = "R-leem")), "\n")
     }
+  }
+  invisible(x)
+}
+
+
+#' Histogram graph
+#'
+#' Graph method for leem class
+#'
+#' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param bg Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.
+#' @param main Insert the plot title.  The default is \code{NULL}.
+#' @param xlab Insert the title of the x-axis graphic label. The default is \code{NULL}.
+#' @param ylab Insert the title of the y-axis graphic label. The default is \code{NULL}.
+#' @param grids Insert grids to plot. The default is \code{grid(col = "white")}.
+#' @param bgcol Insert the background color. This argument is only valid when \code{bg = TRUE}. The default is \code{bgcol="gray"}.
+#' @param bgborder Insert the background border color. This argument is only valid when \code{bg = TRUE}. The default is bgborder = NA.
+#' @param barcol Insert the barplot color. The default is \code{barcol = "yellow"}. This argument is only valid when \code{bars = TRUE}.
+#'
+#' @examples
+#' # Example 1
+#' library(leem)
+#' rnorm(36, 100, 50) |> new_leem(variable = "continuous") |> tabfreq() |> hist()
+#'
+#' @usage
+#' hist(x, ...)
+#'
+#' ## Leem S3 method:
+#' hist.leem(x, bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
+#'           grids = grid(col = "white"), bgcol = "gray", bgborder = NA,
+#'           barcol = "yellow", barborder = "gray")
+#'
+#' @export
+hist.leem <- function(x,
+                      bg = TRUE,
+                      main = NULL,
+                      xlab = NULL,
+                      ylab = NULL,
+                      grids = grid(col = "white"),
+                      bgcol = "gray",
+                      bgborder = NA,
+                      barcol = "yellow",
+                      barborder = "gray",
+                      ...) {
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
+  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (attr(x, "variable") == "discrete") {
+    warning("Coerced to Histogram!", call. = FALSE, domain = "R-leem")
+    numchar <- is.numeric(x$table$Groups)
+    if (numchar) {
+      xmin <- x$table$Groups[1]
+      xmax <- max(x$table$Groups)
+      xvar <- x$table$Groups
+      xvaraux <-  c(xmin - 1, x$table$Groups, xmax + 1)
+      xvar1 <- xvaraux - 0.5
+      xvar2 <- xvaraux + 0.5
+      yvar <- x$table$Fi
+      yvar1 <- x$table$Fac1
+      yvar2 <- x$table$Fac2
+
+
+      # Limiares
+      xlim <- c(min(xvaraux), max(xvaraux))
+      ylim <- c(0, 1.2 * max(yvar))
+
+      # Area de plotagem
+      plot.new()
+      plot.window(xlim, ylim)
+
+      # Labels
+      if (is.null(main)) {
+        main <- gettext("Bar plot", domain = "R-leem")
+      }
+      if (is.null(xlab)) {
+        xlab <- gettext("Groups", domain = "R-leem")
+      }
+      if (is.null(ylab)) {
+        ylab <- gettext("Frequency", domain = "R-leem")
+      }
+
+      title(main = main, xlab = xlab, ylab = ylab)
+
+      if(bg) {
+        rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col =
+               bgcol, border = bgborder)
+      }
+
+      # Eixos
+      axis(1, at = xvaraux)
+      axis(2)
+
+      # Grid
+      grids
+
+      # Inserindo barras
+      rect(xvar - 0.5,
+           0,
+           xvar + 0.5,
+           yvar, col = barcol, border = barborder)
+    } else {
+      stop("Em desenvolvimento!")
+    }
+  }
+  if (attr(x, "variable") == "continuous") {
+    xvar1 <- x$statistics$lower_lim
+    xvar2 <- x$statistics$upper_lim
+    yvar <- x$table$Fi
+    # Limiares
+    xlim <- c(min(xvar1), max(xvar2))
+    ylim <- c(0, 1.2 * max(yvar))
+
+    # Area de plotagem
+    plot.new()
+    plot.window(xlim, ylim)
+
+    # Labels
+    if (is.null(main)) {
+      main <- gettext("Histogram", domain = "R-leem")
+    }
+    if (is.null(xlab)) {
+      xlab <- gettext("Classes", domain = "R-leem")
+    }
+    if (is.null(ylab)) {
+      ylab <- gettext("Frequency", domain = "R-leem")
+    }
+
+    title(main = main, xlab = xlab, ylab = ylab)
+
+    if(bg) {
+      rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col =
+             bgcol, border = bgborder)
+    }
+
+    # Grid
+    grids
+
+    # Inserindo barras
+    rect(xvar1,
+         0,
+         xvar2,
+         yvar, col = barcol, border = barborder)
+
+    # Eixos
+    xvar <- c(xvar1, max(xvar2))
+    axis(1, at = xvar)
+    axis(2)
   }
   invisible(x)
 }
