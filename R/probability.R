@@ -379,6 +379,111 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
                                  nuaux = manipulate::slider(1, 200, nu))
           prob <- pt(q = q, df = nu)
         }
+        if (gui == "tcltk") {
+          # Environment of package
+          envleem <- new.env(parent = base::emptyenv())
+          leemget <- function(x) {
+            get(x, envir= envleem, inherits=FALSE )
+          }
+          leemset <- function(x, value) {
+            assign(x, value, envir= envleem)
+          }
+          globalvariables <- function(x, value) {
+            assign(x, value, envir= .GlobalEnv)
+          }
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          # war <- options(warn = - 1)
+          # on.exit(options(war))
+
+          nu <- argaddit$df
+          # plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
+          #   q[1] <- q1
+          #   q[2] <- q2
+          #   plotcurve(q, nu)
+          # }
+          tk_q1 <- leemset("tk_q1", tclVar(q[1]))
+          tk_df <- leemset("tk_df", tclVar(nu))
+          sapply(c("tk_q1", "tk_df"),
+                 function(x) globalvariables(x, leemget(x)))
+
+          # q1 <- NULL
+          # q2 <- NULL
+          # nu <- NULL
+          ##
+          # Disabled GUI (Type I)
+          oldmode <- tclServiceMode(FALSE)
+          # Logo
+          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+
+          # Plot
+          tkplot <- tktoplevel()
+
+          #Icon main toplevel window
+          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+
+          # Title
+          tkwm.title(tkplot,
+                     gettext("leem package: t Distribution", domain = "R-leem"))
+
+          tkpack(tklabel(tkplot, text = "Parameters"))
+
+          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+                                      height = 500, fun = function(...) {
+                                        q <- as.numeric(tclvalue(tk_q1))
+                                        nu <- as.numeric(tclvalue(tk_df))
+                                        plotcurve(q = q, nu = nu)
+                                      })
+          s01 <- tcltk::tkscale(
+            tkplot,
+            from = -6,
+            to = q,
+            label = 'q',
+            variable = tk_q1,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          s03 <- tkscale(
+            tkplot,
+            from = 1,
+            to = 200,
+            label = 'df',
+            variable = tk_df,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          tkpack(s01, s03,
+                 side = "top",
+                 expand = TRUE,
+                 before = tkplot$env$canvas,
+                 fill = "both")
+          # Activate GUI
+          finish <- tclServiceMode(oldmode)
+          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+            response <- tk_messageBox(
+              title = gettext("Tell me something:", domain = "R-leem"),
+              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+              icon = "question",
+              type = "yesno"
+            )
+            if (response == "yes") {
+              if (exists("tk_q1", envir = .GlobalEnv)) {
+                rm("tk_q1", "tk_df", envir = .GlobalEnv)
+              }
+              tkdestroy(tkplot)
+            }
+          })
+
+
+          prob <- pt(q = q, df = nu)
+
+        }
       } else {
         plotcurve <- function(q, nu) {
           x <- seq(q, 6, by=0.01)
@@ -421,6 +526,111 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           manipulate::manipulate(plotcurve(qaux, nuaux),
                                  qaux = manipulate::slider(-6, 6, q),
                                  nuaux = manipulate::slider(1, 200, nu))
+        }
+        if (gui == "tcltk") {
+          # Environment of package
+          envleem <- new.env(parent = base::emptyenv())
+          leemget <- function(x) {
+            get(x, envir= envleem, inherits=FALSE )
+          }
+          leemset <- function(x, value) {
+            assign(x, value, envir= envleem)
+          }
+          globalvariables <- function(x, value) {
+            assign(x, value, envir= .GlobalEnv)
+          }
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          # war <- options(warn = - 1)
+          # on.exit(options(war))
+
+          nu <- argaddit$df
+          # plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
+          #   q[1] <- q1
+          #   q[2] <- q2
+          #   plotcurve(q, nu)
+          # }
+          tk_q1 <- leemset("tk_q1", tclVar(q[1]))
+          tk_df <- leemset("tk_df", tclVar(nu))
+          sapply(c("tk_q1", "tk_df"),
+                 function(x) globalvariables(x, leemget(x)))
+
+          # q1 <- NULL
+          # q2 <- NULL
+          # nu <- NULL
+          ##
+          # Disabled GUI (Type I)
+          oldmode <- tclServiceMode(FALSE)
+          # Logo
+          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+
+          # Plot
+          tkplot <- tktoplevel()
+
+          #Icon main toplevel window
+          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+
+          # Title
+          tkwm.title(tkplot,
+                     gettext("leem package: t Distribution", domain = "R-leem"))
+
+          tkpack(tklabel(tkplot, text = "Parameters"))
+
+          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+                                      height = 500, fun = function(...) {
+                                        q <- as.numeric(tclvalue(tk_q1))
+                                        nu <- as.numeric(tclvalue(tk_df))
+                                        plotcurve(q = q, nu = nu)
+                                      })
+          s01 <- tcltk::tkscale(
+            tkplot,
+            from = -6,
+            to = q,
+            label = 'q',
+            variable = tk_q1,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          s03 <- tkscale(
+            tkplot,
+            from = 1,
+            to = 200,
+            label = 'df',
+            variable = tk_df,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          tkpack(s01, s03,
+                 side = "top",
+                 expand = TRUE,
+                 before = tkplot$env$canvas,
+                 fill = "both")
+          # Activate GUI
+          finish <- tclServiceMode(oldmode)
+          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+            response <- tk_messageBox(
+              title = gettext("Tell me something:", domain = "R-leem"),
+              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+              icon = "question",
+              type = "yesno"
+            )
+            if (response == "yes") {
+              if (exists("tk_q1", envir = .GlobalEnv)) {
+                rm("tk_q1", "tk_df", envir = .GlobalEnv)
+              }
+              tkdestroy(tkplot)
+            }
+          })
+
+
+          prob <- pt(q = q, df = nu, lower.tail = FALSE)
+
         }
 
       }
@@ -479,7 +689,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           fx <- dgumbel(aux, location, scale)
           fy <- dgumbel(y, location, scale)
           polygon(c(aux, rev(aux)),
-                  c(fx, rep(0, length(fx))),
+                  c(fx, repBEN(0, length(fx))),
                   col="red")
           polygon(c(y, rev(y)),
                   c(fy, rep(0, length(fy))),
