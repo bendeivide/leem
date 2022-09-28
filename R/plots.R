@@ -447,9 +447,10 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 
       title(main = main, xlab = xlab, ylab = ylab)
 
-      # Retangulo do grafico (lembrar de corrigir com on.exit())
-      rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col =
-             bgcol, border = bgborder)
+      if(bg) {
+        rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col =
+               bgcol, border = bgborder)
+      }
 
       # Grid
       grids
