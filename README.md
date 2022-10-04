@@ -65,23 +65,24 @@ Temos dentro desse projetos, diversos projetos integrados, sendo:
 
     -   [Gustavo Duque T. M. Elias \| Eng.
         Civil](https://gustavodtme.github.io/)
-    -   [Ana Bárbara A. Mól \| Eng
+    -   [Ana Bárbara A. Mól \| Eng.
         Civil](https://anabmol.github.io/discestcomp)
     -   [Ana Flávia M. M.
-        Andrade](https://anaf08.github.io/discestcomp/)
-    -   [Marco Antônio C. da Silva \| Eng
+        Andrade \| Eng. Civil](https://anaf08.github.io/discestcomp/)
+    -   [Marco Antônio C. da Silva \| Eng.
         Civil](https://mac8320.github.io/)
 
 -   Disciplina de Estatística e Probabilidade (Eng. Mecatrônica/2022.2)
 
-    -   [André Barboza \| Eng. Mecatrônica]()
-    -   [Nicholas de Carvalho \| Eng Mecatrônica]()
-    -   [Maria Fernanda de Oliveira \| Eng. Mecatrônica]()
-    -   [yuri Fonseca \| Eng. Mecatrônica]()
+    -   [Almir Novais \| Eng. Mecatrônica](https://almirns.github.io/)
+    -   [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
+    -   [Nicholas de Carvalho \| Eng Mecatrônica](https://github.com/Nicholascmf)
+    -   [Maria Fernanda de Oliveira \| Eng. Mecatrônica](https://mariafernandadeoliveira.github.io/)
+    -   [Yuri Fonseca \| Eng. Mecatrônica](https://yurovskyy.github.io/)
 
 -   Iniciação Científica (2022.2)
 
-    -   [Rodrigo Ronchi \| Eng. Química]()
+    -   [Rodrigo Ronchi \| Eng. Química](https://github.com/RodrigoRonchi)
 
 ## Propostas da GUI
 
