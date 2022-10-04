@@ -234,7 +234,7 @@ tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE){
     # Fac1p => Fac1 percentual  # Fac2p => Fac2 percentual
     listres <- list(table = tabela, statistics = estat)
     attr(listres, "variable") <- attr(data, "variable")
-    attr(listres, "table") <- "tabfreq"
+    attr(listres, "output") <- "table"
     class(listres) <- "leem"
     return(listres)
   }

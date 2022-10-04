@@ -1,25 +1,56 @@
-# Probability
+#' Cumulative distribution function
+#'
+#' \code{p} Cumulative distribution function for multiple distributions
+#'
+#' @details The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
+#'
+#' @param q quantile. The \code{q} argument can have length 1 or 2. See Details.
+#' @param dist distribution to use. The default is 't-student'. Options: \code{'normal'}, \code{'binomial'}, \code{'poisson'}, and ....
+#' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.
+#' @param rounding numerical; it represents the number of decimals for calculating the probability.
+#' @param porcentage logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.
+#' @param gui default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'rstudio'} or \code{'tcltk'}.
+#' @param ... additional arguments according to the chosen distribution.
+#'
+#' @return \code{p} returns the probability and its graphical representation. The result can be given as a percentage or not.
+#'
+#' @examples
+#' # Loading package
+#' library(leem)
+#' \dontrun{
+#' p(q = 2, dist = "t-student", df = 10)
+#' p(q = 2, dist = "t-student", df = 10, gui = 'rstudio')
+#' p(q = 2, dist = "t-student", df = 10, gui = 'tcltk')
+#' p(-1 %<X<% 1, dist = "t-student", df = 10)
+#' }
 #' @import manipulate
 #' @import tkRplotR
 #  @import shiny
 #' @export
 p <- function(q, dist = "t-student", lower.tail = TRUE,
               rounding = 4, porcentage = FALSE, gui = "plot", ...) {
+  # Region of q
+  if(q > 6 | q < -6) stop("Define the 'q' argument between -6 and 6", call. = FALSE, domain = "R-leem")
+  # Arguments in '...'
   argaddit <- list(...)
+  # Formal arguments
   argdef <- formals(p)
   if ( length(q) > 1 & !is.null(attr(q, "class"))) {
     regiona <- c("region1", "region3", "region5", "region6") # %>X>%
     regionb <- c("region2", "region4", "region7", "region8") # %<X<%
     if (any(attr(q, "region") == regionb)) {
       if (dist == "t-student") {
-        if (!any(names(argaddit) == "df")) stop("Insira o argumento 'df'!", call. = FALSE)
+        if (!any(names(argaddit) == "df")) {
+          df <- readline("Insert the value of degree of freedom (df): ")
+          argaddit$df <- as.numeric(df)
+        }
           plotcurve <- function(q, nu, ...) {
             x <- seq(q[1], q[2], by=0.01)
             y <- seq(-6, 6, by=0.01)
             fx <- dt(x, df = nu)
             fy <- dt(y, df = nu)
             curve(dt(x, df = nu), -6, 6, ylab = expression(f[T](t)), xlab="T",
-                  ylim = c(0, 1.2 * max(fy)), panel.first = grid(col = "gray"))
+                  ylim = c(0, 1.2 * max(c(fx, fy))), panel.first = grid(col = "gray"))
             polygon(c(y, rev(y)),
                     c(fy, rep(0, length(fy))),
                     col="gray90")
@@ -37,22 +68,22 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
             abline(v = qqaux, lty=2, col = "red")
             if (attr(q, "region") == "region2") {
               legend("topleft", bty="n", fill="red",
-                     legend=substitute(P(t1~"< T < "~t2)==Pr~"\n\n"~gl==nu,
+                     legend=substitute(P(t1~"< T < "~t2)==Pr~"\n\n"~df==nu,
                                        list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
             }
             if (attr(q, "region") == "region4") {
               legend("topleft", bty="n", fill="red",
-                     legend=substitute(P(t1~"<= T <= "~t2)==Pr~"\n\n"~gl==nu,
+                     legend=substitute(P(t1~"<= T <= "~t2)==Pr~"\n\n"~df==nu,
                                        list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
             }
             if (attr(q, "region") == "region7") {
               legend("topleft", bty="n", fill="red",
-                     legend=substitute(P(t1~"<= T < "~t2)==Pr~"\n\n"~gl==nu,
+                     legend=substitute(P(t1~"<= T < "~t2)==Pr~"\n\n"~df==nu,
                                        list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
             }
             if (attr(q, "region") == "region8") {
               legend("topleft", bty="n", fill="red",
-                     legend=substitute(P(t1~"< T <= "~t2)==Pr~"\n\n"~gl==nu,
+                     legend=substitute(P(t1~"< T <= "~t2)==Pr~"\n\n"~df==nu,
                                        list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
             }
           }
@@ -257,7 +288,10 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
     }
     if (any(attr(q, "region") == regiona)) {
       if (dist == "t-student") {
-        if (!any(names(argaddit) == "df")) stop("Insira o argumento 'df'!", call. = FALSE)
+        if (!any(names(argaddit) == "df")) {
+          df <- readline("Insert the value of degree of freedom (df): ")
+          argaddit$df <- as.numeric(df)
+        }
         plotcurve <- function(q, nu) {
           x <- seq(-6, q[1], by=0.01)
           z <- seq(q[2], 6, by=0.01)
@@ -266,7 +300,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           fz <- dt(z, df = nu)
           fy <- dt(y, df = nu)
           curve(dt(x, df = nu), -6, 6, ylab = expression(f[T](t)), xlab="T",
-                ylim = c(0, 1.2 * max(fy)), panel.first = grid(col = "gray"))
+                ylim = c(0, 1.2 * max(c(fx, fy))), panel.first = grid(col = "gray"))
           polygon(c(y, rev(y)),
                   c(fy, rep(0, length(fy))),
                   col="gray90")
@@ -290,22 +324,22 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           abline(v = qq, lty=2, col = "red")
           if (attr(q, "region") == "region1") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~"> X >"~t2)==Pr~"\n\n"~gl==nu,
+                   legend=substitute(P(t1~"> X >"~t2)==Pr~"\n\n"~df==nu,
                                      list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
           }
           if (attr(q, "region") == "region3") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~">= X >="~t2)==Pr~"\n\n"~gl==nu,
+                   legend=substitute(P(t1~">= X >="~t2)==Pr~"\n\n"~df==nu,
                                      list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
           }
           if (attr(q, "region") == "region5") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~">= X > "~t2)==Pr~"\n\n"~gl==nu,
+                   legend=substitute(P(t1~">= X > "~t2)==Pr~"\n\n"~df==nu,
                                      list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
           }
           if (attr(q, "region") == "region6") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~"> X >= "~t2)==Pr~"\n\n"~gl==nu,
+                   legend=substitute(P(t1~"> X >= "~t2)==Pr~"\n\n"~df==nu,
                                      list(t1=qq[1], t2=qq[2], Pr=Pr, nu = nu)))
           }
         }
@@ -334,7 +368,10 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
 
   } else {
     if (dist == "t-student") {
-      if (!any(names(argaddit) == "df")) stop("Insira o argumento 'df'!", call. = FALSE)
+      if (!any(names(argaddit) == "df")) {
+        df <- readline("Insert the value of degree of freedom (df): ")
+        argaddit$df <- as.numeric(df)
+      }
       if (lower.tail) {
         plotcurve <- function(q, nu) {
           x <- seq(-6, q, by=0.01)
@@ -343,7 +380,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           fy <- dt(y, df = nu)
 
           curve(dt(x, df = nu), -6, 6, ylab = expression(f[T](t)),
-                xlab="T", ylim = c(0, 1.2 * max(fx)), panel.first = grid(col = "gray"))
+                xlab="T", ylim = c(0, 1.2 * max(c(fx, fy))), panel.first = grid(col = "gray"))
 
           polygon(c(x, rev(x)),
                   c(fx, rep(0, length(fx))),
@@ -363,7 +400,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
                col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(T<=q)==Pr~"\n\n"~gl==nu, list(q=qq, Pr=Pr, nu = nu)))
+                 legend=substitute(P(T<=q)==Pr~"\n\n"~df==nu, list(q=qq, Pr=Pr, nu = nu)))
         }
         if (gui == "plot" ) {
           # Probability
@@ -393,8 +430,8 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           }
           # Desabilitar warnings global
           #options(warn = - 1)
-          # war <- options(warn = - 1)
-          # on.exit(options(war))
+          war <- options(warn = - 1)
+          on.exit(options(war))
 
           nu <- argaddit$df
           # plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
@@ -491,7 +528,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           fx <- dt(x, df = nu)
           fy <- dt(y, df = nu)
           curve(dt(x, df = nu), -6, 6, ylab = expression(f[T](t)),
-                xlab="T", ylim = c(0, 1.2 * max(fy)), panel.first = grid(col = "gray"))
+                xlab="T", ylim = c(0, 1.2 * max(c(fx,fy))), panel.first = grid(col = "gray"))
 
           polygon(c(x, rev(x)),
                   c(fx, rep(0, length(fx))),
@@ -511,7 +548,7 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
                col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(T~`>`~q)==Pr~"\n\n"~gl==nu, list(q=qq, Pr=Pr, nu = nu)))
+                 legend=substitute(P(T~`>`~q)==Pr~"\n\n"~df==nu, list(q=qq, Pr=Pr, nu = nu)))
         }
         if (gui == "plot") {
           # Probability
@@ -541,8 +578,8 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           }
           # Desabilitar warnings global
           #options(warn = - 1)
-          # war <- options(warn = - 1)
-          # on.exit(options(war))
+          war <- options(warn = - 1)
+          on.exit(options(war))
 
           nu <- argaddit$df
           # plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
@@ -724,6 +761,9 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           prob <- pgumbel(q = q, location, scale, lower.tail = FALSE)
         }
       }
+    }
+    if (dist == "binomial") {
+
     }
   }
   prob <- round(prob, rounding)

@@ -208,51 +208,7 @@ barplot.leem <- function(x,
   invisible(x)
 }
 
-# Impressao da classe 'leem'
-#' @export
-print.leem <- function(x, ...) {
-  if (!is.null(attr(x, "table"))) {
-    print(x$table)
-  } else {
-    attributes(x) <- NULL
-    print(x)
-  }
-}
-# print.leem <- function(x, ...) {
-#   aux <- attr(x, "output")
-#   # Print
-#   switch(aux,
-#          htest = output_htest(x))
-# }
 
-output_htest <- function(x) {
-  if (x$test == "ztest") {
-    cat("\n\n", crayon::bgGreen$bold(x$title), "\n")
-    # Step 1
-    cat(crayon::blue$underline$bold(gettext("Step 1:", domain = "R-leem")),
-        crayon::blue(gettext("Hypothesis", domain = "R-leem")), "\n")
-    cat(crayon::bold(x$nullhyp), "\n")
-    cat(crayon::bold(x$althyp), "\n\n")
-    # Step 2
-    cat(crayon::blue$underline$bold(gettext("Step 2:", domain = "R-leem")),
-        crayon::blue(gettext("Significance level", domain = "R-leem")), "\n")
-    cat(crayon::bold(x$signlevel), "\n\n")
-    # Step 3
-    cat(crayon::blue$underline$bold(gettext("Step 3:", domain = "R-leem")),
-        crayon::blue(gettext("Rule of decision", domain = "R-leem")), "\n")
-    cat(crayon::green$bold(gettext("   If |ztest| > |ztab| => Reject H0!", domain = "R-leem")), "\n")
-    cat(crayon::green(gettext("   ztest - test statistic; ztab - critical point", domain = "R-leem")), "\n")
-    cat(crayon::green(gettext("So...", domain = "R-leem")), "\n")
-    cat(crayon::bold(x$decision), "\n")
-    cat(crayon::green(gettext("Otherside...", domain = "R-leem")), "\n")
-    cat(crayon::bold(x$decision2), "\n\n")
-
-    # Step 4
-    cat(crayon::blue$underline$bold(gettext("Step 4:", domain = "R-leem")),
-        crayon::blue(gettext("Conclusion", domain = "R-leem")), "\n")
-    cat(crayon::bold(x$conclusion))
-  }
-}
 
 
 
@@ -347,25 +303,4 @@ insert.leem <- function(x, type = "mean",
 }
 
 
-# Constructor of object of leem class
-#
-# @param x R object (vector as data structure).
-# @param variable Type of data. If \code{discrete} (default), the data are categorical (numeric or not). If continuous, the data are numeric.
-# @return The \code{variable} argument also allows using \code{argument = 1} for categorical variable and \code{variable = 2} for continuous variable.
-# @examples
-# # Example 1
-# library(leem)
-# x <- rbinom(36, 10, 0.6)
-# new_leem(x, variable = 1)
-#
-# # Example 2 (Pipe operator)
-# rnorm(36, 100, 4) |> new_leem(variable = 2)
-#
-#' @export
-new_leem <- function(x = vector(), variable = "discrete") {
-  stopifnot("The x argument should be vector!" = is.vector(x))
-  if (variable == 1) variable <- "discrete"
-  if (variable == 2) variable <- "continuous"
-  if(!any(variable == c("discrete", "continuous"))) stop("The variable argument must be 'discrete' or 'continuous'.")
-  structure(x, class = "leem", variable = variable)
-}
+
