@@ -69,7 +69,7 @@ Temos dentro desse projetos, diversos projetos integrados, sendo:
 
   - [Almir Novais \| Eng. Mecatrônica](https://almirns.github.io/)
   - [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
-  - [Nicholas de Carvalho \| Eng. Mecatrônica](https://github.com/Nicholascmf)
+  - [Nicholas de Carvalho \| Eng. Mecatrônica](https://nicholascmf.github.io/)
   - [Maria Fernanda de Oliveira \| Eng. Mecatrônica](https://mariafernandadeoliveira.github.io/)
   - [Yuri Fonseca \| Eng. Mecatrônica](https://yurovskyy.github.io/)
 
