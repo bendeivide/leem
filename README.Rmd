@@ -50,7 +50,8 @@ leem()
 Temos dentro desse projetos, diversos projetos integrados, sendo:
 
 - Projeto de dissertação PROFMAT/CAP/UFSJ (Concluído), da orientanda [Juliane Nassaralla Almeida](http://lattes.cnpq.br/5176118169651142);
-- Grupo de Iniciação Científica em Estatística/R:
+- Grupo de Iniciação Científica em Estatística/R
+
   - [Amanda Kelly Costa](https://www.linkedin.com/in/amandakellycosta/) 
   - [Lívia Dias de Sá Amorim](https://www.linkedin.com/in/líviasdias/)
   - [Gustavo do Remédios da Silva Paula](https://www.linkedin.com/in/gustavo-dos-remédios-da-silva-paula-995a04181)
@@ -59,19 +60,22 @@ Temos dentro desse projetos, diversos projetos integrados, sendo:
   
 - Disciplina de Estatística Computacional (2022.1)
 
-  - [Gustavo Duque T. M. Elias | Eng. Civil](https://gustavodtme.github.io/)
-  - [Ana Bárbara A. Mól | Eng Civil](https://anabmol.github.io/discestcomp)
-  - [Ana Flávia M. M. Andrade](https://anaf08.github.io/discestcomp/)
-  - [Marco Antônio C. da Silva | Eng Civil](https://mac8320.github.io/)
+  - [Gustavo Duque T. M. Elias \| Eng. Civil](https://gustavodtme.github.io/)
+  - [Ana Bárbara A. Mól \| Eng. Civil](https://anabmol.github.io/discestcomp)
+  - [Ana Flávia M. M. Andrade \| Eng. Civil](https://anaf08.github.io/discestcomp/)
+  - [Marco Antônio C. da Silva \| Eng. Civil](https://mac8320.github.io/)
   
 - Disciplina de Estatística e Probabilidade (Eng. Mecatrônica/2022.2)
-  - [André Barboza | Eng. Mecatrônica]()
-  - [Nicholas de Carvalho | Eng Mecatrônica]()
-  - [Maria Fernanda de Oliveira | Eng. Mecatrônica]()
-  - [yuri Fonseca | Eng. Mecatrônica]()
+
+  - [Almir Novais \| Eng. Mecatrônica](https://almirns.github.io/)
+  - [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
+  - [Nicholas de Carvalho \| Eng. Mecatrônica](https://nicholascmf.github.io/)
+  - [Maria Fernanda de Oliveira \| Eng. Mecatrônica](https://mariafernandadeoliveira.github.io/)
+  - [Yuri Fonseca \| Eng. Mecatrônica](https://yurovskyy.github.io/)
 
 - Iniciação Científica (2022.2)
-  - [Rodrigo Ronchi | Eng. Química]()
+
+  - [Rodrigo Ronchi \| Eng. Química](https://github.com/RodrigoRonchi)
 
 ## Propostas da GUI
 
