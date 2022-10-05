@@ -24,7 +24,7 @@
 mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FALSE, ...){
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
     if (numchar) {
@@ -71,7 +71,7 @@ mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, 
 #' @export
 median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FALSE, ...) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
-  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
     if (numchar) {
@@ -91,12 +91,12 @@ median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details 
   if (attr(x, "variable") == "continuous") {
     if (grouped) {
       # Implementar o argumento 'trim' depois!
-      classem <- x$table$Fac1 < x$statistics$Numero_amostra / 2
+      classem <- x$table$Fac1 < x$statistics$nsample / 2
       posm <- which(classem == FALSE)[1]
-      l1m <- x$statistics$LI_da_1_Classe + x$statistics$Ampl_clas * (posm - 1)
+      l1m <- x$statistics$lower_lim_1_class + x$statistics$len_class_interval * (posm - 1)
       fant <- if (posm == 1) 0 else x$table$Fac1[posm - 1]
       fi <- x$table$Fi[posm]
-      mediana <- round(l1m + ((x$statistics$Numero_amostra / 2 -  fant) / fi ) * x$statistics$Ampl_clas, digits = rounding)
+      mediana <- round(l1m + ((x$statistics$nsample / 2 -  fant) / fi ) * x$statistics$len_class_interval, digits = rounding)
       resume <- list(median = mediana, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
@@ -146,7 +146,7 @@ mfreq <- function (x, details = FALSE, na.rm = FALSE, rounding = 2, grouped = TR
          call. = FALSE)
   }
 
-  if (class(x) == "leem" & is.null(attr(x, "table")))
+  if (class(x) == "leem" & is.null(attr(x, "output")))
     x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)

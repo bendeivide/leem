@@ -3,9 +3,12 @@
 #' \code{p} Cumulative distribution function for multiple distributions
 #'
 #' @details The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
+#' The additional arguments represent the parameters of the distributions, that is:
+#'
+#' - \code{dist = "t-student"}: \code{nu}
 #'
 #' @param q quantile. The \code{q} argument can have length 1 or 2. See Details.
-#' @param dist distribution to use. The default is 't-student'. Options: \code{'normal'}, \code{'binomial'}, \code{'poisson'}, and ....
+#' @param dist distribution to use. The default is 't-student'. Options: \code{'normal'}, \code{'t-student'}, \code{'binomial'}, \code{'poisson'}, and ....
 #' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.
 #' @param rounding numerical; it represents the number of decimals for calculating the probability.
 #' @param porcentage logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.
@@ -373,6 +376,11 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
         argaddit$df <- as.numeric(df)
       }
       if (lower.tail) {
+        # Desabilitar warnings global
+        #options(warn = - 1)
+        war <- options(warn = - 1)
+        on.exit(options(war))
+
         plotcurve <- function(q, nu) {
           x <- seq(-6, q, by=0.01)
           y <- seq(q, 6, by=0.01)
@@ -428,10 +436,6 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
           globalvariables <- function(x, value) {
             assign(x, value, envir= .GlobalEnv)
           }
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          war <- options(warn = - 1)
-          on.exit(options(war))
 
           nu <- argaddit$df
           # plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
@@ -522,6 +526,10 @@ p <- function(q, dist = "t-student", lower.tail = TRUE,
 
         }
       } else {
+        #options(warn = - 1)
+        war <- options(warn = - 1)
+        on.exit(options(war))
+
         plotcurve <- function(q, nu) {
           x <- seq(q, 6, by=0.01)
           y <- seq(-6, q, by=0.01)

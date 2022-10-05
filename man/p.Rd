@@ -17,7 +17,7 @@ p(
 \arguments{
 \item{q}{quantile. The \code{q} argument can have length 1 or 2. See Details.}
 
-\item{dist}{distribution to use. The default is 't-student'. Options: \code{'normal'}, \code{'binomial'}, \code{'poisson'}, and ....}
+\item{dist}{distribution to use. The default is 't-student'. Options: \code{'normal'}, \code{'t-student'}, \code{'binomial'}, \code{'poisson'}, and ....}
 
 \item{lower.tail}{logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.}
 
@@ -37,6 +37,9 @@ p(
 }
 \details{
 The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
+The additional arguments represent the parameters of the distributions, that is:
+
+- \code{dist = "t-student"}: \code{nu}
 }
 \examples{
 # Loading package

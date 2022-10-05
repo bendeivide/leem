@@ -72,7 +72,7 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
                        lty = 2
 ) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
-  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (!is.logical(both)) stop("The both argument must be logical!", call. = FALSE,
                               domain = "R-leem")
   if (!is.logical(decreasing)) stop("The decreasing argument must be logical!", call. = FALSE,
@@ -550,7 +550,7 @@ polyfreq.leem <- function(x,
                           lty = 2, # Type of line
                           ...) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
-  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (attr(x, "variable") == "continuous") {
     xvar1 <- c(min(x$statistics$lower_lim) - x$statistics$len_class_interval, x$statistics$lower_lim,
                max(x$statistics$lower_lim) + x$statistics$len_class_interval)
@@ -710,7 +710,7 @@ hist.leem <- function(x,
                       barborder = "gray",
                       ...) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
-  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     warning("Coerced to Histogram!", call. = FALSE, domain = "R-leem")
     numchar <- is.numeric(x$table$Groups)

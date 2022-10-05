@@ -15,7 +15,8 @@ print.leem <- function(x, ...) {
   switch(aux,
          htest = output_htest(x),
          table = output_table(x),
-         newleem = output_newleem(x))
+         newleem = output_newleem(x),
+         rprob = output_rprob(x))
 }
 
 output_htest <- function(x) {
@@ -50,6 +51,10 @@ output_table <- function(x) {
   print(x$table)
 }
 output_newleem <- function(x) {
+  attributes(x) <- NULL
+  print(x)
+}
+output_rprob <- function(x) {
   attributes(x) <- NULL
   print(x)
 }

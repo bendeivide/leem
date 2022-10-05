@@ -17,7 +17,7 @@ stickplot <- function(x,
                       ...) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (attr(x, "variable") == "continuous") stop("The function only applies to discrete variables.", call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$tabela$Groups)
     if (numchar) {
@@ -98,7 +98,7 @@ barplot.leem <- function(x,
                          ...) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (attr(x, "variable") == "continuous") stop("The function only applies to discrete variables.", call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$tabela$Groups)
     if (numchar) {

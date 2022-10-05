@@ -10,7 +10,7 @@ variance <- function (x, rounding = 2, na.rm = FALSE, details = FALSE, grouped =
   if (class(x) != "leem")
     stop("Use the 'new_leem()' function to create an object of class leem!",
          call. = FALSE)
-  if (class(x) == "leem" & is.null(attr(x, "table")))
+  if (class(x) == "leem" & is.null(attr(x, "output")))
     x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$estat$raw_data)
@@ -72,7 +72,7 @@ sdev <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
                                  call. = FALSE, domain = "R-leem")
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & is.null(attr(x, "table"))) x <- tabfreq(x)
+  if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$estat$raw_data)
     if (numchar) {
