@@ -19,7 +19,7 @@ stickplot <- function(x,
   if (attr(x, "variable") == "continuous") stop("The function only applies to discrete variables.", call. = FALSE, domain = "R-leem")
   if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
-    numchar <- is.numeric(x$tabela$Groups)
+    numchar <- is.numeric(x$table$Groups)
     if (numchar) {
       xmin <- x$tabela$Groups[1]
       xmax <- max(x$tabela$Groups)

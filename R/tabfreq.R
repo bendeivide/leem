@@ -126,6 +126,7 @@ tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE){
     attr(listres, "table") <- "tabfreq"
     if (!is.null(ordered)) attr(listres, "levels") <- "ordered"
     class(listres) <- "leem"
+    attr(listres, "output") <- "table"
     return(listres)
   }
   if (attr(data, "variable") == "continuous") {
