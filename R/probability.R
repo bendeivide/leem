@@ -2879,11 +2879,11 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                  legend=substitute(P(X~`<`~q~";"~mu == media~","~sigma == varen)==Pr, list(q = qq, Pr = Pr, media = mu, varen = sigma)))
         }
         if (gui == "plot" ) {
-          # Probability
+
           mu <- argaddit$mean
           sigma <- argaddit$sd
           prob <- pnorm(q = q, mean = mu, sd = sigma)
-          # Plot
+
           plotcurve(q, mu,sigma)
         }
         if (gui == "rstudio") {
@@ -2922,11 +2922,11 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                  legend=substitute(P(X~`>`~q)==Pr~"\n\n"~mu == media~~sigma == varen, list(q=qq, Pr=Pr, media = mu, varen = sigma)))
         }
         if (gui == "plot") {
-          # Probability
+
           mu <- argaddit$mean
           sigma <- argaddit$sd
           prob <- pnorm(q = q, mean = mu, sd=sigma)
-          # Plot
+
           plotcurve(q, mu, sigma)
         }
         if (gui == "rstudio") {
@@ -3079,18 +3079,19 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
       }
     }
     if (dist == "beta") {
-      if (lower.tail) {
-        if (!any(names(argaddit) == "alpha")) {
-          alpha <- readline("Insert the value of 'alpha' argument: ")
-          argaddit$alpha <- as.numeric(alpha)
-        }
-        if (!any(names(argaddit) == "beta")) {
-          beta <- readline("Insert the value of 'beta' argument: ")
-          argaddit$beta <- as.numeric(beta)
-        }
+      if (!any(names(argaddit) == "alpha")) {
+        alpha <- readline("Insert the value of 'alpha' argument: ")
+        argaddit$alpha <- as.numeric(alpha)
+      }
+      if (!any(names(argaddit) == "beta")) {
+        beta <- readline("Insert the value of 'beta' argument: ")
+        argaddit$beta <- as.numeric(beta)
+      }
 
-        shape1 <- argaddit$alpha
-        shape2 <- argaddit$beta
+      shape1 <- argaddit$alpha
+      shape2 <- argaddit$beta
+
+      if (lower.tail) {
 
         plotcurve <- function(q, shape1, shape2) {
           x <- seq(0, q[1], by = 0.01)
@@ -3137,6 +3138,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         }
       }
       else{
+
         plotcurve <- function(q, shape1 , shape2 ) {
           x <- seq(q[1], 1, by=0.01)
           y <- seq(0, q[1], by=0.01)
@@ -3184,11 +3186,11 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
       }
     }
     if (dist == "exp") {
+      if (!any(names(argaddit) == "rate")) {
+        rate <- readline("Insert the value of 'rate' argument: ")
+        argaddit$rate <- as.numeric(rate)
+      }
       if (lower.tail) {
-        if (!any(names(argaddit) == "rate")) {
-          rate <- readline("Insert the value of 'rate' argument: ")
-          argaddit$rate <- as.numeric(rate)
-        }
         plotcurve <- function(q, rate) {
           rmin <- 0
           rmax <- q + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
@@ -3509,6 +3511,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
       size <- argaddit$m
       samples <- argaddit$n
       sucess <- argaddit$k
+
       if (lower.tail) {
         plotcurve <- function(q, size, samples, sucess) {
           rmin <- 0
