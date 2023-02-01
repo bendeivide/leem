@@ -98,32 +98,8 @@ msgstr "Limite dos eixos"
 msgid "xlimits"
 msgstr "limite-x"
 
-msgid "8"
-msgstr ""
-
 msgid "ylimits"
 msgstr "limite-y"
-
-msgid "4"
-msgstr ""
-
-msgid "a"
-msgstr ""
-
-msgid "1"
-msgstr ""
-
-msgid "b"
-msgstr ""
-
-msgid "-2"
-msgstr ""
-
-msgid "c"
-msgstr ""
-
-msgid "-3"
-msgstr ""
 
 msgid "1st degree function Additional"
 msgstr "Função do 1º grau"
@@ -214,21 +190,6 @@ msgstr ""
 msgid "Author"
 msgstr "Autor"
 
-msgid ""
-"Juliane Nassarala Almeida (PROFMAT/UFSJ) \n"
-" julianenassaralla@gmail.com"
-msgstr ""
-
-msgid ""
-"Ben Dêivide de Oliveira Batista (UFSJ) \n"
-" ben.deivide@ufsj.edu.br"
-msgstr ""
-
-msgid ""
-"Alexandre Celesino Leite Almeida (UFSJ)\n"
-" celestino@ufsj.edu.br"
-msgstr ""
-
 msgid "Ogives"
 msgstr "Gráfico de ogivas"
 
@@ -268,7 +229,7 @@ msgstr "Mediana"
 msgid "Mode"
 msgstr "Moda"
 
-msgid "Use the 'new_leem()' function to create an object of class leem!""
+msgid "Use the 'new_leem()' function to create an object of class leem!"
 msgstr "Use a função 'new_leem()' para criar um objeto de classe 'leem'!"
 
 msgid "The argument should be numerical!"
@@ -277,5 +238,39 @@ msgstr "O argumento deve ser numérico!"
 msgid "The k argument should be greater than 1!"
 msgstr "O argumento k deve ser maior que 1!"
 
+msgid "Table of frequency"
+msgstr "Tabela de frequência"
 
+msgid "Type of variable:"
+msgstr "Tipo de variável:"
+
+msgid "Classes: Grouping of classes"
+msgstr "Classes: Agrupamento de classes"
+
+msgid "Fi: Absolute frequency"
+msgstr "Fi: Frequência absoluta"
+
+msgid "PM: Midpoint"
+msgstr "PM: Ponto médio"
+
+msgid "Fr: Relative frequency"
+msgstr "Fr: Frequência relativa"
+
+msgid "Fac1: Cumulative frequency (below)"
+msgstr "Fac1: Frequência acumulada (abaixo de)"
+
+msgid "Fac2: Cumulative frequency (above)"
+msgstr "Fac2: Frequência acumulada (acima de)"
+
+msgid "Fp: Percentage frequency"
+msgstr "Fp: Frequência percentual"
+
+msgid "Fac1p: Cumulative percentage frequency (below)"
+msgstr "Fac1p: Frequência acumulada percentual (abaixo de)"
+
+msgid "Fac2p: Cumulative percentage frequency (above)"
+msgstr "Fac2p: Frequência acumulada percentual (acima de)"
+
+msgid "Groups: Discretized grouping"
+msgstr "Groups: Agrupamento discretizado"
 
