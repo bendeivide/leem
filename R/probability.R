@@ -726,7 +726,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         }
       }
       if (dist == "binomial") {
-        if (q[1] < 0 || q[2] < 0) stop("The 'q' argument must be bigger then 1.", call. = FALSE, domain = "R-leem")
         if (!any(names(argaddit) == "size")) {
           size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
           argaddit$size <- as.numeric(size)
@@ -735,7 +734,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
           argaddit$prob <- as.numeric(prob)
         }
-        if (prob > 1) stop("The 'prob' argument must be lower then 1.", call. = FALSE, domain = "R-leem")
         size <- argaddit$size
         sucesso <- argaddit$prob
         plotcurve <- function(q, size, prob) {
@@ -973,7 +971,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                   legend("topleft",
                          bty = "n", fill = "red",
                          legend = substitute(
-                           P(t1 ~ "< X < " ~ t2) == Pr ~ "\n\n" ~ size == si ~ prob == pro,
+                           P(t1 ~ "< X < " ~ t2~ ";" ~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n",
                            list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
                          )
                   )
@@ -982,7 +980,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                   legend("topleft",
                          bty = "n", fill = "red",
                          legend = substitute(
-                           P(t1 ~ "<= X <= " ~ t2) == Pr ~ "\n\n" ~ size == si ~ prob == pro,
+                           P(t1 ~ "<= X <= " ~ t2~ ";" ~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n",
                            list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
                          )
                   )
@@ -991,7 +989,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                   legend("topleft",
                          bty = "n", fill = "red",
                          legend = substitute(
-                           P(t1 ~ "<= X < " ~ t2) == Pr ~ "\n\n" ~ size == si ~ prob == pro,
+                           P(t1 ~ "<= X < " ~ t2~ ";" ~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n",
                            list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
                          )
                   )
@@ -1000,7 +998,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                   legend("topleft",
                          bty = "n", fill = "red",
                          legend = substitute(
-                           P(t1 ~ "< X <= " ~ t2) == Pr ~ "\n\n" ~ size == si ~ prob == pro,
+                           P(t1 ~ "< X <= " ~ t2~ ";" ~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n",
                            list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
                          )
                   )
@@ -1695,7 +1693,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         }
       }
       if (dist == "binomial") {
-        if (q[1] < 0 || q[2] < 0) stop("The 'q' argument must be bigger then 1.", call. = FALSE, domain = "R-leem")
         if (!any(names(argaddit) == "size")) {
           size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
           argaddit$size <- as.numeric(size)
@@ -1704,7 +1701,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
           argaddit$prob <- as.numeric(prob)
         }
-        if (prob > 1) stop("The 'prob' argument must be lower then 1.", call. = FALSE, domain = "R-leem")
         size <- argaddit$size
         sucesso <- argaddit$prob
         plotcurve <- function(q, size, prob) {
@@ -2979,7 +2975,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         }
       }
       if (dist == "binomial") {
-        if (q < 0) stop("The 'q' argument must be bigger then 1.", call. = FALSE, domain = "R-leem")
         if (!any(names(argaddit) == "size")) {
           size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
           argaddit$size <- as.numeric(size)
@@ -2988,7 +2983,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
           argaddit$prob <- as.numeric(prob)
         }
-        if (prob > 1) stop("The 'prob' argument must be lower then 1.", call. = FALSE, domain = "R-leem")
         size <- argaddit$size
         sucesso <- argaddit$prob
         if (lower.tail) {
@@ -3128,7 +3122,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             points(x2, probx2, lwd = 2, pch = 19)
             lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
             points(x1, probx1, lwd = 2, col = "red", pch = 19)
-            abline(v = n, lty = 2)
+            abline(v = samples, lty = 2)
             qq <- round(q, digits = 2)
             qqaux <- round(q, digits = 2)
             Pr <- round(phyper(q, m = size, n = samples, k = sucess), rounding)
@@ -3171,7 +3165,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             points(x1, probx1, lwd = 2, pch = 19)
             lines(x2, probx2, type = "h", lwd = 2, col = "red")
             points(x2, probx2, lwd = 2, pch = 19, col = "red")
-            abline(v = n, lty = 2)
+            abline(v = samples, lty = 2)
             qq <- round(q, digits = 2)
             qqaux <- round(q, digits = 2)
             Pr <- round(phyper(q, m = size, n = samples, k = sucess, lower.tail = F), rounding)
@@ -3208,6 +3202,11 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         argaddit$size <- as.numeric(size)
       }
       if (lower.tail) {
+
+        # Desabilitar warnings global
+        #options(warn = - 1)
+        war <- options(warn = - 1)
+        on.exit(options(war))
         xvq <- 2*q
         xvq1 <- -2*q
         if ( q >= 0) {
@@ -3240,7 +3239,10 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- round(pnbinom(qq,s,p,lower.tail = T), rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(side = 1, at = c(xvq1,qqaux),labels = c("",qqaux), font = 2,col = "red", col.axis= "red")
+          axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
+               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+          axis(side=1, at=as.character(c(xvq1, qqaux)), tick = TRUE, lwd = 1,
+               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty = 2, col = "red")
           legend("topleft",
                  bty = "n", fill = "red",
@@ -3308,13 +3310,13 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- round(pnbinom(qq,s,p,lower.tail = F), rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(side = 1, at = qqaux,col = "red", font = 2, col.axis = "red")
           if (q > 0){
-            axis(side = 1, at = c(qqaux+1,xvq),col = "red")
+            axis(side = 1, at = c(qqaux,xvq),col = "red", lwd.ticks = 0)
           }
           if (q < 0){
-            axis(side = 1, at = c(qqaux-1,xvq),col = "red")
+            axis(side = 1, at = c(qqaux,xvq),col = "red", lwd.ticks = 0)
           }
+          axis(side = 1, at = qqaux,col = "red", font = 2, col.axis = "red")
           abline(v = qqaux, lty = 2, col = "red")
           if (q > 0){
             legend("topleft",
@@ -3354,7 +3356,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           prob <- pnbinom(q,pro,size,lower.tail = F)
         }
       }
-    }##############INCORRECT
+    }#############INCORRECT
       if (dist == "geometric") {
       if (!any(names(argaddit) == "probability")) {
         probability <- readline(gettext("Insert the value of 'probability' argument: ", domain = "R-leem"))
