@@ -327,9 +327,8 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                                                           location, scale) , digits = rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(side = 1, at = as.character(c(xvq1,xvq)),labels = FALSE, lwd.ticks = 0 , col = "black", font = 2, col.axis = "red")
-          axis(side=1, at=qqaux, labels = qqaux,
-               col="red", font = 2, col.axis="red")
+          axis(side=1, at=qqaux, labels=qqaux,
+               col="red", font = 2, col.axis = "red")
           abline(v = qqaux, lty = 2, col = "red")
           if (attr(q, "region") == "region2") {
             legend("topleft", bty="n", fill = "red",
@@ -417,27 +416,27 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
           axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2)
+               col="red", font = 2, col.axis = "red")
           abline(v = qqaux, lty=2, col = "red")
           if (attr(q, "region") == "region2") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1~"< X < "~t2)==Pr~"\n\n,"~ mu == media ~ sigma == varen,
+                   legend = substitute(P(t1~"< X < "~t2 ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
                                        list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
           }
           if (attr(q, "region") == "region4") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1~"<= X <= "~t2)==Pr~"\n\n,"~mu == media ~ sigma == varen,
-                                       list(t1=qq[1], t2=qq[2], Pr=Pr, media = mu, varen = sigma)))
+                   legend = substitute(P(t1~"<= X <= "~t2 ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
+                                       list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
           }
           if (attr(q, "region") == "region7") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~"<= X < "~t2)==Pr~"\n\n,"~mu == media ~ sigma == varen,
-                                     list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen = sigma)))
+                   legend = substitute(P(t1~"<= X < "~t2 ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
+                                       list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
           }
           if ( attr(q, "region") == "region8") {
-            legend( "topleft", bty="n", fill="red",
-                    legend = substitute(P(t1~"< X <= "~t2)==Pr~"\n\n,"~mu == media ~ sigma == varen,
-                                        list(t1=qq[1], t2=qq[2], Pr=Pr, media = mu,varen=sigma)))
+            legend("topleft", bty="n", fill="red",
+                   legend = substitute(P(t1~"< X <= "~t2 ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
+                                       list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
           }
         }
         if (gui == "plot") {
@@ -453,7 +452,10 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         }
       }
       if (dist == "poisson") {
-        if (!any(names(argaddit) == "lambda")) stop("Insira o argumento 'lambda'!", call. = FALSE)
+        if (!any(names(argaddit) == "lambda")) {
+          lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
+          argaddit$lambda <- as.numeric(lambda)
+        }
         plotcurve <- function(q, lambda) {
           rmin <- lambda - 4 * sqrt(lambda)
           if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -487,7 +489,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           points(x1, probx1, lwd = 2, pch = 19)
           lines(x2, probx2, type = "h", lwd = 2)
           points(x2, probx2, lwd = 2, pch = 19)
-          lines(x3, probx3, type = "h", panel.first = grid(), lwd = 2, col = "red")
+          lines(x3, probx3, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
           points(x3, probx3, lwd = 2, col = "red", pch = 19)
           abline(v = lambda, lty = 2)
           qq <- round(q, digits = 2)
@@ -622,7 +624,8 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
       }
       if (dist == "exp") {
         if (!any(names(argaddit) == "rate")) {
-          rate <- readline(gettext("Insert the value of 'rate' argument: ",  domain = "R-leem"))
+          rate <- readline(gettext("Insert the value of 'rate' argument: ",
+                                   domain = "R-leem"))
           argaddit$rate <- as.numeric(rate)
         }
         plotcurve <- function(q, rate) {
@@ -631,18 +634,25 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           y <- seq(0, rmax, by = 0.01)
           probx <- dexp(x, rate = rate)
           proby <- dexp(y, rate = rate)
+
+          # Curve
           curve(dexp(x, rate), 0, rmax,
                 ylab = expression(p[x](q)),
                 xlab = "x", ylim = c(0, 1.2 * max(c(probx, proby))),
                 panel.first = grid(col = "gray90"),
                 main = gettext("Probability Function: Exponential.", domain = "R-leem"))
+
+
           polygon(c(y, rev(y)),
                   c(proby, rep(0,length(proby))),
                   col = "gray90")
+
           polygon(c(x, rev(x)),
                   c(probx, rep(0,length(probx))),
                   col = "red")
+
           abline(v = 1 / rate, lty = 2)
+
           qq <- round(q, digits = 2)
           qqaux <- round(q, digits = 2)
           Pr <- round(pexp(qq[2], rate = rate, lower.tail = T) -
@@ -655,6 +665,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             col = "red", font = 2, col.axis = "red"
           )
           abline(v = qqaux, lty = 2, col = "red")
+
           if (attr(q, "region") == "region2") {
             legend("topleft",
                    bty = "n", fill = "red",
@@ -692,9 +703,12 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             )
           }
         }
+
         if (gui == "plot") {
+          # Probability
           rate <- argaddit$rate
           prob <- (pexp(q = q[1], rate = rate) - pexp(q = q[2],rate = rate))*-1
+          # Plot
           plotcurve(q, rate)
         }
         if (gui == "rstudio") {
@@ -712,6 +726,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         }
       }
       if (dist == "binomial") {
+        if (q[1] < 0 || q[2] < 0) stop("The 'q' argument must be bigger then 1.", call. = FALSE, domain = "R-leem")
         if (!any(names(argaddit) == "size")) {
           size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
           argaddit$size <- as.numeric(size)
@@ -720,6 +735,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
           argaddit$prob <- as.numeric(prob)
         }
+        if (prob > 1) stop("The 'prob' argument must be lower then 1.", call. = FALSE, domain = "R-leem")
         size <- argaddit$size
         sucesso <- argaddit$prob
         plotcurve <- function(q, size, prob) {
@@ -753,12 +769,12 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           points(x1, probx1, lwd = 2, pch = 19)
           lines(x2, probx2, type = "h", lwd = 2)
           points(x2, probx2, lwd = 2, pch = 19)
-          lines(x3, probx3, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
+          lines(x3, probx3, type = "h", panel.first = grid(), lwd = 2, col = "red")
           points(x3, probx3, lwd = 2, col = "red", pch = 19)
           abline(v = size * prob, lty = 2)
           qq <- round(q, digits = 2)
           qqaux <- round(q, digits = 2)
-          Pr <- round(pbinom(q[1], size = size, prob = prob, lower.tail = T) - pbinom(q[2], size = size, prob = prob, lower.tail = T), rounding) * -1
+          Pr <- round(pbinom(q[1], size = as.numeric(size), prob = as.numeric(prob), lower.tail = T) - pbinom(q[2], size = as.numeric(size), prob = as.numeric(prob), lower.tail = T), rounding) * -1
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
           axis(
@@ -769,38 +785,34 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           if (attr(q, "region") == "region2") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "< X < " ~ t2) == Pr ~ "\n\n" ~ size == n ~ p == prob,
-                                       list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
+                   legend = substitute(P(t1 ~ "< X < " ~ t2 ~ ";" ~ size == n ~ p == prob) == Pr ~ "\n\n" , list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
             )
           }
           if (attr(q, "region") == "region4") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "<= X <= " ~ t2) == Pr ~ "\n\n" ~ size == n ~ p == prob,
-                                       list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
+                   legend = substitute(P(t1 ~ "<= X <= " ~ t2 ~ ";" ~ size == n ~ p == prob) == Pr ~ "\n\n" , list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
             )
           }
           if (attr(q, "region") == "region7") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "<= X < " ~ t2) == Pr ~ "\n\n" ~ size == n ~ p == prob,
-                                       list(q = qq, Pr = Pr, n = size, prob = prob))
+                   legend = substitute(P(t1 ~ "<= X < " ~ t2 ~ ";" ~ size == n ~ p == prob) == Pr ~ "\n\n" , list(q = qq, Pr = Pr, n = size, prob = prob))
             )
           }
           if (attr(q, "region") == "region8") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "< X <= " ~ t2) == Pr ~ "\n\n" ~ size == n ~ p == prob,
-                                       list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
+                   legend = substitute(P(t1 ~ "< X <= " ~ t2 ~ ";" ~ size == n ~ p == prob) == Pr ~ "\n\n" , list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
             )
           }
         }
         if (gui == "plot") {
-          prob <- pbinom(q = q, size = size, prob = sucesso)
+          prob <- round(pbinom(q[1], size = as.numeric(size), prob = as.numeric(prob), lower.tail = T) - pbinom(q[2], size = as.numeric(size), prob = as.numeric(prob), lower.tail = T), rounding) * -1
           plotcurve(q, size, prob = sucesso)
         }
         if (gui == "rstudio") {
-          prob <- pbinom(q = q, size = size, prob = sucesso)
+          prob <- round(pbinom(q[1], size = as.numeric(size), prob = as.numeric(prob), lower.tail = T) - pbinom(q[2], size = as.numeric(size), prob = as.numeric(prob), lower.tail = T), rounding)* -1
           manipulate::manipulate(plotcurve(q, size, prob),
                                  q = manipulate::slider(0, size, q),
                                  size = manipulate::slider(size, size + 30, size),
@@ -871,35 +883,34 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           if (attr(q, "region") == "region2") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "< X < " ~ t2) == Pr ~ "\n\n" ~ m == size ~ n == samples ~ k == sucess,
+                   legend = substitute(P(t1 ~ "< X < " ~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n",
                                        list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
             )
           }
           if (attr(q, "region") == "region4") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "<= X <= " ~ t2) == Pr ~ "\n\n" ~ m == size ~ n == samples ~ k == sucess,
+                   legend = substitute(P(t1 ~ "<= X <= " ~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n",
                                        list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
             )
           }
           if (attr(q, "region") == "region7") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "<= X < " ~ t2) == Pr ~ "\n\n" ~ m == size ~ n == samples ~ k == sucess,
+                   legend = substitute(P(t1 ~ "<= X < " ~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n",
                                        list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
             )
           }
           if (attr(q, "region") == "region8") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "< X <= " ~ t2) == Pr ~ "\n\n" ~ m == size ~ n == samples ~ k == sucess,
+                   legend = substitute(P(t1 ~ "< X <= " ~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n",
                                        list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
             )
           }
         }
         if (gui == "plot") {
-          result <- phyper(q = q, m = size, n = samples, k = sucess)
-          prob <- result[2]
+          prob <- round(phyper(q[1], m = size, n = samples, k = sucess) - phyper(q[2], m = size, n = samples, k = sucess), rounding) * -1
           plotcurve(q, size, samples, sucess)
         }
       }
@@ -1018,7 +1029,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                        size = manipulate::slider(1,xvq, size))
                 prob <- pnbinom(q,pro,size,lower.tail = TRUE)
               }
-            }
+            }###########INCORREC
       if (dist == "geometric") {
         if (!any(names(argaddit) == "probability")) {
           probability <- readline(gettext("Insert the value of 'probability' argument: ", domain = "R-leem"))
@@ -1028,9 +1039,9 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           rmin <- -5*q[1]
           rmax <-  5*q[2]
           if (rmin < 0) rmin <- 0
-          x <- rmin:rmax # rever
+          x <- rmin:rmax
           x1 <- rmin:q[1]
-          x2 <- q[2]:rmax # rever (dois elementos só pega o primeiro)
+          x2 <- q[2]:rmax
           x3 <- c(1, 2)
           if (attr(q, "region") == "region2") {
             x3 <- (q[1] + 1):(q[2] - 1)
@@ -1064,10 +1075,8 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- round(pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability),digits = rounding)*- 1
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = qqaux, labels = qqaux,
-            col = "red", font = 2
-          )
+          axis(side=1, at=qqaux, labels=qqaux,
+               col="red", font = 2, col.axis = "red")
           abline(v = qqaux, lty = 2, col = "red")
           if (attr(q, "region") == "region2") {
             legend("topleft",
@@ -1246,9 +1255,12 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- round(pgumbel(q[1], location, scale) + pgumbel(q[2], location, scale), digits = rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(side = 1, at = as.character(c(xvq1,xvq)),labels = FALSE, lwd.ticks = 0 , col = "red", font = 2, col.axis="red")
-          axis(side = 1, at = qqaux, labels = qqaux,
-               col ="black", font = 2, col.axis="red")
+          axis(side=1, at=qq, tick = TRUE, lwd = 0,
+               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+          axis(side=1, at=as.character(c(xvq, qq[1])), tick = TRUE, lwd = 1,
+               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+          axis(side=1, at=as.character(c(qq[2], xvq1)), tick = TRUE, lwd = 1,
+               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty = 2, col = "red")
           if (attr(q, "region") == "region1") {
             legend("topleft", bty ="n", fill ="red",
@@ -1338,7 +1350,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
           axis(side=1, at=qq, tick = TRUE, lwd = 0,
-               col="red", font = 2, lwd.ticks = 1)
+               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
           axis(side=1, at=as.character(c(mu - 4*sigma, qq[1])), tick = TRUE, lwd = 1,
                col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           axis(side=1, at=as.character(c(qq[2], mu + 4*sigma)), tick = TRUE, lwd = 1,
@@ -1346,23 +1358,23 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           abline(v = qqaux, lty=2, col = "red")
           if (attr(q, "region") == "region1") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1~"> X > "~t2)==Pr~"\n\n,"~mu == media ~ sigma == varen,
+                   legend = substitute(P(t1~"> X > "~t2  ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
                                        list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma)))
           }
           if (attr(q, "region") == "region3") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1~">= X >= "~t2)==Pr~"\n\n,"~mu == media ~ sigma == varen,
-                                       list(t1=qq[1], t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
+                   legend = substitute(P(t1~">= X >= "~t2  ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
+                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma)))
           }
           if (attr(q, "region") == "region5") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~">= X > "~t2)==Pr~"\n\n,"~ mu == media  ~ sigma == varen,
-                                     list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen = sigma)))
+                   legend = substitute(P(t1~">= X > "~t2  ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
+                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma)))
           }
           if ( attr(q, "region") == "region6") {
-            legend( "topleft", bty="n", fill="red",
-                    legend = substitute(P(t1~"> X >= "~t2)==Pr~"\n\n,"~ mu == media ~ sigma == varen,
-                                        list(t1=qq[1], t2=qq[2], Pr=Pr, media = mu,varen = sigma)))
+            legend("topleft", bty="n", fill="red",
+                   legend = substitute(P(t1~"> X > ="~t2  ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
+                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma)))
           }
         }
         if (gui == "plot") {
@@ -1372,13 +1384,16 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           plotcurve(q, mu, sigma)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotcurve(qaux, muaux),
+          manipulate::manipulate(plotcurve(mu, qaux, muaux),
                                  qaux = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
                                  muaux = manipulate::slider(mu, mu + 200, mu))
         }
       }
       if (dist == "poisson") {
-        if (!any(names(argaddit) == "lambda")) stop("Insira o argumento 'lambda'!", call. = FALSE)
+        if (!any(names(argaddit) == "lambda")) {
+          lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
+          argaddit$lambda <- as.numeric(lambda)
+        }
         plotcurve <- function(q, lambda) {
           rmin <- lambda - 4 * sqrt(lambda)
           if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -1408,11 +1423,11 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           axis(2)
           title(ylab = expression(p[X](x)), xlab = "X",
                 main = gettext("Probability Function: Poisson.", domain = "R-leem"))
-          lines(x1, probx1, type = "h", panel.first = grid(), lwd = 2,col="red")
+          lines(x1, probx1, type = "h", lwd = 2,col="red")
           points(x1, probx1, lwd = 2, pch = 19,col="red")
           lines(x2, probx2, type = "h", lwd = 2,col="red")
           points(x2, probx2, lwd = 2, pch = 19,col="red")
-          lines(x3, probx3, type = "h", panel.first = grid(), lwd = 2)
+          lines(x3, probx3, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
           points(x3, probx3, lwd = 2, pch = 19)
           abline(v = lambda, lty = 2)
           qq <- round(q, digits = 2)
@@ -1421,8 +1436,12 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                         (ppois(q = q[2],lambda = lambda, lower.tail = F))*-1,digits = rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(side = 1, at = c(q[1], rmin), labels = c(q[1],"") ,col = "red",col.axis = "red")
-          axis(side = 1, at = c(q[2], rmax), labels = c(q[2],"") ,col = "red", col.axis = "red")
+          axis(side=1, at=qq, tick = TRUE, lwd = 0,
+               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+          axis(side=1, at=as.character(c(rmin, qq[1])), tick = TRUE, lwd = 1,
+               col="red", font = 2, labels = c("",qq[1]))
+          axis(side=1, at=as.character(c(qq[2], rmax)), tick = TRUE, lwd = 1,
+               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty = 2, col = "red")
           if (attr(q, "region") == "region1") {
             legend("topleft",
@@ -1566,7 +1585,8 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
       }
       if (dist == "exp") {
         if (!any(names(argaddit) == "rate")) {
-          rate <- readline(gettext("Insert the value of 'rate' argument: ",  domain = "R-leem"))
+          rate <- readline(gettext("Insert the value of 'rate' argument: ",
+                                   domain = "R-leem"))
           argaddit$rate <- as.numeric(rate)
         }
         plotcurve <- function(q, rate) {
@@ -1579,7 +1599,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           proby <- dexp(y, rate = rate)
           curve(dexp(x, rate), 0, rmax,
                 ylab = expression(p[x](q)),
-                xlab = "x", ylim = c(0, 1.2 * max(c(probx1, probx2, proby))),
+                xlab = "x", ylim = c(0, 1.2 * max(c(c(probx1,probx2), proby))),
                 panel.first = grid(col = "gray90"),
                 main = gettext("Probability Function: Exponential.", domain = "R-leem"))
           polygon(c(y, rev(y)),
@@ -1594,12 +1614,17 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           abline(v = 1 / rate, lty = 2)
           qq <- round(q, digits = 2)
           qqaux <- round(q, digits = 2)
-          Pr <- round((pexp(q = q[1], rate = rate) - pexp(q = q[2],rate=rate))*-1, rounding)
+          Pr <- round(pexp(qq[1], rate = rate, lower.tail = T) +
+                        pexp(qq[2], rate = rate, lower.tail = F), rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
           rate2 <- gsub("\\.", ",", rate)
           axis(
-            side = 1, at = qqaux, labels = qqaux,
+            side = 1, at = c(qqaux[1],0), labels = c(qqaux[1],""),
+            col = "red", font = 2, col.axis = "red"
+          )
+          axis(
+            side = 1, at = c(qqaux[2],rmax+1), labels = c(qqaux[2],""),
             col = "red", font = 2, col.axis = "red"
           )
           abline(v = qqaux, lty = 2, col = "red")
@@ -1607,7 +1632,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             legend("topleft",
                    bty = "n", fill = "red",
                    legend = substitute(
-                     P(t1 ~ "> X > " ~ t2) == Pr ~ "\n\n" ~ rate == rat,
+                     P(t1 ~ "> X > " ~ t2~ ";" ~ lambda == rat) == Pr ~ "\n\n",
                      list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
                    )
             )
@@ -1616,7 +1641,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             legend("topleft",
                    bty = "n", fill = "red",
                    legend = substitute(
-                     P(t1 ~ ">= X >= " ~ t2 )== Pr ~ "\n\n" ~ rate == rat,
+                     P(t1 ~ ">= X >= " ~ t2~ ";" ~ lambda == rat) == Pr ~ "\n\n",
                      list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
                    )
             )
@@ -1625,7 +1650,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             legend("topleft",
                    bty = "n", fill = "red",
                    legend = substitute(
-                     P(t1 ~ ">= X > " ~ t2) == Pr ~ "\n\n" ~ rate == rat,
+                     P(t1 ~ ">= X > " ~ t2~ ";" ~ lambda == rat) == Pr ~ "\n\n",
                      list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
                    )
             )
@@ -1634,15 +1659,16 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             legend("topleft",
                    bty = "n", fill = "red",
                    legend = substitute(
-                     P(q[1] ~ "> X >= " ~ q[2]) == Pr ~ "\n\n" ~ rate == rat,
-                     list(t1 = qq[1],t2 = qq[2],q = qq, Pr = Pr, rat = rate)
+                     P(t1 ~ "> X >= " ~ t2~ ";" ~ lambda == rat) == Pr ~ "\n\n",
+                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
                    )
             )
           }
         }
         if (gui == "plot") {
           rate <- argaddit$rate
-          prob <- (pexp(q = q[1], rate = rate) - pexp(q = q[2],rate=rate))*-1
+          prob <- round(pexp(q[1], rate = rate, lower.tail = T) +
+                          pexp(q[2], rate = rate, lower.tail = F), rounding)
           plotcurve(q, rate)
         }
         if (gui == "rstudio") {
@@ -1660,7 +1686,8 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             q[2] <- q2
             plotcurve(q,rate)
           }
-          prob <- (pexp(q = q[1], rate = rate) - pexp(q = q[2],rate=rate))*-1
+          prob <- round(pexp(q[1], rate = rate, lower.tail = T) +
+                          pexp(q[2], rate = rate, lower.tail = F), rounding)
           manipulate::manipulate(plotcurveaux(q1,q2, rate),
                                  q1 = manipulate::slider(0, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], 260, q[2]),
@@ -1668,6 +1695,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         }
       }
       if (dist == "binomial") {
+        if (q[1] < 0 || q[2] < 0) stop("The 'q' argument must be bigger then 1.", call. = FALSE, domain = "R-leem")
         if (!any(names(argaddit) == "size")) {
           size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
           argaddit$size <- as.numeric(size)
@@ -1676,6 +1704,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
           argaddit$prob <- as.numeric(prob)
         }
+        if (prob > 1) stop("The 'prob' argument must be lower then 1.", call. = FALSE, domain = "R-leem")
         size <- argaddit$size
         sucesso <- argaddit$prob
         plotcurve <- function(q, size, prob) {
@@ -1705,61 +1734,56 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           axis(1)
           axis(2)
           title(ylab = expression(p[X](x)), xlab = "X",main="Probability Function: Binomial.")
-          lines(x1, probx1, type = "h", panel.first = grid(col="gray90"), lwd = 2, col = "red")
+          lines(x1, probx1, type = "h", panel.first = grid(), lwd = 2, col = "red")
           points(x1, probx1, lwd = 2, col = "red", pch = 19)
-          lines(x2, probx2, type = "h", panel.first = grid(col="gray90"), lwd = 2, col = "red")
+          lines(x2, probx2, type = "h", panel.first = grid(), lwd = 2, col = "red")
           points(x2, probx2, lwd = 2, col = "red", pch = 19)
           lines(x3, probx3, type = "h", lwd = 2)
           points(x3, probx3, lwd = 2, pch = 19)
           abline(v = size * prob, lty = 2)
           qq <- round(q, digits = 2)
           qqaux <- round(q, digits = 2)
-          Pr <- round(pbinom(q[1], size = size, prob = prob, lower.tail = T) - pbinom(q[2], size = size, prob = prob, lower.tail = T), rounding) * -1
+          Pr <- round(pbinom(q[1], size = as.numeric(size), prob = as.numeric(prob), lower.tail = T) - pbinom(q[2], size = as.numeric(size), prob = as.numeric(prob), lower.tail = F), rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = c(rmin,qqaux[1]), labels = c("",qqaux[1]),
-            col = "red", font = 2, col.axis = "red"
-          )
-          axis(
-            side = 1, at = c(qqaux[2],size), labels = c(qqaux[2],""),
-            col = "red", font = 2, col.axis = "red"
-          )
+          axis(side=1, at=qq, tick = TRUE, lwd = 0,
+               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+          axis(side=1, at=as.character(c(rmin, qq[1])), tick = TRUE, lwd = 1,
+               col="red", font = 2, labels = FALSE)
+          axis(side=1, at=as.character(c(qq[2],size)), tick = TRUE, lwd = 1,
+               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty = 2, col = "red")
           if (attr(q, "region") == "region1") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "> X > " ~ t2) == Pr ~ "\n\n" ~ size == n ~ p == prob, list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
+                   legend = substitute(P(t1 ~ "> X > " ~ t2 ~ ";" ~ size == n ~ p == prob) == Pr ~ "\n\n", list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
             )
           }
           if (attr(q, "region") == "region3") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ ">= X >= " ~ t2) == Pr ~ "\n\n" ~ size == n ~ p == prob,
-                                       list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
+                   legend = substitute(P(t1 ~ ">= X >= " ~ t2 ~ ";" ~ size == n ~ p == prob) == Pr ~ "\n\n", list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
             )
           }
           if (attr(q, "region") == "region5") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ ">= X > " ~ t2) == Pr ~ "\n\n" ~ size == n ~ p == prob,
-                                       list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
+                   legend = substitute(P(t1 ~ ">= X > " ~ t2 ~ ";" ~ size == n ~ p == prob) == Pr ~ "\n\n", list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
             )
           }
           if (attr(q, "region") == "region6") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "> X >= " ~ t2) == Pr ~ "\n\n" ~ size == n ~ p == prob,
-                                       list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
+                   legend = substitute(P(t1 ~ "> X >= " ~ t2 ~ ";" ~ size == n ~ p == prob) == Pr ~ "\n\n", list(t1 = qq[1], t2 = qq[2], q = qq, Pr = Pr, n = size, prob = prob))
             )
           }
         }
         if (gui == "plot") {
-          prob <- pbinom(q = q, size = size, prob = sucesso)
+          prob <- round(pbinom(q[1], size = as.numeric(size), prob = as.numeric(prob), lower.tail = T) - pbinom(q[2], size = as.numeric(size), prob = as.numeric(prob), lower.tail = F), rounding)
           plotcurve(q, size, prob = sucesso)
         }
         if (gui == "rstudio") {
-          prob <- pbinom(q = q, size = size, prob = sucesso)
+          prob <- round(pbinom(q[1], size = as.numeric(size), prob = as.numeric(prob), lower.tail = T) - pbinom(q[2], size = as.numeric(size), prob = as.numeric(prob), lower.tail = F), rounding)
           manipulate::manipulate(plotcurve(q, size, prob),
                                  q = manipulate::slider(0, size, q),
                                  size = manipulate::slider(size, size + 30, size),
@@ -1820,7 +1844,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                            dhyper(x = x, m = size, n = samples, k = sucess))-1, lty = 2)
           qq <- round(q, digits = 2)
           qqaux <- round(q, digits = 2)
-          Pr <- round(phyper(q[1], m = size, n = samples, k = sucess) - phyper(q[2], m = size, n = samples, k = sucess), rounding) * -1
+          Pr <- round(phyper(q[1], m = size, n = samples, k = sucess) - phyper(q[2], m = size, n = samples, k = sucess, lower.tail = FALSE), rounding) * -1
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
           axis(
@@ -1835,33 +1859,32 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           if (attr(q, "region") == "region1") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "> X > " ~ t2) == Pr ~ "\n\n" ~ m == size ~ n == samples ~ k == sucess,
+                   legend = substitute(P(t1 ~ "> X > " ~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n" ,
                                        list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
             )
           }
           if (attr(q, "region") == "region3") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ ">= X >= " ~ t2) == Pr ~ "\n\n" ~ m == size ~ n == samples ~ k == sucess,
+                   legend = substitute(P(t1 ~ ">= X >= " ~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n",
                                        list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
             )
           }
           if (attr(q, "region") == "region5") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ ">= X > " ~ t2) == Pr ~ "\n\n" ~ m == size ~ n == samples ~ k == sucess, list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
+                   legend = substitute(P(t1 ~ ">= X > " ~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n", list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
             )
           }
           if (attr(q, "region") == "region6") {
             legend("topleft",
                    bty = "n", fill = "red",
-                   legend = substitute(P(t1 ~ "> X >= " ~ t2) == Pr ~ "\n\n" ~ m == size ~ n == samples ~ k == sucess, list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
+                   legend = substitute(P(t1 ~ "> X >= " ~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n", list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
             )
           }
         }
         if (gui == "plot") {
-          result <- phyper(q = q, m = size, n = samples, k = sucess)
-          prob <- result[2]#2 results?
+          prob <- round(phyper(q[1], m = size, n = samples, k = sucess) - phyper(q[2], m = size, n = samples, k = sucess, lower.tail = FALSE), digits = rounding) * -1
           plotcurve(q, size, samples, sucess)
         }
       }
@@ -1979,7 +2002,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                  size = manipulate::slider(1,xvq, size))
           prob <- pnbinom(q,pro,size,lower.tail = TRUE)
         }
-      }
+      }##########INCORRECT
       if (dist == "geometric") {
         if (!any(names(argaddit) == "probability")) {
           probability <- readline(gettext("Insert the value of 'probability' argument: ", domain = "R-leem"))
@@ -2022,17 +2045,15 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           abline(v = q, lty = 2)
           qq <- round(q, digits = 2)
           qqaux <- round(q, digits = 2)
-          Pr <- round(pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability),digits = rounding)*-1
+          Pr <- round(pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability, lower.tail = F),digits = rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at =q[1], labels = TRUE ,
-            col = "red", col.axis = "red", font = 2
-          )
-          axis(
-            side = 1, at =q[2], labels = TRUE ,
-            col = "red", col.axis = "red", font = 2
-          )
+          axis(side=1, at=qq, tick = TRUE, lwd = 0,
+               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+          axis(side=1, at=as.character(c(rmin, qq[1])), tick = TRUE, lwd = 1,
+               col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+          axis(side=1, at=as.character(c(qq[2], rmax)), tick = TRUE, lwd = 1,
+               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty = 2, col = "red")
           if (attr(q, "region") == "region1") {
             legend("topleft",
@@ -2073,7 +2094,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         }
         if (gui == "plot") {
           probability <- argaddit$probability
-          prob <- (pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability))*-1
+          prob <- round(pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability, lower.tail = F),digits = rounding)
           plotcurve(q, probability)
         }
         if (gui == "rstudio") {
@@ -2091,7 +2112,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             q[2] <- q2
             plotcurve(q,probability)
           }
-          prob <- (pgeom(q = q[1], prob = probability) - pgeom(q = q[2],prob = probability))*-1
+          prob <- round(pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability, lower.tail = F),digits = rounding)
           manipulate::manipulate(plotcurveaux(q1,q2, probability),
                                  q1 = manipulate::slider(0, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], 260, q[2]),
@@ -2138,8 +2159,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
-                 legend=substitute(P("G <=" ~ q ~ ";" ~ scale==scaux ~ ";" ~ location ==locaux)==Pr~"\n\n",
-                                   list(q=qq,scaux=scaux,locaux=locaux, Pr = Pr)))
+                 legend=substitute(P("X <="~q~";"~nu==df)==Pr~"\n\n", list(q=qq, Pr=Pr, df = nu)))
         }
         if (gui == "plot" ) {
           nu <- argaddit$df
@@ -2453,11 +2473,13 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             Pr <- round(pgumbel(qq, location, scale), digits = rounding)
             Pr <- gsub("\\.", ",", Pr)
             qq <- gsub("\\.", ",", qq)
-            axis(side = 1, at = as.character(c(xvq1,xvq)),labels = FALSE, lwd.ticks = 0 , col = "black", font = 2)
-            axis(side=1, at=c(qqaux,xvq1), labels=c(qqaux,""), col="red", font = 2, col.axis = "red")
+            axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
+                 col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+            axis(side=1, at=as.character(c(xvq1, qqaux)), tick = TRUE, lwd = 1,
+                 col="red", font = 2, lwd.ticks = 0, labels = FALSE)
             abline(v = qqaux, lty=2, col = "red")
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P("G >" ~ q ~ ";" ~ scale==scaux ~ ";" ~ location ==locaux)==Pr~"\n\n",
+                   legend=substitute(P("G <=" ~ q ~ ";" ~ scale==scaux ~ ";" ~ location ==locaux)==Pr~"\n\n",
                                      list(q=qq,scaux=scaux,locaux=locaux, Pr = Pr)))
           }
           if (gui == "plot" ) {
@@ -2509,8 +2531,10 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             Pr <- round(pgumbel(qq, location, scale, lower.tail = FALSE), digits = rounding)
             Pr <- gsub("\\.", ",", Pr)
             qq <- gsub("\\.", ",", qq)
-            axis(side = 1, at = as.character(c(xvq1,xvq)),labels = FALSE, lwd.ticks = 0 , col = "black", font = 2)
-            axis(side=1, at=as.character(c(qqaux,xvq)), labels=c(qqaux,""), col="red", font = 2, col.axis = "red")
+            axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
+                 col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+            axis(side=1, at=as.character(c(xvq, qqaux)), tick = TRUE, lwd = 1,
+                 col="red", font = 2, lwd.ticks = 0, labels = FALSE)
             abline(v = qqaux, lty=2, col = "red")
             legend("topleft", bty="n", fill="red",
                    legend=substitute(P("G >" ~ q ~ ";" ~ scale==scaux ~ ";" ~ location ==locaux)==Pr~"\n\n",
@@ -2566,10 +2590,10 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
           axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2)
+               col="red", font = 2, col.axis = "red")
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(X~`<`~q~";"~mu == media~","~sigma == varen)==Pr, list(q = qq, Pr = Pr, media = mu, varen = sigma)))
+                 legend=substitute(P("X <=" ~ q ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, media = mu, varen = sigma)))
         }
         if (gui == "plot" ) {
           mu <- argaddit$mean
@@ -2578,7 +2602,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           plotcurve(q, mu,sigma)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotcurve(qaux, muaux),
+          manipulate::manipulate(plotcurve(mu, qaux, muaux),
                                  qaux = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
                                  muaux = manipulate::slider(mu, mu + 200, mu))
         }
@@ -2605,15 +2629,15 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
           axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2)
+               col="red", font = 2, col.axis = "red")
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(X~`>`~q)==Pr~"\n\n"~mu == media~~sigma == varen, list(q=qq, Pr=Pr, media = mu, varen = sigma)))
-        }
+                 legend=substitute(P("X >" ~ q ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, media = mu, varen = sigma)))
+          }
         if (gui == "plot") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          prob <- pnorm(q = q, mean = mu, sd=sigma)
+          prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
           plotcurve(q, mu, sigma)
         }
         if (gui == "rstudio") {
@@ -2635,7 +2659,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             rmax <- ceiling(lambda + 4 * sqrt(lambda))
             x <- rmin:rmax
             x1 <- rmin:q
-            x2 <- (q + 1):rmax
+            x2 <- q:rmax
             probx <- dpois(x, lambda = lambda)
             probx1 <- dpois(x1, lambda = lambda)
             probx2 <- dpois(x2, lambda = lambda)
@@ -2647,10 +2671,10 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             axis(2)
             title(ylab = expression(p[X](x)), xlab = "X",
                   main = gettext("Probability Function: Poisson.", domain = "R-leem"))
-            lines(x1, probx1, type = "h", panel.first = grid(), lwd = 2, col = "red")
-            points(x1, probx1, lwd = 2, col = "red", pch = 19)
             lines(x2, probx2, type = "h", lwd = 2)
             points(x2, probx2, lwd = 2, pch = 19)
+            lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
+            points(x1, probx1, lwd = 2, col = "red", pch = 19)
             abline(v = lambda, lty = 2)
             qq <- round(q, digits = 2)
             qqaux <- round(q, digits = 2)
@@ -2697,7 +2721,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             axis(2)
             title(ylab = expression(p[X](x)), xlab = "X",
                   main = gettext("Probability Function: Poisson.", domain = "R-leem"))
-            lines(x1, probx1, type = "h", panel.first = grid(), lwd = 2)
+            lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
             points(x1, probx1, lwd = 2, pch = 19)
             lines(x2, probx2, type = "h", lwd = 2, col = "red")
             points(x2, probx2, lwd = 2, col = "red", pch = 19)
@@ -2707,7 +2731,10 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             Pr <- round(ppois(qq, lambda = lambda, lower.tail = F), rounding)
             Pr <- gsub("\\.", ",", Pr)
             qq <- gsub("\\.", ",", qq)
-            axis(side = 1, at = c(qqaux,rmax) ,labels = c(qqaux, ""), col = "red", col.axis = "red")
+            axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
+                 col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+            axis(side=1, at=as.character(c(qqaux, rmax)), tick = TRUE, lwd = 1,
+                 col="red", font = 2, lwd.ticks = 0, labels = FALSE)
             abline(v = qqaux, lty = 2, col = "red")
             legend("topleft",
                    bty = "n", fill = "red",
@@ -2731,6 +2758,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         }
       }
       if (dist == "beta") {
+        if (q > 1) stop("The 'q' argument must be lower then 1.", call. = FALSE, domain = "R-leem")
       if (!any(names(argaddit) == "alpha")) {
         alpha <- readline(gettext("Insert the value of 'alpha' argument: ",  domain = "R-leem"))
         argaddit$alpha <- as.numeric(alpha)
@@ -2759,7 +2787,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           abline(v=argaddit$alpha, lty=2)
           qq <- round(q, digits=2)
           qqaux <-round(q, digits=2)
-          Pr <- round(pbeta(qq,  shape1, shape2, lower.tail = F), digits=rounding)
+          Pr <- round(pbeta(qq,  shape1, shape2), digits=rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
           axis(side=1, at=qqaux, labels=qqaux,
@@ -2768,7 +2796,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           abline(v = qqaux, lty = 2, col = "red")
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
-                 legend=substitute(P("X <" ~ q ~ ";" ~ alpha == alpha1 ~ ";" ~ beta == beta1) == Pr~"\n\n",
+                 legend=substitute(P("X <=" ~ q ~ ";" ~ alpha == alpha1 ~ ";" ~ beta == beta1) == Pr~"\n\n",
                                    list(q = qq, Pr = Pr, alpha1 = shape1, beta1= shape2)))
         }
         if (gui == "plot" ) {
@@ -2817,7 +2845,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         if (gui == "plot") {
           shape1 <- argaddit$alpha
           shape2 <- argaddit$beta
-          prob <- pbeta(q, shape1, shape2)
+          prob <- pbeta(q, shape1, shape2, lower.tail = F)
           plotcurve(q, shape1, shape2)
         }
         if (gui == "rstudio") {
@@ -2828,189 +2856,130 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
       }
     }
       if (dist == "exp") {
-      if (!any(names(argaddit) == "rate")) {
-        rate <- readline(gettext("Insert the value of 'rate' argument: ",  domain = "R-leem"))
-        argaddit$rate <- as.numeric(rate)
+        if (!any(names(argaddit) == "rate")) {
+          rate <- readline("Insert the value of 'rate' argument: ")
+          argaddit$rate <- as.numeric(rate)
+        }
+
+        if (lower.tail) {
+          plotcurve <- function(q, rate) {
+            rmin <- 0
+            rmax <- q + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
+            x <- rmin:rmax
+            x1 <- seq(rmin, q, by = 0.01)
+            x2 <- seq(q, rmax, by = 0.01)
+            probx <- dexp(x, rate = rate)
+            probx1 <- dexp(x1, rate = rate)
+            probx2 <- dexp(x2, rate = rate)
+            xlim <- c(rmin, rmax)
+            ylim <- c(min(probx), max(probx) + 2)
+            plot.new()
+            plot.window(xlim, ylim)
+            axis(1)
+            axis(2)
+            title(ylab = expression(f[X](x)), xlab = "X")
+            curve(dexp(x, rate), rmin, rmax,
+                  ylab = expression(p[x](q)),
+                  xlab = "x", ylim = ylim,
+                  panel.first = grid(col = "gray90"),
+                  main = gettext("Probability Function: Exponential.", domain = "R-leem"))
+            polygon(c(x2, rev(x2)),
+                    c(probx2, rep(0,length(probx2))),
+                    col = "gray90")
+            polygon(c(x1, rev(x1)),
+                    c(probx1, rep(0,length(probx1))),
+                    col = "red")
+            abline(v = 1 / rate, lty = 2)
+            qq <- round(q, digits = 2)
+            qqaux <- round(q, digits = 2)
+            Pr <- round(pexp(qq, rate = rate, lower.tail = T), rounding)
+            Pr <- gsub("\\.", ",", Pr)
+            qq <- gsub("\\.", ",", qq)
+            rate2 <- gsub("\\.", ",", rate)
+            axis(
+              side = 1, at = qqaux, labels = qqaux,
+              col = "red", font = 2, col.axis = "red"
+            )
+            abline(v = qqaux, lty = 2, col = "red")
+            legend("topleft",
+                   bty = "n", fill = "red",
+                   legend = substitute(P("X <=" ~ q ~";"~~ lambda == rat) == Pr, list(q = qq, Pr = Pr, rat = rate))
+            )
+          }
+          if (gui == "plot") {
+            rate <- argaddit$rate
+            prob <- pexp(q = q, rate = rate)
+            plotcurve(q, rate)
+          }
+          if (gui == "rstudio") {
+            rate <- argaddit$rate
+            prob <- pexp(q = q, rate = rate)
+            manipulate::manipulate(plotcurve(q, rate),
+                                   q = manipulate::slider(0, q + 30, q),
+                                   rate = manipulate::slider(rate, rate + 200, rate)
+            )
+          }
+        } else {
+            plotcurve <- function(q, rate) {
+            rmin <- 0
+            rmax <- (q + ceiling(1 / rate + 7 * sqrt(1 / rate^2)))
+            x <- rmin:rmax
+            x1 <- seq(rmin, q, by = 0.01)
+            x2 <- seq(q, rmax, by = 0.01)
+            probx <- dexp(x, rate = rate)
+            probx1 <- dexp(x1, rate = rate)
+            probx2 <- dexp(x2, rate = rate)
+            xlim <- c(rmin, rmax)
+            ylim <- c(min(probx), max(probx) + 2)
+            plot.new()
+            plot.window(xlim, ylim)
+            axis(1)
+            axis(2)
+            title(ylab = expression(p[X](x)), xlab = "X")
+            curve(dexp(x, rate), rmin, rmax,
+                  ylab = expression(p[x](q)),
+                  xlab = "x", ylim = ylim,
+                  panel.first = grid(col = "gray90"),
+                  main = gettext("Probability Function: Exponential.", domain = "R-leem"))
+            polygon(c(x2, rev(x2)),
+                    c(probx2, rep(0,length(probx2))),
+                    col = "red")
+            polygon(c(x1, rev(x1)),
+                    c(probx1, rep(0,length(probx1))),
+                    col = "gray90")
+            abline(v = rate, lty = 2)
+            qq <- round(q, digits = 2)
+            qqaux <- round(q, digits = 2)
+            Pr <- round(pexp(qq, rate = rate, lower.tail = F), rounding)
+            Pr <- gsub("\\.", ",", Pr)
+            qq <- gsub("\\.", ",", qq)
+            axis(
+              side = 1, at = qqaux, labels = qqaux,
+              col = "red", font = 2, col.axis = "red"
+            )
+            abline(v = qqaux, lty = 2, col = "red")
+            legend("topleft",
+                   bty = "n", fill = "red",
+                   legend = substitute(P("X >" ~ q ~";"~~ lambda == rat) == Pr, list(q = qq, Pr = Pr, rat = rate))
+            )
+          }
+          if (gui == "plot") {
+            rate <- argaddit$rate
+            prob <- pexp(q = q, rate = rate, lower.tail = F)
+            plotcurve(q, rate = rate)
+          }
+          if (gui == "rstudio") {
+            rate <- argaddit$rate
+            prob <- pexp(q = q, rate = rate, lower.tail = F)
+            manipulate::manipulate(plotcurve(q, rate),
+                                   q = manipulate::slider(q, q + 30, q),
+                                   lambda = manipulate::slider(rate, rate + 200, rate)
+            )
+          }
+        }
       }
-      if (lower.tail) {
-        plotcurve <- function(q, rate) {
-          rmin <- 0
-          rmax <- q + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
-          x <- rmin:rmax
-          x1 <- seq(rmin, q, by = 0.01)
-          x2 <- seq(q, rmax, by = 0.01)
-          probx <- dexp(x, rate = rate)
-          probx1 <- dexp(x1, rate = rate)
-          probx2 <- dexp(x2, rate = rate)
-          xlim <- c(rmin, rmax)
-          ylim <- c(min(probx), max(probx) + 2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(f[X](x)), xlab = "X")
-          curve(dexp(x, rate), rmin, rmax,
-                ylab = expression(p[x](q)),
-                xlab = "x", ylim = ylim,
-                panel.first = grid(col = "gray90"),
-                main = gettext("Probability Function: Exponential.", domain = "R-leem"))
-          polygon(c(x2, rev(x2)),
-                  c(probx2, rep(0,length(probx2))),
-                  col = "gray90")
-          polygon(c(x1, rev(x1)),
-                  c(probx1, rep(0,length(probx1))),
-                  col = "red")
-          abline(v = 1 / rate, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pexp(qq, rate = rate, lower.tail = T), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          rate2 <- gsub("\\.", ",", rate)
-          axis(
-            side = 1, at = qqaux, labels = qqaux,
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P("X <" ~ q ~ ";" ~ lambda == rat) == Pr ~ "\n\n;",
-                                     list(q = qq, Pr = Pr, rat = rate2))
-                 )
-        }
-        if (gui == "plot") {
-          rate <- argaddit$rate
-          prob <- pexp(q = q, rate = rate)
-          plotcurve(q, rate)
-        }
-        if (gui == "rstudio") {
-          rate <- argaddit$rate
-          prob <- pexp(q = q, rate = rate)
-          manipulate::manipulate(plotcurve(q, rate),
-                                 q = manipulate::slider(0, q + 30, q),
-                                 rate = manipulate::slider(rate, rate + 200, rate)
-          )
-        }
-      } else {
-        plotcurve <- function(q, rate) {
-          rmin <- 0
-          rmax <- q + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
-          x <- rmin:rmax
-          x1 <- seq(rmin, q, by = 0.01)
-          x2 <- seq(q, rmax, by = 0.01)
-          probx <- dexp(x, rate = rate)
-          probx1 <- dexp(x1, rate = rate)
-          probx2 <- dexp(x2, rate = rate)
-          xlim <- c(rmin, rmax)
-          ylim <- c(min(probx), max(probx) + 2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X")
-          curve(dexp(x, rate), rmin, rmax,
-                ylab = expression(p[x](q)),
-                xlab = "x", ylim = ylim,
-                panel.first = grid(col = "gray90"),
-                main = gettext("Probability Function: Exponential.", domain = "R-leem"))
-          polygon(c(x2, rev(x2)),
-                  c(probx2, rep(0,length(probx2))),
-                  col = "red")
-          polygon(c(x1, rev(x1)),
-                  c(probx1, rep(0,length(probx1))),
-                  col = "gray90")
-          abline(v = rate, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pexp(qq, rate = rate, lower.tail = F), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = qqaux, labels = qqaux,
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P("X >" ~ q ~ ";" ~ lambda == rat) == Pr,
-                                     list(q = qq, Pr = Pr, rat = rate))
-          )
-        }
-        if (gui == "plot") {
-          rate <- argaddit$rate
-          prob <- pexp(q = q, rate = rate)
-          plotcurve(q, rate = rate)
-        }
-        if (gui == "rstudio") {
-          rate <- argaddit$rate
-          prob <- pexp(q = q, rate = rate)
-          manipulate::manipulate(plotcurve(q, rate),
-                                 q = manipulate::slider(q, q + 30, q),
-                                 lambda = manipulate::slider(rate, rate + 200, rate)
-          )
-        }
-      }
-    }
       if (dist == "binomial") {
-      if (!any(names(argaddit) == "size")) {
-        size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
-        argaddit$size <- as.numeric(size)
-      }
-      if (!any(names(argaddit) == "prob")) {
-        prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
-        argaddit$prob <- as.numeric(prob)
-      }
-      size <- argaddit$size
-      sucesso <- argaddit$prob
-      if (lower.tail) {
-        plotcurve <- function(q, size, prob) {
-          rmin <- 0
-          x <- rmin:size
-          x1 <- rmin:q
-          x2 <- (q + 1):size
-          probx <- dbinom(x, size = size, prob = prob)
-          probx1 <- dbinom(x1, size = size, prob = prob)
-          probx2 <- dbinom(x2, size = size, prob = prob)
-          xlim <- c(rmin, size)
-          ylim <- c(min(probx), max(probx) + 0.1)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X",main="Probability Function: Binomial.")
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-          points(x1, probx1, lwd = 2, col = "red", pch = 19)
-          lines(x2, probx2, type = "h", lwd = 2)
-          points(x2, probx2, lwd = 2, pch = 19)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pbinom(q, size = size, prob = prob, lower.tail = T), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = c(qqaux, rmin), labels = c(qqaux, ""),
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P("X <=" ~ q ~ ";" ~ size == n ~ ";" ~ prob == p) == Pr ~ "\n\n",
-                                     list(q = qq, Pr = Pr, n = size, p = prob))
-          )
-        }
-        if (gui == "plot") {
-          prob <- pbinom(q = q, size = size, prob = sucesso)
-          plotcurve(q, size, prob = sucesso)
-        }
-        if (gui == "rstudio") {
-          prob <- pbinom(q = q, size = size, prob = sucesso)
-          manipulate::manipulate(plotcurve(q, size, prob),
-                                 q = manipulate::slider(0, size, q),
-                                 size = manipulate::slider(size, size + 30, size),
-                                 prob = manipulate::slider(sucesso, 1, sucesso)
-          )
-        }
-      } else {
+        if (q < 0) stop("The 'q' argument must be bigger then 1.", call. = FALSE, domain = "R-leem")
         if (!any(names(argaddit) == "size")) {
           size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
           argaddit$size <- as.numeric(size)
@@ -3019,168 +2988,213 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
           argaddit$prob <- as.numeric(prob)
         }
-        plotcurve <- function(q, size, prob) {
-          rmin <- size * prob - 4 * sqrt(size * prob * (1 - prob))
-          if (rmin < 0 || rmin>q) rmin <- 0 else rmin <- round(rmin)
-          x <- rmin:size
-          x1 <- rmin:q
-          x2 <- (q + 1):size
-          probx <- dbinom(x, size = size, prob = prob)
-          probx1 <- dbinom(x1, size = size, prob = prob)
-          probx2 <- dbinom(x2, size = size, prob = prob)
-          xlim <- c(rmin, size)
-          ylim <- c(min(probx), max(probx) + 0.1)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X",main="Probability Function: Binomial.")
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
-          points(x1, probx1, lwd = 2, pch = 19)
-          lines(x2, probx2, type = "h", lwd = 2, col = "red")
-          points(x2, probx2, lwd = 2, pch = 19, col = "red")
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pbinom(q, size = size, prob = prob, lower.tail = F), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = qqaux, labels = qqaux,
-            col = "red", font = 2, col.axis = "red"
-          )
-          axis(
-            side = 1, at = c(qqaux+1, size),
-            col = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P("X >" ~ q ~ ";" ~ size == n ~ ";" ~ prob == p) == Pr ~ "\n\n" ,
-                                     list(q = qq, Pr = Pr, n = size, p = prob ))
-          )
-        }
-        if (gui == "plot") {
-          prob <- pbinom(q = q, size = size, prob = sucesso, lower.tail = FALSE)
-          # Plot
-          plotcurve(q, size, prob = sucesso)
-        }
-        if (gui == "rstudio") {
-          prob <- pbinom(q = q, size = size, prob = sucesso, lower.tail = FALSE)
-          manipulate::manipulate(plotcurve(q, size, prob),
-                                 q = manipulate::slider(q, size, q),
-                                 size = manipulate::slider(size, size + 30, size),
-                                 prob = manipulate::slider(sucesso, 1, sucesso)
-          )
+        if (prob > 1) stop("The 'prob' argument must be lower then 1.", call. = FALSE, domain = "R-leem")
+        size <- argaddit$size
+        sucesso <- argaddit$prob
+        if (lower.tail) {
+          plotcurve <- function(q, size, prob) {
+            rmin <- 0
+            x <- rmin:size
+            x1 <- rmin:q
+            x2 <- (q + 1):size
+            probx <- dbinom(x, size = size, prob = prob)
+            probx1 <- dbinom(x1, size = size, prob = prob)
+            probx2 <- dbinom(x2, size = size, prob = prob)
+            xlim <- c(rmin, size)
+            ylim <- c(min(probx), max(probx) + 0.1)
+            plot.new()
+            plot.window(xlim, ylim)
+            axis(1)
+            axis(2)
+            title(ylab = expression(p[X](x)), xlab = "X",main="Probability Function: Binomial.")
+            lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
+            points(x1, probx1, lwd = 2, col = "red", pch = 19)
+            lines(x2, probx2, type = "h", lwd = 2)
+            points(x2, probx2, lwd = 2, pch = 19)
+            abline(v = size * prob, lty = 2)
+            qq <- round(q, digits = 2)
+            qqaux <- round(q, digits = 2)
+            Pr <- round(pbinom(q, size = size, prob = prob, lower.tail = T), rounding)
+            Pr <- gsub("\\.", ",", Pr)
+            qq <- gsub("\\.", ",", qq)
+            axis(
+              side = 1, at = c(qqaux, rmin), labels = c(qqaux, ""),
+              col = "red", font = 2, col.axis = "red"
+            )
+            abline(v = qqaux, lty = 2, col = "red")
+            legend("topleft",
+                   bty = "n", fill = "red",
+                   legend = substitute(P("X <=" ~ q ~ ";" ~ size == n ~ ";" ~ prob == p) == Pr ~ "\n\n",
+                                       list(q = qq, Pr = Pr, n = size, p = prob))
+            )
+          }
+          if (gui == "plot") {
+            prob <- pbinom(q = q, size = size, prob = sucesso)
+            plotcurve(q, size, prob = sucesso)
+          }
+          if (gui == "rstudio") {
+            prob <- pbinom(q = q, size = size, prob = sucesso)
+            manipulate::manipulate(plotcurve(q, size, prob),
+                                   q = manipulate::slider(0, size, q),
+                                   size = manipulate::slider(size, size + 30, size),
+                                   prob = manipulate::slider(sucesso, 1, sucesso)
+            )
+          }
+        } else {
+          plotcurve <- function(q, size, prob) {
+            rmin <- size * prob - 4 * sqrt(size * prob * (1 - prob))
+            if (rmin < 0 || rmin>q) rmin <- 0 else rmin <- round(rmin)
+            x <- rmin:size
+            x1 <- rmin:q
+            x2 <- (q + 1):size
+            probx <- dbinom(x, size = size, prob = prob)
+            probx1 <- dbinom(x1, size = size, prob = prob)
+            probx2 <- dbinom(x2, size = size, prob = prob)
+            xlim <- c(rmin, size)
+            ylim <- c(min(probx), max(probx) + 0.1)
+            plot.new()
+            plot.window(xlim, ylim)
+            axis(1)
+            axis(2)
+            title(ylab = expression(p[X](x)), xlab = "X",main="Probability Function: Binomial.")
+            lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+            points(x1, probx1, lwd = 2, pch = 19)
+            lines(x2, probx2, type = "h", lwd = 2, col = "red")
+            points(x2, probx2, lwd = 2, pch = 19, col = "red")
+            abline(v = size * prob, lty = 2)
+            qq <- round(q, digits = 2)
+            qqaux <- round(q, digits = 2)
+            Pr <- round(pbinom(q, size = size, prob = prob, lower.tail = F), rounding)
+            Pr <- gsub("\\.", ",", Pr)
+            qq <- gsub("\\.", ",", qq)
+            axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
+                 col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+            axis(side=1, at=as.character(c(qqaux, size)), tick = TRUE, lwd = 1,
+                 col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+            abline(v = qqaux, lty = 2, col = "red")
+            legend("topleft",
+                   bty = "n", fill = "red",
+                   legend = substitute(P("X >" ~ q ~ ";" ~ size == n ~ ";" ~ prob == p) == Pr ~ "\n\n",
+                                       list(q = qq, Pr = Pr, n = size, p = prob))
+            )
+          }
+          if (gui == "plot") {
+            prob <- pbinom(q = q, size = size, prob = sucesso, lower.tail = FALSE)
+            plotcurve(q, size, prob = sucesso)
+          }
+          if (gui == "rstudio") {
+            prob <- pbinom(q = q, size = size, prob = sucesso, lower.tail = FALSE)
+            manipulate::manipulate(plotcurve(q, size, prob),
+                                   q = manipulate::slider(q, size, q),
+                                   size = manipulate::slider(size, size + 30, size),
+                                   prob = manipulate::slider(sucesso, 1, sucesso)
+            )
+          }
         }
       }
-    }
       if (dist == "hyper") {
-      if (!any(names(argaddit) == "m")) {
-        m <- readline(gettext("Insert the value of 'm' argument: ", domain = "R-leem"))
-        argaddit$m <- as.numeric(m)
-      }
-      if (!any(names(argaddit) == "n")) {
-        n <- readline(gettext("Insert the value of 'n' argument: ", domain = "R-leem"))
-        argaddit$n <- as.numeric(n)
-      }
-      if (!any(names(argaddit) == "k")) {
-        k <- readline(gettext("Insert the value of 'k' argument: ", domain = "R-leem"))
-        argaddit$k <- as.numeric(k)
-      }
-      size <- argaddit$m
-      samples <- argaddit$n
-      sucess <- argaddit$k
-      if (lower.tail) {
-        plotcurve <- function(q, size, samples, sucess) {
-          rmin <- 0
-          x <- rmin:size
-          x1 <- rmin:q
-          x2 <- (q + 1):size
-          probx <- dhyper(x, m = size, n = samples, k = sucess)
-          probx1 <- dhyper(x1, m = size, n = samples, k = sucess)
-          probx2 <- dhyper(x2, m = size, n = samples, k = sucess)
-          xlim <- c(rmin, size)
-          ylim <- c(min(probx), max(probx) + 0.1)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X", main = "Probability Function: Hypergeometric.")
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-          points(x1, probx1, lwd = 2, col = "red", pch = 19)
-          lines(x2, probx2, type = "h", lwd = 2)
-          points(x2, probx2, lwd = 2, pch = 19)
-          abline(v = n, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(phyper(q, m = size, n = samples, k = sucess), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = c(qqaux, rmin), labels = c(qqaux, ""),
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P("X <=" ~ q ~ ";" ~ m == size ~ ";" ~  n == samples ~ ";" ~ k == sucess) == Pr ~ "\n\n",
-                                     list(q = q, t1 = qq[1], t2 = qq[2],
-                                          Pr = Pr, size = size, samples = samples, sucess = sucess))
-          )
+        if (!any(names(argaddit) == "m")) {
+          m <- readline(gettext("Insert the value of 'm' argument: ", domain = "R-leem"))
+          argaddit$m <- as.numeric(m)
         }
-        if (gui == "plot") {
-          prob <- phyper(q = q, m = size, n = samples, k = sucess)
-          plotcurve(q, size, samples, sucess)
+        if (!any(names(argaddit) == "n")) {
+          n <- readline(gettext("Insert the value of 'n' argument: ", domain = "R-leem"))
+          argaddit$n <- as.numeric(n)
         }
-      } else {
-        plotcurve <- function(q, size, samples, sucess) {
-          rmin <- 0
-          if (rmin < 0 || rmin > q) rmin <- 0 else rmin <- round(rmin)
-          x <- rmin:size
-          x1 <- rmin:q
-          x2 <- (q + 1):size
-          probx <- dhyper(x, m = size, n = samples, k = sucess)
-          probx1 <- dhyper(x1, m = size, n = samples, k = sucess)
-          probx2 <- dhyper(x2, m = size, n = samples, k = sucess)
-          xlim <- c(rmin, size)
-          ylim <- c(min(probx), max(probx) + 0.1)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X", main = "Probability Function:Hypergeometric.")
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
-          points(x1, probx1, lwd = 2, pch = 19)
-          lines(x2, probx2, type = "h", lwd = 2, col = "red")
-          points(x2, probx2, lwd = 2, pch = 19, col = "red")
-          abline(v = n, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(phyper(q, m = size, n = samples, k = sucess, lower.tail = F), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = qqaux, labels = qqaux,
-            col = "red", font = 2, col.axis = "red"
-          )
-          axis(
-            side = 1, at = c(qqaux + 1, size),,
-            col = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P("X >" ~ q ~ ";" ~ m == size ~ ";" ~ n == samples ~ ";" ~ k == sucess) == Pr ~ "\n\n" ,
-                                     list(t1 = qq[1], t2 = qq[2],
-                                          Pr = Pr, size = size, samples = samples, sucess = sucess, q = q))
-          )
+        if (!any(names(argaddit) == "k")) {
+          k <- readline(gettext("Insert the value of 'k' argument: ", domain = "R-leem"))
+          argaddit$k <- as.numeric(k)
         }
-        if (gui == "plot") {
-          prob <- phyper(q = q, m = size, n = samples, k = sucess)
-          plotcurve(q, size, samples, sucess)
+        size <- argaddit$m
+        samples <- argaddit$n
+        sucess <- argaddit$k
+        if (lower.tail) {
+          plotcurve <- function(q, size, samples, sucess) {
+            rmin <- 0
+            x <- rmin:size
+            x1 <- rmin:q
+            x2 <- q:size
+            probx <- dhyper(x, m = size, n = samples, k = sucess)
+            probx1 <- dhyper(x1, m = size, n = samples, k = sucess)
+            probx2 <- dhyper(x2, m = size, n = samples, k = sucess)
+            xlim <- c(rmin, size)
+            ylim <- c(min(probx), max(probx) + 0.1)
+            plot.new()
+            plot.window(xlim, ylim)
+            axis(1)
+            axis(2)
+            title(ylab = expression(p[X](x)), xlab = "X", main = "Probability Function: Hypergeometric.")
+            lines(x2, probx2, type = "h", lwd = 2)
+            points(x2, probx2, lwd = 2, pch = 19)
+            lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
+            points(x1, probx1, lwd = 2, col = "red", pch = 19)
+            abline(v = n, lty = 2)
+            qq <- round(q, digits = 2)
+            qqaux <- round(q, digits = 2)
+            Pr <- round(phyper(q, m = size, n = samples, k = sucess), rounding)
+            Pr <- gsub("\\.", ",", Pr)
+            qq <- gsub("\\.", ",", qq)
+            axis(
+              side = 1, at = c(qqaux, rmin), labels = c(qqaux, ""),
+              col = "red", font = 2, col.axis = "red"
+            )
+            abline(v = qqaux, lty = 2, col = "red")
+            legend("topleft",
+                   bty = "n", fill = "red",
+                   legend = substitute(P("X <=" ~ q ~ ";" ~ m == size ~ ";" ~  n == samples ~ ";" ~ k == sucess) == Pr ~ "\n\n",
+                                       list(q = q, t1 = qq[1], t2 = qq[2],
+                                            Pr = Pr, size = size, samples = samples, sucess = sucess))
+            )
+          }
+          if (gui == "plot") {
+            prob <- phyper(q = q, m = size, n = samples, k = sucess)
+            plotcurve(q, size, samples, sucess)
+          }
+        } else {
+          plotcurve <- function(q, size, samples, sucess) {
+            rmin <- 0
+            if (rmin < 0 || rmin > q) rmin <- 0 else rmin <- round(rmin)
+            x <- rmin:size
+            x1 <- rmin:q
+            x2 <- q+1:size
+            probx <- dhyper(x, m = size, n = samples, k = sucess)
+            probx1 <- dhyper(x1, m = size, n = samples, k = sucess)
+            probx2 <- dhyper(x2, m = size, n = samples, k = sucess)
+            xlim <- c(rmin, size)
+            ylim <- c(min(probx), max(probx) + 0.1)
+            plot.new()
+            plot.window(xlim, ylim)
+            axis(1)
+            axis(2)
+            title(ylab = expression(p[X](x)), xlab = "X", main = "Probability Function:Hypergeometric.")
+            lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+            points(x1, probx1, lwd = 2, pch = 19)
+            lines(x2, probx2, type = "h", lwd = 2, col = "red")
+            points(x2, probx2, lwd = 2, pch = 19, col = "red")
+            abline(v = n, lty = 2)
+            qq <- round(q, digits = 2)
+            qqaux <- round(q, digits = 2)
+            Pr <- round(phyper(q, m = size, n = samples, k = sucess, lower.tail = F), rounding)
+            Pr <- gsub("\\.", ",", Pr)
+            qq <- gsub("\\.", ",", qq)
+            axis(
+              side = 1, at = c(qqaux, size),
+              col = "red", col.axis = "red",labels =
+            )
+            abline(v = qqaux, lty = 2, col = "red")
+            legend("topleft",
+                   bty = "n", fill = "red",
+                   legend = substitute(P("X >" ~ q ~ ";" ~ m == size ~ ";" ~ n == samples ~ ";" ~ k == sucess) == Pr ~ "\n\n" ,
+                                       list(t1 = qq[1], t2 = qq[2],
+                                            Pr = Pr, size = size, samples = samples, sucess = sucess, q = q))
+            )
+          }
+          if (gui == "plot") {
+            prob <- phyper(q = q, m = size, n = samples, k = sucess, lower.tail = F)
+            plotcurve(q, size, samples, sucess)
+          }
         }
       }
-    }
       if (dist == "nbinom") {
       if (!any(names(argaddit) == "prob")) {
         prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
@@ -3340,7 +3354,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           prob <- pnbinom(q,pro,size,lower.tail = F)
         }
       }
-    }
+    }##############INCORRECT
       if (dist == "geometric") {
       if (!any(names(argaddit) == "probability")) {
         probability <- readline(gettext("Insert the value of 'probability' argument: ", domain = "R-leem"))
@@ -3353,7 +3367,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           if (rmin < 0) rmin <- 0
           x <- rmin:rmax
           x1 <- rmin:q
-          x2 <- (q + 1):rmax
+          x2 <- q:rmax
           probx <-  dgeom(x, prob = probability)
           probx1 <- dgeom(x1, prob = probability)
           probx2 <- dgeom(x2, prob = probability)
@@ -3364,16 +3378,19 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           axis(1)
           axis(2)
           title(ylab = expression(P[X](x)), xlab = "X",main = gettext("Probability Function: Geometric.", domain = "R-leem"))
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-          points(x1, probx1, lwd = 2, col = "red", pch = 19)
           lines(x2, probx2, type = "h", lwd = 2)
           points(x2, probx2, lwd = 2, pch = 19)
+          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
+          points(x1, probx1, lwd = 2, col = "red", pch = 19)
           qq <- round(q, digits = 2)
           qqaux <- round(q, digits = 2)
           Pr <- round(pgeom(qq, prob = probability, lower.tail = T), rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(side = 1, at = c(qqaux,rmin),labels=c(qqaux, ""), tick = TRUE,col = "red",col.axis = "red", font = 2)
+          axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
+               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+          axis(side=1, at=as.character(c(0, qqaux)), tick = TRUE, lwd = 1,
+               col="red", font = 2, labels = FALSE)
           abline(v = qqaux, lty = 2, col = "red")
           legend("topleft",
                  bty = "n", fill = "red",
@@ -3400,28 +3417,28 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           if (rmin < 0) rmin <- 0
           x <- rmin:rmax
           x1 <- rmin:q
-          x2 <- q+1:rmax
+          x2 <- q:rmax
           probx <- dgeom(x, prob = probability)
           probx1 <- dgeom(x1, prob = probability)
           probx2 <- dgeom(x2, prob = probability)
           xlim <- c(rmin, rmax)
-          ylim <- c(min(probx), max(probx) + 0.2)
+          ylim <- c(min(probx), max(probx) +0.2)
           plot.new()
           plot.window(xlim, ylim)
           axis(1)
           axis(2)
           title(ylab = expression(p[X](x)), xlab = "X", main = gettext("Probability Function: Geometric.", domain = "R-leem"))
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
-          points(x1, probx1, lwd = 2, pch = 19)
           lines(x2, probx2, type = "h", lwd = 2, col = "red")
           points(x2, probx2, lwd = 2, col = "red", pch = 19)
+          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+          points(x1, probx1, lwd = 2, pch = 19)
           qq <- round(q, digits = 2)
           qqaux <- round(q, digits = 2)
           Pr <- round(pgeom(qq, prob = probability, lower.tail = T), rounding)
           Pr <- gsub("\\.", ",", Pr)
           qq <- gsub("\\.", ",", qq)
-          axis(side = 1, at = c(qqaux+1,rmax),col = "red")
-          axis(side = 1, at = qqaux,labels = qqaux, col = "red",col.axis="red", font = 2)
+          axis(side = 1, at = c(qqaux,rmax),col = "red",labels = FALSE,lwd.ticks = 0)
+          axis(side = 1, at = qqaux, col = "red",col.axis="red", font = 2)
           abline(v = qqaux, lty = 2, col = "red")
           legend("topleft",
                  bty = "n", fill = "red",
