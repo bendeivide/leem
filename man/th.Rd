@@ -9,7 +9,7 @@ th(
   y = NULL,
   test = "ztest",
   h0,
-  alternative = c("two.sided", "less", "greater"),
+  alternative = c("two.sided", "L", "less", "greater", "G"),
   alpha = 0.05,
   exact = TRUE,
   correct = FALSE,
