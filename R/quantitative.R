@@ -2,8 +2,8 @@
 #'
 #' \code{Q} Quantitative distribution function for multiple distributions.
 #'
-#' @param p probability. The \code{Q} argument need have length 1 and value lower then 1.
-#' @param dist distribution to use. The default is 'normal'. Options: \code{'normal'}, and...
+#' @param p probability. The \code{P} argument need have length 1 and value lower then 1.
+#' @param dist distribution to use. The default is \code{'t-student'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....
 #' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.
 #' @param rounding numerical; it represents the number of decimals for calculating the probability.
 #' @param gui default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'plot'} and....
@@ -22,7 +22,7 @@
 #  @import shiny
 #' @export
 
-Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot", ...) {
+Q <- function(p, dist = "t-student", lower.tail = TRUE, rounding = 4, gui = "plot", ...) {
   if (p>1) stop("The 'p' argument are very large, please insert a value correct for probabilities!", call. = FALSE)
   argaddit <- list(...)
   argdef <- formals(Q)
@@ -66,7 +66,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
              labels = c(qqaux,""), lwd.ticks = 0 , col = "red", font = 2, col.axis = "red")
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft", bty = "n", fill = "red",
-               legend = substitute(Q("P="~ p ~"; " ~ mu == media ~ "; "~ sigma == varen ) == Pr ~ "\n\n",
+               legend = substitute(Q("P="~ p ~"; " ~ mu == media ~ "; "~ sigma == varen )~"<="~ Pr ~ "\n\n",
                                    list(p = qq, Pr = Pr, media = mu, varen = sigma))
         )
       }
@@ -103,7 +103,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
              labels = c(qqaux,""), lwd.ticks = 0 , col = "red", font = 2, col.axis = "red")
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft", bty = "n", fill = "red",
-               legend = substitute(Q("P=" ~ p ~"; " ~ mu == media ~ "; "~ sigma == varen) == Pr ~ "\n\n",
+               legend = substitute(Q("P=" ~ p ~"; " ~ mu == media ~ "; "~ sigma == varen)~">"~ Pr ~ "\n\n",
                                    list(p = qq, Pr = Pr, media = mu, varen = sigma))
         )
       }
@@ -167,7 +167,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
              lwd.ticks = 0 ,col.axis = "red", col = "red", font = 2)
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft", bty = "n", fill = "red",cex=0.8,
-               legend = substitute(Q("P=" ~ p ~"; " ~ location == media ~ "; "~ scale == varen )~ ">=" ~ Pr ~ "\n\n",
+               legend = substitute(Q("P=" ~ p ~"; " ~ location == media ~ "; "~ scale == varen )~ "<=" ~ Pr ~ "\n\n",
                                    list(p = qq, Pr = Pr, media = location, varen = scale)))
       }
       if (gui == "plot") {
@@ -223,7 +223,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
              lwd.ticks = 0 ,col.axis = "red", col = "red", font = 2)
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft", bty = "n", fill = "red",cex=0.8,
-               legend = substitute(Q("P=" ~ p ~"; " ~ location == media ~ "; "~ scale == varen )~ "<=" ~ Pr ~ "\n\n",
+               legend = substitute(Q("P=" ~ p ~"; " ~ location == media ~ "; "~ scale == varen )~ ">" ~ Pr ~ "\n\n",
                                    list(p = qq, Pr = Pr, media = location, varen = scale)))
       }
       if (gui == "plot") {
@@ -248,11 +248,11 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
       }
       if (lower.tail) {
       plotcurve <- function(p, lambda) {
-        rmin <- lambda - 4 * sqrt(lambda)
+        rmin <- 0
         if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
         rmax <- ceiling(lambda + 4 * sqrt(lambda))
         x <- rmin:rmax
-        x1 <- rmin:p
+        x1 <- rmin:qpois(p = p, lambda = lambda)
         x2 <- p[1]:rmax
         pointx <- ppois(x, lambda = lambda)
         pointx1 <- ppois(x1, lambda = lambda)
@@ -264,10 +264,10 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         axis(1)
         axis(2)
         title(ylab = expression(F[X](x)), xlab = "X", main = gettext("Quantitative Function: Poisson.", domain = "R-leem"))
-        lines(x1, pointx1, type = "h", panel.first = grid(), lwd = 2, col = "red")
-        points(x1, pointx1, lwd = 2, col = "red", pch = 19)
         lines(x2, pointx2, type = "h", lwd = 2)
         points(x2, pointx2, lwd = 2, pch = 19)
+        lines(x1, pointx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
+        points(x1, pointx1, lwd = 2, col = "red", pch = 19)
         abline(v = lambda, lty = 2)
         qq <- round(p, digits = 2)
         qqaux <-round(p, digits = 2)
@@ -275,12 +275,12 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         Pr <- gsub("\\.", ",", Pr)
         qq <- gsub("\\.", ",", qq)
         axis(side = 1, at = qqaux, labels = qqaux, col = "red", font = 2, col.axis ="red")
-        axis(side = 1, at = as.character(c(qqaux,lambda - 4 * sqrt(lambda))), labels = c(qqaux,""),
+        axis(side = 1, at = as.character(c(qqaux,rmin)), labels = c(qqaux,""),
              lwd.ticks = 0 ,col.axis = "red", col = "red", font = 2)
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft",
                bty = "n", fill = "red",
-               legend = substitute(Q("P=" ~ Pr ~";" ~ lambda == lambd ) == p ~ "\n\n",
+               legend = substitute(Q("P=" ~ Pr ~";" ~ lambda == lambd )~"<="~ p ~ "\n\n",
                                    list(p = qq, Pr = Pr, lambd = lambda))
         )
       }
@@ -299,7 +299,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
       }
     } else {
       plotcurve <- function(p, lambda) {
-        rmin <- lambda - 4 * sqrt(lambda)
+        rmin <- 0
         if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
         rmax <- ceiling(lambda + 4 * sqrt(lambda))
         x <- rmin:rmax
@@ -315,10 +315,10 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         axis(1)
         axis(2)
         title(ylab = expression(F[X](x)), xlab = "X", main = gettext("Quantitative Function: Poisson.", domain = "R-leem"))
-        lines(x1, pointx1, type = "h", panel.first = grid(), lwd = 2)
-        points(x1, pointx1, lwd = 2, pch = 19)
         lines(x2, pointx2, type = "h", lwd = 2, col = "red")
         points(x2, pointx2, lwd = 2, col = "red", pch = 19)
+        lines(x1, pointx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+        points(x1, pointx1, lwd = 2, pch = 19)
         abline(v = lambda, lty = 2)
         qq <- round(p, digits = 2)
         qqaux <- round(p, digits = 2)
@@ -326,12 +326,12 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         Pr <- gsub("\\.", ",", Pr)
         qq <- gsub("\\.", ",", qq)
         axis(side = 1, at = qqaux, labels = qqaux, col = "red", font = 2, col.axis ="red")
-        axis(side = 1, at = as.character(c(qqaux,lambda + 4 * sqrt(lambda))),labels = c(qqaux,""),
+        axis(side = 1, at = as.character(c(qqaux,rmax)),labels = c(qqaux,""),
              lwd.ticks = 0 ,col.axis = "red", col = "red", font = 2)
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft",
                bty = "n", fill = "red",
-               legend = substitute(Q("P=" ~ Pr ~";" ~ lambda == lambd ) == p ~ "\n\n",
+               legend = substitute(Q("P=" ~ Pr ~";" ~ lambda == lambd )~">"~ p ~ "\n\n",
                                    list(p = qq, Pr = Pr, lambd = lambda))
         )
       }
@@ -385,10 +385,11 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         Pr <- gsub("\\.", ",", Pr)
         qq <- gsub("\\.", ",", qq)
         axis(side = 1, at = qqaux, labels = qqaux, col = "red", font = 2, col.axis ="red")
-        axis(side = 1, at = as.character(c(qqaux, 0)), labels = FALSE, lwd.ticks = 0 , col = "red", font = 2)
+        axis(side = 1, at = as.character(c(qqaux, 0)), labels = FALSE, lwd.ticks = 1 , col = "red", font = 2)
         abline(v = max(x), lty = 2, col = "red")
         legend("topleft", bty = "n", fill = "red",
-               legend = substitute(Q("P="~ p ~"; " ~ alpha == alpha1   ~ "; "~ beta == beta1) ~ "<=" ~ Pr ~ "\n\n", list(p = qq, Pr = Pr, alpha1 = shape1, beta1 = shape2))
+               legend = substitute(Q("P="~ p ~"; " ~ alpha == alpha1   ~ "; "~ beta == beta1) ~ "<=" ~ Pr ~ "\n\n",
+                                   list(p = qq, Pr = Pr, alpha1 = shape1, beta1 = shape2))
         )
       }
       if (gui == "plot") {
@@ -424,7 +425,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         axis(side = 1, at = as.character(c(max(x), 1)),labels = FALSE, lwd.ticks = 0 , col = "red", font = 2)
         abline(v = max(x), lty = 2, col = "red")
         legend("topleft", bty = "n", fill = "red",
-               legend = substitute(Q("P="~ p ~"; " ~ alpha == alpha1 ~ "; "~ beta == beta1) ~">=" ~ Pr ~ "\n\n",
+               legend = substitute(Q("P="~ p ~"; " ~ alpha == alpha1 ~ "; "~ beta == beta1) ~">" ~ Pr ~ "\n\n",
                                    list(p = qq, Pr = Pr, alpha1 = shape1, beta1 = shape2))
         )
       }
@@ -598,7 +599,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         plot.window(xlim, ylim)
         axis(1)
         axis(2)
-        title(ylab = expression(F[X](x)), xlab = "X", main = gettext("Quantitative Function: Beta.", domain = "R-leem"))
+        title(ylab = expression(F[X](x)), xlab = "X", main = gettext("Quantitative Function: Geometric.", domain = "R-leem"))
         lines(x1, pointx1, type = "h", panel.first = grid(), lwd = 2, col = "red")
         points(x1, pointx1, lwd = 2, col = "red", pch = 19)
         lines(x2, pointx2, type = "h", lwd = 2)
@@ -610,7 +611,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         Pr <- gsub("\\.", ",", Pr)
         qq <- gsub("\\.", ",", qq)
         axis(side = 1, at = qqaux, labels = qqaux, col = "red", font = 2, col.axis ="red")
-        axis(side = 1, at = as.character(c(qqaux,rmin)), lwd.ticks = 0,labels = F, col = "red", font = 2)
+        axis(side = 1, at = as.character(c(qqaux,rmin)), lwd.ticks = 1,labels = F, col = "red", font = 2)
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft",
                bty = "n", fill = "red",
@@ -648,7 +649,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         plot.window(xlim, ylim)
         axis(1)
         axis(2)
-        title(ylab = expression(F[X](x)), xlab = "X", main = gettext("Quantitative Function: Beta.", domain = "R-leem"))
+        title(ylab = expression(F[X](x)), xlab = "X", main = gettext("Quantitative Function: Geometric.", domain = "R-leem"))
         lines(x1, pointx1, type = "h", panel.first = grid(), lwd = 2)
         points(x1, pointx1, lwd = 2, pch = 19)
         lines(x2, pointx2, type = "h", lwd = 2, col = "red")
@@ -660,11 +661,11 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         Pr <- gsub("\\.", ",", Pr)
         qq <- gsub("\\.", ",", qq)
         axis(side = 1, at = qqaux, labels = qqaux, col = "red", font = 2, col.axis ="red")
-        axis(side = 1, at = as.character(c(qqaux,rmin)),lwd.ticks = 0 ,labels = F, col = "red", font = 2)
+        axis(side = 1, at = as.character(c(qqaux,rmax)),lwd.ticks = 0 ,labels = F, col = "red", font = 2)
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft",
                bty = "n", fill = "red",
-               legend =  substitute(Q("P=" ~ Pr ~"; " ~ probability == prob ) ~">="~ p ~ "\n\n", list(p = qq, Pr = Pr, prob = prob))
+               legend =  substitute(Q("P=" ~ Pr ~"; " ~ probability == prob ) ~">"~ p ~ "\n\n", list(p = qq, Pr = Pr, prob = prob))
         )
       }
       if (gui == "plot") {
@@ -706,8 +707,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
                 col="red")
         abline(v=0, lty=2)
         qq <- round(p, digits=2)
-        qqaux <-round(qt(p,nu), digits=2)
-        Pr <- round(qt(qq, df = nu, lower.tail = T), digits=rounding)
+        qqaux <-round(qt(p,nu), digits=4)
+        Pr <- round(qt(p, df = nu, lower.tail = T), digits=4)
         Pr <- gsub("\\.", ",", Pr)
         qq <- gsub("\\.", ",", qq)
         axis(side=1, at=qqaux, , labels = qqaux, tick = TRUE, lwd = 0,
@@ -752,9 +753,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
                 col="gray90")
         abline(v=0, lty=2)
         qq <- round(p, digits=2)
-        qqaux <-round(qt(p,nu), digits=2)
-        Pr <- round(qt(qq, df = nu), digits=rounding)
-        Pr <- gsub("\\.", ",", Pr)
+        qqaux <-round(qt(p,nu, lower.tail = F), digits= 4) *-1
         qq <- gsub("\\.", ",", qq)
         axis(side=1, at=qqaux, labels = qqaux, col.axis = "red", tick = TRUE, lwd = 0,
              col="red", font = 2, lwd.ticks = 1)
@@ -762,11 +761,11 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
              col="red", font = 2, lwd.ticks = 0, labels = FALSE)
         abline(v = qqaux, lty=2, col = "red")
         legend("topleft", bty="n", fill="red",
-               legend=substitute(Q("P=" ~ p ~";"~ df == nu)~">="~Pr~"\n\n", list(p = qq, Pr = Pr, nu = nu)))
+               legend=substitute(Q("P=" ~ p ~";"~ df == nu)~">"~Pr~"\n\n", list(p = qq, Pr = qqaux, nu = nu)))
       }
       if (gui == "plot") {
         nu <- argaddit$df
-        point <- qt(p, df = nu)
+        point <- qt(p, df = nu, lower.tail = F) *-1
         plotcurve(p, nu)
       }
       if (gui == "rstudio") {
@@ -779,16 +778,18 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
     }
   }
   if (dist == "binomial") {
-    # Seguranças da distribuição binomial.
-    if (!any(names(argaddit) == "size")) stop("Insert the 'size' argument!", call. = FALSE, domain="R-leem")
-    if (!any(names(argaddit) == "prob")) stop("Insert the 'prob' argument", call. = FALSE,domain="R-leem")
+    if (!any(names(argaddit) == "size")){
+      size <- readline(expression("Insert the 'size' argument: ",domain = "R-leem"))
+      argaddit$size <- as.numeric(size)
+    }
+    if (!any(names(argaddit) == "prob")){
+    prob <- readline(expression("Insert the 'prob' argument: ",domain = "R-leem"))
+    argaddit$prob <- as.numeric(prob)
+  }
     size <- argaddit$size
     sucesso <- argaddit$prob
-    # Cauda verdadeira.
     if (lower.tail) {
       plotcurve <- function(p, size, prob) {
-        # pbinom(2,size=10,prob=0.5)=0.0546875
-        # qbinom(0.0546875,size=10,prob=0.5)=2
         q <- qbinom(p, size, prob)
         rmin <- 0
         if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -798,28 +799,18 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         probx <- dbinom(x, size = size, prob = prob)
         probx1 <- dbinom(x1, size = size, prob = prob)
         probx2 <- dbinom(x2, size = size, prob = prob)
-
-        # Area de plotagem
         xlim <- c(rmin, size)
         ylim <- c(min(probx), max(probx) + 0.1)
-
-        # Area de plotagem
         plot.new()
         plot.window(xlim, ylim)
-
-        # Eixos
         axis(1)
         axis(2)
-
-        # Titulo e lables
-        title(ylab = expression(F[X](x)), xlab = "X",main = "Quantile Function")
-
-        lines(x1, probx1, type = "h", panel.first = grid(), lwd = 2, col = "red")
+        title(ylab = expression(F[X](x)), xlab = "X",
+              main = gettext("Quantitative Function: Binomial.", domain = "R-leem"))
+        lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
         points(x1, probx1, lwd = 2, col = "red", pch = 19)
-
         lines(x2, probx2, type = "h", lwd = 2)
         points(x2, probx2, lwd = 2, pch = 19)
-
         abline(v = size * prob, lty = 2)
         qq <- round(q, digits = 2)
         qqaux <- round(q, digits = 2)
@@ -827,28 +818,27 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         Pr <- gsub("\\.", ",", Pr)
         qq <- gsub("\\.", ",", qq)
         axis(
-          side = 1, at = c(rmin, qqaux), labels = c(rmin, ""),
+          side = 1, at = c(rmin, qqaux), labels = c("", qqaux),
           col = "red", font = 2, col.axis = "red"
+        )
+        axis(
+          side = 1, at = qqaux, labels = TRUE, lwd.ticks = 1,
+          col = "red", font = 2, col.axis= "red"
         )
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft",
                bty = "n", fill = "red",
-               legend = substitute(Q(P >= py ~"; " ~ size == n~"; " ~ p == prob) <= Pr ~ "\n\n" , list(py = p, Pr = Pr, n = size, prob = prob))
+               legend = substitute(Q("P=" ~ py ~"; " ~ size == n~"; " ~ p == prob)~"<="~Pr ~ "\n\n" ,
+                                   list(py = p, Pr = Pr, n = size, prob = prob))
         )
       }
-      # Configurando plotagem padrão.
       if (gui == "plot") {
-        # Ponto
         point <- qbinom(p, size = size, prob = sucesso)
-        # Plotagem.
         plotcurve(p, size, prob = sucesso)
       }
     }
-    # Caso Cauda Falsa.
     else {
       plotcurve <- function(q, size, prob) {
-        # pbinom(2,size=10,prob=0.5,lower.tail=FALSE)=0.9453125
-        # qbinom(0.9453125,size=10,prob=0.5,lower.tail=FALSE)=2
         q <- qbinom(p, size, prob, lower.tail = F)
         rmin <- size * prob - 4 * sqrt(size * prob * (1 - prob))
         if (rmin < 0 || rmin>q) rmin <- 0 else rmin <- round(rmin)
@@ -858,28 +848,18 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         probx <- dbinom(x, size = size, prob = prob)
         probx1 <- dbinom(x1, size = size, prob = prob)
         probx2 <- dbinom(x2, size = size, prob = prob)
-
-        # Area de plotagem
         xlim <- c(rmin, size)
         ylim <- c(min(probx), max(probx) + 0.1)
-
-        # Area de plotagem
         plot.new()
         plot.window(xlim, ylim)
-
-        # Eixos
         axis(1)
         axis(2)
-
-        # Titulo e lables
-        title(ylab = expression(F[X](x)), xlab = "X",main = "Quantile Function")
-
-        lines(x1, probx1, type = "h", panel.first = grid(), lwd = 2)
+        title(ylab = expression(F[X](x)), xlab = "X",
+              main = gettext("Quantitative Function: Binomial.", domain = "R-leem"))
+        lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
         points(x1, probx1, lwd = 2, pch = 19)
-
         lines(x2, probx2, type = "h", lwd = 2, col = "red")
         points(x2, probx2, lwd = 2, pch = 19, col = "red")
-
         abline(v = size * prob, lty = 2)
         qq <- round(q, digits = 2)
         qqaux <- round(q, digits = 2)
@@ -887,28 +867,39 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         Pr <- gsub("\\.", ",", Pr)
         qq <- gsub("\\.", ",", qq)
         axis(
-          side = 1, at = c(qqaux, size), labels = c(qqaux, ""),
+          side = 1, at = c(qqaux, size), labels = c(qqaux, ""), lwd.ticks = 0,
+          col = "red", font = 2, col.axis= "red"
+        )
+        axis(
+          side = 1, at = qqaux, labels = TRUE, lwd.ticks = 1,
           col = "red", font = 2, col.axis= "red"
         )
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft",
                bty = "n", fill = "red",
-               legend = substitute(Q(P >= py ~"; " ~ size == n~"; " ~ p == prob) <= Pr ~ "\n\n" , list(py = p, Pr = Pr, n = size, prob = prob))
+               legend = substitute(Q("P=" ~ py ~"; " ~ size == n~"; " ~ p == prob)~">"~Pr ~ "\n\n" ,
+                                   list(py = p, Pr = Pr, n = size, prob = prob))
         )
       }
-      # Configurando plotagem padrão.
       if (gui == "plot") {
-        # Ponto
         point <- qbinom(p, size = size, prob = sucesso, lower.tail = F)
-        # Plotagem.
         plotcurve(p, size, prob = sucesso)
       }
     }
-  }##############Rest
+  }
   if (dist == "hyper") {
-    if (!any(names(argaddit) == "m")) stop("Insert the 'm' argument!", call. = FALSE, domain = "R-leem") # size
-    if (!any(names(argaddit) == "n")) stop("Insert the 'n' argument", call. = FALSE, domain = "R-leem") # number of sampes drawn
-    if (!any(names(argaddit) == "k")) stop("Insert the 'k' argument", call. = FALSE, domain = "R-leem") # number of itens in the population
+    if (!any(names(argaddit) == "m")){
+      m <- readline(expression("Insert the 'm' argument: ",domain = "R-leem"))
+      argaddit$m <- as.numeric(m)
+    }
+    if (!any(names(argaddit) == "n")){
+      n <- readline(expression("Insert the 'n' argument: ",domain = "R-leem"))
+      argaddit$n <- as.numeric(n)
+    }
+    if (!any(names(argaddit) == "k")){
+      k <- readline(expression("Insert the 'k' argument: ",domain = "R-leem"))
+      argaddit$k <- as.numeric(k)
+    }
     size <- argaddit$m
     samples <- argaddit$n
     sucess <- argaddit$k
@@ -922,28 +913,17 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         probx <- dhyper(x, m = size, n = samples, k = sucess)
         probx1 <- dhyper(x1, m = size, n = samples, k = sucess)
         probx2 <- dhyper(x2, m = size, n = samples, k = sucess)
-
-        # Area de plotagem
         xlim <- c(rmin, size)
         ylim <- c(min(probx), max(probx) + 0.1)
-
-        # Area de plotagem
         plot.new()
         plot.window(xlim, ylim)
-
-        # Eixos
         axis(1)
         axis(2)
-
-        # Titulo e lables
-        title(ylab = expression(F[X](x)), xlab = "X", main = "Probability Function")
-
-        lines(x1, probx1, type = "h", panel.first = grid(), lwd = 2, col = "red")
+        title(ylab = expression(F[X](x)), xlab = "X", main = gettext("Quantitative Function: Hypergeometric.", domain = "R-leem"))
+        lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
         points(x1, probx1, lwd = 2, col = "red", pch = 19)
-
         lines(x2, probx2, type = "h", lwd = 2)
         points(x2, probx2, lwd = 2, pch = 19)
-
         abline(v = match(max(dhyper(x = x, m = size, n = samples, k = sucess)), dhyper(x = x, m = size, n = samples, k = sucess)) - 1, lty = 2)
         qq <- round(q, digits = 2)
         qqaux <- round(q, digits = 2)
@@ -951,28 +931,23 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         Pr <- gsub("\\.", ",", Pr)
         qq <- gsub("\\.", ",", qq)
         axis(
-          side = 1, at = c(rmin, qqaux), labels = c(rmin, ""),
+          side = 1, at = c(rmin, qqaux), labels = c("", qqaux),
           col = "red", font = 2, col.axis = "red"
         )
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft",
                bty = "n", fill = "red",
-               legend = substitute(Q(P >= py ~ "; " ~ m == size ~ "; " ~ n == samples ~ "; " ~ k == sucess) <= Pr ~ "\n\n", list(py = p, Pr = Pr, size = size, samples = samples, sucess = sucess))
+               legend = substitute(Q("P=" ~py ~ "; " ~ m == size ~ "; " ~ n == samples ~ "; " ~ k == sucess)~"<="~ Pr ~ "\n\n",
+                                   list(py = p, Pr = Pr, size = size, samples = samples, sucess = sucess))
         )
       }
-      # Configurando plotagem padrão.
       if (gui == "plot") {
-        # Probability
         point <- qhyper(p, m = size, n = samples, k = sucess)
-        # Plot
         plotcurve(p, size, samples, sucess)
       }
     }
-    # Caso Cauda Falsa.
     else {
       plotcurve <- function(p, size, samples, sucess) {
-        # pbinom(2,size=10,prob=0.5,lower.tail=FALSE)=0.9453125
-        # qbinom(0.9453125,size=10,prob=0.5,lower.tail=FALSE)=2
         q <- qhyper(p, m = size, n = samples, k = sucess)
         rmin <- 0
         if (rmin < 0 || rmin > q) rmin <- 0 else rmin <- round(rmin)
@@ -982,54 +957,45 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, rounding = 4, gui = "plot",
         probx <- dhyper(x, m = size, n = samples, k = sucess)
         probx1 <- dhyper(x1, m = size, n = samples, k = sucess)
         probx2 <- dhyper(x2, m = size, n = samples, k = sucess)
-
-        # Area de plotagem
         xlim <- c(rmin, size)
         ylim <- c(min(probx), max(probx) + 0.1)
-
-        # Area de plotagem
         plot.new()
         plot.window(xlim, ylim)
-
-        # Eixos
         axis(1)
         axis(2)
-
-        # Titulo e lables
-        title(ylab = expression(F[X](x)), xlab = "X", main = "Quantile Function")
-
-        lines(x1, probx1, type = "h", panel.first = grid(), lwd = 2)
+        title(ylab = expression(F[X](x)), xlab = "X", main = gettext("Quantitative Function: Hypergeometric.", domain = "R-leem"))
+        lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
         points(x1, probx1, lwd = 2, pch = 19)
-
         lines(x2, probx2, type = "h", lwd = 2, col = "red")
         points(x2, probx2, lwd = 2, pch = 19, col = "red")
-
-
         abline(v = match(max(dhyper(x = x, m = size, n = samples, k = sucess)), dhyper(x = x, m = size, n = samples, k = sucess)) - 1, lty = 2)
         qq <- round(q, digits = 2)
         qqaux <- round(q, digits = 2)
-        Pr <- round(qhyper(x, m = size, n = samples, k = sucess, lower.tail = F), rounding)
+        Pr <- round(qhyper(p, m = size, n = samples, k = sucess, lower.tail = F), rounding)
         Pr <- gsub("\\.", ",", Pr)
         qq <- gsub("\\.", ",", qq)
         axis(
-          side = 1, at = c(qqaux, size), labels = c(qqaux, ""),
+          side = 1, at = c(qqaux, size), labels = FALSE,
+          col = "red", font = 2, col.axis = "red", lwd.ticks= 0
+        )
+        axis(
+          side = 1, at = qqaux, labels = qqaux,
           col = "red", font = 2, col.axis = "red"
         )
+
         abline(v = qqaux, lty = 2, col = "red")
         legend("topleft",
                bty = "n", fill = "red",
-               legend = substitute(Q(P >= py ~ "; " ~ m == size ~ "; " ~ n == samples ~ "; " ~ k == sucess) <= Pr ~ "\n\n", list(py = p, Pr = Pr, size = size, samples = samples, sucess = sucess))
+               legend = substitute(Q("P=" ~py ~ "; " ~ m == size ~ "; " ~ n == samples ~ "; " ~ k == sucess)~">"~ Pr ~ "\n\n",
+                                   list(py = p, Pr = Pr, size = size, samples = samples, sucess = sucess))
         )
       }
-      # Configurando plotagem padrão.
       if (gui == "plot") {
-        # Probability
         point <- qhyper(p, m = size, n = samples, k = sucess, lower.tail = F)
-        # Plot
         plotcurve(p, size, samples, sucess)
       }
     }
-  }##################Rest
+  }
   point <- round(point, rounding)
   return(point)
 }
