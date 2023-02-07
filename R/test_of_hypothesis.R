@@ -118,7 +118,7 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
              col="red", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side=1, at=as.character(c(ztab[2], + 5)), tick = TRUE, lwd = 1,
              col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-        title("Test of Hypoteses: zTest.")
+        title("Test of hypothesis: Z-Test.")
         text(0,0.3,"ACCEPT H0" )
         text(ztab[1] - 1 , 0.1, "RRH0")
         text(ztab[2] + 1 ,0.1,"RRH0")
@@ -192,7 +192,7 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
       }
       if (plot == TRUE) {
         par(mar = c(20,4,4,4))
-        title(main = "Test of hypoteses: zTest.")
+        title("Test of hypothesis: Z-Test.")
 
         x <- seq(- 4 , ztab[1], by = 0.01)
         y <- seq(ztab[1],+ 4, by = 0.01)
@@ -307,7 +307,7 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
              col="#009E73", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side=1, at=as.character(c(ztab[2], + 4)), tick = TRUE, lwd = 1,
              col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-        title(main = "Test of hypoteses: zTest.")
+        title("Test of hypothesis: Z-Test.")
         text(0, 0.3, "ACCEPT H0")
         text(2.5, 0.1, "RRH0")
         arrows(ztest ,0.05, 3, 0.19)
@@ -426,7 +426,7 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
              col="red", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side = 1, at = as.character(c(ttest)), tick = TRUE, lwd = 1,
              font = 2, lwd.ticks = 0, labels = T, col.axis = "blue",  col = "blue")
-        title("Test of Hypoteses: tTest.")
+        title("Test of hypothesis: T-Test.")
         text(0,0.3,"ACCEPT H0" )
         text(ttab[1] - 1 , 0.1, "RRH0")
         text(ttab[2] + 1 ,0.1,"RRH0")
@@ -524,7 +524,7 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
              col="#009E73", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side = 1, at = as.character(c(ttest)), tick = TRUE, lwd = 1,
              font = 2, lwd.ticks = 0, labels = T, col.axis = "blue",  col = "blue")
-        title(main = "Test of hypoteses: tTest.")
+        title("Test of hypothesis: T-Test.")
         text(0, 0.3, "ACCEPT H0")
         text(-2.5, 0.1, "RRH0")
         arrows(ttest ,0.05, 3, 0.19)
@@ -619,7 +619,7 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
              col="red", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side = 1, at = as.character(c(ttest)), tick = TRUE, lwd = 1,
              font = 2, lwd.ticks = 0, labels = T, col.axis = "blue",  col = "blue")
-        title(main = "Test of hypoteses: tTest.")
+        title("Test of hypothesis: T-Test.")
         text(0, 0.3, "ACCEPT H0")
         text(2.5, 0.1, "RRH0")
         arrows(ttest ,0.05, 3, 0.19)
