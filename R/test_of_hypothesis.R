@@ -38,6 +38,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
           p <- as.numeric(p)
         }else p <- argaddit$p
     }else{
+      if (is.null(y)) {
       if (!any(names(argaddit) == "sd")) {
         sdev <- readline("Insert the value of population standard deviation? ")
         sdev <- as.numeric(sdev)
@@ -46,7 +47,18 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
         h0 <- readline("Insert the value of null hypothesis? ")
         h0 <- as.numeric(h0)
       }
+      }else{
+        if (!any(names(argaddit) == "sd")) {
+          sdev <- c(readline("Insert the value of population 1 standard deviation: "),
+                    readline("Insert the value of population 2 standard deviation: "))
+          sdev <- as.numeric(sdev)
+        }else if(length(argaddit$sd) < 1){
+          sdev <- c(readline("Insert the value of population 1 standard deviation: "),
+                    readline("Insert the value of population 2 standard deviation: "))
+          sdev <- as.numeric(sdev)
+        }else sdev <- argaddit$sd
       }
+    }
     if (any(alternative == c("two.sided", "t", "T"))) {
       if (is.null(y)) {
         if(prop == TRUE){
@@ -110,6 +122,49 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
                         althyp = althyp, signlevel = signlevel, decision = decision,
                         decision2 = decision2, conclusion = conclusion)
       }
+      else{
+          title <- paste(gettext("  two Sample z-test (Two-sided test) \n", domain = "R-leem"))
+          nullhyp <- paste(gettext("  H0: mu1 = mu2 ", domain = "R-leem"),sep ="")
+          althyp <- paste(gettext("  H1: mu1 != mu2", domain = "R-leem"),sep ="")
+          signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha           ,2),sep = "")
+          n <- length(x)
+          n1 <- length(y)
+          ztest <- round((mean(x) - mean(y)) /sqrt((sdev[1]^2/n)-(sdev[2]^2 /n1)), 2)
+          ztab <- round(qnorm(1 - (alpha)/2), 2)
+          ztab <- round(c(-ztab, ztab), 2)
+          pvalue <- 2 * pnorm(abs(ztest), lower.tail = FALSE)
+          if (abs(ztest) >= abs(ztab[2])) {
+            decision <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                              abs(ztest), "| > |ztab = ", abs(ztab[2]),
+                              gettext("| then reject H0!", domain = "R-leem"), sep = "")
+            decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                               pvalue, " < alpha = ", alpha,
+                               gettext(" then reject H0!", domain = "R-leem"), sep = "")
+            decisionplot <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                                  abs(ztest), "| > |ztab = ", abs(ztab[2]), '|')
+            conclusion <- paste(gettext("   We observed by the Z Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                                round(alpha * 100),
+                                gettext("% probability", domain = "R-leem"), sep = "")
+            conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+          } else {
+            decision <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                              abs(ztest), "| < |ztab = ", abs(ztab[2]),
+                              gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+            decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                               pvalue, " > alpha = ", alpha,
+                               gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+            decisionplot <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                                  abs(ztest), "| < |ztab = ", abs(ztab[2]), '|')
+            conclusion <- paste(gettext("   We observed by the Z Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                                round(alpha * 100),
+                                gettext("% probability", domain = "R-leem"), sep = "")
+            conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+          }
+          results <- list(ztest = ztest, ztab = ztab, pvalue = pvalue, test = test,
+                          alternative = alternative, title = title, nullhyp = nullhyp,
+                          althyp = althyp, signlevel = signlevel, decision = decision,
+                          decision2 = decision2, conclusion = conclusion)
+        }
       if (plot == TRUE) {
         par(mar = c(20,4,4,4))
         x <- seq(- 5 * 1, ztab[1], by = 0.01)
@@ -231,6 +286,49 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
                         althyp = althyp, signlevel = signlevel, decision = decision,
                         decision2 = decision2, conclusion = conclusion)
       }
+      else{
+        title <- paste(gettext("  two Sample z-test (Less-sided test) \n", domain = "R-leem"))
+        nullhyp <- paste(gettext("  H0: mu1 >= mu2 ", domain = "R-leem"),sep ="")
+        althyp <- paste(gettext("  H1: mu1 < mu2", domain = "R-leem"),sep ="")
+        signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha           ,2),sep = "")
+        n <- length(x)
+        n1 <- length(y)
+        ztest <- round((mean(x) - mean(y)) /sqrt((sdev[1]^2/n)-(sdev[2]^2 /n1)), 2)
+        ztab <- round(qnorm(1 - (alpha)), 2)
+        ztab <- round(c(-ztab, ztab), 2)
+        pvalue <- 2 * pnorm(abs(ztest), lower.tail = FALSE)
+        if (abs(ztest) >= abs(ztab[2])) {
+          decision <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                            abs(ztest), "| > |ztab = ", abs(ztab[2]),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                                abs(ztest), "| > |ztab = ", abs(ztab[2]), '|')
+          conclusion <- paste(gettext("   We observed by the Z Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        } else {
+          decision <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                            abs(ztest), "| < |ztab = ", abs(ztab[2]),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                                abs(ztest), "| < |ztab = ", abs(ztab[2]), '|')
+          conclusion <- paste(gettext("   We observed by the Z Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+        }
+        results <- list(ztest = ztest, ztab = ztab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+      }
       if (plot == TRUE) {
         par(mar = c(20,4,4,4))
         x <- seq(- 4 , ztab[1], by = 0.01)
@@ -342,6 +440,51 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
                         althyp = althyp, signlevel = signlevel, decision = decision,
                         decision2 = decision2, conclusion = conclusion)
       }
+      else{
+        title <- paste(gettext("  two Sample z-test (Greater-sided test) \n", domain = "R-leem"))
+        nullhyp <- paste(gettext("  H0: mu1 <= mu2 ", domain = "R-leem"),sep ="")
+        althyp <- paste(gettext("  H1: mu1 > mu2", domain = "R-leem"),sep ="")
+        signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha           ,2),sep = "")
+        n <- length(x)
+        n1 <- length(y)
+        ztest <- round((mean(x) - mean(y)) /sqrt((sdev[1]^2/n)-(sdev[2]^2 /n1)), 2)
+        ztab <- round(qnorm(1 - (alpha)), 2)
+        ztab <- round(c(-ztab, ztab), 2)
+        pvalue <- 2 * pnorm(abs(ztest), lower.tail = TRUE)
+
+        if (abs(ztest) >= abs(ztab[2])) {
+          decision <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                            abs(ztest), "| > |ztab = ", abs(ztab[2]),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                                abs(ztest), "| > |ztab = ", abs(ztab[2]), '|')
+          conclusion <- paste(gettext("   We observed by the Z Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        } else {
+          decision <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                            abs(ztest), "| < |ztab = ", abs(ztab[2]),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As |ztest = ", domain = "R-leem"),
+                                abs(ztest), "| < |ztab = ", abs(ztab[2]), '|')
+          conclusion <- paste(gettext("   We observed by the Z Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+        }
+        results <- list(ztest = ztest, ztab = ztab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+
+      }
       if(plot == TRUE){
         par(mar = c(20,4,4,4))
         x <- seq(- 4 , ztab[2], by = 0.01)
@@ -450,6 +593,63 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
                         althyp = althyp, signlevel = signlevel, decision = decision,
                         decision2 = decision2, conclusion = conclusion)
       }
+      else{
+        n1 <- length(x)
+        n2 <- length(y)
+        if(n1 == n2){
+          df <- n1+n2-2
+          sp <- ((n1-1)*var(x) + (n2-1)*var(y))/df
+        }else{
+          df <- ((((var(x)^2)/ n1) + ((var(y)^2) / n2))^2) / (((((var(x)^2)/n1)^2)/n1 - 1) + (((var(x)^2)/n2)^2)/n2 - 1)
+          sp <- ((n1 - 1) * var(x) + (n2 - 1) * var(y)) / df
+        }
+        title <- paste(gettext("  Two Sample t-test (Two-sided test) \n", domain = "R-leem"))
+        nullhyp <- paste(gettext("  H0: μ1 = μ2", domain = "R-leem"),
+                         sep = "")
+        althyp <- paste(gettext("  H1: μ1 != μ2", domain = "R-leem"),
+                        sep = "")
+        signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha, 2),
+                           sep = "")
+        ttest <- round((mean(x) - mean(y)) / sqrt(sp*(1/n1+1/n2)), 2)
+        if (alternative == "two.sided"){
+          ttab <- round(qt(1 - (alpha)/2, df), 2)
+        } else {
+          ttab <- round(qt(1 - alpha, df), 2)
+        }
+        ttab <- round(c(-ttab, ttab), 2)
+        pvalue <- 2 * pt(df, abs(ttest), lower.tail = FALSE)
+        if (abs(ttest) >= abs(ttab[2])) {
+          decision <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                            abs(ttest), "| > |ttab = ", abs(ttab[2]),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "" )
+          decisionplot <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                                abs(ttest), "| > |ttab = ", abs(ttab[2]), '|')
+          conclusion <- paste(gettext("   We observed by the t Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext(" H0 was rejected", domain = "R-leem"))
+        } else {
+          decision <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                            abs(ttest), "| < |ttab = ", abs(ttab[2]),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                                abs(ttest), "| < |ttab = ", abs(ttab[2]),"|")
+          conclusion <- paste(gettext("   We observed by the t Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("   No evidence to reject the H0 ", domain = "R-leem"))
+        }
+        results <- list(ttest = ttest, ttab = ttab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+      }
       if (plot == TRUE) {
         par(mar = c(20,4,4,4))
         x <- seq(- 5 * 1, ttab[1], by = 0.01)
@@ -492,14 +692,11 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
         text(3.1, 0.2, "ttest")
         mtext("Step 1: Hypothesis", side = 1, line = 5, adj = 0, col = "red")
         mtext("___________________", side = 1, line = 5, adj = 0, col = "red")
-        mtext(t = substitute(  H0 == h01,
-                               list(h01 = h0))  , side = 1, line = 6, adj = 0)
-        mtext(t = substitute(  H1~"!="~ h01,
-                               list(h01 = h0))  , side = 1, line = 7, adj = 0)
+        mtext(t = nullhyp  , side = 1, line = 6, adj = 0)
+        mtext(t = althyp , side = 1, line = 7, adj = 0)
         mtext("Step 2: Significante level ", side = 1, line = 10, adj = 0, col = "red")
         mtext("______________________", side = 1, line = 10, adj = 0, col = "red")
-        mtext(t = substitute(  alpha == al,
-                               list(al = alpha))  , side = 1, line = 11, adj = 0)
+        mtext(t = signlevel  , side = 1, line = 11, adj = 0)
         mtext("Step 3: Rule of decision ", side = 1, line = 5, adj = 1, col = "red")
         mtext("______________________", side = 1, line = 5, adj = 1, col = "red")
         mtext(decisionplot, side = 1, line = 6, adj = 1)
@@ -526,7 +723,6 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
           decision <- paste(gettext("   As |ttest = ", domain = "R-leem"),
                             abs(ttest), "| > |ttab = ", abs(ttab[2]),
                             gettext("| then reject H0!", domain = "R-leem"), sep = "")
-
           decisionplot <- paste(gettext("   As |ttest = ", domain = "R-leem"),
                                 abs(ttest), "| > |ttab = ", abs(ttab[2]),
                                 "|")
@@ -536,7 +732,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
           conclusion <- paste(gettext("   We observed by the t Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
                               round(alpha * 100),
                               gettext("% probability", domain = "R-leem"), sep = "")
-          conclusioncons <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
         } else {
           decision <- paste(gettext("   As |ttest = ", domain = "R-leem"),
                             abs(ttest), "| < |ttab = ", abs(ttab[2]),
@@ -549,7 +745,55 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
           conclusion <- paste(gettext("   We observed by the t Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
                               round(alpha * 100),
                               gettext("% probability", domain = "R-leem"), sep = "")
-          conclusioncons <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        }
+        results <- list(ttest = ttest, ttab = ttab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+      }
+      else{
+        n1 <- length(x)
+        n2 <- length(y)
+        df <- n1+n2-2
+        sp <- ((n1-1)*var(x) + (n2-1)*var(y))/df
+        title <- paste(gettext("  Two Sample t-test (Less test) \n", domain = "R-leem"))
+        nullhyp <- paste(gettext("  H0: μ1 >= μ2", domain = "R-leem"),
+                         sep = "")
+        althyp <- paste(gettext("  H1: μ1 < μ2", domain = "R-leem"),
+                        sep = "")
+        signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha, 2),
+                           sep = "")
+        ttest <- round((mean(x) - mean(y)) / sqrt(sp*(1/n1+1/n2)), 2)
+        ttab <- round(dt(df, 1 - alpha), 2)
+        ttab <- round(c(-ttab, ttab), 2)
+        pvalue <- 2 * pt(df, abs(ttest), lower.tail = FALSE)
+        if (abs(ttest) >= abs(ttab[2])) {
+          decision <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                            abs(ttest), "| > |ttab = ", abs(ttab[2]),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                                abs(ttest), "| > |ttab = ", abs(ttab[2]), '|')
+          conclusion <- paste(gettext("   We observed by the t Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext(" H0 was rejected", domain = "R-leem"))
+        } else {
+          decision <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                            abs(ttest), "| < |ttab = ", abs(ttab[2]),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                                abs(ttest), "| < |ttab = ", abs(ttab[2]), '|')
+          conclusion <- paste(gettext("   We observed by the t Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("   No evidence to reject the H0 ", domain = "R-leem"))
         }
         results <- list(ttest = ttest, ttab = ttab, pvalue = pvalue, test = test,
                         alternative = alternative, title = title, nullhyp = nullhyp,
@@ -589,20 +833,17 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
         text(3.1, 0.2, "ttest")
         mtext("Step 1: Hypothesis", side = 1, line = 5, adj = 0, col = "red")
         mtext("___________________", side = 1, line = 5, adj = 0, col = "red")
-        mtext(t = substitute(  H0 == h01,
-                               list(h01 = h0))  , side = 1, line = 6, adj = 0)
-        mtext(t = substitute(  H1~"!="~ h01,
-                               list(h01 = h0))  , side = 1, line = 7, adj = 0)
+        mtext(t = nullhyp  , side = 1, line = 6, adj = 0)
+        mtext(t = althyp , side = 1, line = 7, adj = 0)
         mtext("Step 2: Significante level ", side = 1, line = 10, adj = 0, col = "red")
         mtext("______________________", side = 1, line = 10, adj = 0, col = "red")
-        mtext(t = substitute(  alpha == al,
-                               list(al = alpha))  , side = 1, line = 11, adj = 0)
+        mtext(t = signlevel  , side = 1, line = 11, adj = 0)
         mtext("Step 3: Rule of decision ", side = 1, line = 5, adj = 1, col = "red")
         mtext("______________________", side = 1, line = 5, adj = 1, col = "red")
         mtext(decisionplot, side = 1, line = 6, adj = 1)
         mtext("Step 4: Conclusion ", side = 1, line = 10, adj = 1, col = "red")
         mtext("_________________", side = 1, line = 10, adj = 1, col = "red")
-        mtext(conclusioncons, side = 1, line = 11, adj = 1)
+        mtext(conclusionplot, side = 1, line = 11, adj = 1)
       }
     }
     if (any(alternative == c("greater", "g", "G"))) {
@@ -651,6 +892,54 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
                         althyp = althyp, signlevel = signlevel, decision = decision,
                         decision2 = decision2, conclusion = conclusion)
       }
+      else{
+        n1 <- length(x)
+        n2 <- length(y)
+        df <- n1+n2-2
+        sp <- ((n1-1)*var(x) + (n2-1)*var(y))/df
+        title <- paste(gettext("  Two Sample z-test (Greater test) \n", domain = "R-leem"))
+        nullhyp <- paste(gettext("  H0: μ1 <= μ2", domain = "R-leem"),
+                         sep = "")
+        althyp <- paste(gettext("  H1: μ1 > μ2", domain = "R-leem"),
+                        sep = "")
+        signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha, 2),
+                           sep = "")
+        ttest <- round((mean(x) - mean(y)) / sqrt(sp*(1/n1+1/n2)), 2)
+        ttab <- round(dt(df, 1 - alpha), 2)
+        ttab <- round(c(-ttab, ttab), 2)
+        pvalue <- 2 * pt(df, abs(ttest), lower.tail = FALSE)
+        if (abs(ttest) >= abs(ttab[2])) {
+          decision <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                            abs(ttest), "| > |ttab = ", abs(ttab[2]),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                                abs(ttest), "| > |ttab = ", abs(ttab[2]), '|')
+          conclusion <- paste(gettext("   We observed by the t Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext(" H0 was rejected", domain = "R-leem"))
+        } else {
+          decision <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                            abs(ttest), "| < |ttab = ", abs(ttab[2]),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As |ttest = ", domain = "R-leem"),
+                                abs(ttest), "| < |ttab = ", abs(ttab[2]), '|')
+          conclusion <- paste(gettext("   We observed by the t Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("   No evidence to reject the H0 ", domain = "R-leem"))
+        }
+        results <- list(ttest = ttest, ttab = ttab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+      }
       if(plot == TRUE){
         par(mar = c(20,4,4,4))
         x <- seq(- 4 , ttab[2], by = 0.01)
@@ -684,14 +973,11 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
         text(3.1, 0.2, "ttest")
         mtext("Step 1: Hypothesis", side = 1, line = 5, adj = 0, col = "red")
         mtext("___________________", side = 1, line = 5, adj = 0, col = "red")
-        mtext(t = substitute(  H0 == h01,
-                               list(h01 = h0))  , side = 1, line = 6, adj = 0)
-        mtext(t = substitute(  H1~"!="~ h01,
-                               list(h01 = h0))  , side = 1, line = 7, adj = 0)
+        mtext(t = nullhyp  , side = 1, line = 6, adj = 0)
+        mtext(t = althyp , side = 1, line = 7, adj = 0)
         mtext("Step 2: Significante level ", side = 1, line = 10, adj = 0, col = "red")
         mtext("______________________", side = 1, line = 10, adj = 0, col = "red")
-        mtext(t = substitute(  alpha == al,
-                               list(al = alpha))  , side = 1, line = 11, adj = 0)
+        mtext(t = signlevel  , side = 1, line = 11, adj = 0)
         mtext("Step 3: Rule of decision ", side = 1, line = 5, adj = 1, col = "red")
         mtext("______________________", side = 1, line = 5, adj = 1, col = "red")
         mtext(decisionplot, side = 1, line = 6, adj = 1)
