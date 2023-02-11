@@ -16,7 +16,7 @@
 #'
 #' @import crayon
 #' @export
-th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
+th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative = c("two.sided","L",
                                                                 "less", "greater","G"), alpha = 0.05, exact = TRUE,
                correct = FALSE, paired = FALSE, plot = FALSE, ...) {
 
@@ -27,18 +27,44 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
     xfile <- file.choose(new = TRUE)
     x <- read.table(xfile, h = TRUE)
   }
-  # Z test:
   if (test == "ztest") {
-    if (!any(names(argaddit) == "sd")) {
-      sdev <- readline("Insert the value of population standard deviation? ")
-      sdev <- as.numeric(sdev)
-    } else sdev <- argaddit$sd
-    if (missing(h0)) {
-      h0 <- readline("Insert the value of null hypothesis? ")
-      h0 <- as.numeric(h0)
-    }
-    if (alternative == "two.sided") {
+    if(prop == TRUE){
+        if (!any(names(argaddit) == "pa")) {
+          pa <- readline("Insert the value of population sample part? ")
+          pa <- as.numeric(pa)
+        } else pa <- argaddit$pa
+        if (missing(p)) {
+          p <- readline("Insert the value of  proportion? ")
+          p <- as.numeric(p)
+        }else p <- argaddit$p
+    }else{
+      if (!any(names(argaddit) == "sd")) {
+        sdev <- readline("Insert the value of population standard deviation? ")
+        sdev <- as.numeric(sdev)
+      } else sdev <- argaddit$sd
+      if (missing(h0)) {
+        h0 <- readline("Insert the value of null hypothesis? ")
+        h0 <- as.numeric(h0)
+      }
+      }
+    if (any(alternative == c("two.sided", "t", "T"))) {
       if (is.null(y)) {
+        if(prop == TRUE){
+          title <- paste(gettext("  One Sample z-test proportion (Two-sided test) \n", domain = "R-leem"))
+          nullhyp <- paste(gettext("  H0: p= ", domain = "R-leem"), round(p, 2),
+                           sep = "")
+          althyp <- paste(gettext("  H1: p != ", domain = "R-leem"), round(p, 2),
+                          sep = "")
+          signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha, 2),
+                             sep = "")
+          n <- length(x)
+          pa <- pa/n
+          ztest <- round( (( pa - p ) / ( sqrt(  (p * ( 1-p) ) / n  )  )) , 2)
+          ztab <- round(qnorm(1 - (alpha)/2), 2)
+          ztab <- round(c(-ztab, ztab), 2)
+          pvalue <- 2 * pnorm(abs(ztest), lower.tail = FALSE)
+          h0 <- p
+        }else{
         title <- paste(gettext("  One Sample z-test (Two-sided test) \n", domain = "R-leem"))
         nullhyp <- paste(gettext("  H0: mu = ", domain = "R-leem"), round(h0, 2),
                          sep = "")
@@ -48,13 +74,10 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
                            sep = "")
         n <- length(x)
         ztest <- round((mean(x) - h0) / (sdev /sqrt(n)), 2)
-        if (alternative == "two.sided"){
-          ztab <- round(qnorm(1 - (alpha)/2), 2)
-        } else {
-          ztab <- round(qnorm(1 - alpha), 2)
-        }
+        ztab <- round(qnorm(1 - (alpha)/2), 2)
         ztab <- round(c(-ztab, ztab), 2)
         pvalue <- 2 * pnorm(abs(ztest), lower.tail = FALSE)
+        }
         if (abs(ztest) >= abs(ztab[2])) {
           decision <- paste(gettext("   As |ztest = ", domain = "R-leem"),
                             abs(ztest), "| > |ztab = ", abs(ztab[2]),
@@ -118,7 +141,11 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
              col="red", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side=1, at=as.character(c(ztab[2], + 5)), tick = TRUE, lwd = 1,
              col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-        title("Test of hypothesis: Z-Test.")
+        if(prop == TRUE){
+          title("Test of proportion: Z-Test.")
+        }else{
+          title("Test of hypothesis: Z-Test.")
+        }
         text(0,0.3,"ACCEPT H0" )
         text(ztab[1] - 1 , 0.1, "RRH0")
         text(ztab[2] + 1 ,0.1,"RRH0")
@@ -127,14 +154,11 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
         text(3.1,0.2, round(ztest, digits = 4))
         mtext("Step 1: Hypothesis", side = 1, line = 5, adj = 0, col = "red")
         mtext("___________________", side = 1, line = 5, adj = 0, col = "red")
-        mtext(t = substitute(  H0 == h01,
-                               list(h01 = h0))  , side = 1, line = 6, adj = 0)
-        mtext(t = substitute(   H1 ~"!="~ h01,
-                               list(h01 = h0))  , side = 1, line = 7, adj = 0)
+        mtext(t = nullhyp  , side = 1, line = 6, adj = 0)
+        mtext(t = althyp , side = 1, line = 7, adj = 0)
         mtext("Step 2: Significante level ", side = 1, line = 10, adj = 0, col = "red")
         mtext("______________________", side = 1, line = 10, adj = 0, col = "red")
-        mtext(t = substitute(  alpha == al,
-                               list(al = alpha))  , side = 1, line = 11, adj = 0)
+        mtext(t = signlevel  , side = 1, line = 11, adj = 0)
         mtext("Step 3: Rule of decision ", side = 1, line = 5, adj = 1, col = "red")
         mtext("______________________", side = 1, line = 5, adj = 1, col = "red")
         mtext(decisionplot, side = 1, line = 6, adj = 1)
@@ -145,6 +169,22 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
     }
     if (any(alternative == c("less", "l", "L"))) {
       if (is.null(y)) {
+        if(prop == TRUE){
+          title <- paste(gettext("  One Sample z-test proportion (Less test) \n", domain = "R-leem"))
+          nullhyp <- paste(gettext("  H0: p >= ", domain = "R-leem"), round(p, 2),
+                           sep = "")
+          althyp <- paste(gettext("  H1: p < ", domain = "R-leem"), round(p, 2),
+                          sep = "")
+          signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha, 2),
+                             sep = "")
+          n <- length(x)
+          pa <- pa/n
+          ztest <- round( (( pa - p ) / ( sqrt(  (p * ( 1-p) ) / n  )  )) , 2)
+          ztab <- round(qnorm(1 - (alpha)), 2)
+          ztab <- round(c(-ztab, ztab), 2)
+          pvalue <- 2 * pnorm(abs(ztest), lower.tail = T)
+          h0 <- p
+        }else{
         title <- paste(gettext("  One Sample z-test (Less test) \n", domain = "R-leem"))
         nullhyp <- paste(gettext("  H0: mu = ", domain = "R-leem"), round(h0, 2),
                          sep = "")
@@ -157,6 +197,7 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
         ztab <- round(qnorm(1 - alpha), 2)
         ztab <- round(c(-ztab, ztab), 2)
         pvalue <- 2 * pnorm(abs(ztest), lower.tail = FALSE)
+        }
         if (abs(ztest) >= abs(ztab[2])) {
           decision <- paste(gettext("   As |ztest = ", domain = "R-leem"),
                             abs(ztest), "| > |ztab = ", abs(ztab[2]),
@@ -192,8 +233,6 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
       }
       if (plot == TRUE) {
         par(mar = c(20,4,4,4))
-        title("Test of hypothesis: Z-Test.")
-
         x <- seq(- 4 , ztab[1], by = 0.01)
         y <- seq(ztab[1],+ 4, by = 0.01)
         fx <- dnorm(x, mean = 0, sd = 1)
@@ -216,30 +255,48 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
              col="red", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side=1, at=as.character(c(ztab[1], + 4)), tick = TRUE, lwd = 1,
              col="#009E73", font = 2, lwd.ticks = 0, labels = FALSE)
+        if(prop == TRUE){
+          title("Test of proportion: Z-Test.")
+        }else{
+          title("Test of hypothesis: Z-Test.")
+        }
         text(0, 0.3, "ACCEPT H0")
         text(-2.5, 0.1, "RRH0")
         arrows(ztest ,0.05, 3, 0.19)
         text(3.1, 0.2, round(ztest, digits = 4))
         mtext("Step 1: Hypothesis", side = 1, line = 5, adj = 0, col = "red")
         mtext("___________________", side = 1, line = 5, adj = 0, col = "red")
-        mtext(t = substitute(  H0 == h01,
-                               list(h01 = h0))  , side = 1, line = 6, adj = 0)
-        mtext(t = substitute(   H1 ~"!="~ h01,
-                               list(h01 = h0))  , side = 1, line = 7, adj = 0)
+        mtext(t = nullhyp  , side = 1, line = 6, adj = 0)
+        mtext(t = althyp , side = 1, line = 7, adj = 0)
         mtext("Step 2: Significante level ", side = 1, line = 10, adj = 0, col = "red")
         mtext("______________________", side = 1, line = 10, adj = 0, col = "red")
-        mtext(t = substitute(  alpha == al,
-                               list(al = alpha))  , side = 1, line = 11, adj = 0)
+        mtext(t = signlevel  , side = 1, line = 11, adj = 0)
         mtext("Step 3: Rule of decision ", side = 1, line = 5, adj = 1, col = "red")
         mtext("______________________", side = 1, line = 5, adj = 1, col = "red")
         mtext(decisionplot, side = 1, line = 6, adj = 1)
         mtext("Step 4: Conclusion ", side = 1, line = 10, adj = 1, col = "red")
         mtext("_________________", side = 1, line = 10, adj = 1, col = "red")
         mtext(conclusionplot, side = 1, line = 11, adj = 1)
-      }
+              }
     }
     if (any(alternative == c("greater", "g", "G"))) {
       if (is.null(y)) {
+        if(prop == TRUE){
+          title <- paste(gettext("  One Sample z-test proportion (Greater test) \n", domain = "R-leem"))
+          nullhyp <- paste(gettext("  H0: p <= ", domain = "R-leem"), round(p, 2),
+                           sep = "")
+          althyp <- paste(gettext("  H1: p > ", domain = "R-leem"), round(p, 2),
+                          sep = "")
+          signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha, 2),
+                             sep = "")
+          n <- length(x)
+          pa <- pa/n
+          ztest <- round( (( pa - p ) / ( sqrt(  (p * ( 1-p) ) / n  )  )) , 2)
+          ztab <- round(qnorm(1 - (alpha)), 2)
+          ztab <- round(c(-ztab, ztab), 2)
+          pvalue <- 2 * pnorm(abs(ztest), lower.tail = F)
+          h0 <- p
+        }else{
         title <- paste(gettext("  One Sample z-test (Greater test) \n", domain = "R-leem"))
         nullhyp <- paste(gettext("  H0: mu = ", domain = "R-leem"), round(h0, 2),
                          sep = "")
@@ -252,6 +309,7 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
         ztab <- round(qnorm(1 - alpha), 2)
         ztab <- round(c(-ztab, ztab), 2)
         pvalue <- 2 * pnorm(abs(ztest), lower.tail = FALSE)
+        }
         if (abs(ztest) >= abs(ztab[2])) {
           decision <- paste(gettext("   As |ztest = ", domain = "R-leem"),
                             abs(ztest), "| > |ztab = ", abs(ztab[2]),
@@ -307,7 +365,11 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
              col="#009E73", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side=1, at=as.character(c(ztab[2], + 4)), tick = TRUE, lwd = 1,
              col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-        title("Test of hypothesis: Z-Test.")
+        if(prop == TRUE){
+          title("Test of proportion: Z-Test.")
+        }else{
+          title("Test of hypothesis: Z-Test.")
+        }
         text(0, 0.3, "ACCEPT H0")
         text(2.5, 0.1, "RRH0")
         arrows(ztest ,0.05, 3, 0.19)
@@ -315,15 +377,11 @@ th <- function(x, y = NULL, test = "ztest", h0, alternative = c("two.sided","L",
         text(3.1, 0.2, round(ztest, digits = 4))
         mtext("Step 1: Hypothesis", side = 1, line = 5, adj = 0, col = "red")
         mtext("___________________", side = 1, line = 5, adj = 0, col = "red")
-        mtext(t = substitute(  H0 == h01,
-                               list(h01 = h0))  , side = 1, line = 6, adj = 0)
-        mtext(t = substitute(  H1 ~"!="~ h01,
-                               list(h01 = h0))  , side = 1, line = 7, adj = 0)
+        mtext(t = nullhyp  , side = 1, line = 6, adj = 0)
+        mtext(t = althyp , side = 1, line = 7, adj = 0)
         mtext("Step 2: Significante level ", side = 1, line = 10, adj = 0, col = "red")
         mtext("______________________", side = 1, line = 10, adj = 0, col = "red")
-        mtext(t = substitute(  alpha == al,
-                               list(al = alpha))  , side = 1, line = 11, adj = 0)
-
+        mtext(t = signlevel  , side = 1, line = 11, adj = 0)
         mtext("Step 3: Rule of decision ", side = 1, line = 5, adj = 1, col = "red")
         mtext("______________________", side = 1, line = 5, adj = 1, col = "red")
         mtext(decisionplot, side = 1, line = 6, adj = 1)
