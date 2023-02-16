@@ -44,55 +44,61 @@ leem()
 
 Temos dentro desse projetos, diversos projetos integrados, sendo:
 
--   Projeto de dissertação PROFMAT/CAP/UFSJ (Concluído), da orientanda
-    [Juliane Nassaralla
-    Almeida](http://lattes.cnpq.br/5176118169651142);
+- Projeto de dissertação PROFMAT/CAP/UFSJ (Concluído), da orientanda
+  [Juliane Nassaralla Almeida](http://lattes.cnpq.br/5176118169651142);
 
--   Grupo de Iniciação Científica em Estatística/R:
+- Grupo de Iniciação Científica em Estatística/R
 
-    -   [Amanda Kelly
-        Costa](https://www.linkedin.com/in/amandakellycosta/)
-    -   [Lívia Dias de Sá
-        Amorim](https://www.linkedin.com/in/líviasdias/)
-    -   [Gustavo do Remédios da Silva
-        Paula](https://www.linkedin.com/in/gustavo-dos-remédios-da-silva-paula-995a04181)
-    -   [Dailon Vinicius Barbosa de
-        Fátima](linkedin.com/in/dailon-vinicius-6502a9207)
-    -   [André Felipe Duarte
-        Gonçalves](https://www.linkedin.com/in/andrefdg/)
+  - [Amanda Kelly Costa](https://www.linkedin.com/in/amandakellycosta/)
+  - [Lívia Dias de Sá Amorim](https://www.linkedin.com/in/líviasdias/)
+  - [Gustavo do Remédios da Silva
+    Paula](https://www.linkedin.com/in/gustavo-dos-remédios-da-silva-paula-995a04181)
+  - [Dailon Vinicius Barbosa de
+    Fátima](linkedin.com/in/dailon-vinicius-6502a9207)
+  - [André Felipe Duarte
+    Gonçalves](https://www.linkedin.com/in/andrefdg/)
 
--   Disciplina de Estatística Computacional (2022.1)
+- Disciplina de Estatística Computacional (2022.1)
 
-    -   [Gustavo Duque T. M. Elias \| Eng.
-        Civil](https://gustavodtme.github.io/)
-    -   [Ana Bárbara A. Mól \| Eng.
-        Civil](https://anabmol.github.io/discestcomp)
-    -   [Ana Flávia M. M.
-        Andrade \| Eng. Civil](https://anaf08.github.io/discestcomp/)
-    -   [Marco Antônio C. da Silva \| Eng.
-        Civil](https://mac8320.github.io/)
+  - [Gustavo Duque T. M. Elias \| Eng.
+    Civil](https://gustavodtme.github.io/)
+  - [Ana Bárbara A. Mól \| Eng.
+    Civil](https://anabmol.github.io/discestcomp)
+  - [Ana Flávia M. M. Andrade \| Eng.
+    Civil](https://anaf08.github.io/discestcomp/)
+  - [Marco Antônio C. da Silva \| Eng.
+    Civil](https://mac8320.github.io/)
 
--   Disciplina de Estatística e Probabilidade (Eng. Mecatrônica/2022.2)
+- Disciplina de Estatística e Probabilidade (Eng. Mecatrônica/2022.2)
 
-    -   [Almir Novais \| Eng. Mecatrônica](https://almirns.github.io/)
-    -   [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
-    -   [Nicholas de Carvalho \| Eng Mecatrônica](https://nicholascmf.github.io/)
-    -   [Maria Fernanda de Oliveira \| Eng. Mecatrônica](https://mariafernandadeoliveira.github.io/)
-    -   [Yuri Fonseca \| Eng. Mecatrônica](https://yurovskyy.github.io/)
+  - [Almir Novais \| Eng. Mecatrônica](https://almirns.github.io/)
+  - [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
+  - [Nicholas de Carvalho \| Eng.
+    Mecatrônica](https://nicholascmf.github.io/)
+  - [Maria Fernanda de Oliveira \| Eng.
+    Mecatrônica](https://mariafernandadeoliveira.github.io/)
+  - [Yuri Fonseca \| Eng. Mecatrônica](https://yurovskyy.github.io/)
 
--   Iniciação Científica (2022.2)
+- Iniciação Científica (2022.2)
 
-    -   [Rodrigo Ronchi \| Eng. Química](https://github.com/RodrigoRonchi)
+  - [Rodrigo Ronchi \| Eng. Química](https://github.com/RodrigoRonchi)
+
+- Iniciação Científica (2023.1)
+
+  - [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
 
 ## Propostas da GUI
 
--   GUI 1 (Proposta de Gustavo):
-    <https://www.figma.com/file/qYH2QntEZcVZDvq1ejp3W7/Untitled?node-id=0%3A1>
+- GUI 1 (Proposta de Gustavo):
+  <https://www.figma.com/file/qYH2QntEZcVZDvq1ejp3W7/Untitled?node-id=0%3A1>
 
--   GUI 2 (Proposta de Juliane):
-    <https://www.figma.com/proto/isRxuZbvduJe4bww0FvlTW/Untitled?node-id=7%3A18&scaling=min-zoom>
+- GUI 2 (Proposta de Juliane):
+  <https://www.figma.com/proto/isRxuZbvduJe4bww0FvlTW/Untitled?node-id=7%3A18&scaling=min-zoom>
 
--   GUI 3 (Proposta de André Felipe):
-    <https://www.figma.com/proto/lapHIsabTlxt6NLO0Grsur/Untitled?node-id=13%3A582&scaling=contain&page-id=0%3A1>
+- GUI 3 (Proposta de André Felipe):
+  <https://www.figma.com/proto/lapHIsabTlxt6NLO0Grsur/Untitled?node-id=13%3A582&scaling=contain&page-id=0%3A1>
 
--   GUI 4 (Proposta de Dailon): [Imagem](images/gui-dailon.jpeg)
+- GUI 4 (Proposta de Dailon): [Imagem](images/gui-dailon.jpeg)
+
+> De todo modo, já temos uma versão da GUI para o leem, que se inspirou
+> nesses modelos iniciais!

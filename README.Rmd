@@ -77,6 +77,10 @@ Temos dentro desse projetos, diversos projetos integrados, sendo:
 
   - [Rodrigo Ronchi \| Eng. Química](https://github.com/RodrigoRonchi)
 
+- Iniciação Científica (2023.1)
+
+  - [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
+
 ## Propostas da GUI
 
 - GUI 1 (Proposta de Gustavo): <https://www.figma.com/file/qYH2QntEZcVZDvq1ejp3W7/Untitled?node-id=0%3A1>
@@ -86,3 +90,5 @@ Temos dentro desse projetos, diversos projetos integrados, sendo:
 - GUI 3 (Proposta de André Felipe): <https://www.figma.com/proto/lapHIsabTlxt6NLO0Grsur/Untitled?node-id=13%3A582&scaling=contain&page-id=0%3A1>
 
 - GUI 4 (Proposta de Dailon): [Imagem](images/gui-dailon.jpeg)
+
+> De todo modo, já temos uma versão da GUI para o leem, que se inspirou nesses modelos iniciais!
