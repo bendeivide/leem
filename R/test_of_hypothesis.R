@@ -6,6 +6,7 @@
 #' @param y an optional (non-empty) numeric vector of data values.
 #' @param test character value. The options are: \code{"ttest"}, \code{"ztest"}, \code{"ptest"}, \code{"chitest"}, \code{"ftest"}, \code{"anova"}, \code{"friedman"}, \code{"kruskal"}, \code{"mann whitney"}.
 #' @param h0 numeric value. The hypothesized parameter.
+#' @param prop a logical indicating whether you want to use the proportion test of not. Default is \code{prop=FALSE}.
 #' @param alternative a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.
 #' @param alpha significance level of the test
 #' @param exact a logical indicating whether you want to use the exact test or not. Default is \code{exact=TRUE}.

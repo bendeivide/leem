@@ -116,8 +116,6 @@ Q <- function(p, dist = "t-student", lower.tail = TRUE, rounding = 4, gui = "plo
     }
   }
   if (dist == "gumbel") {
-    loca <- argaddit$location
-    sca <- argaddit$scale
     if (!any(names(argaddit) == "location")) {
       location <- readline(gettext("Insert the value of 'location' argument: ",  domain = "R-leem"))
       argaddit$location <- as.numeric(location)
@@ -128,6 +126,8 @@ Q <- function(p, dist = "t-student", lower.tail = TRUE, rounding = 4, gui = "plo
     }
     if (argaddit$scale <= 0 ) stop("The 'scale' argument must be greater than zero!",
                                    call. = FALSE, domain = "R-leem")
+    loca <- argaddit$location
+    sca <- argaddit$scale
     if (lower.tail) {
       xvq <- 2*qgumbel(p,loca,sca,lower.tail = TRUE) -loca
       xvq1 <- -2*qgumbel(p,loca,sca,lower.tail = TRUE) +loca
@@ -144,8 +144,8 @@ Q <- function(p, dist = "t-student", lower.tail = TRUE, rounding = 4, gui = "plo
         curve(pgumbel(x,location,scale,lower.tail = TRUE), xvq1,xvq,ylim=c(0,1.2),xlim=c(xvq1,xvq),
               ylab = expression(F[X](x)), xlab = "X",panel.first = grid(col = "gray90"),
               main = gettext("Quantitative Function: Gumbel.", domain = "R-leem"))
-        x <- seq(xvq1, q, by = 0.01)
-        y <- seq(q, xvq,by = 0.01)
+        x <- seq(xvq1, q[1], by = 0.01)
+        y <- seq(q[1], xvq,by = 0.01)
         fx <- pgumbel(x, location,scale)
         fy <- pgumbel(y, location, scale)
         polygon(c(y, rev(y)),
