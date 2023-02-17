@@ -252,7 +252,7 @@ Q <- function(p, dist = "t-student", lower.tail = TRUE, rounding = 4, gui = "plo
         if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
         rmax <- ceiling(lambda + 4 * sqrt(lambda))
         x <- rmin:rmax
-        x1 <- rmin:qpois(p = p, lambda = lambda)
+        x1 <- rmin:p
         x2 <- p[1]:rmax
         pointx <- ppois(x, lambda = lambda)
         pointx1 <- ppois(x1, lambda = lambda)
