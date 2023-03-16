@@ -9,6 +9,9 @@ th(
   y = NULL,
   test = "ztest",
   h0,
+  prop = FALSE,
+  p,
+  pa,
   alternative = c("two.sided", "L", "less", "greater", "G"),
   alpha = 0.05,
   exact = TRUE,
@@ -26,6 +29,8 @@ th(
 \item{test}{character value. The options are: \code{"ttest"}, \code{"ztest"}, \code{"ptest"}, \code{"chitest"}, \code{"ftest"}, \code{"anova"}, \code{"friedman"}, \code{"kruskal"}, \code{"mann whitney"}.}
 
 \item{h0}{numeric value. The hypothesized parameter.}
+
+\item{prop}{a logical indicating whether you want to use the proportion test of not. Default is \code{prop=FALSE}.}
 
 \item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". You can specify just the initial letter.}
 

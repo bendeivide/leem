@@ -15,7 +15,7 @@ stickchart <- function(x,
                       lty = 1,
                       lwd = 2,
                       ...) {
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE, domain = "R-leem")
   if (attr(x, "variable") == "continuous") stop("The function only applies to discrete variables.", call. = FALSE, domain = "R-leem")
   if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
@@ -790,7 +790,7 @@ hist.leem <- function(x,
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
-    warning("Coerced to Histogram!", call. = FALSE, domain = "R-leem")
+    warning("Coerced to barplot!", call. = FALSE, domain = "R-leem")
     numchar <- is.numeric(x$table$Groups)
     if (numchar) {
       xmin <- x$table$Groups[1]
@@ -889,6 +889,138 @@ hist.leem <- function(x,
     xvar <- c(xvar1, max(xvar2))
     axis(1, at = xvar)
     axis(2)
+  }
+  invisible(x)
+}
+
+
+
+#' Barplot graph
+#'
+#' @export
+barplot.leem <- function(x,
+                         bg = TRUE,
+                         main = NULL,
+                         xlab = NULL,
+                         ylab = NULL,
+                         panel.first = grid(col = "white"),
+                         bgcol = "gray",
+                         bgborder = NA,
+                         barcol = "yellow",
+                         barborder = "gray",
+                         posx1 = 0,
+                         posx2 = 0,
+                         xangf = 0,
+                         labels = NULL,
+                         ...) {
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
+  if (attr(x, "variable") == "continuous") stop("The function only applies to discrete variables.", call. = FALSE, domain = "R-leem")
+  if (class(x) == "leem" & is.null(attr(x, "output"))) x <- tabfreq(x)
+  if (attr(x, "variable") == "discrete") {
+    numchar <- is.numeric(x$table$Groups)
+    if (numchar) {
+      xmin <- x$table$Groups[1]
+      xmax <- max(x$table$Groups)
+      xvar <- x$table$Groups
+      xvaraux <-  c(xmin - 1, x$table$Groups, xmax + 1)
+      xvar1 <- xvaraux - 0.5
+      xvar2 <- xvaraux + 0.5
+      yvar <- x$table$Fi
+      yvar1 <- x$table$Fac1
+      yvar2 <- x$table$Fac2
+
+
+      # Limiares
+      xlim <- c(min(xvaraux), max(xvaraux))
+      ylim <- c(0, 1.2 * max(yvar))
+
+      # Area de plotagem
+      plot.new()
+      plot.window(xlim, ylim)
+
+      # Labels
+      if (is.null(main)) {
+        main <- gettext("Bar plot", domain = "R-leem")
+      }
+      if (is.null(xlab)) {
+        xlab <- gettext("Groups", domain = "R-leem")
+      }
+      if (is.null(ylab)) {
+        ylab <- gettext("Frequency", domain = "R-leem")
+      }
+
+      title(main = main, xlab = xlab, ylab = ylab)
+
+      if(bg) {
+        rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col =
+               bgcol, border = bgborder)
+      }
+
+      # Eixos
+      axis(1, at = xvar)
+      axis(2)
+
+      # Grid
+      panel.first
+
+      # Inserindo barras
+      rect(xvar - 0.5,
+           0,
+           xvar + 0.5,
+           yvar, col = barcol, border = barborder)
+    } else {
+      ngroups <- length(x$table$Groups)
+      aux <- 1:ngroups
+      xvar <- x$table$Groups
+      xvaraux <-  c(0, aux, ngroups + 1)
+      xvar1 <- xvaraux - 0.5
+      xvar2 <- xvaraux + 0.5
+      yvar <- x$table$Fi
+      yvar1 <- x$table$Fac1
+      yvar2 <- x$table$Fac2
+
+
+      # Limiares
+      xlim <- c(min(xvaraux), max(xvaraux))
+      ylim <- c(0, 1.2 * max(yvar))
+
+      # Area de plotagem
+      plot.new()
+      plot.window(xlim, ylim)
+
+      # Labels
+      if (is.null(main)) {
+        main <- gettext("Bar plot", domain = "R-leem")
+      }
+      if (is.null(xlab)) {
+        xlab <- gettext("Groups", domain = "R-leem")
+      }
+      if (is.null(ylab)) {
+        ylab <- gettext("Frequency", domain = "R-leem")
+      }
+
+      title(main = main, xlab = xlab, ylab = ylab)
+
+      if(bg) {
+        rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col =
+               bgcol, border = bgborder)
+      }
+
+      # Eixos
+      axis(1, at = aux, labels = FALSE)
+      if (is.null(labels)) labels <- xvar
+      text(x = aux + posx1,  y = par("usr")[3] + posx2, labels = labels, srt = xangf, pos = 1, xpd = TRUE)
+      axis(2)
+
+      # Grid
+      panel.first
+
+      # Inserindo barras
+      rect(aux - 0.5,
+           0,
+           aux + 0.5,
+           yvar, col = barcol, border = barborder)
+    }
   }
   invisible(x)
 }

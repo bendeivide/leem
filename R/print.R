@@ -190,7 +190,36 @@ output_htest <- function(x) {
   }
 }
 output_table <- function(x) {
+  cat(crayon::silver(gettext("\nTable of frequency \n", domain = "R-leem")))
+  cat(crayon::silver(gettext("Type of variable: ", domain = "R-leem")))
+  cat(crayon::silver(attr(x, "variable")))
+  cat("\n\n")
   print(x$table)
+  if (attr(x, "variable") == "continuous") {
+    cat(crayon::silver("\n============================================== \n"))
+    cat(crayon::silver(gettext("Classes: Grouping of classes \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fi: Absolute frequency \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("PM: Midpoint \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fr: Relative frequency \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fac1: Cumulative frequency (below) \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fac2: Cumulative frequency (above) \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fp: Percentage frequency \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fac1p: Cumulative percentage frequency (below) \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fac2p: Cumulative percentage frequency (above) \n", domain = "R-leem")))
+  }
+  if (attr(x, "variable") == "discrete") {
+    cat(crayon::silver("============================================== \n"))
+    aux1 <- gettext("Groups: Discretized grouping \n", domain = "R-leem")
+    cat(crayon::silver(aux1))
+    cat(crayon::silver(gettext("Fi: Absolute frequency \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fr: Relative frequency \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fac1: Cumulative frequency (below) \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fac2: Cumulative frequency (above) \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fp: Percentage frequency \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fac1p: Cumulative percentage frequency (below) \n", domain = "R-leem")))
+    cat(crayon::silver(gettext("Fac2p: Cumulative percentage frequency (above) \n", domain = "R-leem")))
+  }
+
 }
 output_newleem <- function(x) {
   attributes(x) <- NULL

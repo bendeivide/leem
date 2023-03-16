@@ -7,7 +7,7 @@
 tabfreq(dados, ...)
 
 ## Leem S3 method:
-tabfreq(data, k = NULL, ordered = NULL)
+tabfreq(data, k = NULL, ordered = NULL, namereduction)
 
 ## Default S3 method:
 tabfreq(data)
