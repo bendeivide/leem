@@ -33,7 +33,7 @@
 #' tabfreq(dados, ...)
 #'
 #' ## Leem S3 method:
-#' tabfreq(data, k = NULL, ordered = NULL)
+#' tabfreq(data, k = NULL, ordered = NULL, namereduction)
 #'
 #' ## Default S3 method:
 #' tabfreq(data)
@@ -117,7 +117,7 @@ tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE){
     tabela <- data.frame(tabela)
 
     if (numchar) {
-      listres <- list(table = tabela, statisctics = estat)
+      listres <- list(table = tabela, statistics = estat)
     } else {
       listres <- list(table = tabela)
     }

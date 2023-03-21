@@ -1,5 +1,5 @@
 # crayon package
 
-warn <- green$bold
-note <- cyan
-error <- red$bold
+warn <- crayon::green$bold
+note <- crayon::cyan
+error <- crayon::red$bold

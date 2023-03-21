@@ -81,11 +81,19 @@ Temos dentro desse projetos, diversos projetos integrados, sendo:
 
 - Iniciação Científica (2022.2)
 
+<<<<<<< HEAD
   - [Rodrigo Ronchi \| Eng. Química](https://github.com/RodrigoRonchi)
 
 - Iniciação Científica (2023.1)
 
   - [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
+=======
+    -   [Rodrigo Ronchi \| Eng. Química](https://github.com/RodrigoRonchi)
+    
+-   Iniciação Científica (2023.1)
+
+    -   [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
+>>>>>>> leem-andre
 
 ## Propostas da GUI
 
