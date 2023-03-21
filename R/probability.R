@@ -1225,18 +1225,23 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           legend("topleft", bty="n", fill="red",
                  legend=substitute(P(X~`<`~q~";"~mu == media~","~sigma == varen)==Pr, list(q = qq, Pr = Pr, media = mu, varen = sigma)))
         }
+
         if (gui == "plot" ) {
-          # Probability
+          # Plot
           mu <- argaddit$mean
           sigma <- argaddit$sd
           prob <- pnorm(q = q, mean = mu, sd = sigma)
-          # Plot
           plotcurve(q, mu,sigma)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotcurve(qaux, muaux),
+          # Plot
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          prob <- pnorm(q = q, mean = mu, sd = sigma)
+          manipulate::manipulate(plotcurve(qaux, muaux, sdaux),
                                  qaux = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
-                                 muaux = manipulate::slider(mu, mu + 200, mu))
+                                 muaux = manipulate::slider(mu - q, mu + q, mu),
+                                 sdaux = manipulate::slider(0, mu + 2 * sigma, sigma))
         }
       } else{
         plotcurve <- function(q, mu, sigma) {
