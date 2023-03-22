@@ -2553,110 +2553,110 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           }
         }
       }
-      if (dist == "normal") {
-      if (!any(names(argaddit) == "mean")) {
-        mean <- readline(gettext("Insert the value of 'mean' argument: ", domain = "R-leem"))
-        argaddit$mean <- as.numeric(mean)
-      }
-      if (!any(names(argaddit) == "sd")) {
-        sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
-        argaddit$sd <- as.numeric(sd)
-      }
-      if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
-      if (lower.tail) {
-        plotcurve <- function(q, mu, sigma) {
-          x <- seq(mu - 4 * sigma, q, by = 0.01)
-          y <- seq(q, mu + 4 * sigma, by = 0.01)
-          fx <- dnorm(x, mean = mu, sd = sigma)
-          fy <- dnorm(y, mean = mu, sd = sigma)
-          curve(dnorm(x, mean = mu, sd = sigma), mu - 4 * sigma, mu + 4 * sigma ,
-                ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
-                panel.first = grid(col = "gray90"),
-                main = gettext("Probability Function: Normal.", domain = "R-leem"))
-          polygon(c(x, rev(x)),
-                  c(fx, rep(0, length(fx))),
-                  col="red")
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="gray90")
-          abline(v=argaddit$mean, lty=2)
-          qq <- round(q, digits=2)
-          qqaux <-round(q, digits=2)
-          Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2, col.axis = "red")
-          abline(v = qqaux, lty=2, col = "red")
-          legend("topleft", bty="n", fill="red",
-                 legend=substitute(P("X <=" ~ q ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, media = mu, varen = sigma)))
-        }
-
-        if (gui == "plot" ) {
-<<<<<<< HEAD
-          # Plot
-=======
->>>>>>> leem-andre
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
-          prob <- pnorm(q = q, mean = mu, sd = sigma)
-          plotcurve(q, mu,sigma)
-        }
-        if (gui == "rstudio") {
-<<<<<<< HEAD
-          # Plot
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
-          prob <- pnorm(q = q, mean = mu, sd = sigma)
-          manipulate::manipulate(plotcurve(qaux, muaux, sdaux),
-=======
-          manipulate::manipulate(plotcurve(mu, qaux, muaux),
->>>>>>> leem-andre
-                                 qaux = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
-                                 muaux = manipulate::slider(mu - q, mu + q, mu),
-                                 sdaux = manipulate::slider(0, mu + 2 * sigma, sigma))
-        }
-      } else{
-        plotcurve <- function(q, mu, sigma) {
-          x <- seq(q, mu + 4 * sigma, by=0.01)
-          y <- seq(mu - 4 * sigma, q, by=0.01)
-          fx <- dnorm(x, mean = mu, sd = sigma)
-          fy <- dnorm(y, mean = mu, sd = sigma)
-          curve(dnorm(x, mean = mu, sd=sigma), mu - 4 * sigma, mu + 4 * sigma,
-                ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
-                panel.first = grid(col = "gray90"),
-                main = gettext("Probability Function: Normal.", domain = "R-leem"))
-          polygon(c(x, rev(x)),
-                  c(fx, rep(0, length(fx))),
-                  col="red")
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="gray90")
-          abline(v=argaddit$mean, lty=2)
-          qq <- round(q, digits=2)
-          qqaux <-round(q, digits=2)
-          Pr <- round(pnorm(qq, mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2, col.axis = "red")
-          abline(v = qqaux, lty=2, col = "red")
-          legend("topleft", bty="n", fill="red",
-                 legend=substitute(P("X >" ~ q ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, media = mu, varen = sigma)))
-          }
-        if (gui == "plot") {
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
-          prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
-          plotcurve(q, mu, sigma)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotcurve(qaux, muaux),
-                                 qaux = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
-                                 muaux = manipulate::slider(mu, mu + 200, mu))
-        }
-      }
-    }
+#       if (dist == "normal") {
+#       if (!any(names(argaddit) == "mean")) {
+#         mean <- readline(gettext("Insert the value of 'mean' argument: ", domain = "R-leem"))
+#         argaddit$mean <- as.numeric(mean)
+#       }
+#       if (!any(names(argaddit) == "sd")) {
+#         sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
+#         argaddit$sd <- as.numeric(sd)
+#       }
+#       if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+#       if (lower.tail) {
+#         plotcurve <- function(q, mu, sigma) {
+#           x <- seq(mu - 4 * sigma, q, by = 0.01)
+#           y <- seq(q, mu + 4 * sigma, by = 0.01)
+#           fx <- dnorm(x, mean = mu, sd = sigma)
+#           fy <- dnorm(y, mean = mu, sd = sigma)
+#           curve(dnorm(x, mean = mu, sd = sigma), mu - 4 * sigma, mu + 4 * sigma ,
+#                 ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
+#                 panel.first = grid(col = "gray90"),
+#                 main = gettext("Probability Function: Normal.", domain = "R-leem"))
+#           polygon(c(x, rev(x)),
+#                   c(fx, rep(0, length(fx))),
+#                   col="red")
+#           polygon(c(y, rev(y)),
+#                   c(fy, rep(0, length(fy))),
+#                   col="gray90")
+#           abline(v=argaddit$mean, lty=2)
+#           qq <- round(q, digits=2)
+#           qqaux <-round(q, digits=2)
+#           Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
+#           Pr <- gsub("\\.", ",", Pr)
+#           qq <- gsub("\\.", ",", qq)
+#           axis(side=1, at=qqaux, labels=qqaux,
+#                col="red", font = 2, col.axis = "red")
+#           abline(v = qqaux, lty=2, col = "red")
+#           legend("topleft", bty="n", fill="red",
+#                  legend=substitute(P("X <=" ~ q ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, media = mu, varen = sigma)))
+#         }
+#
+#         if (gui == "plot" ) {
+# #<<<<<<< HEAD
+#           # Plot
+# #=======
+# #>>>>>>> leem-andre
+#           mu <- argaddit$mean
+#           sigma <- argaddit$sd
+#           prob <- pnorm(q = q, mean = mu, sd = sigma)
+#           plotcurve(q, mu,sigma)
+#         }
+#         if (gui == "rstudio") {
+# #<<<<<<< HEAD
+#           # Plot
+#           mu <- argaddit$mean
+#           sigma <- argaddit$sd
+#           prob <- pnorm(q = q, mean = mu, sd = sigma)
+#           manipulate::manipulate(plotcurve(qaux, muaux, sdaux),
+# #=======
+#           manipulate::manipulate(plotcurve(mu, qaux, muaux),
+# #>>>>>>> leem-andre
+#                                  qaux = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
+#                                  muaux = manipulate::slider(mu - q, mu + q, mu),
+#                                  sdaux = manipulate::slider(0, mu + 2 * sigma, sigma))
+#         }
+#       } else{
+#         plotcurve <- function(q, mu, sigma) {
+#           x <- seq(q, mu + 4 * sigma, by=0.01)
+#           y <- seq(mu - 4 * sigma, q, by=0.01)
+#           fx <- dnorm(x, mean = mu, sd = sigma)
+#           fy <- dnorm(y, mean = mu, sd = sigma)
+#           curve(dnorm(x, mean = mu, sd=sigma), mu - 4 * sigma, mu + 4 * sigma,
+#                 ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
+#                 panel.first = grid(col = "gray90"),
+#                 main = gettext("Probability Function: Normal.", domain = "R-leem"))
+#           polygon(c(x, rev(x)),
+#                   c(fx, rep(0, length(fx))),
+#                   col="red")
+#           polygon(c(y, rev(y)),
+#                   c(fy, rep(0, length(fy))),
+#                   col="gray90")
+#           abline(v=argaddit$mean, lty=2)
+#           qq <- round(q, digits=2)
+#           qqaux <-round(q, digits=2)
+#           Pr <- round(pnorm(qq, mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
+#           Pr <- gsub("\\.", ",", Pr)
+#           qq <- gsub("\\.", ",", qq)
+#           axis(side=1, at=qqaux, labels=qqaux,
+#                col="red", font = 2, col.axis = "red")
+#           abline(v = qqaux, lty=2, col = "red")
+#           legend("topleft", bty="n", fill="red",
+#                  legend=substitute(P("X >" ~ q ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, media = mu, varen = sigma)))
+#           }
+#         if (gui == "plot") {
+#           mu <- argaddit$mean
+#           sigma <- argaddit$sd
+#           prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
+#           plotcurve(q, mu, sigma)
+#         }
+#         if (gui == "rstudio") {
+#           manipulate::manipulate(plotcurve(qaux, muaux),
+#                                  qaux = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
+#                                  muaux = manipulate::slider(mu, mu + 200, mu))
+#         }
+#       }
+#     }
       if (dist == "poisson") {
       if (!any(names(argaddit) == "lambda")) {
         lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
