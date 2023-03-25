@@ -30,13 +30,16 @@ leem <- function(gui = TRUE) {
 
   if (gui == TRUE) {
     # Insert images
-    tkimage.create("photo", "::image::logo", file = system.file("etc", "leem.png", package = "leem"))
-    tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+    tkimage.create("photo", "::image::logo",
+                   file = system.file("etc", "leem.png", package = "leem"))
+    tkimage.create("photo", "::image::iconleem",
+                   file = system.file("etc", "leem-icon.png", package = "leem"))
     tkimage.create("photo", "::image::edit",
                    file = system.file("etc", "edit.gif", package = "leem"))
     tkimage.create("photo", "::image::directory",
                    file = system.file("etc", "directory.gif", package = "leem"))
-    tkimage.create("photo", "::image::open", file = system.file("etc", "open.gif", package = "leem"))
+    tkimage.create("photo", "::image::open",
+                   file = system.file("etc", "open.gif", package = "leem"))
 
 
     # ##########################
@@ -275,13 +278,70 @@ leem <- function(gui = TRUE) {
           accelerator = "Ctrl+S", command = .plot1st2st)
     tkadd(math_menu, "command", label = gettext("Higher education", domain = "R-leem"),
           accelerator = "Ctrl+H", command = function()  tkdestroy(topwinstat))
+
+
     # Menu Statistics
     stat_menu <- tkmenu(menu_bar, tearoff = FALSE)
     tkadd(menu_bar, "cascade", label = gettext("Statistics", domain = "R-leem"), menu = stat_menu)
-    tkadd(stat_menu, "command", label = gettext("Elementary school", domain = "R-leem"),
-          accelerator = "Ctrl+S", command = function()  tkdestroy(topwinstat))
-    tkadd(stat_menu, "command", label = gettext("Higher education", domain = "R-leem"),
-          accelerator = "Ctrl+S", command = function()  tkdestroy(topwinstat))
+    #Menu Demonstrations
+    stat_menudemo <- tkmenu(stat_menu, tearoff = FALSE)
+    tkadd(stat_menu, "cascade", label = gettext("Demonstrations", domain = "R-leem"), menu = stat_menudemo)
+    tkadd(stat_menudemo, "command", label = gettext("Normal distribution", domain = "R-leem"), accelerator = "Ctrl+V", command = .demolocsca)
+    # Menu m.position.
+    tkadd(stat_menu, "command", label = gettext("Measures of position", domain = "R-leem"),accelerator = "Ctrl+P", command = .mposition)
+    # Menu m.dispersion.
+    tkadd(stat_menu, "command", label = gettext("Measures of dispersion", domain = "R-leem"), accelerator = "Ctrl+D", command = .mdispersion)
+    #Menu probability.
+    stat_menuprob <- tkmenu(stat_menu, tearoff = FALSE)
+    tkadd(stat_menu, "cascade", label = gettext("Probability distributions", domain = "R-leem"), menu = stat_menuprob)
+    tkadd(stat_menuprob, "command", label = gettext("Beta", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuprob, "command", label = gettext("Binomial", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuprob, "command", label = gettext("Exponential", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuprob, "command", label = gettext("Geometric", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuprob, "command", label = gettext("Gumbel", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuprob, "command", label = gettext("Hypergeometric", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuprob, "command", label = gettext("Negative Binomial", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuprob, "command", label = gettext("Normal", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuprob, "command", label = gettext("Poisson", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuprob, "command", label = gettext("T-Student", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    #Menu Quantitative
+    stat_menuquant <- tkmenu(stat_menu, tearoff = FALSE)
+    tkadd(stat_menu, "cascade", label = gettext("Quantitative distributions", domain = "R-leem"), menu = stat_menuprob)
+    tkadd(stat_menuquant, "command", label = gettext("Beta", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuquant, "command", label = gettext("Binomial", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuquant, "command", label = gettext("Exponential", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuquant, "command", label = gettext("Geometric", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuquant, "command", label = gettext("Gumbel", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuquant, "command", label = gettext("Hypergeometric", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuquant, "command", label = gettext("Negative Binomial", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuquant, "command", label = gettext("Normal", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuquant, "command", label = gettext("Poisson", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    tkadd(stat_menuquant, "command", label = gettext("T-Student", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+    #Menu tabfreq
+    tkadd(stat_menu, "command", label = gettext("Table of frequêncy", domain = "R-leem"),
+          accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
+
+
     # Menu about
     about_menu <- tkmenu(menu_bar, tearoff = FALSE)
     tkadd(menu_bar, "cascade", label = gettext("About", domain = "R-leem"), menu = about_menu)
