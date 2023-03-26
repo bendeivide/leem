@@ -283,17 +283,20 @@ leem <- function(gui = TRUE) {
     # Menu Statistics
     stat_menu <- tkmenu(menu_bar, tearoff = FALSE)
     tkadd(menu_bar, "cascade", label = gettext("Statistics", domain = "R-leem"), menu = stat_menu)
+    #Menu Basic Statistics
+    stat_menubasic <- tkmenu(stat_menu, tearoff = FALSE)
+    tkadd(stat_menu, "cascade", label = gettext("Elementary school", domain = "R-leem"), menu = stat_menubasic)
     #Menu Demonstrations
-    stat_menudemo <- tkmenu(stat_menu, tearoff = FALSE)
-    tkadd(stat_menu, "cascade", label = gettext("Demonstrations", domain = "R-leem"), menu = stat_menudemo)
+    stat_menudemo <- tkmenu(stat_menubasic, tearoff = FALSE)
+    tkadd(stat_menubasic, "cascade", label = gettext("Demonstrations", domain = "R-leem"), menu = stat_menudemo)
     tkadd(stat_menudemo, "command", label = gettext("Normal distribution", domain = "R-leem"), accelerator = "Ctrl+V", command = .demolocsca)
     # Menu m.position.
-    tkadd(stat_menu, "command", label = gettext("Measures of position", domain = "R-leem"),accelerator = "Ctrl+P", command = .mposition)
+    tkadd(stat_menubasic, "command", label = gettext("Measures of position", domain = "R-leem"),accelerator = "Ctrl+P", command = .mposition)
     # Menu m.dispersion.
-    tkadd(stat_menu, "command", label = gettext("Measures of dispersion", domain = "R-leem"), accelerator = "Ctrl+D", command = .mdispersion)
+    tkadd(stat_menubasic, "command", label = gettext("Measures of dispersion", domain = "R-leem"), accelerator = "Ctrl+D", command = .mdispersion)
     #Menu probability.
     stat_menuprob <- tkmenu(stat_menu, tearoff = FALSE)
-    tkadd(stat_menu, "cascade", label = gettext("Probability distributions", domain = "R-leem"), menu = stat_menuprob)
+    tkadd(stat_menubasic, "cascade", label = gettext("Probability distributions", domain = "R-leem"), menu = stat_menuprob)
     tkadd(stat_menuprob, "command", label = gettext("Beta", domain = "R-leem"),
           accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
     tkadd(stat_menuprob, "command", label = gettext("Binomial", domain = "R-leem"),
@@ -315,8 +318,8 @@ leem <- function(gui = TRUE) {
     tkadd(stat_menuprob, "command", label = gettext("T-Student", domain = "R-leem"),
           accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
     #Menu Quantitative
-    stat_menuquant <- tkmenu(stat_menu, tearoff = FALSE)
-    tkadd(stat_menu, "cascade", label = gettext("Quantitative distributions", domain = "R-leem"), menu = stat_menuprob)
+    stat_menuquant <- tkmenu(stat_menubasic, tearoff = FALSE)
+    tkadd(stat_menubasic, "cascade", label = gettext("Quantitative distributions", domain = "R-leem"), menu = stat_menuprob)
     tkadd(stat_menuquant, "command", label = gettext("Beta", domain = "R-leem"),
           accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
     tkadd(stat_menuquant, "command", label = gettext("Binomial", domain = "R-leem"),
@@ -338,9 +341,12 @@ leem <- function(gui = TRUE) {
     tkadd(stat_menuquant, "command", label = gettext("T-Student", domain = "R-leem"),
           accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
     #Menu tabfreq
-    tkadd(stat_menu, "command", label = gettext("Table of frequêncy", domain = "R-leem"),
+    tkadd(stat_menubasic, "command", label = gettext("Table of frequêncy", domain = "R-leem"),
           accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
 
+    #Menu Statistics High
+    stat_menuhigther <- tkmenu(stat_menu, tearoff= FALSE)
+    tkadd(stat_menu, "cascade", label = gettext("Higher education", domain = "R-leem"), menu = stat_menuhigther)
 
     # Menu about
     about_menu <- tkmenu(menu_bar, tearoff = FALSE)
