@@ -450,10 +450,10 @@
   group1 <- ttkpanedwindow(group.all, orient = "horizontal", style = "leem.TPanedwindow", height = 150)
   tkadd(group.all, group1, weight = 1)
   ##
-  group2 <- ttkpanedwindow(group.all, orient = "horizontal", style = "leem.TPanedwindow", height = 450)
+  group2 <- ttkpanedwindow(group.all, orient = "vertical", style = "leem.TPanedwindow", height = 450)
   tkadd(group.all, group2, weight = 2)
   ##
-  group3 <- ttkpanedwindow(group.all, orient = "horizontal", style = "leem.TPanedwindow", height = 50)
+  group3 <- ttkpanedwindow(group.all, orient = "horizontal", style = "leem.TPanedwindow", height = 30)
   tkadd(group.all, group3, weight = 1)
 
   #######################
@@ -547,9 +547,14 @@
 
   tkadd(group3, calculate_button)
 
-
-
+  #Result
   plotaux1 <- function(){
+    sapply(as.character(tkwinfo("children", fres)),
+           function(W) tcl("destroy", W))
+
+    sapply(as.character(tkwinfo("children", plot1)),
+           function(W) tcl("destroy", W))
+
     if(tclvalue(aditvalue11) == "TRUE"){
       txt_vardata <- new_leem(as.numeric(unlist(strsplit(tclvalue(txt_vardata), ", ")[[1]])), "continuous")
     }else if(tclvalue(aditvalue12) == "TRUE"){
@@ -564,9 +569,10 @@
                                                  'Mode', mfreq(txt_vardata), domain = "R-leem")),
            anchor = "n", expand = FALSE, fill = "x")
 
-    tkpack(tkmessageBox(message = txt_vardata))
-
-
+    tkpack(plotg1 <- tkrplot(plot1, hscale = 1.5,
+                 vscale = 1.3, fun = function(...) {
+                   polyfreq.leem(txt_vardata, barcol= "#00FFFF")
+                 }))
   }
 
   tkbind(calculate_button, "<ButtonRelease>", function(...) plotaux1())
