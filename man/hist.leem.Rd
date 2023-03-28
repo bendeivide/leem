@@ -9,7 +9,7 @@ hist(x, ...)
 ## Leem S3 method:
 hist.leem(x, bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
           grids = grid(col = "white"), bgcol = "gray", bgborder = NA,
-          barcol = "yellow", barborder = "gray")
+          barcol = "yellow", barborder = "gray", ...)
 }
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
@@ -31,11 +31,18 @@ hist.leem(x, bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
 \item{barcol}{Insert the barplot color. The default is \code{barcol = "yellow"}. This argument is only valid when \code{bars = TRUE}.}
 }
 \description{
-Graph method for leem class
+Class method leem for generic hist
 }
 \examples{
 # Example 1
 library(leem)
 rnorm(36, 100, 50) |> new_leem(variable = "continuous") |> tabfreq() |> hist()
+
+# Example 2
+library(leem)
+school <- rep(c("high", "university", "basic"), 3:5)
+sample(school, 30, TRUE) |>
+ new_leem() |>
+ tabfreq(ordered = c("basic", "high", "university"))
 
 }

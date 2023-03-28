@@ -115,3 +115,16 @@ sdev <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
     }
   }
 }
+
+# Coefficient of variation
+# cv
+
+
+# Mean standard error
+#mse
+
+# Mean deviation
+#mdev
+
+# Mean absolute deviation
+#madev
