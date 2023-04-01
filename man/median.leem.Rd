@@ -7,7 +7,7 @@
 \method{median}{leem}(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FALSE, ...)
 }
 \arguments{
-\item{x}{R object (list) of class leem. Use \code{new_leem()} function. Complex vectors are allowed for \code{trim = 0}, only.}
+\item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
 
 \item{na.rm}{a logical value indicating whether \code{NA} values should be stripped before the computation proceeds.}
 

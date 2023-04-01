@@ -14,6 +14,8 @@ hist.leem(x, bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
 
+\item{freq}{Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.}
+
 \item{bg}{Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.}
 
 \item{main}{Insert the plot title.  The default is \code{NULL}.}
@@ -29,6 +31,8 @@ hist.leem(x, bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
 \item{bgborder}{Insert the background border color. This argument is only valid when \code{bg = TRUE}. The default is bgborder = NA.}
 
 \item{barcol}{Insert the barplot color. The default is \code{barcol = "yellow"}. This argument is only valid when \code{bars = TRUE}.}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 Class method leem for generic hist

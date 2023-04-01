@@ -1,8 +1,49 @@
+#' Pie Chart
+#'
+#' Draw a pie chart.
+#'
+#' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param col Character vector. Default \code{col = heat.colors(5)}.
+#' @param border Logical argument (default \code{FALSE}).
+#' @param main Title name.
+#' @param ... further arguments passed to or from other methods.
+#' @examples
+#' library(leem)
+#' # Example 1
+#' school <- rep(c("high", "university", "basic"), 3:5)
+#' x <- sample(school, 30, TRUE) |>
+#'   new_leem() |>
+#'   tabfreq(ordered = c("basic", "high", "university"))
+#' # Example 2
+#' x <- rbinom(36, 10, 0.6)
+#' x <- new_leem(x, variable = "discrete")
+#' x <- tabfreq(x)
+#' piechart(x)
+#' @export
+piechart <- function(x, col = heat.colors(5), border = FALSE, main = NULL, ...) {
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
+  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
+  if(is.null(main)) main <- gettext("Pie Chart", domain = "R-leem")
+  if (attr(x, "variable") == "discrete") {
+    labels <- paste0(x$table$Groups, " (", x$table$Fp, "%", ")")
+    graphics::pie(x$table$Fi, labels = labels, col = col, border = border,
+                  main = main, ...)
+
+  }
+  if (attr(x, "variable") == "continuous") {
+
+  }
+}
+
+
+
+
 #' Stick chart
 #'
 #' Stick chart for discrete data
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param freq Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.
 #' @param bg Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.
 #' @param main Insert the plot title. The default is \code{NULL}.
 #' @param xlab Insert the title of the x-axis graphic label. The default is \code{NULL}.
@@ -20,6 +61,8 @@
 #' @param pwd Point width. The default is  \code{pwd = 3}.
 #' @param lty Line type. The default is  \code{lty = 2}.
 #' @param lwd Line width. The default is  \code{lwd = 2}.
+#' @param ... further arguments passed to or from other methods.
+#'
 #' @return The result of \code{stickchart()} is \code{x} object.
 #' @examples
 #' library(leem)
@@ -38,6 +81,7 @@
 #' stickchartunction(x, ...)
 #' @export
 stickchart <- function(x,
+                      freq = "a",
                       bg = TRUE,
                       main = NULL,
                       xlab = NULL,
@@ -58,14 +102,16 @@ stickchart <- function(x,
                       ...) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE, domain = "R-leem")
   if (attr(x, "variable") == "continuous") stop("The function only applies to discrete variables.", call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x)
+  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$table$Groups)
     if (numchar) {
       xmin <- x$table$Groups[1]
       xmax <- max(x$table$Groups)
       xvar <- x$table$Groups
-      yvar <- x$table$Fi
+      if (freq == "a") yvar <- c(0, x$table$Fi, 0)
+      if (freq == "r") yvar <- c(0, x$table$Fr, 0)
+      if (freq == "p") yvar <- c(0, x$table$Fp, 0)
 
       # Limiares
       xlim <- c(xmin - 0.5, xmax + 0.5)
@@ -83,7 +129,9 @@ stickchart <- function(x,
         xlab <- gettext("Groups", domain = "R-leem")
       }
       if (is.null(ylab)) {
-        ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+        if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
       }
 
       title(main = main, xlab = xlab, ylab = ylab)
@@ -170,6 +218,7 @@ stickchart <- function(x,
 #' Generic function that plots the culmulative frequency curve.
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param freq Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.
 #' @param decreasing Logical argument. Default is \code{FALSE}. If \code{decreasing = FALSE}, it represents the "ogive larger than", if \code{decreasing = TRUE}, it represents the "ogive less than".
 #' @param both Logical argument. Default is \code{FALSE}. If \code{both = TRUE}, both o will be plotted. If \code{both = FALSE} otherside.
 #' @param bars Logical argument. Default is \code{FALSE}. If \code{bars = TRUE}, the bars of the accumulated frequency will be inserted to plot, according to the \code{decreasing} argument. If \code{bars = FALSE} otherside.
@@ -190,6 +239,7 @@ stickchart <- function(x,
 #' @param lwd numeric argument. The line width. The default is  \code{lwd = 2}.
 #' @param pch Type of point. The default is  \code{pch = 19}.
 #' @param lty Type of line. The default is  \code{lty = 2}.
+#' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
 #' library(leem)
@@ -218,7 +268,7 @@ ogive <- function(x, ...) {
 }
 # S3Method ogive of leem class
 #' @export
-ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
+ogive.leem <- function(x, freq = "a", decreasing = FALSE, both = FALSE,
                        bars = FALSE,
                        histogram = FALSE,
                        bg = TRUE,
@@ -236,8 +286,8 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
                        lpcol = "black",
                        lwd = 2,
                        pch = 19,
-                       lty = 2
-) {
+                       lty = 2,
+...) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
   if (!is.logical(both)) stop("The both argument must be logical!", call. = FALSE,
@@ -251,21 +301,29 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$table$Groups)
     if (numchar) {
+      # Auxiliar variables
+      xmin <- x$table$Groups[1]
+      xmax <- max(x$table$Groups)
+      xvar <- x$table$Groups
+      xvaraux <-  c(xmin - 1, x$table$Groups, xmax + 1)
+      xvar1 <- xvaraux - 0.5
+      xvar2 <- xvaraux + 0.5
+      yvar <- x$table$Fi
+      yr <- x$table$Fr
+      yp <- x$table$Fp
+      yvar1 <- x$table$Fac1
+      yvar2 <- x$table$Fac2
+      yr1 <- x$table$Fac1p/100
+      yr2 <- x$table$Fac2p/100
+      yp1 <- x$table$Fac1p
+      yp2 <- x$table$Fac2p
       if (both) {
-        xmin <- x$table$Groups[1]
-        xmax <- max(x$table$Groups)
-        xvar <- x$table$Groups
-        xvaraux <-  c(xmin - 1, x$table$Groups, xmax + 1)
-        xvar1 <- xvaraux - 0.5
-        xvar2 <- xvaraux + 0.5
-        yvar <- x$table$Fi
-        yvar1 <- x$table$Fac1
-        yvar2 <- x$table$Fac2
-
-
         # Limiares
         xlim <- c(min(xvaraux), max(xvaraux))
-        ylim <- c(0, 1.2 * max(c(yvar, yvar1, yvar2)))
+        if (freq == "a") ylim <- c(0, 1.2 * max(c(yvar, yvar1, yvar2)))
+        if (freq == "r") ylim <- c(0, 1.2 * max(c(yr1, yr2)))
+        if (freq == "p") ylim <- c(0, 1.2 * max(c(yp1, yp2)))
+
 
         # Area de plotagem
         plot.new()
@@ -279,7 +337,9 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
           xlab <- gettext("Groups", domain = "R-leem")
         }
         if (is.null(ylab)) {
-          ylab <- gettext("Frequency", domain = "R-leem")
+          if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+          if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+          if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
         }
         title(main = main, xlab = xlab, ylab = ylab)
 
@@ -297,45 +357,85 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
             barcol1 <- barcol[1]
             barcol2 <- barcol[2]
           } else barcol1 <- barcol2 <- barcol
-          rect(xvar - 0.5,
-               0,
-               xvar + 0.5,
-               yvar1, col = barcol1, border = barborder)
+          if (freq == "a") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yvar1, col = barcol1, border = barborder)
 
-          rect(xvar - 0.5,
-               0,
-               xvar + 0.5,
-               yvar2, col = barcol2, border = barborder)
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yvar2, col = barcol2, border = barborder)
+          }
+          if (freq == "r") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yr1, col = barcol1, border = barborder)
+
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yr2, col = barcol2, border = barborder)
+          }
+          if (freq == "p") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yp1, col = barcol1, border = barborder)
+
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yp2, col = barcol2, border = barborder)
+          }
         }
         if (histogram) {
-          rect(xvar - 0.5,
-               0,
-               xvar + 0.5,
-               yvar, col = histcol[1], border = histborder)
-
+          if (freq == "a") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yvar, col = histcol[1], border = histborder)
+          }
+          if (freq == "r") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yr, col = histcol[1], border = histborder)
+          }
+          if (freq == "p") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yp, col = histcol[1], border = histborder)
+          }
         }
         # Pontos
-        points(c(xvar[1] - 1, xvar), c(0, yvar1), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
-        points(c(xvar, max(xvar) + 1), c(yvar2, 0), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        if (freq == "a") {
+          points(c(xvar[1] - 1, xvar), c(0, yvar1), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+          points(c(xvar, max(xvar) + 1), c(yvar2, 0), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        }
+        if (freq == "r") {
+          points(c(xvar[1] - 1, xvar), c(0, yr1), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+          points(c(xvar, max(xvar) + 1), c(yr2, 0), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        }
+        if (freq == "p") {
+          points(c(xvar[1] - 1, xvar), c(0, yp1), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+          points(c(xvar, max(xvar) + 1), c(yp2, 0), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        }
 
         # Eixos
         axis(1, at = xvaraux)
         axis(2)
       }
       if (decreasing == FALSE & both == FALSE) {
-        xmin <- x$table$Groups[1]
-        xmax <- max(x$table$Groups)
-        xvar <- x$table$Groups
-        xvaraux <-  c(xmin - 1, x$table$Groups, xmax + 1)
-        xvar1 <- xvaraux - 0.5
-        xvar2 <- xvaraux + 0.5
-        yvar <- x$table$Fi
-        yvar1 <- x$table$Fac1
-        yvar2 <- x$table$Fac2
-
         # Limiares
         xlim <- c(min(xvaraux), max(xvaraux))
-        ylim <- c(0, 1.2 * max(c(yvar, yvar1, yvar2)))
+        if (freq == "a") ylim <- c(0, 1.2 * max(c(yvar, yvar1, yvar2)))
+        if (freq == "r") ylim <- c(0, 1.2 * max(c(yr1, yr2)))
+        if (freq == "p") ylim <- c(0, 1.2 * max(c(yp1, yp2)))
+
 
         # Area de plotagem
         plot.new()
@@ -349,7 +449,9 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
           xlab <- gettext("Groups", domain = "R-leem")
         }
         if (is.null(ylab)) {
-          ylab <- gettext("Frequency", domain = "R-leem")
+          if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+          if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+          if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
         }
 
         title(main = main, xlab = xlab, ylab = ylab)
@@ -368,41 +470,69 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
             barcol1 <- barcol[1]
             barcol2 <- barcol[2]
           } else barcol1 <- barcol2 <- barcol
-          rect(xvar - 0.5,
-               0,
-               xvar + 0.5,
-               yvar1, col = barcol1, border = barborder)
+          if (freq == "a") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yvar1, col = barcol1, border = barborder)
+          }
+          if (freq == "r") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yr1, col = barcol1, border = barborder)
+          }
+          if (freq == "p") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yp1, col = barcol1, border = barborder)
+          }
         }
         if (histogram) {
-          rect(xvar - 0.5,
-               0,
-               xvar + 0.5,
-               yvar, col = histcol[1], border = histborder)
+          if (freq == "a") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yvar, col = histcol[1], border = histborder)
+          }
+          if (freq == "r") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yr, col = histcol[1], border = histborder)
+          }
+          if (freq == "p") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yp, col = histcol[1], border = histborder)
+          }
 
         }
 
         # Pontos
-        points(c(xvar[1] - 1, xvar), c(0, yvar1), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
-
+        # Pontos
+        if (freq == "a") {
+          points(c(xvar[1] - 1, xvar), c(0, yvar1), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        }
+        if (freq == "r") {
+          points(c(xvar[1] - 1, xvar), c(0, yr1), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        }
+        if (freq == "p") {
+          points(c(xvar[1] - 1, xvar), c(0, yp1), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        }
 
         # Eixos
         axis(1, at = xvaraux)
         axis(2)
       }
       if (decreasing == TRUE & both == FALSE) {
-        xmin <- x$table$Groups[1]
-        xmax <- max(x$table$Groups)
-        xvar <- x$table$Groups
-        xvaraux <-  c(xmin - 1, x$table$Groups, xmax + 1)
-        xvar1 <- xvaraux - 0.5
-        xvar2 <- xvaraux + 0.5
-        yvar <- x$table$Fi
-        yvar1 <- x$table$Fac1
-        yvar2 <- x$table$Fac2
-
         # Limiares
         xlim <- c(min(xvaraux), max(xvaraux))
-        ylim <- c(0, 1.2 * max(c(yvar, yvar1, yvar2)))
+        if (freq == "a") ylim <- c(0, 1.2 * max(c(yvar, yvar1, yvar2)))
+        if (freq == "r") ylim <- c(0, 1.2 * max(c(yr1, yr2)))
+        if (freq == "p") ylim <- c(0, 1.2 * max(c(yp1, yp2)))
 
         # Area de plotagem
         plot.new()
@@ -416,7 +546,9 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
           xlab <- gettext("Groups", domain = "R-leem")
         }
         if (is.null(ylab)) {
-          ylab <- gettext("Frequency", domain = "R-leem")
+          if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+          if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+          if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
         }
 
         title(main = main, xlab = xlab, ylab = ylab)
@@ -435,21 +567,57 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
             barcol1 <- barcol[1]
             barcol2 <- barcol[2]
           } else barcol1 <- barcol2 <- barcol
-          rect(xvar - 0.5,
-               0,
-               xvar + 0.5,
-               yvar2, col = barcol2, border = barborder)
+          if (freq == "a") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yvar2, col = barcol2, border = barborder)
+          }
+          if (freq == "r") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yr2, col = barcol2, border = barborder)
+          }
+          if (freq == "p") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yp2, col = barcol2, border = barborder)
+          }
         }
         if (histogram) {
-          rect(xvar - 0.5,
-               0,
-               xvar + 0.5,
-               yvar, col = histcol[1], border = histborder)
+          if (freq == "a") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yvar, col = histcol[1], border = histborder)
+          }
+          if (freq == "r") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yr, col = histcol[1], border = histborder)
+          }
+          if (freq == "p") {
+            rect(xvar - 0.5,
+                 0,
+                 xvar + 0.5,
+                 yp, col = histcol[1], border = histborder)
+          }
 
         }
 
         # Pontos
-        points(c(xvar, max(xvar) + 1), c(yvar2, 0), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        if (freq == "a") {
+          points(c(xvar, max(xvar) + 1), c(yvar2, 0), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        }
+        if (freq == "r") {
+          points(c(xvar, max(xvar) + 1), c(yr2, 0), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        }
+        if (freq == "p") {
+          points(c(xvar, max(xvar) + 1), c(yp2, 0), col = lpcol, type = type, lwd = lwd, pch = pch, lty = lty)
+        }
 
         # Eixos
         axis(1, at = xvaraux)
@@ -465,8 +633,20 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
   if (attr(x, "variable") == "continuous") {
     if (both) {
       xvar <- c(x$statistics$lower_lim[1], x$statistics$upper_lim)
-      yvar <- c(0, x$table$Fac1)
-      yvar2 <- c(x$table$Fac2, 0)
+      if (freq == "a") {
+        yvar <- c(0, x$table$Fac1)
+        yvar2 <- c(x$table$Fac2, 0)
+      }
+      if (freq == "r") {
+        yvar <- c(0, x$table$Fac1p/100)
+        yvar2 <- c(x$table$Fac2p/100, 0)
+      }
+      if (freq == "p") {
+        yvar <- c(0, x$table$Fac1p)
+        yvar2 <- c(x$table$Fac2p, 0)
+      }
+
+
 
       # Limiares
       xlim <- c(min(xvar), max(xvar))
@@ -484,7 +664,9 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
         xlab <- gettext("Classes", domain = "R-leem")
       }
       if (is.null(ylab)) {
-        ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+        if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
       }
       title(main = main, xlab = xlab, ylab = ylab)
 
@@ -502,20 +684,47 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
           barcol1 <- barcol[1]
           barcol2 <- barcol[2]
         } else barcol1 <- barcol2 <- barcol
-        rect(x$statistics$lower_lim,
-             0,
-             x$statistics$upper_lim,
-             x$table$Fac1, col = barcol1, border = barborder)
+        if (freq == "a") {
+          rect(x$statistics$lower_lim,
+               0,
+               x$statistics$upper_lim,
+               x$table$Fac1, col = barcol1, border = barborder)
 
-        rect(x$statistics$lower_lim,
-             0,
-             x$statistics$upper_lim,
-             x$table$Fac2, col = barcol2, border = barborder)
+          rect(x$statistics$lower_lim,
+               0,
+               x$statistics$upper_lim,
+               x$table$Fac2, col = barcol2, border = barborder)
+        }
+        if (freq == "r") {
+          rect(x$statistics$lower_lim,
+               0,
+               x$statistics$upper_lim,
+               x$table$Fac1p/100, col = barcol1, border = barborder)
+
+          rect(x$statistics$lower_lim,
+               0,
+               x$statistics$upper_lim,
+               x$table$Fac2p/100, col = barcol2, border = barborder)
+        }
+        if (freq == "p") {
+          rect(x$statistics$lower_lim,
+               0,
+               x$statistics$upper_lim,
+               x$table$Fac1p, col = barcol1, border = barborder)
+
+          rect(x$statistics$lower_lim,
+               0,
+               x$statistics$upper_lim,
+               x$table$Fac2p, col = barcol2, border = barborder)
+        }
       }
       if (histogram) {
         xvar3 <- x$statistics$lower_lim
         xvar4 <- x$statistics$upper_lim
-        yvar3 <- x$table$Fi
+        if (freq == "a") yvar3 <- x$table$Fi
+        if (freq == "r") yvar3 <- x$table$Fr
+        if (freq == "p") yvar3 <- x$table$Fp
+
         rect(xvar3,
              0,
              xvar4,
@@ -532,7 +741,15 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
     }
     if (decreasing == FALSE & both == FALSE) {
       xvar <- c(x$statistics$lower_lim[1], x$statistics$upper_lim)
-      yvar <- c(0, x$table$Fac1)
+      if (freq == "a") {
+        yvar <- c(0, x$table$Fac1)
+      }
+      if (freq == "r") {
+        yvar <- c(0, x$table$Fac1p/100)
+      }
+      if (freq == "p") {
+        yvar <- c(0, x$table$Fac1p)
+      }
 
       # Limiares
       xlim <- c(min(xvar), max(xvar))
@@ -550,7 +767,9 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
         xlab <- gettext("Classes", domain = "R-leem")
       }
       if (is.null(ylab)) {
-        ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+        if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
       }
 
       title(main = main, xlab = xlab, ylab = ylab)
@@ -565,16 +784,21 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 
       # Inserindo barras
       if (bars) {
+        if (freq == "a") aux <- x$table$Fac1
+        if (freq == "r") aux <- x$table$Fac1p/100
+        if (freq == "p") aux <- x$table$Fac1p
         rect(x$statistics$lower_lim,
              0,
              x$statistics$upper_lim,
-             x$table$Fac1, col = barcol, border = barborder)
+             aux, col = barcol, border = barborder)
       }
       # Histograma
       if (histogram) {
         xvar3 <- x$statistics$lower_lim
         xvar4 <- x$statistics$upper_lim
-        yvar3 <- x$table$Fi
+        if (freq == "a") yvar3 <- x$table$Fi
+        if (freq == "r") yvar3 <- x$table$Fr
+        if (freq == "p") yvar3 <- x$table$Fp
         rect(xvar3,
              0,
              xvar4,
@@ -591,7 +815,15 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
     }
     if (decreasing == TRUE & both == FALSE) {
       xvar <- c(x$statistics$lower_lim[1], x$statistics$upper_lim)
-      yvar <- c(x$table$Fac2, 0)
+      if (freq == "a") {
+        yvar <- c(x$table$Fac2, 0)
+      }
+      if (freq == "r") {
+        yvar <- c(x$table$Fac2p/100, 0)
+      }
+      if (freq == "p") {
+        yvar <- c(x$table$Fac2p, 0)
+      }
 
       # Limiares
       xlim <- c(min(xvar), max(xvar))
@@ -609,7 +841,9 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
         xlab <- gettext("Classes", domain = "R-leem")
       }
       if (is.null(ylab)) {
-        ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+        if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
       }
 
       title(main = main, xlab = xlab, ylab = ylab)
@@ -625,16 +859,21 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 
       # Inserindo barras
       if (bars) {
+        if (freq == "a") aux <- x$table$Fac2
+        if (freq == "r") aux <- x$table$Fac2p/100
+        if (freq == "p") aux <- x$table$Fac2p
         rect(x$statistics$lower_lim,
              0,
              x$statistics$upper_lim,
-             x$table$Fac2, col = barcol, border = barborder)
+             aux, col = barcol, border = barborder)
       }
       # Histograma
       if (histogram) {
         xvar3 <- x$statistics$lower_lim
         xvar4 <- x$statistics$upper_lim
-        yvar3 <- x$table$Fi
+        if (freq == "a") yvar3 <- x$table$Fi
+        if (freq == "r") yvar3 <- x$table$Fr
+        if (freq == "p") yvar3 <- x$table$Fp
         rect(xvar3,
              0,
              xvar4,
@@ -661,6 +900,7 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 #' Generic function that plots the frequency polygon curve.
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param freq Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.
 #' @param type Type of plot. The default is \code{type = "b"}, i.e., line and points. See \code{\link{graphical parameter}} for details.
 #' @param bars Logical argument. Default is \code{FALSE}. If \code{bars = TRUE}, the histogram will be inserted to plot.
 #' @param bg Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.
@@ -678,6 +918,7 @@ ogive.leem <- function(x, decreasing = FALSE, both = FALSE,
 #' @param lwd numeric argument. The line width. The default is  \code{lwd = 2}.
 #' @param pch Type of point. The default is  \code{pch = 19}.
 #' @param lty Type of line. The default is  \code{lty = 2}.
+#' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
 #' # Example 1
@@ -700,6 +941,7 @@ polyfreq <- function(x, ...) {
 }
 #' @export
 polyfreq.leem <- function(x,
+                          freq = "a",
                           type = "b",
                           bars = TRUE,
                           bg = TRUE,
@@ -723,7 +965,10 @@ polyfreq.leem <- function(x,
                max(x$statistics$lower_lim) + x$statistics$len_class_interval)
     xvar2 <- c(min(x$statistics$upper_lim) - x$statistics$len_class_interval, x$statistics$upper_lim,
                max(x$statistics$upper_lim) + x$statistics$len_class_interval)
-    yvar <- c(0, x$table$Fi, 0)
+    if (freq == "a") yvar <- c(0, x$table$Fi, 0)
+    if (freq == "r") yvar <- c(0, x$table$Fr, 0)
+    if (freq == "p") yvar <- c(0, x$table$Fp, 0)
+
     pm <- c(min(x$statistics$lower_lim) - x$statistics$len_class_interval / 2,
             x$table$PM,
             max(x$statistics$upper_lim) + x$statistics$len_class_interval / 2)
@@ -743,7 +988,9 @@ polyfreq.leem <- function(x,
       xlab <- gettext("Classes", domain = "R-leem")
     }
     if (is.null(ylab)) {
-      ylab <- gettext("Frequency", domain = "R-leem")
+      if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+      if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+      if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
     }
 
     title(main = main, xlab = xlab, ylab = ylab)
@@ -780,9 +1027,21 @@ polyfreq.leem <- function(x,
       xvaraux <-  c(xmin - 1, x$table$Groups, xmax + 1)
       xvar1 <- xvaraux - 0.5
       xvar2 <- xvaraux + 0.5
-      yvar <- x$table$Fi
-      yvar1 <- x$table$Fac1
-      yvar2 <- x$table$Fac2
+      if (freq == "a") {
+        yvar <- x$table$Fi
+        yvar1 <- x$table$Fac1
+        yvar2 <- x$table$Fac2
+      }
+      if (freq == "p") {
+        yvar <- x$table$Fp
+        yvar1 <- x$table$Fac1p
+        yvar2 <- x$table$Fac2p
+      }
+      if (freq == "r") {
+        yvar <- x$table$Fr
+        yvar1 <- x$table$Fac1p/100
+        yvar2 <- x$table$Fac2p/100
+      }
 
 
       # Limiares
@@ -801,7 +1060,9 @@ polyfreq.leem <- function(x,
         xlab <- gettext("Groups", domain = "R-leem")
       }
       if (is.null(ylab)) {
-        ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+        if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
       }
 
       title(main = main, xlab = xlab, ylab = ylab)
@@ -842,6 +1103,7 @@ polyfreq.leem <- function(x,
 #' Class method leem for generic hist
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param freq Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.
 #' @param bg Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.
 #' @param main Insert the plot title.  The default is \code{NULL}.
 #' @param xlab Insert the title of the x-axis graphic label. The default is \code{NULL}.
@@ -850,6 +1112,7 @@ polyfreq.leem <- function(x,
 #' @param bgcol Insert the background color. This argument is only valid when \code{bg = TRUE}. The default is \code{bgcol="gray"}.
 #' @param bgborder Insert the background border color. This argument is only valid when \code{bg = TRUE}. The default is bgborder = NA.
 #' @param barcol Insert the barplot color. The default is \code{barcol = "yellow"}. This argument is only valid when \code{bars = TRUE}.
+#' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
 #' # Example 1
@@ -874,6 +1137,7 @@ polyfreq.leem <- function(x,
 #'
 #' @export
 hist.leem <- function(x,
+                      freq = "a",
                       bg = TRUE,
                       main = NULL,
                       xlab = NULL,
@@ -888,13 +1152,15 @@ hist.leem <- function(x,
   if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
   if (attr(x, "variable") == "discrete") {
     warning("Coerced to barplot!", call. = FALSE, domain = "R-leem")
-    barplot(x, bg, main, xlab, xlab, grids, bgcol, bgborder,
+    barplot(x, freq, bg, main, xlab, xlab, grids, bgcol, bgborder,
             barcol, barborder, ...)
   }
   if (attr(x, "variable") == "continuous") {
     xvar1 <- x$statistics$lower_lim
     xvar2 <- x$statistics$upper_lim
-    yvar <- x$table$Fi
+    if (freq == "a") yvar <- x$table$Fi
+    if (freq == "r") yvar <- x$table$Fr
+    if (freq == "p") yvar <- x$table$Fp
     # Limiares
     xlim <- c(min(xvar1), max(xvar2))
     ylim <- c(0, 1.2 * max(yvar))
@@ -911,7 +1177,9 @@ hist.leem <- function(x,
       xlab <- gettext("Classes", domain = "R-leem")
     }
     if (is.null(ylab)) {
-      ylab <- gettext("Frequency", domain = "R-leem")
+      if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+      if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+      if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
     }
 
     title(main = main, xlab = xlab, ylab = ylab)
@@ -945,6 +1213,7 @@ hist.leem <- function(x,
 #' Class method leem for generic barplot
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param freq Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.
 #' @param bg Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.
 #' @param main Character argument. Insert the plot title.  The default is \code{NULL}.
 #' @param xlab Character argument. Insert the title of the x-axis graphic label. The default is \code{NULL}.
@@ -957,6 +1226,7 @@ hist.leem <- function(x,
 #' @param posx2 Numeric argument.Distance of the labels (vertical) in relation to the x axis.
 #' @param xang  Numeric argument.Angle of the labels in relation to the x axis
 #' @param labels Character argument. Labels name vector.
+#' @param ... further arguments passed to or from other methods.
 #'
 #' @usage
 #' barplot(x, ...)
@@ -976,7 +1246,7 @@ hist.leem <- function(x,
 #' # Example 2 - Color bars
 #' rep(1:5, 5:1) |>
 #'   new_leem() |>
-#'   barplot(barcolor = heat.colors(3))
+#'   barplot(barcol = heat.colors(5))
 #' # Example 3 - Ordered data
 #' library(leem)
 #' school <- rep(c("high", "university", "basic"), 3:5)
@@ -990,6 +1260,7 @@ hist.leem <- function(x,
 #'   barplot(barcol = heat.colors(10))
 #' @export
 barplot.leem <- function(x,
+                         freq = "a",
                          bg = TRUE,
                          main = NULL,
                          xlab = NULL,
@@ -1008,7 +1279,7 @@ barplot.leem <- function(x,
   if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x)
   if (attr(x, "variable") == "continuous") {
     warning("Coerced to histogram!", call. = FALSE, domain = "R-leem")
-    hist(x, bg, main, xlab, ylab, grids,
+    hist(x, freq, bg, main, xlab, ylab, grids,
          bgcol, bgborder, barcol, barborder, ...)
   }
   if (attr(x, "variable") == "discrete") {
@@ -1020,9 +1291,21 @@ barplot.leem <- function(x,
       xvaraux <-  c(xmin - 1, x$table$Groups, xmax + 1)
       xvar1 <- xvaraux - 0.5
       xvar2 <- xvaraux + 0.5
-      yvar <- x$table$Fi
-      yvar1 <- x$table$Fac1
-      yvar2 <- x$table$Fac2
+      if (freq == "a") {
+        yvar <- x$table$Fi
+        yvar1 <- x$table$Fac1
+        yvar2 <- x$table$Fac2
+      }
+      if (freq == "p") {
+        yvar <- x$table$Fp
+        yvar1 <- x$table$Fac1p
+        yvar2 <- x$table$Fac2p
+      }
+      if (freq == "r") {
+        yvar <- x$table$Fr
+        yvar1 <- x$table$Fac1p/100
+        yvar2 <- x$table$Fac2p/100
+      }
 
 
       # Limiares
@@ -1041,7 +1324,9 @@ barplot.leem <- function(x,
         xlab <- gettext("Groups", domain = "R-leem")
       }
       if (is.null(ylab)) {
-        ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+        if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
       }
 
       title(main = main, xlab = xlab, ylab = ylab)
@@ -1070,9 +1355,21 @@ barplot.leem <- function(x,
       xvaraux <-  c(0, aux, ngroups + 1)
       xvar1 <- xvaraux - 0.5
       xvar2 <- xvaraux + 0.5
-      yvar <- x$table$Fi
-      yvar1 <- x$table$Fac1
-      yvar2 <- x$table$Fac2
+      if (freq == "a") {
+        yvar <- x$table$Fi
+        yvar1 <- x$table$Fac1
+        yvar2 <- x$table$Fac2
+      }
+      if (freq == "p") {
+        yvar <- x$table$Fp
+        yvar1 <- x$table$Fac1p
+        yvar2 <- x$table$Fac2p
+      }
+      if (freq == "r") {
+        yvar <- x$table$Fr
+        yvar1 <- x$table$Fac1p/100
+        yvar2 <- x$table$Fac2p/100
+      }
 
 
       # Limiares
@@ -1091,7 +1388,9 @@ barplot.leem <- function(x,
         xlab <- gettext("Groups", domain = "R-leem")
       }
       if (is.null(ylab)) {
-        ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "a") ylab <- gettext("Frequency", domain = "R-leem")
+        if (freq == "r") ylab <- gettext("Relative frequency", domain = "R-leem")
+        if (freq == "p") ylab <- gettext("Percentage frequency (%)", domain = "R-leem")
       }
 
       title(main = main, xlab = xlab, ylab = ylab)

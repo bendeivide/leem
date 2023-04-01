@@ -17,6 +17,10 @@ ogive(x, decreasing = FALSE, both = FALSE, bars = FALSE,
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
 
+\item{...}{further arguments passed to or from other methods.}
+
+\item{freq}{Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.}
+
 \item{decreasing}{Logical argument. Default is \code{FALSE}. If \code{decreasing = FALSE}, it represents the "ogive larger than", if \code{decreasing = TRUE}, it represents the "ogive less than".}
 
 \item{both}{Logical argument. Default is \code{FALSE}. If \code{both = TRUE}, both o will be plotted. If \code{both = FALSE} otherside.}

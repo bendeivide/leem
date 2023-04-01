@@ -16,6 +16,10 @@ polyfreq.leem(x, type = "b", bars = TRUE, bg = TRUE, main = NULL,
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
 
+\item{...}{further arguments passed to or from other methods.}
+
+\item{freq}{Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.}
+
 \item{type}{Type of plot. The default is \code{type = "b"}, i.e., line and points. See \code{\link{graphical parameter}} for details.}
 
 \item{bars}{Logical argument. Default is \code{FALSE}. If \code{bars = TRUE}, the histogram will be inserted to plot.}

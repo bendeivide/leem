@@ -9,6 +9,8 @@ stickchartunction(x, ...)
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
 
+\item{freq}{Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.}
+
 \item{bg}{Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.}
 
 \item{main}{Insert the plot title. The default is \code{NULL}.}
@@ -42,6 +44,8 @@ stickchartunction(x, ...)
 \item{lty}{Line type. The default is  \code{lty = 2}.}
 
 \item{lwd}{Line width. The default is  \code{lwd = 2}.}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \value{
 The result of \code{stickchart()} is \code{x} object.

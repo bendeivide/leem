@@ -44,7 +44,7 @@ tabfreq <- function(dados, ...) {
 
 
 #' @export
-tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE){
+tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE, ...){
   if (class(data) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE,
                                    domain = "R-leem")
 

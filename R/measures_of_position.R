@@ -1,11 +1,104 @@
-# Dados
-# set.seed(10)
-# x <- rnorm(36, 100, 50)
-# y <- rbinom(36, 10, 0.8)
-# y <- rep(letters[1:4], 1:4)
-# y |> new_leem(variable = "discrete") |> tabfreq() |> mean()
-#x |> new_leem(variable = "continuous") |> tabfreq() |> mean()
+#' Measures of position
+#'
+#' Compute all measures of position
+#'
+#' @param x R object (list) of class leem. Use \code{new_leem()} function. Complex vectors are allowed for \code{trim = 0}, only.
+#' @param trim The fraction (0 to 0.5) of observations to be trimmed from each end of x before the mean is computed. Values of trim outside that range are taken as the nearest endpoint.
+#' @param na.rm	a logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
+#' @param rounding Numerical object. Rounds the values in its first argument to the specified number of decimal places (default \code{2}).
+#' @param grouped Logical object. Determines whether the measure of position result will be based on grouped data or not (default \code{TRUE}).
+#' @param details Logical object. Details of data (default \code{FALSE}).
+#' @param ... further arguments passed to or from other methods.
+#' @details The measures of position are: average, median and mode.
+#' @examples
+#' # Example 1: Poisson data
+#' rpois(30, 2.5) |>
+#'   new_leem() |>
+#'   mpos()
+#' # Example 2: Normal data
+#' rnorm(50, 100, 2.5) |>
+#'   new_leem(variable = 2) |>
+#'   mpos(grouped = FALSE)
+#' @export
+mpos <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FALSE, ...){
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
+                               call. = FALSE, domain = "R-leem")
+  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x)
+  if (attr(x, "variable") == "discrete") {
+    numchar <- is.numeric(x$statistics$raw_data)
+    if (numchar) {
+      media <- round(mean(x = x$statistics$raw_data,
+                            trim = trim,
+                            na.rm = na.rm), digits = rounding)
+      mediana <- round(median(x = x$statistics$raw_data,
+                              na.rm = na.rm), digits = rounding)
+      moda <- mfreq(x = x, na.rm = na.rm, rounding = rounding)
+      measures <- list(average = media, median = mediana,
+                       mode = moda)
+      resume <- list(average = media, median = mediana,
+                     mode = moda, table = x$table,
+                     rawdata = x$statistics$raw_data)
+      if (details) {
+        return(resume)
+      } else {
+        return(measures)
+      }
 
+    } else {
+      media <- "Measure not used for this data type!"
+      mediana <- "Measure not used for this data type!"
+      moda <- mfreq(x = x$statistics$raw_data, na.rm = na.rm,
+                    rounding = rounding)
+      measures <- list(average = media, median = mediana,
+                       mode = moda)
+      resume <- list(average = media, median = mediana,
+                     mode = moda, table = x$table,
+                     rawdata = x$statistics$raw_data)
+      if (details) {
+        return(resume)
+      } else {
+        return(measures)
+      }
+    }
+  }
+  if (attr(x, "variable") == "continuous") {
+    if (grouped) {
+      media <- mean(x = x,
+                          trim = trim,
+                          na.rm = na.rm, rounding = rounding)
+      mediana <- median(x = x, na.rm = na.rm, rounding = rounding)
+      moda <- mfreq(x = x, na.rm = na.rm, rounding = rounding)
+      measures <- list(average = media, median = mediana,
+                       mode = moda)
+      resume <- list(average = media, median = mediana,
+                     mode = moda, table = x$table,
+                     rawdata = x$statistics$raw_data)
+      if (details) {
+        return(resume)
+      } else {
+        return(measures)
+      }
+    } else {
+      media <- mean(x = x, grouped = FALSE,
+                    trim = trim,
+                    na.rm = na.rm, rounding = rounding)
+      mediana <- median(x = x, na.rm = na.rm, rounding = rounding,
+                        grouped = FALSE,)
+      moda <- mfreq(x = x, na.rm = na.rm, rounding = rounding,
+                    grouped = FALSE,)
+      measures <- list(average = media, median = mediana,
+                       mode = moda)
+      resume <- list(average = media, median = mediana,
+                     mode = moda, table = x$table,
+                     rawdata = x$statistics$raw_data)
+      if (details) {
+        return(resume)
+      } else {
+        return(measures)
+      }
+    }
+  }
+}
 
 
 
@@ -82,7 +175,7 @@ mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, 
 #'
 #' Class method leem for the generic median function
 #'
-#' @param x R object (list) of class leem. Use \code{new_leem()} function. Complex vectors are allowed for \code{trim = 0}, only.
+#' @param x R object (list) of class leem. Use \code{new_leem()} function.
 #' @param na.rm	a logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
 #' @param rounding Numerical object. Rounds the values in its first argument to the specified number of decimal places (default \code{2}).
 #' @param grouped Logical object. Determines whether the measure of position result will be based on grouped data or not (default \code{TRUE}).
@@ -146,7 +239,7 @@ median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details 
 #'
 #' Compute the sample mode.
 #'
-#' @param x R object (list) of class leem. Use \code{new_leem()} function. Complex vectors are allowed for \code{trim = 0}, only.
+#' @param x R object (list) of class leem. Use \code{new_leem()} function.
 #' @param na.rm	a logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
 #' @param rounding Numerical object. Rounds the values in its first argument to the specified number of decimal places (default \code{2}).
 #' @param grouped Logical object. Determines whether the measure of position result will be based on grouped data or not (default \code{TRUE}).
@@ -190,13 +283,9 @@ mfreq <- function (x, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FAL
          domain = "R-leem")
   }
 
-  if (class(x) != "leem") {
-    stop("Use the 'new_leem()' function to create an object of class leem!",
-         call. = FALSE)
-  }
+  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
+  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x)
 
-  if (class(x) == "leem" & is.null(attr(x, "output")))
-    x <- tabfreq(x)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
     if (numchar == 0) {

@@ -8,8 +8,8 @@
 #' @param tcol Text color type. The default is \code{tcol = lcol}.
 #' @param acol Arrow color type. The default is \code{acol = lcol}.
 #' @param parrow Text and arrow height. The default is \code{parrow = 0.5}. This argument must be the same length as the \code{type} argument.
-#' @param larrow Text and arrow length. The default is \code{larrow = 0.3}.
-#' @param ptext Distance between lines of text. The default is \code{ptext = 0}.
+#' @param larrow Text and arrow length. The default is \code{larrow = 0.6}.
+#' @param ptext Distance between lines of text. The default is \code{ptext = 0.06}.
 #' @param side Side to insert the text. The default is \code{side = "right"}. This argument must be the same length as the \code{type} argument.
 #' @param lwd numeric argument. The vertical line width. The default is  \code{lwd = 2}.
 #' @param lwdarrow numeric argument. The arrow width. The default is  \code{lwdarrow = lwd}.
@@ -54,8 +54,8 @@ insert.leem <- function(x, type = "mean",
                         tcol = lcol,
                         acol = lcol,
                         parrow = 0.5,
-                        larrow = 0.3,
-                        ptext = 0,
+                        larrow = 0.6,
+                        ptext = 0.06,
                         side = "right",
                         lwd = 2,
                         lwdarrow = lwd,
@@ -65,22 +65,31 @@ insert.leem <- function(x, type = "mean",
     parrow <- c(0.2, 0.5, 0.9)
     parrow <- parrow[1:length(type)]
   }
-  if (length(lcol) != length(type)) {
-    lcol <- c(lcol[1], lcol[1], lcol[1])
-    lcol <- lcol[1:length(type)]
+  if (type == "all") {
+    if (length(lcol) < 3) {
+      lcol <- c(lcol[1], lcol[1], lcol[1])
+      lcol <- lcol[1:length(type)]
+    }
+  } else {
+    if (length(lcol) != length(type)) {
+      lcol <- c(lcol[1], lcol[1], lcol[1])
+      lcol <- lcol[1:length(type)]
+    }
   }
+
+
   if (length(side) != length(type)) {
     side <- c("left", "right", "left")
     side <- side[1:length(type)]
-
   }
-  if (any(type == "all")) {
+  if (type == "all") {
     # Defensive programming
     if (length(parrow) < 3) {
       parrow <- c(0.2, 0.5, 0.9)
     }
     if (length(lcol) < 3) {
       lcol <- c(lcol[1], lcol[1], lcol[1])
+      acol <- lcol
     }
     if (length(side) < 3) {
       side <- c("left", "right", "left")
@@ -90,31 +99,31 @@ insert.leem <- function(x, type = "mean",
            lty = lty, lwd = lwd, col = lcol[1])
     # par("usr")[i] => [i] -> c(x1, x2, y1, y2)
     if (side[1] == "right") {
-      x0 <- mean(x) + mean(x) * larrow
-      y0 <- max(x$table$Fi) * parrow[1]
-      arrows(x0 = x0, y0 = y0,
-             x1 = mean(x), y1 = max(x$table$Fi) * parrow[1],
-             length = 0.1, col = acol[1], lwd = lwdarrow)
-
-      text(x = mean(x) + 1.1 * mean(x) * larrow, y = ptext + max(x$table$Fi) * 0.06 + y0,
-           labels = gettext("Mean", domain = "R-leem"), col = tcol[1])
-
-      # ?plotmath
-      text(x = mean(x) + 1.1 * mean(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
-           labels = bquote(bar(X) ==.(format(mean(x, rounding = 4), digits = 4))), col = tcol[1])
-    }
-    if (side[1] == "left") {
-      x0 <- mean(x) - mean(x) * larrow
-      y0 <- max(x$table$Fi) * parrow[1]
+      x0 <- mean(x)  + (par("usr")[2] - par("usr")[1])/2 * larrow
+      y0 <- par("usr")[4] * parrow[1]
       arrows(x0 = x0, y0 = y0,
              x1 = mean(x), y1 = y0,
              length = 0.1, col = acol[1], lwd = lwdarrow)
 
-      text(x = mean(x) - 1.1 * mean(x) * larrow, y = ptext + max(x$table$Fi) * 0.06 + y0,
+      text(x = x0, y = ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
            labels = gettext("Mean", domain = "R-leem"), col = tcol[1])
 
       # ?plotmath
-      text(x = mean(x) - 1.1 * mean(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+      text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
+           labels = bquote(bar(X) ==.(format(mean(x, rounding = 4), digits = 4))), col = tcol[1])
+    }
+    if (side[1] == "left") {
+      x0 <- mean(x) - (par("usr")[2] - par("usr")[1])/2 * larrow
+      y0 <- par("usr")[4] * parrow[1]
+      arrows(x0 = x0, y0 = y0,
+             x1 = mean(x), y1 = y0,
+             length = 0.1, col = acol[1], lwd = lwdarrow)
+
+      text(x = x0, y = ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
+           labels = gettext("Mean", domain = "R-leem"), col = tcol[1])
+
+      # ?plotmath
+      text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
            labels = bquote(bar(X) ==.(format(mean(x, rounding = 4), digits = 4))), col = tcol[1])
     }
     # Median
@@ -122,31 +131,31 @@ insert.leem <- function(x, type = "mean",
            lty = lty, lwd = lwd, col = lcol[2])
     # par("usr")[i] => [i] -> c(x1, x2, y1, y2)
     if (side[2] == "right") {
-      x0 <- median(x) + median(x) * larrow
-      y0 <- max(x$table$Fi) * parrow[2]
+      x0 <- median(x)  + (par("usr")[2] - par("usr")[1])/2 * larrow
+      y0 <- par("usr")[4] * parrow[2]
       arrows(x0 = x0, y0 = y0,
-             x1 = median(x), y1 = max(x$table$Fi) * parrow[2],
+             x1 = median(x), y1 = y0,
              length = 0.1, col = acol[2], lwd = lwdarrow)
 
-      text(x = median(x) + 1.1 * median(x) * larrow, y =  ptext + max(x$table$Fi) * 0.06 + y0,
+      text(x = x0, y =  ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
            labels = gettext("Median", domain = "R-leem"), col = tcol[2])
 
       # ?plotmath
-      text(x = median(x) + 1.1 * median(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+      text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
            labels = bquote(md(X) ==.(format(median(x, rounding = 4), digits = 4))), col = tcol[2])
     }
     if (side[2] == "left") {
-      x0 <- median(x) - median(x) * larrow
-      y0 <- max(x$table$Fi) * parrow[2]
-      arrows(x0 = x0, y0 = max(x$table$Fi) * parrow[2],
-             x1 = median(x), y1 = max(x$table$Fi) * parrow[2],
+      x0 <- median(x) - (par("usr")[2] - par("usr")[1]) / 2 * larrow
+      y0 <- par("usr")[4] * parrow[2]
+      arrows(x0 = x0, y0 = y0,
+             x1 = median(x), y1 = y0,
              length = 0.1, col = acol[2], lwd = lwdarrow)
 
-      text(x = median(x) - 1.1 * median(x) * larrow, y = ptext + max(x$table$Fi) * 0.06 + y0,
+      text(x = x0, y = ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
            labels = gettext("Median", domain = "R-leem"), col = tcol[2])
 
       # ?plotmath
-      text(x = median(x) - 1.1 * median(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+      text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
            labels = bquote(md(X) ==.(format(median(x, rounding = 4), digits = 4))), col = tcol[2])
     }
     # Mode
@@ -155,31 +164,31 @@ insert.leem <- function(x, type = "mean",
              lty = lty, lwd = lwd, col = lcol[3])
       # par("usr")[i] => [i] -> c(x1, x2, y1, y2)
       if (side[3] == "right") {
-        x0 <- mfreq(x) + mfreq(x) * larrow
-        y0 <- max(x$table$Fi) * parrow[3]
+        x0 <- mfreq(x) + (par("usr")[2] - par("usr")[1]) / 2 * larrow
+        y0 <- par("usr")[4] * parrow[3]
         arrows(x0 = x0, y0 = y0,
-               x1 = mfreq(x), y1 = max(x$table$Fi) * parrow[3],
+               x1 = mfreq(x), y1 = par("usr")[4] * parrow[3],
                length = 0.1, col = acol[3], lwd = lwdarrow)
 
-        text(x = mfreq(x) + 1.1 * mfreq(x) * larrow, y =  ptext + max(x$table$Fi) * 0.06 + y0,
+        text(x = x0, y =  ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
              labels = gettext("Mode", domain = "R-leem"), col = tcol[3])
 
         # ?plotmath
-        text(x = mfreq(x) + 1.1 * mfreq(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+        text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
              labels = bquote(mo(X) ==.(format(mfreq(x, rounding = 4), digits = 4))), col = tcol[3])
       }
       if (side[3] == "left") {
-        x0 <- mfreq(x) - mfreq(x) * larrow
-        y0 <- max(x$table$Fi) * parrow[3]
-        arrows(x0 = x0, y0 = max(x$table$Fi) * parrow[3],
-               x1 = mfreq(x), y1 = max(x$table$Fi) * parrow[3],
+        x0 <- mfreq(x) - (par("usr")[2] - par("usr")[1]) / 2 * larrow
+        y0 <- par("usr")[4] * parrow[3]
+        arrows(x0 = x0, y0 = y0,
+               x1 = mfreq(x), y1 = par("usr")[4] * parrow[3],
                length = 0.1, col = acol[3], lwd = lwdarrow)
 
-        text(x = mfreq(x) - 1.1 * mfreq(x) * larrow, y = ptext + max(x$table$Fi) * 0.06 + y0,
+        text(x = x0, y = ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
              labels = gettext("Mode", domain = "R-leem"), col = tcol[3])
 
         # ?plotmath
-        text(x = mfreq(x) - 1.1 * mfreq(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+        text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
              labels = bquote(md(X) ==.(format(mfreq(x, rounding = 4), digits = 4))), col = tcol[3])
       }
     } else {
@@ -207,31 +216,31 @@ insert.leem <- function(x, type = "mean",
         abline(v = mean(x),
                lty = lty, lwd = lwd, col = lcol[i])
         if (side[i] == "right") {
-          x0 <- mean(x) + mean(x) * larrow
-          y0 <- max(x$table$Fi) * parrow[i]
+          x0 <- mean(x) + (par("usr")[2] - par("usr")[1]) / 2 * larrow
+          y0 <- par("usr")[4] * parrow[i]
           arrows(x0 = x0, y0 = y0,
-                 x1 = mean(x), y1 = max(x$table$Fi) * parrow[i],
+                 x1 = mean(x), y1 = par("usr")[4] * parrow[i],
                  length = 0.1, col = acol[i], lwd = lwdarrow)
 
-          text(x = mean(x) + 1.1 * mean(x) * larrow, y = ptext + max(x$table$Fi) * 0.06 + y0,
+          text(x = x0, y = ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
                labels = gettext("Mean", domain = "R-leem"), col = tcol[i])
 
           # ?plotmath
-          text(x = mean(x) + 1.1 * mean(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+          text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
                labels = bquote(bar(X) ==.(format(mean(x, rounding = 4), digits = 4))), col = tcol[i])
         }
         if (side[i] == "left") {
-          x0 <- mean(x) - mean(x) * larrow
-          y0 <- max(x$table$Fi) * parrow[i]
+          x0 <- mean(x) - (par("usr")[2] - par("usr")[1]) / 2 * larrow
+          y0 <- par("usr")[4] * parrow[i]
           arrows(x0 = x0, y0 = y0,
                  x1 = mean(x), y1 = y0,
                  length = 0.1, col = acol[i], lwd = lwdarrow)
 
-          text(x = mean(x) - 1.1 * mean(x) * larrow, y = ptext + max(x$table$Fi) * 0.06 + y0,
+          text(x = x0, y = ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
                labels = gettext("Mean", domain = "R-leem"), col = tcol[i])
 
           # ?plotmath
-          text(x = mean(x) - 1.1 * mean(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+          text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
                labels = bquote(bar(X) ==.(format(mean(x, rounding = 4), digits = 4))), col = tcol[i])
         }
       }
@@ -240,31 +249,31 @@ insert.leem <- function(x, type = "mean",
                lty = lty, lwd = lwd, col = lcol[i])
         # par("usr")[i] => [i] -> c(x1, x2, y1, y2)
         if (side[i] == "right") {
-          x0 <- median(x) + median(x) * larrow
-          y0 <- max(x$table$Fi) * parrow[i]
+          x0 <- median(x) + (par("usr")[2] - par("usr")[1]) / 2 * larrow
+          y0 <- par("usr")[4] * parrow[i]
           arrows(x0 = x0, y0 = y0,
-                 x1 = median(x), y1 = max(x$table$Fi) * parrow[i],
+                 x1 = median(x), y1 = par("usr")[4] * parrow[i],
                  length = 0.1, col = acol[i], lwd = lwdarrow)
 
-          text(x = median(x) + 1.1 * median(x) * larrow, y =  ptext + max(x$table$Fi) * 0.06 + y0,
+          text(x = x0, y =  ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
                labels = gettext("Median", domain = "R-leem"), col = tcol[i])
 
           # ?plotmath
-          text(x = median(x) + 1.1 * median(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+          text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
                labels = bquote(md(X) ==.(format(median(x, rounding = 4), digits = 4))), col = tcol[i])
         }
         if (side[i] == "left") {
-          x0 <- median(x) - median(x) * larrow
-          y0 <- max(x$table$Fi) * parrow[i]
-          arrows(x0 = x0, y0 = max(x$table$Fi) * parrow[i],
-                 x1 = median(x), y1 = max(x$table$Fi) * parrow[i],
+          x0 <- median(x) - (par("usr")[2] - par("usr")[1]) / 2 * larrow
+          y0 <- par("usr")[4] * parrow[i]
+          arrows(x0 = x0, y0 = y0,
+                 x1 = median(x), y1 = y0,
                  length = 0.1, col = acol[i], lwd = lwdarrow)
 
-          text(x = median(x) - 1.1 * median(x) * larrow, y = ptext + max(x$table$Fi) * 0.06 + y0,
+          text(x = x0, y = ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
                labels = gettext("Median", domain = "R-leem"), col = tcol[i])
 
           # ?plotmath
-          text(x = median(x) - 1.1 * median(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+          text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
                labels = bquote(md(X) ==.(format(median(x, rounding = 4), digits = 4))), col = tcol[i])
         }
       }
@@ -274,31 +283,31 @@ insert.leem <- function(x, type = "mean",
                  lty = lty, lwd = lwd, col = lcol[i])
           # par("usr")[i] => [i] -> c(x1, x2, y1, y2)
           if (side[i] == "right") {
-            x0 <- mfreq(x) + mfreq(x) * larrow
-            y0 <- max(x$table$Fi) * parrow[i]
+            x0 <- mfreq(x) + (par("usr")[2] - par("usr")[1]) / 2 * larrow
+            y0 <- par("usr")[4] * parrow[i]
             arrows(x0 = x0, y0 = y0,
-                   x1 = mfreq(x), y1 = max(x$table$Fi) * parrow[i],
+                   x1 = mfreq(x), y1 = y0,
                    length = 0.1, col = acol[i], lwd = lwdarrow)
 
-            text(x = mfreq(x) + 1.1 * mfreq(x) * larrow, y =  ptext + max(x$table$Fi) * 0.06 + y0,
+            text(x = x0, y =  ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
                  labels = gettext("Mode", domain = "R-leem"), col = tcol[i])
 
             # ?plotmath
-            text(x = mfreq(x) + 1.1 * mfreq(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+            text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
                  labels = bquote(mo(X) ==.(format(mfreq(x, rounding = 4), digits = 4))), col = tcol[i])
           }
           if (side[i] == "left") {
-            x0 <- mfreq(x) - mfreq(x) * larrow
-            y0 <- max(x$table$Fi) * parrow[i]
-            arrows(x0 = x0, y0 = max(x$table$Fi) * parrow[i],
-                   x1 = mfreq(x), y1 = max(x$table$Fi) * parrow[i],
+            x0 <- mfreq(x) - (par("usr")[2] - par("usr")[1]) / 2 * larrow
+            y0 <- par("usr")[4] * parrow[i]
+            arrows(x0 = x0, y0 = y0,
+                   x1 = mfreq(x), y1 = y0,
                    length = 0.1, col = acol[i], lwd = lwdarrow)
 
-            text(x = mfreq(x) - 1.1 * mfreq(x) * larrow, y = ptext + max(x$table$Fi) * 0.06 + y0,
+            text(x = x0, y = ptext * (par("usr")[4] - par("usr")[3]) / 2 + y0,
                  labels = gettext("Mode", domain = "R-leem"), col = tcol[i])
 
             # ?plotmath
-            text(x = mfreq(x) - 1.1 * mfreq(x) * larrow, y = y0 - max(x$table$Fi) * 0.06 - ptext,
+            text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
                  labels = bquote(md(X) ==.(format(mfreq(x, rounding = 4), digits = 4))), col = tcol[i])
           }
         } else {
