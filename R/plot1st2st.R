@@ -61,7 +61,7 @@
 
   ## Child 1
   tkpack(frameaux <- ttkframe(child1.group1),
-                       expand = TRUE, anchor = "n", side = "top")
+         expand = TRUE, anchor = "n", side = "top")
 
   tkpack(coef <- ttklabelframe(frameaux,
                                text = gettext("Coefficients",
@@ -69,8 +69,8 @@
          fill = "x", expand = TRUE, anchor = "n", side = "left")
 
   tkpack(limaxes <- ttklabelframe(frameaux,
-                               text = gettext("Limit of axes",
-                                              domain = "R-leem")),
+                                  text = gettext("Limit of axes",
+                                                 domain = "R-leem")),
          fill = "x", expand = TRUE, anchor = "n", side = "left")
 
   ### Limit axes
@@ -85,7 +85,7 @@
   txt_xlim <- tclVar(gettext("8", domain = "R-leem"))
   ##
   tkpack(entry_xaxe <- tkentry(parent = xaxe,
-                                textvariable = txt_xlim),
+                               textvariable = txt_xlim),
          anchor = "nw", padx = "1m", ipadx = "2m", side = "left",
          expand = TRUE, fill = "x")
 
@@ -100,7 +100,7 @@
   txt_ylim <- tclVar(gettext("4", domain = "R-leem"))
   ##
   tkpack(entry_yaxe <- tkentry(parent = yaxe,
-                                textvariable = txt_ylim),
+                               textvariable = txt_ylim),
          anchor = "nw", padx = "1m", ipadx = "2m", side = "left",
          expand = TRUE, fill = "x")
 
@@ -368,7 +368,7 @@
                    coefang, "\n\n",
                    int1, "\n\n",
                    int2
-                   )
+    )
 
     # Label
     tkpack(res <- tklabel(fres, text = texts), side = "left",
@@ -390,14 +390,14 @@
 
 
     plotleem <<- tkplot(parent = fplot,
-                       fun = function(...){
-                         faux(
-                           a = eval(parse(text = tclvalue(txt_vara))),
-                           b = eval(parse(text = tclvalue(txt_varb))),
-                           d = eval(parse(text = tclvalue(txt_varc)))
-                         )
-                       },
-                       hscale = fator, vscale = fator)
+                        fun = function(...){
+                          faux(
+                            a = eval(parse(text = tclvalue(txt_vara))),
+                            b = eval(parse(text = tclvalue(txt_varb))),
+                            d = eval(parse(text = tclvalue(txt_varc)))
+                          )
+                        },
+                        hscale = fator, vscale = fator)
 
     # Scale of plot
     s <- tkscale(splot, command = f, from = 1, to = 3.00, variable = "fator",
@@ -416,6 +416,212 @@
   finish <- tclServiceMode(oldmode)
 }
 
+.mposition<- function(...) {
+
+  # Style TFrame
+  .Tcl("ttk::style configure leem.TFrame -relief solid")
+  # Style PanedWindow
+  .Tcl("ttk::style configure leem.TPanedwindow -relief solid")
+
+  # Disabled GUI
+  oldmode <- tclServiceMode(FALSE)
+
+  # Window function
+  func <- tktoplevel(width = 700, height = 700)
+
+  # Not propagate
+  tkpack.propagate(func, FALSE)
+
+  # Title
+  tkwm.title(func,
+             gettext("package leem: Measures of Positions.", domain = "R-leem"))
+
+  ############
+  # Overall group
+  ############
+  #group.all <- NULL
+  group.all <- ttkpanedwindow(func, orient = "vertical", width = 700, height = 700)
+  tkpack(group.all, expand = TRUE, fill = "both")
+
+  ##############
+  # Child groups
+  ##############
+  # Top-level window
+  group1 <- ttkpanedwindow(group.all, orient = "horizontal", style = "leem.TPanedwindow", height = 150)
+  tkadd(group.all, group1, weight = 1)
+  ##
+  group2 <- ttkpanedwindow(group.all, orient = "vertical", style = "leem.TPanedwindow", height = 450)
+  tkadd(group.all, group2, weight = 2)
+  ##
+  group3 <- ttkpanedwindow(group.all, orient = "horizontal", style = "leem.TPanedwindow", height = 30)
+  tkadd(group.all, group3, weight = 1)
+
+  #######################
+  # Child of Child groups
+  #######################
+  #Q1
+  child1.group1 <- ttkframe(parent = group1, style = "leem.TFrame",
+                            padding = c(3,3,3,3), width = 300)
+  tkadd(group1, child1.group1)
+
+  #Q2
+  child2.group1 <- ttkframe(parent = group1, style = "leem.TFrame",
+                            padding = c(3,3,3,3))
+  tkadd(group1, child2.group1)
+  #Q3
+  child1.group2 <- ttkframe(parent = group2, style = "leem.TFrame",
+                            padding = c(3,3,3,3))
+  tkadd(group2, child1.group2)
+
+  ## Child 1
+  tkpack(frameaux <- ttkframe(child1.group1),
+         expand = TRUE, anchor = "n", side = "top")
+
+  tkpack(dataentrytext <- ttklabelframe(frameaux,
+                                        text = gettext("Data vector:",
+                                                       domain = "R-leem")),
+         fill = "x", expand = TRUE, anchor = "n", side = "left")
+  # Entry
+  txt_data <- tclVar(gettext("8", domain = "R-leem"))
+  ### data
+  # data entry manual
+  tkpack(dataentryl <- tkframe(dataentrytext), anchor = "n",
+         expand = FALSE, fill = "x")
+  txt_vardata <- tclVar(gettext("xx.xxx, xx.xxx, ...", domain = "R-leem"))
+  tkpack(entry_vardata <- tkentry(parent = dataentryl,
+                                  textvariable = txt_vardata),
+         anchor = "nw", padx = "1m", ipadx = "20m", side = "top",
+         expand = TRUE, fill = "x")
+
+
+  ## Child 2
+  tkpack(adit1 <- ttklabelframe(child1.group1,
+                                text = gettext("Variable type",
+                                               domain = "R-leem")),
+         fill = "x", expand = TRUE, anchor = "n", side = "top")
+  # Checkbox
+  tkpack(st11 <- tkframe(adit1), anchor = "n",
+         expand = FALSE, fill = "x")
+  aditvalue11 <- tclVar("FALSE")
+  tkpack(adit11 <- tkcheckbutton(parent = st11,
+                                 text = gettext("Continous", domain = "R-leem"),
+                                 variable = aditvalue11,
+                                 onvalue = "TRUE",
+                                 offvalue = "FALSE"),
+         anchor = "nw", padx = "1m", side = "left")
+  # Checkbox
+  tkpack(st12 <- tkframe(adit1), anchor = "n",
+         expand = FALSE, fill = "x")
+  aditvalue12 <- tclVar("FALSE")
+  tkpack(adit12 <- tkcheckbutton(parent = st12,
+                                 text = gettext("Discrete", domain = "R-leem"),
+                                 variable = aditvalue12,
+                                 onvalue = "TRUE",
+                                 offvalue = "FALSE"),
+         anchor = "nw", padx = "1m", side = "left")
+
+  ## Child 4
+  tkpack(results <- ttklabelframe(child2.group1,
+                                  text = gettext("Results",
+                                                 domain = "R-leem")),
+         fill = "both", expand = TRUE, anchor = "n")
+  # Frame
+  tkpack(fres <- tkframe(results), anchor = "n",
+         expand = FALSE, fill = "x")
+  # Label
+  tkpack(res <- tklabel(fres, text = gettext("The results...", domain = "R-leem")), anchor = "n",
+         expand = FALSE, fill = "x")
+
+  ## Child 5
+  tkpack(plot1 <- ttklabelframe(child1.group2,
+                                text = gettext("Plot",
+                                               domain = "R-leem")),
+         fill = "both", expand = TRUE, anchor = "n")
+
+
+  # Calculate
+
+  calculate_button <- ttkbutton(text = gettext("Calculate",
+                                               domain = "R-leem"),
+                                parent = group3, width = 200)
+
+  tkadd(group3, calculate_button)
+
+  #Result
+  plotaux1 <- function(){
+    sapply(as.character(tkwinfo("children", fres)),
+           function(W) tcl("destroy", W))
+
+    sapply(as.character(tkwinfo("children", plot1)),
+           function(W) tcl("destroy", W))
+
+    if(tclvalue(aditvalue11) == "TRUE"){
+      txt_vardata <- new_leem(as.numeric(unlist(strsplit(tclvalue(txt_vardata), ", ")[[1]])), "continuous")
+    }else if(tclvalue(aditvalue12) == "TRUE"){
+      txt_vardata <- new_leem(as.numeric(unlist(strsplit(tclvalue(txt_vardata), ", ")[[1]])), "discrete")
+    }else{
+      tkpack(tkmessageBox(message = gettext("Please, select a type of variable.")))
+    }
+    txt_vardata <- tabfreq(txt_vardata)
+
+    tkpack(res <- tklabel(fres, text = gettext('Mean', mean.leem(txt_vardata),'//',
+                                               'Median', median.leem(txt_vardata),'//',
+                                               'Mode', mfreq(txt_vardata), domain = "R-leem")),
+           anchor = "n", expand = FALSE, fill = "x")
+
+    tkpack(plotg1 <- tkrplot(plot1, hscale = 1.5,
+                             vscale = 1.3, fun = function(...) {
+                               polyfreq.leem(txt_vardata, barcol= "#00FFFF")
+                             }))
+  }
+
+  tkbind(calculate_button, "<ButtonRelease>", function(...) plotaux1())
+
+  # Activate GUI
+  finish <- tclServiceMode(oldmode)
+}
+
+.mdispersion <- function(...) {
+
+  # Style TFrame
+  .Tcl("ttk::style configure leem.TFrame -relief solid")
+  # Style PanedWindow
+  .Tcl("ttk::style configure leem.TPanedwindow -relief solid")
+
+  # Disabled GUI
+  oldmode <- tclServiceMode(FALSE)
+
+  # Window function
+  func <- tktoplevel(width = 700, height = 700)
+
+  # Not propagate
+  tkpack.propagate(func, FALSE)
+
+  # Title
+  tkwm.title(func,
+             gettext("Measures of dispersion", domain = "R-leem"))
+
+  ############
+  # Overall group
+  ############
+  #group.all <- NULL
+  group.all <- ttkpanedwindow(func, orient = "vertical", width = 700, height = 700)
+  tkpack(group.all, expand = TRUE, fill = "both")
+
+  ##############
+  # Child groups
+  ##############
+  # Top-level window
+  group1 <- ttkpanedwindow(group.all, orient = "horizontal", style = "leem.TPanedwindow", height = 250)
+  tkadd(group.all, group1, weight = 1)
+
+  # Activate GUI
+  finish <- tclServiceMode(oldmode)
+}
+
+.demolocsca <- function(...) {
+  showpar(gui = "tcltk")
+}
 
 
 
