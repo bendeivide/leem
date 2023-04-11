@@ -478,13 +478,8 @@
          expand = TRUE, anchor = "n", side = "top")
 
   tkpack(dataentrytext <- ttklabelframe(frameaux,
-<<<<<<< HEAD
-                               text = gettext("Data vector:",
-                                              domain = "R-leem")),
-=======
                                         text = gettext("Data vector:",
                                                        domain = "R-leem")),
->>>>>>> 20978c7478572ed63d97e11140e563b6ba8c07a5
          fill = "x", expand = TRUE, anchor = "n", side = "left")
   # Entry
   txt_data <- tclVar(gettext("8", domain = "R-leem"))
@@ -494,11 +489,7 @@
          expand = FALSE, fill = "x")
   txt_vardata <- tclVar(gettext("xx.xxx, xx.xxx, ...", domain = "R-leem"))
   tkpack(entry_vardata <- tkentry(parent = dataentryl,
-<<<<<<< HEAD
-                                textvariable = txt_vardata),
-=======
                                   textvariable = txt_vardata),
->>>>>>> 20978c7478572ed63d97e11140e563b6ba8c07a5
          anchor = "nw", padx = "1m", ipadx = "20m", side = "top",
          expand = TRUE, fill = "x")
 
@@ -574,16 +565,6 @@
     txt_vardata <- tabfreq(txt_vardata)
 
     tkpack(res <- tklabel(fres, text = gettext('Mean', mean.leem(txt_vardata),'//',
-<<<<<<< HEAD
-                                                 'Median', median.leem(txt_vardata),'//',
-                                                 'Mode', mfreq(txt_vardata), domain = "R-leem")),
-           anchor = "n", expand = FALSE, fill = "x")
-
-    tkpack(plotg1 <- tkrplot(plot1, hscale = 1.5,
-                 vscale = 1.3, fun = function(...) {
-                   polyfreq.leem(txt_vardata, barcol= "#00FFFF")
-                 }))
-=======
                                                'Median', median.leem(txt_vardata),'//',
                                                'Mode', mfreq(txt_vardata), domain = "R-leem")),
            anchor = "n", expand = FALSE, fill = "x")
@@ -592,7 +573,6 @@
                              vscale = 1.3, fun = function(...) {
                                polyfreq.leem(txt_vardata, barcol= "#00FFFF")
                              }))
->>>>>>> 20978c7478572ed63d97e11140e563b6ba8c07a5
   }
 
   tkbind(calculate_button, "<ButtonRelease>", function(...) plotaux1())
