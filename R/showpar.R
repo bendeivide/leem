@@ -73,7 +73,7 @@ showpar <- function(gui = "rstudio") {
 
     # Title
     tkwm.title(tkplot,
-               gettext("leem package: Normal Distribution", domain = "R-leem"))
+               gettext("leem package: Demonstration - Normal Distribution", domain = "R-leem"))
 
     tkpack(tklabel(tkplot, text = "Parameters"))
 
@@ -97,7 +97,7 @@ showpar <- function(gui = "rstudio") {
       tkplot,
       from = -50,
       to = 50,
-      label = 'mean',
+      label = 'Mean',
       variable = tk_mu,
       showvalue = TRUE,
       resolution = 1,
