@@ -59,7 +59,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           fy <- dt(y, df = nu)
           curve(dt(x, df = nu), -6, 6, ylab = expression(f[X](x)), xlab="X",
                 ylim = c(0, 1.2 * max(c(fx, fy))), panel.first = grid(col = "gray90"),
-                main = gettext("Probability Function: T-Student.", domain = "R-leem"))
+                main = gettext("Probability Function: T-Student", domain = "R-leem"))
           polygon(c(y, rev(y)),
                   c(fy, rep(0, length(fy))),
                   col="gray90")
@@ -70,30 +70,30 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           qq <- round(q, digits=2)
           qqaux <- qq
           Pr <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
+          #Pr <- gsub("\\.", ",", Pr)
+          #qq <- gsub("\\.", ",", qq)
           axis(side=1, at=qqaux, labels=qqaux,
                col="red", font = 2, col.axis = "red")
           abline(v = qqaux, lty=2, col = "red")
           if (attr(q, "region") == "region2") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~"< x < "~t2~";"~nu==df)==Pr~"\n\n",
+                   legend=substitute(P(t1~"< X < "~t2~";"~nu==df)==Pr~"\n\n",
                                      list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu)))
           }
           if (attr(q, "region") == "region4") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~"<= X <= "~t2~";"~nu==df)==Pr~"\n\n",
-                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu)))
+                   legend=substitute(P(t1<=~X<=~t2~";"~nu==df)==Pr~"\n\n",
+                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu, X = "X")))
           }
           if (attr(q, "region") == "region7") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~"<= T < "~t2~";"~nu==df)==Pr~"\n\n",
-                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu)))
+                   legend=substitute(P(t1<=~X<~t2~";"~nu==df)==Pr~"\n\n",
+                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu, X = "X")))
           }
           if (attr(q, "region") == "region8") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~"< T <= "~t2~";"~nu==df)==Pr~"\n\n",
-                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu)))
+                   legend=substitute(P(t1<~X<=~t2~";"~nu==df)==Pr~"\n\n",
+                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu, X = "X")))
           }
         }
         if (gui == "plot" ) {
@@ -128,7 +128,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           }
           # Desabilitar warnings global
           #options(warn = - 1)
-          # war <- options(warn = - 1)
+          war <- options(warn = - 1)
           # on.exit(options(war))
 
           nu <- argaddit$df
@@ -222,7 +222,12 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
               }
               tkdestroy(tkplot)
             }
+
           })
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
           prob <- round(pt(q[2], df = nu,
                            lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
         }
@@ -446,9 +451,13 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           plotcurve(q, mu, sigma)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotcurve(qaux, muaux),
-                                 qaux = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
-                                 muaux = manipulate::slider(mu, mu + 200, mu))
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          manipulate::manipulate(plotcurve(q, mean, sd),
+                                 q = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
+                                 mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+          prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
         }
       }
       if (dist == "poisson") {
@@ -1149,7 +1158,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           fy <- dt(y, df = nu)
           curve(dt(x, df = nu), -6, 6, ylab = expression(f[X](x)), xlab="X",
                 ylim = c(0, 1.2 * max(c(fx, fy))), panel.first = grid(col = "gray90"),
-                main = gettext("Probability Function: T-Student.", domain = "R-leem"))
+                main = gettext("Probability Function: T-Student", domain = "R-leem"))
           polygon(c(y, rev(y)),
                   c(fy, rep(0, length(fy))),
                   col="gray90")
@@ -1162,8 +1171,8 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           abline(v=0, lty=2)
           qq <- round(q, digits=2)
           Pr <- round(pt(q[1], df = nu, lower.tail = T) + pt(q[2], df = nu, lower.tail = F), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
+          #Pr <- gsub("\\.", ",", Pr)
+          #qq <- gsub("\\.", ",", qq)
           axis(side=1, at=qq, tick = TRUE, lwd = 0,
                col="red", font = 2, lwd.ticks = 1, col.axis = "red")
           axis(side=1, at=as.character(c(-6, qq[1])), tick = TRUE, lwd = 1,
@@ -1178,18 +1187,18 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           }
           if (attr(q, "region") == "region3") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~">= X >="~t2~";"~nu==df)==Pr~"\n\n",
-                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu)))
+                   legend=substitute(P(t1>=~X>=~t2~";"~nu==df)==Pr~"\n\n",
+                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu, X = "X")))
           }
           if (attr(q, "region") == "region5") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~">= X > "~t2~";"~nu==df)==Pr~"\n\n",
-                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu)))
+                   legend=substitute(P(t1>=~X>~t2~";"~nu==df)==Pr~"\n\n",
+                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu, X = "X")))
           }
           if (attr(q, "region") == "region6") {
             legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1~"> X >= "~t2~";"~nu==df)==Pr~"\n\n",
-                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu)))
+                   legend=substitute(P(t1>~X>=~t2~";"~nu==df)==Pr~"\n\n",
+                                     list(t1=qq[1], t2=qq[2], Pr=Pr, df = nu, X = "X")))
           }
         }
         if (gui == "plot" ) {
@@ -1332,7 +1341,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                 ylim = c(0, 1.2 * max(fx,fy,fz)),xlab="X",
                 ylab = expression(f[X](x)),
                 panel.first = grid(col="gray90"),
-                main = gettext("Probability Function: Normal.", domain = "R-leem"))
+                main = gettext("Probability Function: Normal", domain = "R-leem"))
           polygon(c(y, rev(y)),
                   c(fy, rep(0, length(fy))),
                   col="gray90")
@@ -1356,23 +1365,23 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           abline(v = qqaux, lty=2, col = "red")
           if (attr(q, "region") == "region1") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1~"> X > "~t2  ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
+                   legend = substitute(P(t1~"> X >"~t2  ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
                                        list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma)))
           }
           if (attr(q, "region") == "region3") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1~">= X >= "~t2  ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
-                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma)))
+                   legend = substitute(P(t1>=~X>=~t2  ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
+                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma, X ="X")))
           }
           if (attr(q, "region") == "region5") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1~">= X > "~t2  ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
+                   legend = substitute(P(t1>=~"X > "~t2  ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
                                        list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma)))
           }
           if ( attr(q, "region") == "region6") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1~"> X > ="~t2  ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n,",
-                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma)))
+                   legend = substitute(P(t1>~X>=~t2  ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
+                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma, X = "X")))
           }
         }
         if (gui == "plot") {
@@ -1382,9 +1391,20 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           plotcurve(q, mu, sigma)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotcurve(mu, qaux, muaux),
-                                 qaux = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
-                                 muaux = manipulate::slider(mu, mu + 200, mu))
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          plotcurveaux <- function(q1 = q[1], q2 = q[2], mu, sigma, ...) {
+            q[1] <- q1
+            q[2] <- q2
+            plotcurve(q, mu, sigma)
+          }
+          manipulate::manipulate(plotcurveaux(q1, q2, mean, sd),
+                                 q1 = manipulate::slider(mu - 4 * sigma, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], mu + 4 * sigma, q[2]),
+                                 mean = manipulate::slider(mu, mu + 4 * sigma, mu),
+                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+          prob <- round(pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
+            pnorm(q[2], mean = mu, sd = sigma, lower.tail = F), digits = rounding)
         }
       }
       if (dist == "poisson") {
@@ -2127,7 +2147,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         # Desabilitar warnings global
         #options(warn = - 1)
         war <- options(warn = - 1)
-        on.exit(options(war))
+        #on.exit(options(war))
 
         plotcurve <- function(q, nu) {
           x <- seq(-6, q, by=0.01)
@@ -2147,15 +2167,15 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           qq <- round(q, digits=2)
           qqaux <-round(q, digits=2)
           Pr <- round(pt(qq, df = nu, lower.tail = T), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
+          #Pr <- gsub("\\.", ",", Pr)
+          #qq <- gsub("\\.", ",", qq)
           axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
                col="red", font = 2, lwd.ticks = 1, col.axis = "red")
           axis(side=1, at=as.character(c(-6, qqaux)), tick = TRUE, lwd = 1,
                col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
-                 legend=substitute(P("X <="~q~";"~nu==df)==Pr~"\n\n", list(q=qq, Pr=Pr, df = nu)))
+                 legend=substitute(P(X<=~q~";"~nu==df)==Pr~"\n\n", list(q=qq, Pr=Pr, df = nu)))
         }
         if (gui == "plot" ) {
           nu <- argaddit$df
@@ -2264,6 +2284,10 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
               }
               tkdestroy(tkplot)
             }
+            # Desabilitar warnings global
+            #options(warn = - 1)
+            #war <- options(warn = - 1)
+            on.exit(options(war))
           })
 
 
@@ -2294,8 +2318,8 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           qq <- round(q, digits=2)
           qqaux <-round(q, digits=2)
           Pr <- round(pt(qq, df = nu, lower.tail = F), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
+          #Pr <- gsub("\\.", ",", Pr)
+          #qq <- gsub("\\.", ",", qq)
           axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
                col="red", font = 2, lwd.ticks = 1, col.axis = "red")
           axis(side=1, at=as.character(c(qqaux, 6)), tick = TRUE, lwd = 1,
@@ -2603,49 +2627,55 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
            # Plot
            mu <- argaddit$mean
            sigma <- argaddit$sd
-           manipulate::manipulate(plotcurve(q, mu, sd),
-           mean = manipulate::slider(mu, mu + 4 * sigma, q),
-           sd = manipulate::slider(sigma, mu + 4 * sigma, q),
-           q = manipulate::slider(q, mu + 4 * sigma, q))
+           manipulate::manipulate(plotcurve(q, mean, sd),
+             q = manipulate::slider(q, mu + 4 * sigma, q),
+             mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+             sd = manipulate::slider(sigma, sigma * 1.8, sigma)
+           )
            prob = pnorm(q = q, mean = mu, sd = sigma)
-       }} else{
+         }
+       } else{
          plotcurve <- function(q, mu, sigma) {
-           x <- seq(q, mu + 4 * sigma, by=0.01)
-           y <- seq(mu - 4 * sigma, q, by=0.01)
-          fx <- dnorm(x, mean = mu, sd = sigma)
+           x <- seq(mu - 4 * sigma, q, by = 0.01)
+           y <- seq(q, mu + 4 * sigma, by = 0.01)
+           fx <- dnorm(x, mean = mu, sd = sigma)
            fy <- dnorm(y, mean = mu, sd = sigma)
-           curve(dnorm(x, mean = mu, sd=sigma), mu - 4 * sigma, mu + 4 * sigma,
+           curve(dnorm(x, mean = mu, sd = sigma), mu - 4 * sigma, mu + 4 * sigma ,
                  ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
                  panel.first = grid(col = "gray90"),
-                 main = gettext("Probability Function: Normal.", domain = "R-leem"))
+                 main = gettext("Probability Function: Normal", domain = "R-leem"))
            polygon(c(x, rev(x)),
                    c(fx, rep(0, length(fx))),
-                   col="red")
+                   col="gray90")
            polygon(c(y, rev(y)),
                    c(fy, rep(0, length(fy))),
-                   col="gray90")
+                   col="red")
            abline(v=argaddit$mean, lty=2)
            qq <- round(q, digits=2)
            qqaux <-round(q, digits=2)
-           Pr <- round(pnorm(qq, mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
+           Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
            Pr <- gsub("\\.", ",", Pr)
            qq <- gsub("\\.", ",", qq)
            axis(side=1, at=qqaux, labels=qqaux,
                 col="red", font = 2, col.axis = "red")
            abline(v = qqaux, lty=2, col = "red")
            legend("topleft", bty="n", fill="red",
-                  legend=substitute(P("X >" ~ q ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, media = mu, varen = sigma)))
-           }
+                  legend=substitute(P("X <=" ~ q ~ ";" ~ mu ==  mean ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, mean = mu, varen = sigma)))
+         }
          if (gui == "plot") {
            mu <- argaddit$mean
-          sigma <- argaddit$sd
+           sigma <- argaddit$sd
            prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
            plotcurve(q, mu, sigma)
          }
          if (gui == "rstudio") {
-           manipulate::manipulate(plotcurve(qaux, muaux),
-                                  qaux = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q),
-                                  muaux = manipulate::slider(mu, mu + 200, mu))
+           mu <- argaddit$mean
+           sigma <- argaddit$sd
+           manipulate::manipulate(plotcurve(q, mean, sd),
+                                  q = manipulate::slider(q, mu + 4 * sigma, q),
+                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+           prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
          }
        }
        }
