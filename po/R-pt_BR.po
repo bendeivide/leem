@@ -217,7 +217,7 @@ msgstr "Gráfico de barras"
 msgid "Histogram"
 msgstr "Histograma de frequências"
 
-msgid "Stick plot"
+msgid "Stick chart"
 msgstr "Gráfico de hastes ou bastão"
 
 msgid "Mean"
@@ -273,4 +273,10 @@ msgstr "Fac2p: Frequência acumulada percentual (acima de)"
 
 msgid "Groups: Discretized grouping"
 msgstr "Groups: Agrupamento discretizado"
+
+msgid "Relative frequency"
+msgstr "Frequência relativa"
+
+msgid "Percentage frequency (%)"
+msgstr "Frequência percentual (%)"
 

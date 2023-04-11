@@ -26,9 +26,9 @@ insert(x)
 
 \item{parrow}{Text and arrow height. The default is \code{parrow = 0.5}. This argument must be the same length as the \code{type} argument.}
 
-\item{larrow}{Text and arrow length. The default is \code{larrow = 0.3}.}
+\item{larrow}{Text and arrow length. The default is \code{larrow = 0.6}.}
 
-\item{ptext}{Distance between lines of text. The default is \code{ptext = 0}.}
+\item{ptext}{Distance between lines of text. The default is \code{ptext = 0.06}.}
 
 \item{side}{Side to insert the text. The default is \code{side = "right"}. This argument must be the same length as the \code{type} argument.}
 

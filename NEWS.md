@@ -5,53 +5,65 @@
 # leem 0.2.0
 
 - **Functions for Basic Statistics**
-  - [ ] *Tables grouped and raw datas*: `tabfreq()`
+  - [X] *Tables grouped and raw datas*: `tabfreq()`
+    - [X] *help*   
     - [X] continuous
     - [X] discrete
-      - numerical
-      - categorical 
-        - ordered
-        - no ordered
+      - [X] numerical
+      - [X] categorical 
+        - [X] ordered
+        - [X] no ordered
     - [X] Pendency: change variable names
     - [X] Help document
   - [ ] *Plots*
     - [X] Translated labels, title, ...
-    - [ ] Histogram:
+    - [ ] Boxplot
+    - [X] Histogram:
+      - [X] *help* 
       - [X] continuous
-      - [ ] discrete
-        - [X] numerical
-        - [ ] categorical: coerced to `barplot()`
+      - [X] discrete
+        - Coerced to barplot
+          - [X] numerical
+          - [X] categorical
     - [X] Barplot
-      - discrete
-        - numerical
-        - categorical
-          - ordered
-          - no ordered
+      - [X] *help*   
+      - [X] discrete
+        - [X] numerical
+        - [X] categorical
+          - [X] ordered
+          - [X] no ordered
+      - [X] continuous
+        - [X] coerced to histogram
     - [ ] Stick plot
-      - [ ] discrete
-        - [X] numerical
-        - [ ] categorical
-          - [ ] ordered
-          - [ ] no ordered
-    - [ ] Polygon
+      - [X] *help*  
       - [X] continuous
-      - [ ] discrete
+      - [X] discrete
         - [X] numerical
-        - [ ] categorical 
-          - [ ] ordered
-          - [ ] no ordered
-    - [ ] Ogive
+        - [X] categorical
+          - [X] ordered
+          - [X] no ordered
+    - [X] Polygon
+      - [X] *help* 
       - [X] continuous
-      - [ ] discrete
+      - [X] discrete
         - [X] numerical
-        - [ ] categorical 
-          - [ ] ordered
-          - [ ] no ordered
+        - [X] categorical 
+          - [X] ordered
+          - [X] no ordered
+    - [X] Ogive
+      - [X] *help* 
+      - [X] continuous
+      - [X] discrete
+        - [X] numerical
+        - [X] categorical 
+          - [X] ordered
+          - [X] no ordered
   - *Measures of position*:
     - Mean: `mean()`
+      - [X] *help* 
       - [X] grouped data
       - [X] raw data
-      - [X] Insert into plots
+      - [X] Insert into plots: insert()
     - Median: `median()`
        - [X] grouped data
       - [X] raw data

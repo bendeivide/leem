@@ -4,24 +4,67 @@
 \alias{barplot.leem}
 \title{Barplot graph}
 \usage{
-\method{barplot}{leem}(
-  x,
-  bg = TRUE,
-  main = NULL,
-  xlab = NULL,
-  ylab = NULL,
-  panel.first = grid(col = "white"),
-  bgcol = "gray",
-  bgborder = NA,
-  barcol = "yellow",
-  barborder = "gray",
-  posx1 = 0,
-  posx2 = 0,
-  xangf = 0,
-  labels = NULL,
-  ...
-)
+barplot(x, ...)
+
+## Leem S3 method:
+barplot.leem(x, bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
+  grids = grid(col = "white"), bgcol = "gray", bgborder = NA,
+  barcol = "yellow", barborder = "gray", posx1 = 0, posx2 = 0,
+  xang = 0, labels = NULL, ...)
+}
+\arguments{
+\item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
+
+\item{freq}{Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.}
+
+\item{bg}{Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.}
+
+\item{main}{Character argument. Insert the plot title.  The default is \code{NULL}.}
+
+\item{xlab}{Character argument. Insert the title of the x-axis graphic label. The default is \code{NULL}.}
+
+\item{ylab}{Character argument. Insert the title of the y-axis graphic label. The default is \code{NULL}.}
+
+\item{grids}{Insert grids to plot. The default is \code{grid(col = "white")}.}
+
+\item{bgborder}{Character argument. Insert the background border color. This argument is only valid when \code{bg = TRUE}. The default is bgborder = NA.}
+
+\item{barcol}{Character argument. Insert the barplot color. The default is \code{barcol = "yellow"}. This argument is only valid when \code{bars = TRUE}.}
+
+\item{barborder}{Numeric argument. Insert the barplot border color. This argument is only valid when \code{bars = TRUE}. The default is barborder = "gray".}
+
+\item{posx1}{Numeric argument.Distance of the labels (horizontal) in relation to the x axis.}
+
+\item{posx2}{Numeric argument.Distance of the labels (vertical) in relation to the x axis.}
+
+\item{xang}{Numeric argument.Angle of the labels in relation to the x axis}
+
+\item{labels}{Character argument. Labels name vector.}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
-Barplot graph
+Class method leem for generic barplot
+}
+\examples{
+# Example 1 - Simple example
+library(leem)
+rep(1:5, 5:1) |>
+  new_leem() |>
+  barplot()
+# Example 2 - Color bars
+rep(1:5, 5:1) |>
+  new_leem() |>
+  barplot(barcol = heat.colors(5))
+# Example 3 - Ordered data
+library(leem)
+school <- rep(c("high", "university", "basic"), 3:5)
+sample(school, 30, TRUE) |>
+ new_leem() |>
+ tabfreq(ordered = c("basic", "high", "university")) |>
+ barplot(xang = 15, posx2 = -0.2)
+# Example 4 - Coerced to histogram
+rnorm(100, 10, 2) |>
+  new_leem(variable = 2) |>
+  barplot(barcol = heat.colors(10))
 }

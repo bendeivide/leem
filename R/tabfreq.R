@@ -44,7 +44,7 @@ tabfreq <- function(dados, ...) {
 
 
 #' @export
-tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE){
+tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE, ...){
   if (class(data) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE,
                                    domain = "R-leem")
 
@@ -62,8 +62,9 @@ tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE){
         groups <- as.character(names(aux))
         if (namereduction) groups <- subtnames(groups)
       } else {
-        pos <- match(as.character(names(aux)), ordered)
+        pos <- match(ordered, as.character(names(aux)))
         aux <- aux[pos]
+        names(aux) <- ordered
         groups <- as.character(names(aux))
         if (namereduction) groups <- subtnames(groups)
       }
