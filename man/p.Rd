@@ -33,7 +33,7 @@ P(
 \code{P} returns the probability and its graphical representation. The result can be given as a percentage or not.
 }
 \description{
-\code{P} Cumulative distribution function for multiple distributions
+\code{P} Compute the cumulative distribution function for multiple distributions
 }
 \details{
 The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.

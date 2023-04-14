@@ -1,5 +1,6 @@
 #' @export
 `%>x>%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region1", output = "rprob")
   if (is.double(x)) return(x)
@@ -12,6 +13,7 @@
 
 #' @export
 `%>X>%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region1", output = "rprob")
   if (is.double(x)) return(x)
@@ -25,6 +27,7 @@
 
 #' @export
 `%<X<%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region2", output = "rprob")
   if (is.double(x)) return(x)
@@ -37,6 +40,7 @@
 
 #' @export
 `%<x<%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region2", output = "rprob")
   if (is.double(x)) return(x)
@@ -50,6 +54,7 @@
 
 #' @export
 `%>=X>=%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region3", output = "rprob")
   return(x)
@@ -57,6 +62,7 @@
 
 #' @export
 `%>=x>=%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region3", output = "rprob")
   return(x)
@@ -64,6 +70,7 @@
 
 #' @export
 `%<=X<=%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region4", output = "rprob")
   return(x)
@@ -71,6 +78,7 @@
 
 #' @export
 `%<=x<=%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region4", output = "rprob")
   return(x)
@@ -78,6 +86,7 @@
 
 #' @export
 `%>=X>%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region5", output = "rprob")
   if (is.double(x)) return(x)
@@ -90,6 +99,7 @@
 
 #' @export
 `%>=x>%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region5", output = "rprob")
   if (is.double(x)) return(x)
@@ -102,6 +112,7 @@
 
 #' @export
 `%>X>=%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region6", output = "rprob")
   if (is.double(x)) return(x)
@@ -114,6 +125,7 @@
 
 #' @export
 `%>x>=%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region6", output = "rprob")
   if (is.double(x)) return(x)
@@ -127,6 +139,7 @@
 
 #' @export
 `%<=X<%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region7", output = "rprob")
   if (is.double(x)) return(x)
@@ -139,6 +152,7 @@
 
 #' @export
 `%<=x<%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region7", output = "rprob")
   if (is.double(x)) return(x)
@@ -151,6 +165,7 @@
 
 #' @export
 `%<X<=%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region8", output = "rprob")
   if (is.double(x)) return(x)
@@ -163,6 +178,7 @@
 
 #' @export
 `%<x<=%` <- function(a, b) {
+  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region8", output = "rprob")
   if (is.double(x)) return(x)
