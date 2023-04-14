@@ -404,12 +404,12 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
         }
         # Auxiliar variables
-        minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
-        maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
+        minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+        maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
 
         plotcurve <- function(q, mu, sigma) {
-          #minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
-          #maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
+          minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
+          maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
           x <- seq(q[1], q[2], by = 0.01)
           y <- seq(minimo, maximo, by = 0.01)
           fx <- dnorm(x, mean = mu, sd = sigma)
@@ -436,25 +436,26 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           abline(v = qqaux, lty=2, col = "red")
           if (attr(q, "region") == "region2") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1<~X<~t2 ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n",
+                   legend = substitute(P(t1<~X<~t2 ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
                                        list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
           }
           if (attr(q, "region") == "region4") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1<=~X<=~t2 ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n",
+                   legend = substitute(P(t1<=~X<=~t2 ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
                                        list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
           }
           if (attr(q, "region") == "region7") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1<=~X<~t2 ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n",
+                   legend = substitute(P(t1<=~X<~t2 ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
                                        list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
           }
           if ( attr(q, "region") == "region8") {
             legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1<~X<=~t2 ~ ";" ~ mu == media ~ ";" ~ sigma == varen)==Pr~"\n\n",
+                   legend = substitute(P(t1<~X<=~t2 ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
                                        list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
           }
         }
+
         if (gui == "plot") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
@@ -1471,12 +1472,12 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
 
         # Auxiliar variables
-        minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
-        maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
+        minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+        maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
 
         plotcurve <- function(q, mu, sigma) {
-          #minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
-          #maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
+          minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
+          maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
           x <- seq(minimo, q[1], by = 0.01)
           z <- seq(q[2], maximo, by = 0.01)
           y <-seq(minimo, maximo, by = 0.01)
@@ -1500,13 +1501,13 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           qq <- round(q, digits=2)
           qqaux <- qq
           Pr <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
+          #Pr <- gsub("\\.", ",", Pr)
+          #qq <- gsub("\\.", ",", qq)
           axis(side=1, at=qq, tick = TRUE, lwd = 0,
                col="red", font = 2, lwd.ticks = 1, col.axis = "red")
-          axis(side=1, at=as.character(c(mu - 4*sigma, qq[1])), tick = TRUE, lwd = 1,
+          axis(side=1, at=as.character(c(minimo, qq[1])), tick = TRUE, lwd = 1,
                col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          axis(side=1, at=as.character(c(qq[2], mu + 4*sigma)), tick = TRUE, lwd = 1,
+          axis(side=1, at=as.character(c(qq[2], maximo)), tick = TRUE, lwd = 1,
                col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty=2, col = "red")
           if (attr(q, "region") == "region1") {
@@ -2316,8 +2317,10 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           Pr <- round(pt(qq, df = nu, lower.tail = T), digits=rounding)
           #Pr <- gsub("\\.", ",", Pr)
           #qq <- gsub("\\.", ",", qq)
+          # Insert red q point and vertical line (X-axis)
           axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
                col="red", font = 2, lwd.ticks = 1, col.axis = "red")
+          # Insert red horizontal line (X-axis)
           axis(side=1, at=as.character(c(-lim, qqaux)), tick = TRUE, lwd = 1,
                col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty=2, col = "red")
@@ -2741,9 +2744,11 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
       }
       if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
       if (lower.tail) {
+        # Auxiliar variables
+        minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+        maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+        # PLot function
         plotcurve <- function(q, mu, sigma) {
-          minimo <- if (q <= mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
-          maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
           x <- seq(minimo, q, by = 0.01)
           y <- seq(q, maximo, by = 0.01)
           fx <- dnorm(x, mean = mu, sd = sigma)
@@ -2758,17 +2763,22 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           polygon(c(y, rev(y)),
                   c(fy, rep(0, length(fy))),
                   col="gray90")
+          # Insert vertical line over the mean
           abline(v=mu, lty=2)
           qq <- round(q, digits=2)
           qqaux <-round(q, digits=2)
           Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
+          #Pr <- gsub("\\.", ",", Pr)
+          #qq <- gsub("\\.", ",", qq)
+          # Insert red q point and vertical line (X-axis)
           axis(side=1, at=qqaux, labels=qqaux,
                col="red", font = 2, col.axis = "red")
+          # Insert red horizontal line (X-axis)
+          axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
+               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(X<= ~ q ~ ";" ~ mu ==  mean ~ ";" ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, mean = mu, varen = sigma)))
+                 legend=substitute(P(X<= ~ q ~ ";" ~ mu ==  mean ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, mean = mu, varen = sigma)))
         }
 
         if (gui == "plot" ) {
@@ -2809,10 +2819,10 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           #   q[2] <- q2
           #   plotcurve(q, nu)
           # }
-          tk_q1 <- leemset("tk_q1", tclVar(q[1]))
-          tk_mu <- leemset("tk_df", tclVar(mu))
+          tk_q <- leemset("tk_q", tclVar(q))
+          tk_mu <- leemset("tk_mu", tclVar(mu))
           tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          sapply(c("tk_q1", "tk_df"),
+          sapply(c("tk_q", "tk_mu", "tk_sigma"),
                  function(x) globalvariables(x, leemget(x)))
 
           # q1 <- NULL
@@ -2838,17 +2848,17 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
 
           tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
                                       height = 500, fun = function(...) {
-                                        q <- as.numeric(tclvalue(tk_q1))
-                                        mu <- as.numeric(tclvalue(tk_df))
+                                        q <- as.numeric(tclvalue(tk_q))
+                                        mu <- as.numeric(tclvalue(tk_mu))
                                         sigma <- as.numeric(tclvalue(tk_sigma))
                                         plotcurve(q = q, mu = mu, sigma = sigma)
                                       })
           s01 <- tcltk::tkscale(
             tkplot,
-            from = mu + 4 * sigma,
-            to = q,
+            from = minimo,
+            to = maximo,
             label = 'q',
-            variable = tk_q1,
+            variable = tk_q,
             showvalue = TRUE,
             resolution = 1,
             repeatdelay = 200,
@@ -2857,10 +2867,10 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           )
           s02 <- tcltk::tkscale(
             tkplot,
-            from = 1,
-            to = 200,
-            label = 'mu',
-            variable = tk_df,
+            from = mu,
+            to = mu + 2 * sigma,
+            label = 'mean',
+            variable = tk_mu,
             showvalue = TRUE,
             resolution = 1,
             repeatdelay = 200,
@@ -2869,9 +2879,9 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           )
           s03 <- tcltk::tkscale(
             tkplot,
-            from = 1,
-            to = 200,
-            label = 'sigma',
+            from = sigma,
+            to = sigma * 1.8,
+            label = 'standard deviation',
             variable = tk_sigma,
             showvalue = TRUE,
             resolution = 1,
@@ -2937,7 +2947,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                col="red", font = 2, col.axis = "red")
           abline(v = qqaux, lty=2, col = "red")
           legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(X> ~ q ~ ";" ~ mu ==  mean ~ ";" ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, mean = mu, varen = sigma)))
+                 legend=substitute(P(X> ~ q ~ ";" ~ mu ==  mean ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, mean = mu, varen = sigma)))
         }
         if (gui == "plot") {
           mu <- argaddit$mean
