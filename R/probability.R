@@ -23,12 +23,15 @@
 #' @examples
 #' # Loading package
 #' library(leem)
+#' # Example 1 - t-Student distribution
 #' \dontrun{
 #' P(q = 2, dist = "t-student", df = 10)
 #' P(q = 2, dist = "t-student", df = 10, gui = 'rstudio')
 #' P(q = 2, dist = "t-student", df = 10, gui = 'tcltk')
 #' P(-1 %<X<% 1, dist = "t-student", df = 10)
 #' }
+#' # Example 2 - Normal distribution
+#' P(-2,  dist = "normal", mean = 3, sd = 2, main = expression(f(x) == (1 / sqrt(n * sigma^2)) * exp(-1/2 * (x - mu)^2/sigma^2)))
 #' @import manipulate
 #' @import tkRplotR
 #  @import shiny
@@ -104,7 +107,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           }
         }
         if (gui == "plot" ) {
-          prob <- round(pt(q = q[2], df = nu) - pt(q = q[1], df = nu), rounding)
           plotcurve(q, nu)
         }
         if (gui == "rstudio") {
@@ -117,7 +119,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                  q1 = manipulate::slider(-llower, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], lupper, q[2]),
                                  df = manipulate::slider(1, nu + 100, nu))
-          prob <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
         }
         if (gui == "tcltk") {
           # Environment of package
@@ -233,8 +234,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           #options(warn = - 1)
           #war <- options(warn = - 1)
           on.exit(options(war))
-          prob <- round(pt(q[2], df = nu,
-                           lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
         }
         if (gui == "shiny") {
           # # Environment of package
@@ -292,6 +291,8 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           # }
           # shinyaux()
         }
+        # Compute the desired probability
+        prob <- pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T)
       }
       if (dist == "gumbel") {
         if (!any(names(argaddit) == "location")) {
@@ -414,11 +415,16 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           y <- seq(minimo, maximo, by = 0.01)
           fx <- dnorm(x, mean = mu, sd = sigma)
           fy <- dnorm(y, mean = mu, sd = sigma)
+          if (!any(names(argaddit) == "main")) {
+            main <- gettext("Distribution Function: Normal", domain = "R-leem")
+          } else {
+            main <- argaddit$main
+          }
           curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
                 ylab = expression(f[X](x)), xlab = "X",
                 ylim = c(0, 1.2 * max(fx,fy)),
                 panel.first = grid(col="gray90"),
-                main = gettext("Distribution Function: Normal", domain = "R-leem"))
+                main = main)
           polygon(c(y, rev(y)),
                   c(fy, rep(0, length(fy))),
                   col="gray90")
@@ -459,7 +465,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         if (gui == "plot") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
           plotcurve(q, mu, sigma)
         }
         if (gui == "rstudio") {
@@ -475,8 +480,141 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
-          prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
         }
+        if (gui == "tcltk") {
+          # Environment of package
+          envleem <- new.env(parent = base::emptyenv())
+          leemget <- function(x) {
+            get(x, envir= envleem, inherits=FALSE )
+          }
+          leemset <- function(x, value) {
+            assign(x, value, envir= envleem)
+          }
+          globalvariables <- function(x, value) {
+            assign(x, value, envir= .GlobalEnv)
+          }
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          # on.exit(options(war))
+
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          plotcurveaux <- function(q1 = q[1], q2 = q[2], mu = mu,  sigma = sigma, ...) {
+            q[1] <- q1
+            q[2] <- q2
+            plotcurve(q, mu, sigma)
+          }
+          tk_q1 <- leemset("tk_q1", tclVar(q[1]))
+          tk_q2 <- leemset("tk_q2", tclVar(q[2]))
+          tk_mean <- leemset("tk_mean", tclVar(mu))
+          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          sapply(c("tk_q1", "tk_q2", "tk_mean", "tk_sigma"),
+                 function(x) globalvariables(x, leemget(x)))
+          # q1 <- NULL
+          # q2 <- NULL
+          # nu <- NULL
+          ##
+          # Disabled GUI (Type I)
+          oldmode <- tclServiceMode(FALSE)
+          # Logo
+          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          # Plot
+          tkplot <- tktoplevel()
+          #Icon main toplevel window
+          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          # Title
+          tkwm.title(tkplot,
+                     gettext("leem package: Normal Distribution", domain = "R-leem"))
+
+          tkpack(tklabel(tkplot, text = "Parameters"))
+          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+                                      height = 500, fun = function(...) {
+                                        q1 <- as.numeric(tclvalue(tk_q1))
+                                        q2 <- as.numeric(tclvalue(tk_q2))
+                                        mu <- as.numeric(tclvalue(tk_mean))
+                                        sigma <- as.numeric(tclvalue(tk_sigma))
+                                        plotcurveaux(q1 = q1, q2 = q2, mu = mu, sigma = sigma)
+                                      })
+          s02 <- tcltk::tkscale(
+            tkplot,
+            from = q[2],
+            to = maximo,
+            label = 'q2',
+            variable = tk_q2,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          s01 <- tcltk::tkscale(
+            tkplot,
+            from = minimo,
+            to = q[2],
+            label = 'q1',
+            variable = tk_q1,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          s03 <- tkscale(
+            tkplot,
+            from = mu,
+            to = mu + 2 * sigma,
+            label = 'mean',
+            variable = tk_mean,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          s04 <- tkscale(
+            tkplot,
+            from = sigma,
+            to = 1.8 * sigma,
+            label = 'standard deviation',
+            variable = tk_sigma,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          tkpack(s01, s02, s03, s04,
+                 side = "top",
+                 expand = TRUE,
+                 before = tkplot$env$canvas,
+                 fill = "both")
+          # Activate GUI
+          finish <- tclServiceMode(oldmode)
+          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+            response <- tk_messageBox(
+              title = gettext("Tell me something:", domain = "R-leem"),
+              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+              icon = "question",
+              type = "yesno"
+            )
+            if (response == "yes") {
+              if (exists("tk_q1", envir = .GlobalEnv)) {
+                rm("tk_q1", "tk_q2", "tk_df", envir = .GlobalEnv)
+              }
+              tkdestroy(tkplot)
+            }
+
+          })
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
+          # prob <- round(pt(q[2], df = nu,
+          #                  lower.tail = T) + pt(q[1], df = nu, lower.tail = F), digits=rounding)
+        }
+        # Compute the desired probability
+        prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
       }
       if (dist == "poisson") {
         if (!any(names(argaddit) == "lambda")) {
@@ -1227,7 +1365,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           }
         }
         if (gui == "plot" ) {
-          prob <- round(pt(q[1], df = nu, lower.tail = T) + pt(q[2], df = nu, lower.tail = F), digits=rounding)
           plotcurve(q, nu)
         }
         if (gui == "rstudio") {
@@ -1240,7 +1377,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                  q1 = manipulate::slider(-llower, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], lupper, q[2]),
                                  df = manipulate::slider(1, nu + 100, nu))
-          prob <- round(pt(q[1], df = nu, lower.tail = T) + pt(q[2], df = nu, lower.tail = F), digits=rounding)
         }
         if (gui == "tcltk") {
           # Environment of package
@@ -1356,9 +1492,9 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           #options(warn = - 1)
           #war <- options(warn = - 1)
           on.exit(options(war))
-          prob <- round(pt(q[2], df = nu,
-                           lower.tail = T) + pt(q[1], df = nu, lower.tail = F), digits=rounding)
         }
+        # Calculates the desired probability
+        prob <- pt(q[1], df = nu, lower.tail = T) + pt(q[2], df = nu, lower.tail = F)
       }
       if (dist == "gumbel") {
         if (!any(names(argaddit) == "location")) {
@@ -1484,11 +1620,16 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           fx <- dnorm(x, mean = mu, sd = sigma)
           fz <- dnorm(z,mean = mu, sd = sigma)
           fy <- dnorm(y, mean = mu, sd = sigma)
+          if (!any(names(argaddit) == "main")) {
+            main <- gettext("Distribution Function: Normal", domain = "R-leem")
+          } else {
+            main <- argaddit$main
+          }
           curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
                 ylim = c(0, 1.2 * max(fx,fy,fz)),xlab="X",
                 ylab = expression(f[X](x)),
                 panel.first = grid(col="gray90"),
-                main = gettext("Distribution Function: Normal", domain = "R-leem"))
+                main = main)
           polygon(c(y, rev(y)),
                   c(fy, rep(0, length(fy))),
                   col="gray90")
@@ -1534,7 +1675,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         if (gui == "plot") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
           plotcurve(q, mu, sigma)
         }
         if (gui == "rstudio") {
@@ -1550,9 +1690,142 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
-          prob <- round(pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
-                          pnorm(q[2], mean = mu, sd = sigma, lower.tail = F), digits = rounding)
         }
+        if (gui == "tcltk") {
+          # Environment of package
+          envleem <- new.env(parent = base::emptyenv())
+          leemget <- function(x) {
+            get(x, envir= envleem, inherits=FALSE )
+          }
+          leemset <- function(x, value) {
+            assign(x, value, envir= envleem)
+          }
+          globalvariables <- function(x, value) {
+            assign(x, value, envir= .GlobalEnv)
+          }
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          # on.exit(options(war))
+
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          plotcurveaux <- function(q1 = q[1], q2 = q[2], mu = mu,  sigma = sigma, ...) {
+            q[1] <- q1
+            q[2] <- q2
+            plotcurve(q, mu, sigma)
+          }
+          tk_q1 <- leemset("tk_q1", tclVar(q[1]))
+          tk_q2 <- leemset("tk_q2", tclVar(q[2]))
+          tk_mean <- leemset("tk_mean", tclVar(mu))
+          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          sapply(c("tk_q1", "tk_q2", "tk_mean", "tk_sigma"),
+                 function(x) globalvariables(x, leemget(x)))
+          # q1 <- NULL
+          # q2 <- NULL
+          # nu <- NULL
+          ##
+          # Disabled GUI (Type I)
+          oldmode <- tclServiceMode(FALSE)
+          # Logo
+          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          # Plot
+          tkplot <- tktoplevel()
+          #Icon main toplevel window
+          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          # Title
+          tkwm.title(tkplot,
+                     gettext("leem package: Normal Distribution", domain = "R-leem"))
+
+          tkpack(tklabel(tkplot, text = "Parameters"))
+          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+                                      height = 500, fun = function(...) {
+                                        q1 <- as.numeric(tclvalue(tk_q1))
+                                        q2 <- as.numeric(tclvalue(tk_q2))
+                                        mu <- as.numeric(tclvalue(tk_mean))
+                                        sigma <- as.numeric(tclvalue(tk_sigma))
+                                        plotcurveaux(q1 = q1, q2 = q2, mu = mu, sigma = sigma)
+                                      })
+          s02 <- tcltk::tkscale(
+            tkplot,
+            from = q[2],
+            to = maximo,
+            label = 'q2',
+            variable = tk_q2,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          s01 <- tcltk::tkscale(
+            tkplot,
+            from = minimo,
+            to = q[2],
+            label = 'q1',
+            variable = tk_q1,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          s03 <- tkscale(
+            tkplot,
+            from = mu,
+            to = mu + 2 * sigma,
+            label = 'mean',
+            variable = tk_mean,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          s04 <- tkscale(
+            tkplot,
+            from = sigma,
+            to = 1.8 * sigma,
+            label = 'standard deviation',
+            variable = tk_sigma,
+            showvalue = TRUE,
+            resolution = 1,
+            repeatdelay = 200,
+            repeatinterval = 100,
+            orient = "hor"
+          )
+          tkpack(s01, s02, s03, s04,
+                 side = "top",
+                 expand = TRUE,
+                 before = tkplot$env$canvas,
+                 fill = "both")
+          # Activate GUI
+          finish <- tclServiceMode(oldmode)
+          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+            response <- tk_messageBox(
+              title = gettext("Tell me something:", domain = "R-leem"),
+              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+              icon = "question",
+              type = "yesno"
+            )
+            if (response == "yes") {
+              if (exists("tk_q1", envir = .GlobalEnv)) {
+                rm("tk_q1", "tk_q2", "tk_df", envir = .GlobalEnv)
+              }
+              tkdestroy(tkplot)
+            }
+
+          })
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
+          # prob <- round(pt(q[2], df = nu,
+          #                  lower.tail = T) + pt(q[1], df = nu, lower.tail = F), digits=rounding)
+        }
+        # Calculates the desired probability
+        prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
+                        pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
       }
       if (dist == "poisson") {
         if (!any(names(argaddit) == "lambda")) {
@@ -2329,7 +2602,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         }
         if (gui == "plot" ) {
           nu <- argaddit$df
-          prob <- pt(q = q, df = nu)
           plotcurve(q, nu)
         }
         if (gui == "rstudio") {
@@ -2338,7 +2610,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           manipulate::manipulate(plotcurve(q, nu),
                                  q = manipulate::slider(-lim, lim, q),
                                  nu = manipulate::slider(1, nu+100, nu))
-          prob <- pt(q = q, df = nu)
         }
         if (gui == "tcltk") {
           # Environment of package
@@ -2440,11 +2711,9 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             #war <- options(warn = - 1)
             on.exit(options(war))
           })
-
-
-          prob <- pt(q = q, df = nu)
-
         }
+        # Calculates the desired probability
+        prob <- pt(q = q, df = nu)
       } else {
         # options(warn = - 1)
         war <- options(warn = - 1)
@@ -2483,7 +2752,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         if (gui == "plot") {
           # Probability
           nu <- argaddit$df
-          prob <- pt(q = q, df = nu, lower.tail = FALSE)
           # Plot
           plotcurve(q, nu)
         }
@@ -2493,7 +2761,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           manipulate::manipulate(plotcurve(q, df),
                                  q = manipulate::slider(-lim, lim, q),
                                  df = manipulate::slider(1, nu+100, nu))
-          prob <- pt(q = q, df = nu)
         }
         if (gui == "tcltk") {
           # Environment of package
@@ -2598,11 +2865,9 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             # war <- options(warn = - 1)
             on.exit(options(war))
           })
-
-
-          prob <- pt(q = q, df = nu, lower.tail = FALSE)
-
         }
+        # Calculates the desired probability
+        prob <- pt(q = q, df = nu, lower.tail = FALSE)
 
       }
     }
@@ -2792,7 +3057,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           #           # Plot
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          prob <- pnorm(q = q, mean = mu, sd = sigma)
           plotcurve(q, mu,sigma)
         }
         if (gui == "rstudio") {
@@ -2804,7 +3068,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma)
           )
-          prob = pnorm(q = q, mean = mu, sd = sigma)
         }
         if (gui == "tcltk") {
           # Desabilitar warnings global
@@ -2926,12 +3189,15 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             #war <- options(warn = - 1)
             on.exit(options(war))
           })
-
-
-          prob <- pnorm(q = q, mean = mu, sd = sigma)
-
         }
-      } else{
+        # Compute the desired probability
+        prob <- pnorm(q = q, mean = mu, sd = sigma)
+
+      } else {
+        # Auxiliar variables
+        minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+        maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+        # Plot function
         plotcurve <- function(q, mu, sigma) {
           minimo <- if (q <= mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
           maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
@@ -2973,7 +3239,6 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         if (gui == "plot") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
           plotcurve(q, mu, sigma)
         }
         if (gui == "rstudio") {
@@ -2983,7 +3248,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                  q = manipulate::slider(q, mu + 4 * sigma, q),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
-          prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
+
         }
 
         if (gui == "tcltk") {
@@ -3111,6 +3376,8 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
           prob <- pnorm(q = q, mean = mu, sd = sigma)
 
         }
+        # Compute the desired probability
+        prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
       }
     }
     if (dist == "poisson") {
