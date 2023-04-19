@@ -1,14 +1,18 @@
-#' Quantitative distribution function.
+#' Quantile distribution function.
 #'
-#' \code{Q} Quantitative distribution function for multiple distributions.
+#' \code{Q} Quantile function for multiple distributions.
 #'
-#' @param p probability. The \code{P} argument need have length 1 and value lower then 1.
+#' @param p probability. The \code{p} argument need have length 1 and value lower then 1.
 #' @param dist distribution to use. The default is \code{'t-student'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....
 #' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.
 #' @param rounding numerical; it represents the number of decimals for calculating the probability.
 #' @param gui default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'plot'} and....
 #' @param ... additional arguments according to the chosen distribution.
-#'
+#' @details The expression of quantile function is given by:
+#' \deqn{
+#' Q(p)=\inf {x\in \mathbb{R}: p \leq F(x)},
+#' }
+#' where \code{p} is the first argument of \code{Q()} and \code{x} its return value;
 #' @return \code{Q} returns the point and its graphical representation. The result is give by a integer number.
 #'
 #' @examples
@@ -22,11 +26,10 @@
 #  @import shiny
 #' @export
 
-Q <- function(p, dist = "t-student", lower.tail = TRUE, rounding = 4, gui = "plot", ...) {
+Q <- function(p, dist = "t-student", lower.tail = TRUE, rounding = 2, gui = "plot", mfrow = c(1, 2), type = "both", ...) {
   if (p>1) stop("The 'p' argument are very large, please insert a value correct for probabilities!", call. = FALSE)
   argaddit <- list(...)
   argdef <- formals(Q)
-  point <- 1
   if (dist == "normal") {
     if (!any(names(argaddit) == "mean")) {
       mean <- readline(gettext("Insert the 'mean' argument: ", domain = "R-leem"))
@@ -36,13 +39,13 @@ Q <- function(p, dist = "t-student", lower.tail = TRUE, rounding = 4, gui = "plo
       sd <- readline(gettext("Insert the 'sd' argument: ", domain = "R-leem"))
       argaddit$sd <- as.numeric(sd)
     }
-    mu <- argaddit$mean
-    sigma <- argaddit$sd
     if (lower.tail) {
+      # Plot function - Type I
       plotcurve <- function(p, mu, sigma) {
         x <- qnorm(p, mu, sigma)
         curve(pnorm(x, mean = mu, sd = sigma), mu - 4 * sigma, mu + 4 * sigma, ylab = expression(F[X](x)),
-              xlab = "X",panel.first = grid(col = "gray90"), main = gettext("Quantitative Function: Normal.", domain = "R-leem"))
+              ylim = c(0, 1.2), xlab = "X",panel.first = grid(col = "gray90"), main = gettext("Quantile Function: Normal", domain = "R-leem"),
+              lwd = 4)
         x <- seq(mu - 4 * sigma, x[1], by = 0.01)
         y <- seq(x[1], mu + 4 * sigma,by = 0.01)
         fx <- pnorm(x, mu, sigma)
@@ -51,29 +54,145 @@ Q <- function(p, dist = "t-student", lower.tail = TRUE, rounding = 4, gui = "plo
                 c(fy, rep(0, length(fy))),
                 col = "gray90"
         )
+        # polygon(c(x, rev(x)),
+        #         c(fx, rep(0, length(fx))),
+        #         col = "red"
+        # )
+        #abline(v = mu, lty = 2)
+        qq <- round(p, digits = rounding)
+        qqaux <- round(qnorm(p,mu,sigma), digits = rounding)
+        # Pr <- gsub("\\.", ",", Pr)
+        # qq <- gsub("\\.", ",", qq)
+        aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+        axis(side = 1, at = qqaux, labels = qqaux, col.axis = "red", font = 2, pos = aux2, lwd.ticks = 0)
+        axis(side = 1, at = qqaux, labels = FALSE, col.axis = "red", col = "red", font = 2, tick = TRUE, lwd.ticks = 1)
+        # auxiliar variable
+        aux <- par("usr")[1]-(par("usr")[2] - par("usr")[1])/20
+        axis(side = 2, at = qq, labels = qq, col.axis = "red", font = 2, pos = aux, lwd.ticks = 0)
+        axis(side = 2, at = qq, labels = FALSE, col.axis = "red", col = "red", font = 2, tick = TRUE, lwd.ticks = 1)
+
+
+        segments(qqaux, 0, qqaux, qq, lty = 2, col = "red")
+        segments(par("usr")[1], qq, qqaux, qq, lty = 2, col = "red")
+        points(qqaux, qq, pch = 16, col = "red")
+        # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+        legend("topleft", bty = "n", col = "red", pch = 16,
+               legend = substitute(Q(p==p1 ~"; " ~ mu == media ~ ","~ sigma == varen) == Qr ~ "\n\n",
+                                   list(p = "p", p1 = qq, Qr = qqaux, media = mu, varen = sigma))
+        )
+      }
+      # Auxiliar variables
+      q <- qnorm(p, argaddit$mean, argaddit$sd)
+      minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+      maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+      # Plot function
+      plotcurve2 <- function(q, mu, sigma) {
+        minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
+        maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
+        x <- seq(minimo, q, by = 0.01)
+        y <- seq(q, maximo, by = 0.01)
+        fx <- dnorm(x, mean = mu, sd = sigma)
+        fy <- dnorm(y, mean = mu, sd = sigma)
+        if (!any(names(argaddit) == "main")) {
+          main <- gettext("Distribution Function: Normal", domain = "R-leem")
+        } else {
+          main <- argaddit$main
+        }
+        curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
+              ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
+              panel.first = grid(col = "gray90"),
+              main = main)
         polygon(c(x, rev(x)),
                 c(fx, rep(0, length(fx))),
-                col = "red"
-        )
-        abline(v = mu, lty = 2)
-        qq <- round(p, digits = 2)
-        qqaux <- round(qnorm(p,mu,sigma), digits = rounding)
-        Pr <- round(qnorm(qq, mean = mu, sd = sigma, lower.tail = T), digits = rounding)
-        Pr <- gsub("\\.", ",", Pr)
-        qq <- gsub("\\.", ",", qq)
-        axis(side = 1, at = qqaux, labels = qqaux, col = "red", font = 2)
-        axis(side = 1, at = as.character(c(qqaux, mu - 4 * sigma)),
-             labels = c(qqaux,""), lwd.ticks = 0 , col = "red", font = 2, col.axis = "red")
-        abline(v = qqaux, lty = 2, col = "red")
-        legend("topleft", bty = "n", fill = "red",
-               legend = substitute(Q("P="~ p ~"; " ~ mu == media ~ "; "~ sigma == varen )~"<="~ Pr ~ "\n\n",
-                                   list(p = qq, Pr = Pr, media = mu, varen = sigma))
-        )
+                col="red")
+        polygon(c(y, rev(y)),
+                c(fy, rep(0, length(fy))),
+                col="gray90")
+        # Insert vertical line over the mean
+        abline(v=mu, lty=2)
+        qq <- round(q, digits=rounding)
+        qqaux <-round(q, digits=rounding)
+        Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
+        #Pr <- gsub("\\.", ",", Pr)
+        #qq <- gsub("\\.", ",", qq)
+        # Insert red q point and vertical line (X-axis)
+        aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+        axis(side=1, at=qqaux, labels=qqaux,
+             col="red", font = 2, col.axis = "red", tick = FALSE, pos = aux2)
+        # Insert red horizontal and vertical line (X-axis)
+        axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
+             col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+        abline(v = qqaux, lty=2, col = "red")
+        legend("topleft", bty="n", fill="red",
+               legend=substitute(F[X](X<= ~ q ~ ";" ~ mu ==  mean ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, mean = mu, varen = sigma)))
       }
-      if (gui == "plot") {
-        point <- qnorm(p, mean = mu, sd = sigma)
+      plotcurve2aux <- function(p, mu, sigma) {
+        q <- qnorm(p, mu, sigma)
+        plotcurve2(q, mu, sigma)
+      }
+      plotcurveaux <- function(p, mu, sigma) {
+        op <- par(mfrow = mfrow)
         plotcurve(p, mu, sigma)
+        q <- qnorm(p, mu, sigma)
+        plotcurve2(q, mu,sigma)
+        # Preserving the global variable
+        par(op)
       }
+
+      if (type == "both") {
+        if (gui == "plot") {
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          plotcurveaux(p, mu, sigma)
+        }
+        if (gui == "rstudio") {
+          # Plot
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          manipulate::manipulate(plotcurveaux(p, mean, sd),
+                                 p = manipulate::slider(0.001, 0.999, p),
+                                 mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma)
+          )
+        }
+      }
+      if (type == "cdf") {
+        if (gui == "plot") {
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          plotcurve(p, mu, sigma)
+          #plotcurve2(qnorm(p, mu, sigma), mu,sigma)
+        }
+        if (gui == "rstudio") {
+          # Plot
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          manipulate::manipulate(plotcurve(p, mean, sd),
+                                 p = manipulate::slider(0.001, 0.999, p),
+                                 mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma)
+          )
+        }
+      }
+      if (type == "pdf") {
+        if (gui == "plot") {
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          #plotcurve(p, mu, sigma)
+          plotcurve2aux(p, mu,sigma)
+        }
+        if (gui == "rstudio") {
+          # Plot
+          mu <- argaddit$mean
+          sigma <- argaddit$sd
+          manipulate::manipulate(plotcurve2aux(p, mean, sd),
+                                 p = manipulate::slider(0.001, 0.999, qnorm(p, mu, sigma)),
+                                 mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma)
+          )
+        }
+      }
+      point <- qnorm(p, mean = mu, sd = sigma)
     }
     else {
       plotcurve <- function(p, mu, sigma) {
