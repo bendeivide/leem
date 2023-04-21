@@ -141,6 +141,7 @@ plotpnormalbrplot <- function(q, mu, sigma, rounding, main = NULL) {
   Pr <- round(pnorm(q[2], mean = mu,sd = sigma, lower.tail = T) - pnorm(q[1], mean = mu, sd=sigma, lower.tail = T), digits=rounding)
   #Pr <- gsub("\\.", ",", Pr)
   #qq <- gsub("\\.", ",", qq)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
   axis(side=1, at=qqaux, labels=qqaux,
        col="red", font = 2, col.axis = "red")
   abline(v = qqaux, lty=2, col = "red")
@@ -223,10 +224,11 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
   Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
   #Pr <- gsub("\\.", ",", Pr)
   #qq <- gsub("\\.", ",", qq)
-  # Insert red q point and vertical line (X-axis)
+  # Insert red q point
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
   axis(side=1, at=qqaux, labels=qqaux,
-       col="red", font = 2, col.axis = "red")
-  # Insert red horizontal line (X-axis)
+       col="red", font = 2, col.axis = "red", tick = FALSE, pos = aux2)
+  # Insert red horizontal and vertical line (X-axis)
   axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   abline(v = qqaux, lty=2, col = "red")
@@ -262,11 +264,12 @@ plotpnormallftplot <- function(q, mu, sigma, rounding, main = NULL) {
   Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
   # Pr <- gsub("\\.", ",", Pr)
   # qq <- gsub("\\.", ",", qq)
-  # Insert red q point and vertical line (X-axis)
+  # Insert red q point
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
   axis(side=1, at=qqaux, labels=qqaux,
-       col="red", font = 2, col.axis = "red")
+       col="red", font = 2, col.axis = "red", tick = FALSE, pos = aux2)
   abline(v = qqaux, lty=2, col = "red")
-  # Insert red horizontal line (X-axis)
+  # Insert red horizontal and vertical line (X-axis)
   axis(side=1, at=as.character(c(qqaux, maximo)), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
