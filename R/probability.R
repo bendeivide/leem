@@ -11,7 +11,7 @@
 #' }
 #'
 #' @param q quantile. The \code{q} argument can have length 1 or 2. See Details.
-#' @param dist distribution to use. The default is \code{'t-student'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....
+#' @param dist distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....
 #' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.
 #' @param rounding numerical; it represents the number of decimals for calculating the probability.
 #' @param porcentage logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.
@@ -36,8 +36,8 @@
 #' @import tkRplotR
 #  @import shiny
 #' @export
-P <- function(q, dist = "t-student", lower.tail = TRUE,
-              rounding = 4, porcentage = FALSE, gui = "plot", ...) {
+P <- function(q, dist = "normal", lower.tail = TRUE,
+              rounding = 4, porcentage = FALSE, gui = "plot", main = NULL, ...) {
   # Region of q
   # if (dist == "t-student") {
   #   if (q > 6 | q < -6) stop("Define the 'q' argument between -6 and 6", call. = FALSE, domain = "R-leem")
@@ -408,74 +408,15 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
         maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
 
-        plotcurve <- function(q, mu, sigma) {
-          minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
-          maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
-          x <- seq(q[1], q[2], by = 0.01)
-          y <- seq(minimo, maximo, by = 0.01)
-          fx <- dnorm(x, mean = mu, sd = sigma)
-          fy <- dnorm(y, mean = mu, sd = sigma)
-          if (!any(names(argaddit) == "main")) {
-            main <- gettext("Distribution Function: Normal", domain = "R-leem")
-          } else {
-            main <- argaddit$main
-          }
-          curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-                ylab = expression(f[X](x)), xlab = "X",
-                ylim = c(0, 1.2 * max(fx,fy)),
-                panel.first = grid(col="gray90"),
-                main = main)
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="gray90")
-          polygon(c(x, rev(x)),
-                  c(fx, rep(0, length(fx))),
-                  col="red")
-          abline(v=mu, lty=2)
-          qq <- round(q, digits=2)
-          qqaux <- qq
-          Pr <- round(pnorm(q[2], mean = mu,sd = sigma, lower.tail = T) - pnorm(q[1], mean = mu, sd=sigma, lower.tail = T), digits=rounding)
-          #Pr <- gsub("\\.", ",", Pr)
-          #qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2, col.axis = "red")
-          abline(v = qqaux, lty=2, col = "red")
-          if (attr(q, "region") == "region2") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1<~X<~t2 ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
-                                       list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
-          }
-          if (attr(q, "region") == "region4") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1<=~X<=~t2 ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
-                                       list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
-          }
-          if (attr(q, "region") == "region7") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1<=~X<~t2 ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
-                                       list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
-          }
-          if ( attr(q, "region") == "region8") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1<~X<=~t2 ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
-                                       list(t1=qq[1],t2=qq[2], Pr=Pr, media = mu, varen=sigma)))
-          }
-        }
-
         if (gui == "plot") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          plotcurve(q, mu, sigma)
+          plotpnormalbrplot(q, mu, sigma, rounding, main)
         }
         if (gui == "rstudio") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          plotcurveaux <- function(q1 = q[1], q2 = q[2], mean, sd, ...) {
-            q[1] <- q1
-            q[2] <- q2
-            plotcurve(q, mean, sd)
-          }
-          manipulate::manipulate(plotcurveaux(q1, q2, mean, sd),
+          manipulate::manipulate(plotpnormalbrrstudio(q1, q2, mean, sd, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
@@ -534,7 +475,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                         q2 <- as.numeric(tclvalue(tk_q2))
                                         mu <- as.numeric(tclvalue(tk_mean))
                                         sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotcurveaux(q1 = q1, q2 = q2, mu = mu, sigma = sigma)
+                                        plotpnormalbrtcltk(q1 = q1, q2 = q2, mu = mu, sigma = sigma, rounding, main, q)
                                       })
           s02 <- tcltk::tkscale(
             tkplot,
@@ -543,7 +484,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             label = 'q2',
             variable = tk_q2,
             showvalue = TRUE,
-            resolution = 1,
+            resolution = 0.01,
             repeatdelay = 200,
             repeatinterval = 100,
             orient = "hor"
@@ -555,7 +496,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             label = 'q1',
             variable = tk_q1,
             showvalue = TRUE,
-            resolution = 1,
+            resolution = 0.01,
             repeatdelay = 200,
             repeatinterval = 100,
             orient = "hor"
@@ -1611,81 +1552,15 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
         maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
 
-        plotcurve <- function(q, mu, sigma) {
-          minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
-          maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
-          x <- seq(minimo, q[1], by = 0.01)
-          z <- seq(q[2], maximo, by = 0.01)
-          y <-seq(minimo, maximo, by = 0.01)
-          fx <- dnorm(x, mean = mu, sd = sigma)
-          fz <- dnorm(z,mean = mu, sd = sigma)
-          fy <- dnorm(y, mean = mu, sd = sigma)
-          if (!any(names(argaddit) == "main")) {
-            main <- gettext("Distribution Function: Normal", domain = "R-leem")
-          } else {
-            main <- argaddit$main
-          }
-          curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-                ylim = c(0, 1.2 * max(fx,fy,fz)),xlab="X",
-                ylab = expression(f[X](x)),
-                panel.first = grid(col="gray90"),
-                main = main)
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="gray90")
-          polygon(c(x, rev(x)),
-                  c(fx, rep(0, length(fx))),
-                  col="red")
-          polygon(c(z,rev(z)), c(fz,rep(0,length(fz))),
-                  col="red" )
-          abline(v=mu, lty=2)
-          qq <- round(q, digits=2)
-          qqaux <- qq
-          Pr <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
-          #Pr <- gsub("\\.", ",", Pr)
-          #qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qq, tick = TRUE, lwd = 0,
-               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
-          axis(side=1, at=as.character(c(minimo, qq[1])), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          axis(side=1, at=as.character(c(qq[2], maximo)), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          abline(v = qqaux, lty=2, col = "red")
-          if (attr(q, "region") == "region1") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1>~X>~t2  ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
-                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma)))
-          }
-          if (attr(q, "region") == "region3") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1>=~X>=~t2  ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
-                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma, X ="X")))
-          }
-          if (attr(q, "region") == "region5") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1>=~X>~t2  ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
-                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma)))
-          }
-          if ( attr(q, "region") == "region6") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1>~X>=~t2  ~ ";" ~ mu == media ~ "," ~ sigma == varen)==Pr~"\n\n",
-                                       list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma, X = "X")))
-          }
-        }
         if (gui == "plot") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          plotcurve(q, mu, sigma)
+          plotpnormalarplot(q, mu, sigma, rounding, main)
         }
         if (gui == "rstudio") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          plotcurveaux <- function(q1 = q[1], q2 = q[2], mu, sigma, ...) {
-            q[1] <- q1
-            q[2] <- q2
-            plotcurve(q, mu, sigma)
-          }
-          manipulate::manipulate(plotcurveaux(q1, q2, mean, sd),
+          manipulate::manipulate(plotpnormalarrstudio(q1, q2, mean, sd, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
@@ -1744,7 +1619,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                         q2 <- as.numeric(tclvalue(tk_q2))
                                         mu <- as.numeric(tclvalue(tk_mean))
                                         sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotcurveaux(q1 = q1, q2 = q2, mu = mu, sigma = sigma)
+                                        plotpnormalartcltk(q1 = q1, q2 = q2, mu = mu, sigma = sigma, rounding, main, q)
                                       })
           s02 <- tcltk::tkscale(
             tkplot,
@@ -1753,7 +1628,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             label = 'q2',
             variable = tk_q2,
             showvalue = TRUE,
-            resolution = 1,
+            resolution = 0.01,
             repeatdelay = 200,
             repeatinterval = 100,
             orient = "hor"
@@ -1765,7 +1640,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             label = 'q1',
             variable = tk_q1,
             showvalue = TRUE,
-            resolution = 1,
+            resolution = 0.01,
             repeatdelay = 200,
             repeatinterval = 100,
             orient = "hor"
@@ -3012,58 +2887,17 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         # Auxiliar variables
         minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
         maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
-        # Plot function
-        plotcurve <- function(q, mu, sigma) {
-          minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
-          maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
-          x <- seq(minimo, q, by = 0.01)
-          y <- seq(q, maximo, by = 0.01)
-          fx <- dnorm(x, mean = mu, sd = sigma)
-          fy <- dnorm(y, mean = mu, sd = sigma)
-          if (!any(names(argaddit) == "main")) {
-            main <- gettext("Distribution Function: Normal", domain = "R-leem")
-          } else {
-            main <- argaddit$main
-          }
-          curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-                ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
-                panel.first = grid(col = "gray90"),
-                main = main)
-          polygon(c(x, rev(x)),
-                  c(fx, rep(0, length(fx))),
-                  col="red")
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="gray90")
-          # Insert vertical line over the mean
-          abline(v=mu, lty=2)
-          qq <- round(q, digits=2)
-          qqaux <-round(q, digits=2)
-          Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
-          #Pr <- gsub("\\.", ",", Pr)
-          #qq <- gsub("\\.", ",", qq)
-          # Insert red q point and vertical line (X-axis)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2, col.axis = "red")
-          # Insert red horizontal line (X-axis)
-          axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          abline(v = qqaux, lty=2, col = "red")
-          legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(X<= ~ q ~ ";" ~ mu ==  mean ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, mean = mu, varen = sigma)))
-        }
-
         if (gui == "plot" ) {
           #           # Plot
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          plotcurve(q, mu,sigma)
+          plotpnormallttplot(q, mu,sigma, rounding, main)
         }
         if (gui == "rstudio") {
           # Plot
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          manipulate::manipulate(plotcurve(q, mean, sd),
+          manipulate::manipulate(plotpnormallttplot(q, mean, sd, rounding, main),
                                  q = manipulate::slider(q, mu + 4 * sigma, q),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma)
@@ -3089,20 +2923,13 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
 
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          # plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
-          #   q[1] <- q1
-          #   q[2] <- q2
-          #   plotcurve(q, nu)
-          # }
           tk_q <- leemset("tk_q", tclVar(q))
           tk_mu <- leemset("tk_mu", tclVar(mu))
           tk_sigma <- leemset("tk_sigma", tclVar(sigma))
           sapply(c("tk_q", "tk_mu", "tk_sigma"),
                  function(x) globalvariables(x, leemget(x)))
 
-          # q1 <- NULL
-          # q2 <- NULL
-          # nu <- NULL
+
           ##
           # Disabled GUI (Type I)
           oldmode <- tclServiceMode(FALSE)
@@ -3126,7 +2953,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                         q <- as.numeric(tclvalue(tk_q))
                                         mu <- as.numeric(tclvalue(tk_mu))
                                         sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotcurve(q = q, mu = mu, sigma = sigma)
+                                        plotpnormallttplot(q = q, mu = mu, sigma = sigma, rounding, main)
                                       })
           s01 <- tcltk::tkscale(
             tkplot,
@@ -3135,7 +2962,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             label = 'q',
             variable = tk_q,
             showvalue = TRUE,
-            resolution = 1,
+            resolution = 0.01,
             repeatdelay = 200,
             repeatinterval = 100,
             orient = "hor"
@@ -3147,7 +2974,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
             label = 'mean',
             variable = tk_mu,
             showvalue = TRUE,
-            resolution = 1,
+            resolution = 0.01,
             repeatdelay = 200,
             repeatinterval = 100,
             orient = "hor"
@@ -3198,53 +3025,16 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
         minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
         maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
         # Plot function
-        plotcurve <- function(q, mu, sigma) {
-          minimo <- if (q <= mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
-          maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
-          x <- seq(minimo, q, by = 0.01)
-          y <- seq(q, maximo, by = 0.01)
-          fx <- dnorm(x, mean = mu, sd = sigma)
-          fy <- dnorm(y, mean = mu, sd = sigma)
-          if (!any(names(argaddit) == "main")) {
-            main <- gettext("Distribution Function: Normal", domain = "R-leem")
-          } else {
-            main <- argaddit$main
-          }
-          curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-                ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
-                panel.first = grid(col = "gray90"),
-                main = main)
-          polygon(c(x, rev(x)),
-                  c(fx, rep(0, length(fx))),
-                  col="gray90")
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="red")
-          abline(v=mu, lty=2)
-          qq <- round(q, digits=2)
-          qqaux <-round(q, digits=2)
-          Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
-          # Pr <- gsub("\\.", ",", Pr)
-          # qq <- gsub("\\.", ",", qq)
-          # Insert red q point and vertical line (X-axis)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2, col.axis = "red")
-          abline(v = qqaux, lty=2, col = "red")
-          # Insert red horizontal line (X-axis)
-          axis(side=1, at=as.character(c(qqaux, maximo)), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(X> ~ q ~ ";" ~ mu ==  mean ~ "," ~ sigma == varen)==Pr, list(q = qq, Pr = Pr, mean = mu, varen = sigma)))
-        }
+
         if (gui == "plot") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          plotcurve(q, mu, sigma)
+          plotpnormallftplot(q, mu, sigma, rounding, main)
         }
         if (gui == "rstudio") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          manipulate::manipulate(plotcurve(q, mean, sd),
+          manipulate::manipulate(plotpnormallftplot(q, mean, sd, rounding, main),
                                  q = manipulate::slider(q, mu + 4 * sigma, q),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
@@ -3308,7 +3098,7 @@ P <- function(q, dist = "t-student", lower.tail = TRUE,
                                         q <- as.numeric(tclvalue(tk_q))
                                         mu <- as.numeric(tclvalue(tk_mu))
                                         sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotcurve(q = q, mu = mu, sigma = sigma)
+                                        plotpnormallftplot(q = q, mu = mu, sigma = sigma, rounding, main)
                                       })
           s01 <- tcltk::tkscale(
             tkplot,

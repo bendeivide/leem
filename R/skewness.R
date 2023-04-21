@@ -78,6 +78,6 @@ skewness <- function (x, type = "pearson", rounding = 2, na.rm = FALSE, details 
         }
       }
     }
+    if (length(skew) > 1) warning("Pearson's asymmetry is not appropriate for bimodal, trimodal or higher situations!", domain = "R-leem")
   }
-
 }

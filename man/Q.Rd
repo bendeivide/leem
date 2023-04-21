@@ -6,8 +6,9 @@
 \usage{
 Q(
   p,
-  dist = "t-student",
+  dist = "normal",
   lower.tail = TRUE,
+  two.sided = FALSE,
   rounding = 2,
   gui = "plot",
   mfrow = c(1, 2),
@@ -18,18 +19,24 @@ Q(
 \arguments{
 \item{p}{probability. The \code{p} argument need have length 1 and value lower then 1.}
 
-\item{dist}{distribution to use. The default is \code{'t-student'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....}
+\item{dist}{distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....}
 
-\item{lower.tail}{logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.}
+\item{lower.tail}{logical; if \code{TRUE} (default), the quantile function is computed; otherwise, the complement of the quantile function (survival function) will be computed. The \code{lower.tail} argument will only be valid for two-\code{sided = FALSE}.}
+
+\item{two.sided}{logical. if \code{TRUE} (default), the calculation of the quantile function and survival will be presented; otherwise the \code{Q()} function will be based according to the \code{lower.tail} argument.}
 
 \item{rounding}{numerical; it represents the number of decimals for calculating the probability.}
 
-\item{gui}{default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'plot'} and....}
+\item{gui}{default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{"plot"} and \code{"rstudio"} and \code{"tcltk"}.}
 
-\item{...}{additional arguments according to the chosen distribution.}
+\item{mfrow}{numerical vector. Considering the arguments \code{two.sided = TRUE} and \code{type = "both"}, the default will be to present two graphs (based on CDF and PDF) horizontally for the quantile function, that is, \code{mfrow = c(1, 2)} (default).}
+
+\item{type}{character argument. The default is \code{"both"}; the output will display two plots (based on CDF and PDF) to present the result of Q(). The other options are: \code{"cdf"} and \code{"pdf"}.}
+
+\item{...}{additional parameters according to the chosen distribution.}
 }
 \value{
-\code{Q} returns the point and its graphical representation. The result is give by a integer number.
+\code{Q} returns the quantile and its graphical representation for a given distribution. The output is a vector.
 }
 \description{
 \code{Q} Quantile function for multiple distributions.
@@ -37,12 +44,12 @@ Q(
 \details{
 The expression of quantile function is given by:
 \deqn{
-Q(p)=\inf {x\in \mathbb{R}: p \leq F(x)},
+Q(p)=\inf {x\in \mathbb{R}: p \le F(x)},
 }
 where \code{p} is the first argument of \code{Q()} and \code{x} its return value;
 }
 \examples{
-# Loading package
+# Attaching package
 library(leem)
 \dontrun{
 Q(p = 0.8, dist = "normal", mean = 200, sd=30)

@@ -12,3 +12,4 @@ logo\.png
 ^docs$
 ^pkgdown$
 R/transp_cores\.R
+diagram
