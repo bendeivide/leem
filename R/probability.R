@@ -3107,7 +3107,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
             label = 'q',
             variable = tk_q,
             showvalue = TRUE,
-            resolution = 0.0 1,
+            resolution = 0.01,
             repeatdelay = 200,
             repeatinterval = 100,
             orient = "hor"

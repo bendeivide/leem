@@ -28,7 +28,6 @@ piechart <- function(x, col = heat.colors(5), border = FALSE, main = NULL, ...) 
     labels <- paste0(x$table$Groups, " (", x$table$Fp, "%", ")")
     graphics::pie(x$table$Fi, labels = labels, col = col, border = border,
                   main = main, ...)
-
   }
   if (attr(x, "variable") == "continuous") {
 
@@ -149,9 +148,9 @@ stickchart <- function(x,
       grids
 
       # Inserindo hastes
-      lines(x$table$Groups, x$table$Fi, type = "h",
+      lines(1:length(x$table$Groups), x$table$Fi, type = "h",
             lty = lty, lwd = lwd, col = lcol)
-      points(x$table$Groups, x$table$Fi, pch  = pty, lwd = pwd,
+      points(1:length(x$table$Groups), x$table$Fi, pch  = pty, lwd = pwd,
              col = pcol)
     } else {
       ngroups <- length(x$table$Groups)
@@ -160,7 +159,9 @@ stickchart <- function(x,
       xvaraux <-  c(0, aux, ngroups + 1)
       xvar1 <- xvaraux - 0.5
       xvar2 <- xvaraux + 0.5
-      yvar <- x$table$Fi
+      if (freq == "a") yvar <- c(0, x$table$Fi, 0)
+      if (freq == "r") yvar <- c(0, x$table$Fr, 0)
+      if (freq == "p") yvar <- c(0, x$table$Fp, 0)
       yvar1 <- x$table$Fac1
       yvar2 <- x$table$Fac2
 
@@ -201,11 +202,10 @@ stickchart <- function(x,
       grids
 
       # Inserindo hastes
-      lines(x$table$Groups, x$table$Fi, type = "h",
+      lines(1:length(x$table$Groups), x$table$Fi, type = "h",
             lty = lty, lwd = lwd, col = lcol)
-      points(x$table$Groups, x$table$Fi, pch  = pty, lwd = pwd,
+      points(1:length(x$table$Groups), x$table$Fi, pch  = pty, lwd = pwd,
              col = pcol)
-
 
     }
   }
