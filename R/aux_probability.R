@@ -254,7 +254,7 @@ plotppoissonarplot <- function(q, lambda, rounding, main = NULL){
        col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
   axis(side=1, at=as.character(c(qqmax, rmax)), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-  axis(side=1, at=as.character(c(rmin, qqmin)), tick = TRUE, lwd = 1,
+  axis(side=1, at=as.character(x1), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   axis(side=1, at=as.character(q), tick = TRUE, lwd = 0,
        col="red", font = 2, lwd.ticks = 1, labels = FALSE)
