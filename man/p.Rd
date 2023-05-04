@@ -8,7 +8,7 @@ P(
   q,
   dist = "normal",
   lower.tail = TRUE,
-  rounding = 4,
+  rounding = 5,
   porcentage = FALSE,
   gui = "plot",
   main = NULL,
@@ -26,7 +26,7 @@ P(
 
 \item{porcentage}{logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.}
 
-\item{gui}{default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'rstudio'} or \code{'tcltk'}.}
+\item{gui}{default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'none'}, \code{'rstudio'} or \code{'tcltk'}.}
 
 \item{...}{additional arguments according to the chosen distribution.}
 }
