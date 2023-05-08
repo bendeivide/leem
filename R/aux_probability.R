@@ -58,8 +58,8 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region1") {
     legaux <- legend("topleft", bty="n", fill="red",
-           legend = substitute(P(X<t1)+P(X>t2)==Pr,
-                               list(t1=qq[1],t2=qq[2], Pr = Pr)))
+                     legend = substitute(P(X<t1)+P(X>t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white",
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma)))
@@ -1082,7 +1082,7 @@ plotppoissonltfplot <- function(q, lambda, rounding, main = NULL){
   axis(1, at = 5*(0:rmax))
   axis(2)
   title(ylab = expression(p[X](x)), xlab = "X",
-        main = bquote(atop("Probability function plot: Poisson", p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~S[X](plain(x)^"*")~"="~1 - F[X](plain(x)^"*") == 1 - sum(p[X](x), x<=plain(x)^"*", ""))))
+        main = bquote(atop("Probability function plot: Poisson", p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~S[X]("X*")~"="~1 - F[X]("x*") == 1 - sum(p[X](x), x<="x*", ""))))
   lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
   points(x1, probx1, lwd = 2, pch = 19)
   lines(x2, probx2, type = "h", lwd = 2, col = "red")
