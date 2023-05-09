@@ -891,27 +891,39 @@ plotppoissonlttplot <- function(q, lambda, rounding, main = NULL){
   axis(1, at = 5*(0:rmax))
   axis(2)
   title(ylab = expression(p[X](x)), xlab = "X",
-        main = bquote(atop("Probability function plot: Poisson", p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~F[X](plain(x)^"*") == sum(p[X](x), x<=plain(x)^"*", ""))))
+        main = substitute(atop("Probability function plot: Poisson", p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~F[X](t) == sum(p[X](x), x<=t, "")),
+                          list(t = q, t2 = q + 1)))
   lines(x2, probx2, type = "h", lwd = 2, panel.first = grid(col = "gray90"))
   points(x2, probx2, lwd = 2, pch = 19)
   lines(x1, probx1, type = "h", lwd = 2, col = "red")
   points(x1, probx1, lwd = 2, col = "red", pch = 19)
-  abline(v = lambda, lty = 2)
+  # Mean
+  #abline(v = lambda, lty = 2)
   qq <- round(q, digits = 2)
   qqaux <- round(q, digits = 2)
   Pr <- round(ppois(qq, lambda = lambda, lower.tail = T), rounding)
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  axis(side=1, at=q, lwd = 0,
-       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
-  axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2)
+  axis(side=1, at=as.character(q), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2, lwd.ticks = 0, lwd = 1)
   abline(v = qqaux, lty = 2, col = "red")
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",
                    legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
-                                       list(q = qq, Pr = Pr)))
+                                       list(q = qq, Pr = Pr)), cex = 0.8)
   legend(rmin, legaux$text$y, bty="n", bg = "white",
          legend = substitute("Parameters:"~lambda == lambd,
-                             list(lambd = lambda)))
+                             list(lambd = lambda)), cex = 0.8)
 }#OK
 
 
@@ -1082,27 +1094,40 @@ plotppoissonltfplot <- function(q, lambda, rounding, main = NULL){
   axis(1, at = 5*(0:rmax))
   axis(2)
   title(ylab = expression(p[X](x)), xlab = "X",
-        main = bquote(atop("Probability function plot: Poisson", p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~S[X]("X*")~"="~1 - F[X]("x*") == 1 - sum(p[X](x), x<="x*", ""))))
+        main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
+                          list(t = q, t2 = q + 1)))
   lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
   points(x1, probx1, lwd = 2, pch = 19)
   lines(x2, probx2, type = "h", lwd = 2, col = "red")
   points(x2, probx2, lwd = 2, col = "red", pch = 19)
-  abline(v = lambda, lty = 2)
+  # Mean
+  #abline(v = lambda, lty = 2)
   qq <- round(q, digits = 2)
   qqaux <- round(q, digits = 2)
   Pr <- round(ppois(qq, lambda = lambda, lower.tail = F), rounding)
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  axis(side=1, at=q+1, lwd = 0,
+  axis(side=1, at=q + 1, lwd = 0,
        col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
-  axis(side = 1, at = c(q+1,rmax), labels = FALSE,col = "red",col.axis = "red",  font = 2)
+  axis(
+    side = 1,
+    at = as.character(q + 1),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = as.character(c(q+1,rmax)), labels = FALSE,col = "red",col.axis = "red",  tick = TRUE,
+       lwd.ticks = 0, lwd = 1)
   abline(v = qqaux+1, lty = 2, col = "red")
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",
-                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
-                                       list(q = qq, Pr = Pr)))
+                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
+                                       list(q = qq, Pr = Pr, q2 = qq + 1)), cex = 0.8)
   legend(rmin, legaux$text$y, bty="n", bg = "white",
          legend = substitute("Parameters:"~lambda == lambd,
-                             list(lambd = lambda)))
+                             list(lambd = lambda)), cex = 0.8)
 }#OK
 
 

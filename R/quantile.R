@@ -44,17 +44,17 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
     if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
     if (two.sided) {
       if (type == "both") {
+        # Plot size title
+        cex.main <- 0.7
         if (gui == "plot") {
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          cex.main <- 0.7
           plotqnormaltsboth(p, mu, sigma, rounding, mfrow, cex.main = cex.main) # aux_quantile.R
         }
         if (gui == "rstudio") {
           # Plot
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          cex.main <- 0.7
           manipulate::manipulate(plotqnormaltsboth(p, mean, sd, rounding, mfrow, cex.main = cex.main), # aux_quantile.R
                                  p = manipulate::slider(0.01, 0.99, p),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
@@ -81,7 +81,6 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
 
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          cex.main <- 0.7
           tk_p <- leemset("tk_p", tclVar(p))
           tk_mu <- leemset("tk_mu", tclVar(mu))
           tk_sigma <- leemset("tk_sigma", tclVar(sigma))
@@ -450,10 +449,10 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
     } else{
       if (lower.tail) {
         if (type == "both") {
+          cex.main <- 0.7
           if (gui == "plot") {
             mu <- argaddit$mean
             sigma <- argaddit$sd
-            cex.main <- 0.8
             plotqnormalttboth(p, mu, sigma, rounding, mfrow, cex.main = cex.main)
           }
           if (gui == "rstudio") {
@@ -487,7 +486,6 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
 
             mu <- argaddit$mean
             sigma <- argaddit$sd
-            cex.main <- 0.8
             tk_p <- leemset("tk_p", tclVar(p))
             tk_mu <- leemset("tk_mu", tclVar(mu))
             tk_sigma <- leemset("tk_sigma", tclVar(sigma))
@@ -1269,16 +1267,16 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
     }
     if (two.sided) {
       if (type == "both") {
+        # Plot size title
+        cex.main <- 0.7
         if (gui == "plot") {
           lambda <- argaddit$lambda
-          cex.main <- 0.7
           plotqpoissontsboth(p, lambda, rounding, mfrow, cex.main = cex.main) # aux_quantile.R
         }
         if (gui == "rstudio") {
           # Plot
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          cex.main <- 0.7
           manipulate::manipulate(plotqnormaltsboth(p, mean, sd, rounding, mfrow, cex.main = cex.main), # aux_quantile.R
                                  p = manipulate::slider(0.01, 0.99, p),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
@@ -1305,7 +1303,6 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
 
           mu <- argaddit$mean
           sigma <- argaddit$sd
-          cex.main <- 0.7
           tk_p <- leemset("tk_p", tclVar(p))
           tk_mu <- leemset("tk_mu", tclVar(mu))
           tk_sigma <- leemset("tk_sigma", tclVar(sigma))

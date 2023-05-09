@@ -394,7 +394,7 @@ plotqpoissontscdf <- function(p, lambda, rounding, ...) {
     panel.first = grid(col = "gray90"),
     main = bquote(
       atop(
-        bold("Cumulative distribution plot: Poisson"),
+        bold("Cumulative distribution plot: Normal"),
         Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}") ~ "," ~ Q[S]("p*") ==
           inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") * "," ~ "p*" ==
           1 - p
@@ -420,7 +420,7 @@ plotqpoissontscdf <- function(p, lambda, rounding, ...) {
   )
   axis(
     side = 1,
-    at = qaux,
+    at = as.character(qaux[1]),
     labels = FALSE,
     col.axis = "red",
     col = "red",
@@ -446,8 +446,7 @@ plotqpoissontscdf <- function(p, lambda, rounding, ...) {
     col.axis = "blue",
     col = "blue",
     font = 2,
-    tick = TRUE,
-    lwd.ticks = 1
+    tick = TRUE
   )
   # Y-axis: P1
   aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
@@ -458,7 +457,8 @@ plotqpoissontscdf <- function(p, lambda, rounding, ...) {
     col.axis = "red",
     font = 2,
     pos = aux,
-    tick = FALSE
+    tick = FALSE,
+    lwd = 0
   )
   axis(
     side = 2,
@@ -468,14 +468,15 @@ plotqpoissontscdf <- function(p, lambda, rounding, ...) {
     col = "red",
     font = 2,
     tick = TRUE,
-    lwd.ticks = 1
+    lwd.ticks = 1,
+    lwd = 0
   )
   # Y-axis: P2
   aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
   axis(
     side = 2,
     at = qq[2],
-    labels = substitute("p*" == prob, list(prob = qq[2])),
+    labels = substitute(1 - "p*" == prob, list(prob = qq[2])),
     col.axis = "blue",
     font = 2,
     pos = aux,
@@ -554,11 +555,11 @@ plotqpoissontscdf <- function(p, lambda, rounding, ...) {
     pch = 19,
     col = "blue",
     legend = substitute(
-      Q("p*" == p2 ~ "; " ~ lambda == lambd) == Qr,
+      Q[S]("p*" == p2 ~ "; " ~ lambda == lambd) == Qr,
       list(
         Qr = qaux[2],
         p = "p",
-        p2 = qq[2],
+        p2 = 1-qq[2],
         lambd = lambda
       )
     ),
@@ -599,19 +600,22 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
   }
 
   rmin <-
-    if (q[1] < lambda)
+    if (q[1] < lambda) {
       trunc(q[1] - 4 * sqrt(lambda))
-  else
+  } else {
     trunc(lambda - 4 * sqrt(lambda))
-  if (rmin < 0)
+  }
+  if (rmin < 0) {
     rmin <- 0
-  else
+  } else {
     rmin <- round(rmin)
+  }
   rmax <-
-    if (q[2] > lambda)
+    if (q[2] > lambda) {
       ceiling(q[2] + 4 * sqrt(lambda))
-  else
-    ceiling(lambda + 4 * sqrt(lambda))
+    } else {
+      ceiling(lambda + 4 * sqrt(lambda))
+    }
   x <- rmin:rmax
   probx <- dpois(x, lambda = lambda)
 
@@ -643,10 +647,11 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
   qqmin <- qq[1]
   qqmax <- qq[2]
   # red vertical lines and points
-  x1 <- if (rmin > qqmin)
+  x1 <- if (rmin > qqmin) {
     qqmin
-  else
+  } else {
     rmin:qqmin
+  }
   x2 <- qqmax:rmax
   probx1 <- dpois(x1, lambda = lambda)
   probx2 <- dpois(x2, lambda = lambda)
@@ -670,12 +675,48 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
          lwd = 2,
          pch = 19,
          col = "red")
-  abline(v = lambda, lty = 2)
-  # red x-axis
+  # Mean
+  #abline(v = lambda, lty = 2)
+  # Point of survival function
+  #abline(v = q[2] - 1, lty = 2, col = "blue")
+  # blue x-axis
+  # axis(
+  #   side = 1,
+  #   at = as.character(q[2] - 1),
+  #   col = "blue",
+  #   font = 2,
+  #   tick = FALSE,
+  #   lwd.ticks = 0,
+  #   col.axis = "blue",
+  #   pos = aux2
+  # )
+  # axis(
+  #   side = 1,
+  #   at = as.character(q[2] - 1),
+  #   tick = TRUE,
+  #   lwd = 0,
+  #   col = "blue",
+  #   font = 2,
+  #   lwd.ticks = 1,
+  #   labels = FALSE
+  # )
+
   # red x-axis
   axis(
     side = 1,
-    at = c(qqmin, qqmax),
+    at = qqmin,
+    labels = substitute(q == q1, list(q1 = qqmin)),
+    lwd = 0,
+    col = "red",
+    font = 2,
+    tick = FALSE,
+    col.axis = "red",
+    pos = aux2
+  )
+  axis(
+    side = 1,
+    at = qqmax,
+    labels = substitute(q[S] == q2, list(q2 = qqmax)),
     lwd = 0,
     col = "red",
     font = 2,
@@ -693,16 +734,7 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
     lwd.ticks = 0,
     labels = FALSE
   )
-  axis(
-    side = 1,
-    at = as.character(x1),
-    tick = TRUE,
-    lwd = 1,
-    col = "red",
-    font = 2,
-    lwd.ticks = 0,
-    labels = FALSE
-  )
+
   axis(
     side = 1,
     at = as.character(q),
@@ -713,6 +745,7 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
     lwd.ticks = 1,
     labels = FALSE
   )
+
   # intervals
   abline(v = c(qqmin, qqmax),
          lty = 2,
@@ -740,11 +773,11 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
       xlab = "X",
       main = substitute(
         atop(
-          "Probability function plot: Poisson",
+          bold("Probability function plot: Poisson"),
           p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
-            "," ~  ~ P(X <= t1) == 0 * "," ~  ~ P(X >= t2) == sum(p[X](x), x >= t2, infinity)
+            "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
         ),
-        list(t1 = qqmin, t2 = qqmax, x = "x")
+        list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
       ),
       ...
     )
@@ -753,9 +786,9 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
       "topleft",
       bty = "n",
       fill = "red",
-      legend = substitute(P(X <= t1) + P(X >= t2) == Pr,
+      legend = substitute(F[X](t1) + S[X](t2) == Pr,
                           list(
-                            t1 = qqmin, t2 = qqmax, Pr = Pr
+                            t1 = qqmin, t2 = qqmax - 1, Pr = Pr
                           )), cex = 0.8
     )
     legend(
@@ -784,9 +817,9 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
         atop(
           bold("Probability function plot: Poisson"),
           p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
-            "," ~  ~ P(X <= t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ P(X >= t2) == sum(p[X](x), x >= t2, infinity)
+            "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
         ),
-        list(t1 = qqmin, t2 = qqmax, x = "x")
+        list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
       ),
       ...
     )
@@ -795,9 +828,9 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
       "topleft",
       bty = "n",
       fill = "red",
-      legend = substitute(P(X <= t1) + P(X >= t2) == Pr,
+      legend = substitute(F[X](t1) + S[X](t2) == Pr,
                           list(
-                            t1 = qqmin, t2 = qqmax, Pr = Pr
+                            t1 = qqmin, t2 = qqmax - 1, Pr = Pr
                           )), cex = 0.8
     )
     legend(
@@ -1126,6 +1159,7 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
     col.axis = "red",
     font = 2,
     pos = aux2,
+    tick = FALSE,
     lwd.ticks = 0
   )
   axis(
