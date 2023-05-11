@@ -49,9 +49,11 @@ leem()
 
 Temos dentro desse projetos, diversos projetos integrados, sendo:
 
-- Projeto de dissertação PROFMAT/CAP/UFSJ (Concluído), da orientanda [Juliane Nassaralla Almeida](http://lattes.cnpq.br/5176118169651142);
-- Grupo de Iniciação Científica em Estatística/R
 
+
+- Projeto de dissertação PROFMAT/CAP/UFSJ (2020.1), da orientanda [Juliane Nassaralla Almeida](http://lattes.cnpq.br/5176118169651142);
+
+- Grupo de Iniciação Científica em Estatística/R
   - [Amanda Kelly Costa](https://www.linkedin.com/in/amandakellycosta/) 
   - [Lívia Dias de Sá Amorim](https://www.linkedin.com/in/líviasdias/)
   - [Gustavo do Remédios da Silva Paula](https://www.linkedin.com/in/gustavo-dos-remédios-da-silva-paula-995a04181)

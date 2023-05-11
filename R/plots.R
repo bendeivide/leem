@@ -3,6 +3,7 @@
 #' Draw a pie chart.
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param labels One or more expressions or character strings giving names for the slices
 #' @param col Character vector. Default \code{col = heat.colors(5)}.
 #' @param border Logical argument (default \code{FALSE}).
 #' @param main Title name.
@@ -20,17 +21,42 @@
 #' x <- tabfreq(x)
 #' piechart(x)
 #' @export
-piechart <- function(x, col = heat.colors(5), border = FALSE, main = NULL, ...) {
+piechart <- function(x, labels = NULL, col = heat.colors(5, 1), border = FALSE, main = NULL, ...) {
+  # defensive programming
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
   if(is.null(main)) main <- gettext("Pie Chart", domain = "R-leem")
   if (attr(x, "variable") == "discrete") {
-    labels <- paste0(x$table$Groups, " (", x$table$Fp, "%", ")")
+    # defensive programming
+    if (!is.null(labels)) {
+      if (length(labels) != length(x$table$Groups)) {
+        stop("The length of the labels argument must equal the number categories!", call. = FALSE, domain = "R-leem")
+      }
+    }
+    if (is.null(labels)) {
+      labels <- paste0(x$table$Groups, " (", x$table$Fp, "%", ")")
+    } else{
+      labels <- paste0(labels, " (", x$table$Fp, "%", ")")
+    }
+
     graphics::pie(x$table$Fi, labels = labels, col = col, border = border,
                   main = main, ...)
   }
   if (attr(x, "variable") == "continuous") {
+    # defensive programming
+    if (!is.null(labels)) {
+      if (length(labels) != length(x$table$Classes)) {
+        stop("The length of the labels argument must equal the number classes!", call. = FALSE, domain = "R-leem")
+      }
+    }
+    if (is.null(labels)) {
+      labels <- paste0("[", x$statistics$lower_lim, ";",  x$statistics$upper_lim, ")", " (", x$table$Fp, "%", ")")
+    } else{
+      labels <- paste0(labels, " (", x$table$Fp, "%", ")")
+    }
 
+    graphics::pie(x$table$Fi, labels = labels, col = col, border = border,
+                  main = main, ...)
   }
 }
 

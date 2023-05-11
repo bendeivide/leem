@@ -34,7 +34,7 @@
           - [X] no ordered
       - [X] continuous
         - [X] coerced to histogram
-    - [ ] Stick plot
+    - [X] Stick plot
       - [X] *help*  
       - [X] continuous
       - [X] discrete
@@ -58,6 +58,14 @@
         - [X] categorical 
           - [X] ordered
           - [X] no ordered
+    - [X] Pie
+      - [X] *help* 
+      - [X] continuous
+      - [X] discrete
+        - [X] numerical
+        - [X] categorical 
+          - [X] ordered
+          - [X] no ordered
   - *Measures of position*:
     - Mean: `mean()`
       - [X] *help* 
@@ -65,10 +73,15 @@
       - [X] raw data
       - [X] Insert into plots: insert()
     - Median: `median()`
+       - [X] *help* 
        - [X] grouped data
+       - [X] raw data
+       - [X] Insert into plots: insert()
+    -  [X] Mode: `mfreq()`
+      - [X] *help* 
+      - [X] grouped data
       - [X] raw data
-      - [X] Insert into plots
-    -  [ ] Mode: `mfreq()`
+      - [X] Insert into plots: insert()
   - [X] *Output*: `print.leem()` 
   - [X] *Probability Function*: `P()`
     - Distributions:

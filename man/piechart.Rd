@@ -4,7 +4,14 @@
 \alias{piechart}
 \title{Pie Chart}
 \usage{
-piechart(x, col = heat.colors(5), border = FALSE, main = NULL, ...)
+piechart(
+  x,
+  labels = NULL,
+  col = heat.colors(5, 1),
+  border = FALSE,
+  main = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
