@@ -16,6 +16,8 @@ piechart(
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
 
+\item{labels}{One or more expressions or character strings giving names for the slices}
+
 \item{col}{Character vector. Default \code{col = heat.colors(5)}.}
 
 \item{border}{Logical argument (default \code{FALSE}).}

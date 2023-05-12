@@ -17,6 +17,8 @@ tabfreq(data)
 
 \item{k}{Number of classes. Default is \code{NULL}.}
 
+\item{na.rm}{a logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.}
+
 \item{ordered}{Ordered vector of the same length and elements of data object. Default is \code{NULL}.}
 
 \item{namereduction}{Logical argument. If \code{TRUE} (default), the group names are reduzed the 10 characters. If \code{FALSE}, otherwise.}

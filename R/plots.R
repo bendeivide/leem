@@ -1258,7 +1258,7 @@ hist.leem <- function(x,
 #' barplot(x, ...)
 #'
 #' ## Leem S3 method:
-#' barplot.leem(x, bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
+#' barplot.leem(x, freq = "a", bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
 #'   grids = grid(col = "white"), bgcol = "gray", bgborder = NA,
 #'   barcol = "yellow", barborder = "gray", posx1 = 0, posx2 = 0,
 #'   xang = 0, labels = NULL, ...)
@@ -1374,6 +1374,8 @@ barplot.leem <- function(x,
            0,
            xvar + 0.5,
            yvar, col = barcol, border = barborder)
+
+
     } else {
       ngroups <- length(x$table$Groups)
       aux <- 1:ngroups

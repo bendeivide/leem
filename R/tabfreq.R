@@ -4,6 +4,7 @@
 #'
 #' @param data R object (data structure vector) of class leem. Use \code{new_leem()} function.
 #' @param k Number of classes. Default is \code{NULL}.
+#' @param na.rm a logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.
 #' @param ordered Ordered vector of the same length and elements of data object. Default is \code{NULL}.
 #' @param namereduction Logical argument. If \code{TRUE} (default), the group names are reduzed the 10 characters. If \code{FALSE}, otherwise.
 #' @return The result of \code{tabfreq()} is a list. This list has two elements: \code{table} and \code{statistics}. The first is the data frequency table, and the second represents some useful statistics for methods of leem class.
@@ -44,20 +45,34 @@ tabfreq <- function(dados, ...) {
 
 
 #' @export
-tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE, ...){
+tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, namereduction = TRUE, ...){
   if (class(data) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE,
                                    domain = "R-leem")
-
+  # defensive programming
+  if (anyNA(data)) {
+    if (na.rm) {
+      if (attr(data, "variable") == "discrete") {
+        data <- new_leem(data[!is.na(data)])
+      } else{
+        data <- new_leem(data[!is.na(data)], variable = 2)
+      }
+    } else {
+      # The data was coerced to string!
+      data <- paste0(data)
+      data <- new_leem(data)
+      attr(data, "na") <- "na"
+    }
+  }
   if (attr(data, "variable") == "discrete") {
     # numeric ou character
     numchar <- is.numeric(data)
     # tamanho da amostra
     n <- length(data)
     # Dist freq
-    aux <- table(data)
+    aux <- table(data, exclude = NULL)
     if (numchar) {
       groups <- as.numeric(names(aux))
-    } else{
+    } else {
       if (is.null(ordered)) {
         groups <- as.character(names(aux))
         if (namereduction) groups <- subtnames(groups)
@@ -88,9 +103,13 @@ tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE, .
     fac2 <- function(x) {
       f1 <- sum(x)
       n <- length(x)
-      vet <- c(f1, rep(0,n - 1))
-      for (j in 2:n) {
-        vet[j] <- vet[j - 1] - x[j - 1]
+      if (n == 1) {
+        vet <- f1
+      } else {
+        vet <- c(f1, rep(0,n - 1))
+        for (j in 2:n) {
+          vet[j] <- vet[j - 1] - x[j - 1]
+        }
       }
       return(vet)
     }
@@ -128,6 +147,7 @@ tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE, .
     if (!is.null(ordered)) attr(listres, "levels") <- "ordered"
     class(listres) <- "leem"
     attr(listres, "output") <- "table"
+    if (!is.null(attr(data, "na")))  attr(listres, "na") <- "na"
     return(listres)
   }
   if (attr(data, "variable") == "continuous") {
@@ -137,7 +157,10 @@ tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE, .
     n <- length(data)
     if (is.null(k)) {
       # Numero de classes
-      if (n <= 100) {
+      if (n < 4) {
+        k <- n
+      }
+      if (n >= 4 & n <= 100) {
         k <- round(sqrt(n))
         # OBS.: O valor de k nao necessariamente precisa ser
         #       sqrt(n). Esse eh um valor base
@@ -149,8 +172,8 @@ tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE, .
       if(!is.numeric(k)) stop("The argument should be numerical!", call. = FALSE,
                               domain = "R-leem")
     }
-    if (k <= 1) stop("The k argument should be greater than 1!", call. = FALSE,
-                     domain = "R-leem")
+    if (k < 1) stop("The k argument should be greater than 1!", call. = FALSE,
+                    domain = "R-leem")
     # Number of classes
     k <- round(k)
     # Amplitude
@@ -236,8 +259,10 @@ tabfreq.leem <- function(data, k = NULL, ordered = NULL, namereduction = TRUE, .
     # Fac1p => Fac1 percentual  # Fac2p => Fac2 percentual
     listres <- list(table = tabela, statistics = estat)
     attr(listres, "variable") <- attr(data, "variable")
+    attr(listres, "table") <- "tabfreq"
     attr(listres, "output") <- "table"
     class(listres) <- "leem"
+    if (!is.null(attr(data, "na")))  attr(listres, "na") <- "na"
     return(listres)
   }
 }

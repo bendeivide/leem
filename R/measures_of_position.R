@@ -24,6 +24,7 @@ mpos <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, detai
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
   if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x)
+  if (attr(x, "na") == "na") return(NA)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
     if (numchar) {
@@ -128,6 +129,7 @@ mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, 
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
   if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
+  if (attr(x, "na") == "na") return(NA)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
     if (numchar) {
@@ -190,6 +192,7 @@ mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, 
 median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FALSE, ...) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
+  if (attr(x, "na") == "na") return(NA)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
     if (numchar) {
@@ -285,6 +288,7 @@ mfreq <- function (x, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FAL
 
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x)
+  if (attr(x, "na") == "na") return(NA)
 
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
