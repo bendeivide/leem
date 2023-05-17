@@ -189,7 +189,7 @@ insert.leem <- function(x, type = "mean",
 
         # ?plotmath
         text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
-             labels = bquote(md(X) ==.(format(mfreq(x, rounding = 4), digits = 4))), col = tcol[3])
+             labels = bquote(mo(X) ==.(format(mfreq(x, rounding = 4), digits = 4))), col = tcol[3])
       }
     } else {
       cat("\nThe data set has no mode!", domain = "R-leem")
@@ -308,7 +308,7 @@ insert.leem <- function(x, type = "mean",
 
             # ?plotmath
             text(x = x0, y = y0 - ptext * (par("usr")[4] - par("usr")[3]) / 2,
-                 labels = bquote(md(X) ==.(format(mfreq(x, rounding = 4), digits = 4))), col = tcol[i])
+                 labels = bquote(mo(X) ==.(format(mfreq(x, rounding = 4), digits = 4))), col = tcol[i])
           }
         } else {
           cat("\nThe data set has no mode!", domain = "R-leem")

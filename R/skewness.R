@@ -28,7 +28,8 @@ skewness <- function (x, type = "pearson", rounding = 2, na.rm = FALSE, details 
                                call. = FALSE, domain = "R-leem")
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x)
+  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
+  if (!is.null(attr(x, "NA"))) return(NA)
   if (type == "pearson") {
     if (attr(x, "variable") == "discrete") {
       numchar <- is.numeric(x$statistics$raw_data)

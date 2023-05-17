@@ -34,7 +34,7 @@
 #' tabfreq(dados, ...)
 #'
 #' ## Leem S3 method:
-#' tabfreq(data, k = NULL, ordered = NULL, namereduction)
+#' tabfreq(data, k = NULL, na.rm = FALSE, ordered = NULL, namereduction = TRUE, ...)
 #'
 #' ## Default S3 method:
 #' tabfreq(data)
@@ -48,6 +48,8 @@ tabfreq <- function(dados, ...) {
 tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, namereduction = TRUE, ...){
   if (class(data) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE,
                                    domain = "R-leem")
+  # Output object
+  listres <- list(table = NULL, statistics = NULL)
   # defensive programming
   if (anyNA(data)) {
     if (na.rm) {
@@ -60,7 +62,7 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
       # The data was coerced to string!
       data <- paste0(data)
       data <- new_leem(data)
-      attr(data, "na") <- "na"
+      attr(listres, "NA") <- "NA"
     }
   }
   if (attr(data, "variable") == "discrete") {
@@ -137,9 +139,10 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
     tabela <- data.frame(tabela)
 
     if (numchar) {
-      listres <- list(table = tabela, statistics = estat)
+      listres$table <- tabela
+      listres$statistics <- estat
     } else {
-      listres <- list(table = tabela)
+      listres$table <- tabela
     }
 
     attr(listres, "variable") <- attr(data, "variable")
@@ -147,7 +150,6 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
     if (!is.null(ordered)) attr(listres, "levels") <- "ordered"
     class(listres) <- "leem"
     attr(listres, "output") <- "table"
-    if (!is.null(attr(data, "na")))  attr(listres, "na") <- "na"
     return(listres)
   }
   if (attr(data, "variable") == "continuous") {
@@ -228,7 +230,7 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
     # Frequencia percentual
     fp <- round(fr*100, 2)
     # Fac (abaixo de) percentual
-    fac1p = round((fac1/n)*100, 2)
+    fac1p <- round((fac1/n)*100, 2)
     # Fac (acima de) percentual
     fac22p <- round((fac22/n)*100, 2)
     # Estatisticas
@@ -257,12 +259,13 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
     # Fac2 => Frequencia acumulada (acima de)
     # Fp => Frequencia percentual
     # Fac1p => Fac1 percentual  # Fac2p => Fac2 percentual
-    listres <- list(table = tabela, statistics = estat)
+    #listres <- list(table = tabela, statistics = estat)
+    listres$table <- tabela
+    listres$statistics <- estat
     attr(listres, "variable") <- attr(data, "variable")
     attr(listres, "table") <- "tabfreq"
     attr(listres, "output") <- "table"
     class(listres) <- "leem"
-    if (!is.null(attr(data, "na")))  attr(listres, "na") <- "na"
     return(listres)
   }
 }
