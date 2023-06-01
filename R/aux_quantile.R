@@ -505,14 +505,14 @@ plotqpoissontscdf <- function(p, lambda, rounding, ...) {
       ppois(w[i], lambda = lambda),
       w[i + 1],
       max(ppois(w[i], lambda = lambda)),
-      lty = 2,
+      lty = 1,
       col = "black"
     )
     segments(w[i + 1],
              min(ppois(w[i + 1], lambda = lambda)),
              w[i + 1],
              max(ppois(w[i], lambda = lambda)),
-             lty = 1,
+             lty = 2,
              col = "black")
   }
 
@@ -1206,14 +1206,14 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
       ppois(w[i], lambda = lambda),
       w[i + 1],
       max(ppois(w[i], lambda = lambda)),
-      lty = 2,
+      lty = 1,
       col = "black"
     )
     segments(w[i + 1],
              min(ppois(w[i + 1], lambda = lambda)),
              w[i + 1],
              max(ppois(w[i], lambda = lambda)),
-             lty = 1,
+             lty = 2,
              col = "black")
   }
 
@@ -1606,7 +1606,7 @@ plotqpoissonlttsf <- function(p, lambda, rounding) {
       ppois(w[i], lambda = lambda, lower.tail = FALSE),
       w[i + 1],
       ppois(w[i], lambda = lambda, lower.tail = FALSE),
-      lty = 2,
+      lty = 1,
       col = "black"
     )
     segments(
@@ -1614,7 +1614,7 @@ plotqpoissonlttsf <- function(p, lambda, rounding) {
       ppois(w[i + 1], lambda = lambda, lower.tail = FALSE),
       w[i + 1],
       ppois(w[i], lambda = lambda, lower.tail = FALSE),
-      lty = 1,
+      lty = 2,
       col = "black"
     )
   }

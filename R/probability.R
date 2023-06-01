@@ -95,9 +95,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #options(warn = - 1)
           war <- options(warn = - 1)
           # on.exit(options(war))
-
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
           plotcurveaux <- function(q1 = q[1], q2 = q[2], mu = mu,  sigma = sigma, ...) {
             q[1] <- q1
             q[2] <- q2
@@ -221,17 +218,17 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           argaddit$df <- as.numeric(df)
         }
 
+        nu <- argaddit$df
+
         #Auxiliary Arguments
         llower <- if(abs(q[1]) > 6) abs(q[1] + 2) else 6
         lupper <- if(abs(q[2]) > 6) abs(q[2] + 2) else 6
 
 
         if (gui == "plot" ) {
-          nu <- argaddit$df
           plotptstudentarplot(q, nu, rounding, main)
         }
         if (gui == "rstudio") {
-          nu <- argaddit$df
           manipulate::manipulate(plotptstudentarrstudio(q1, q2, df, rounding, main, q),
                                  q1 = manipulate::slider(-llower, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], lupper, q[2]),
@@ -254,7 +251,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           war <- options(warn = - 1)
           # on.exit(options(war))
 
-          nu <- argaddit$df
           plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
             q[1] <- q1
             q[2] <- q2
@@ -434,8 +430,65 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  size = manipulate::slider(1, size+30, size),
                                  prob = manipulate::slider(0, 1, prob))
         }
-        prob <- round(pbinom(q[1], size = size, prob = prob, lower.tail = T)
-                      + pbinom(q[2], size = size, prob = prob, lower.tail = F), digits = rounding)
+        if (is.double(q)) {
+          if (attr(q, "region") == "region5") {
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region1") {
+            q[1] <- q[1] - 1
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region6") {
+            q[1] <- q[1] - 1
+          }
+          ## b-region
+          if (attr(q, "region") == "region7") {
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region2") {
+            q[1] <- q[1] + 1
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region8") {
+            q[1] <- q[1] + 1
+          }
+          if (q[1] >= q[2]) {
+            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+            cat(saida)
+            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+          }
+        }
+        prob <- round(pbinom(q = q[1], size = size, prob = prob) + pbinom(q = q[2] - 1, size = size, prob = prob, lower.tail = FALSE),
+                      digits = rounding)
+      }
+      if (dist == "chisq") {
+        if (!any(names(argaddit) == "ncp")) {
+          ncp <- readline(gettext("Insert the value of 'ncp' argument: ", domain = "R-leem"))
+          argaddit$ncp <- as.numeric(ncp)
+        }
+        if (!any(names(argaddit) == "df")) {
+          df <- readline(gettext("Insert the value of 'df' argument: ", domain = "R-leem"))
+          argaddit$df <- as.numeric(df)
+        }
+
+        if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+
+        ncp <- argaddit$ncp
+        df <- argaddit$df
+        minimo <- if (q[1] <= ncp - 4 * df) ncp - 4 * df else 0
+        maximo <- if (q[2] > ncp + 4 * df) q[2] + 4 * df else ncp + 4 * df
+        if (gui == "plot") {
+          plotpchisqarplot(q, df, ncp, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpchisqarrstudio(q1, q2, df, ncp, rounding, main, q),
+                                 q1 = manipulate::slider(minimo, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], maximo, q[2]),
+                                 df = manipulate::slider(df, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(ncp, ncp + 2 * df, ncp))
+        }
+        prob <- pchisq(q[1], df = df, ncp = ncp, lower.tail = T) +
+          pchisq(q[2], df = df, ncp = ncp, lower.tail = F)
       }
       if (dist == "gumbel") {
         if (!any(names(argaddit) == "location")) {
@@ -1069,15 +1122,12 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         # Auxiliar variables
         minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
         maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
-
+        mu <- argaddit$mean
+        sigma <- argaddit$sd
         if (gui == "plot") {
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
           plotpnormalbrplot(q, mu, sigma, rounding, main)
         }
         if (gui == "rstudio") {
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
           manipulate::manipulate(plotpnormalbrrstudio(q1, q2, mean, sd, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
@@ -1100,9 +1150,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #options(warn = - 1)
           war <- options(warn = - 1)
           # on.exit(options(war))
-
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
           plotcurveaux <- function(q1 = q[1], q2 = q[2], mu = mu,  sigma = sigma, ...) {
             q[1] <- q1
             q[2] <- q2
@@ -1228,13 +1275,12 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         nu <- argaddit$df
         llower <- if(abs(q[1]) > 6) abs(q[1] + 2) else 6
         lupper <- if(abs(q[2]) > 6) abs(q[2] + 2) else 6
+        nu <- argaddit$df
         # Function
         if (gui == "plot" ) {
-          nu <- argaddit$df
           plotptstudentbrplot(q, nu, rounding, main)
         }
         if (gui == "rstudio") {
-          nu <- argaddit$df
           manipulate::manipulate(plotptstudentbrrstudio(q1, q2, df, rounding, main, q),
                                  q1 = manipulate::slider(-llower, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], lupper, q[2]),
@@ -1256,8 +1302,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #options(warn = - 1)
           war <- options(warn = - 1)
           # on.exit(options(war))
-
-          nu <- argaddit$df
           plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
             q[1] <- q1
             q[2] <- q2
@@ -1493,7 +1537,66 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  size = manipulate::slider(1, size+30, size),
                                  prob = manipulate::slider(0, 1, prob))
         }
-        prob <- round(pbinom(q[2], size, prob, lower.tail = T) - pbinom(q[1], size, prob, lower.tail = T), rounding)
+        # readjusting the range
+        ## ab-region
+        if (is.double(q)) {
+          if (attr(q, "region") == "region5") {
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region1") {
+            q[1] <- q[1] - 1
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region6") {
+            q[1] <- q[1] - 1
+          }
+          ## b-region
+          if (attr(q, "region") == "region7") {
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region2") {
+            q[1] <- q[1] + 1
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region8") {
+            q[1] <- q[1] + 1
+          }
+          if (q[1] >= q[2]) {
+            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+            cat(saida)
+            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+          }
+        }
+        prob <- round(pbinom(q = q[2], size = size, prob = prob) - pbinom(q = q[1], size = size, prob = prob),
+                      digits = rounding)
+      }
+      if (dist == "chisq") {
+        if (!any(names(argaddit) == "ncp")) {
+          ncp <- readline(gettext("Insert the value of 'ncp' argument: ", domain = "R-leem"))
+          argaddit$ncp <- as.numeric(ncp)
+        }
+        if (!any(names(argaddit) == "df")) {
+          df <- readline(gettext("Insert the value of 'df' argument: ", domain = "R-leem"))
+          argaddit$df <- as.numeric(df)
+        }
+        ncp <- argaddit$ncp
+        df <- argaddit$df
+        minimo <- if (q[1] <= ncp - 4 * df) ncp - 4 * df else 0
+        maximo <- if (q[2] > ncp + 4 * df) q[2] + 4 * df else ncp + 4 * df
+
+        if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+
+        if (gui == "plot") {
+          plotpchisqbrplot(q, df, ncp, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpchisqbrrstudio(q1, q2, df, ncp, rounding, main, q),
+                                 q1 = manipulate::slider(minimo, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], maximo, q[2]),
+                                 df = manipulate::slider(df, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(ncp, ncp + 2 * df, ncp))
+        }
+        prob <- pchisq(q = q[2], df = df, ncp= ncp) - pchisq(q = q[1], df = df, ncp = ncp)
       }
       if (dist == "gumbel") {
         if (!any(names(argaddit) == "location")) {
@@ -2095,14 +2198,12 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         # Auxiliar variables
         minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
         maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+        mu <- argaddit$mean
+        sigma <- argaddit$sd
         if (gui == "plot" ) {
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
           plotpnormallttplot(q, mu,sigma, rounding, main)
         }
         if (gui == "rstudio") {
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
           manipulate::manipulate(plotpnormallttplot(q, mean, sd, rounding, main),
                                  q = manipulate::slider(q, mu + 4 * sigma, q),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
@@ -2126,9 +2227,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           globalvariables <- function(x, value) {
             assign(x, value, envir= .GlobalEnv)
           }
-
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
           tk_q <- leemset("tk_q", tclVar(q))
           tk_mu <- leemset("tk_mu", tclVar(mu))
           tk_sigma <- leemset("tk_sigma", tclVar(sigma))
@@ -2232,15 +2330,12 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
         maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
         # Plot function
-
+        mu <- argaddit$mean
+        sigma <- argaddit$sd
         if (gui == "plot") {
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
           plotpnormalltfplot(q, mu, sigma, rounding, main)
         }
         if (gui == "rstudio") {
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
           manipulate::manipulate(plotpnormalltfplot(q, mean, sd, rounding, main),
                                  q = manipulate::slider(q, mu + 4 * sigma, q),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
@@ -2266,8 +2361,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
             assign(x, value, envir= .GlobalEnv)
           }
 
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
           # plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
           #   q[1] <- q1
           #   q[2] <- q2
@@ -2383,13 +2476,12 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         argaddit$df <- as.numeric(df)
       }
       lim <- if(abs(q) > 6) abs(q + 2) else 6
+      nu <- argaddit$df
       if (lower.tail) {
         if (gui == "plot" ) {
-          nu <- argaddit$df
           plotptstudentlttplot(q, nu, rounding, main)
         }
         if (gui == "rstudio") {
-          nu <- argaddit$df
           manipulate::manipulate(plotptstudentlttplot(q, nu, rounding, main),
                                  q = manipulate::slider(-lim, lim, q),
                                  nu = manipulate::slider(1, nu+100, nu))
@@ -2407,7 +2499,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
             assign(x, value, envir= .GlobalEnv)
           }
 
-          nu <- argaddit$df
           # plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
           #   q[1] <- q1
           #   q[2] <- q2
@@ -2499,11 +2590,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         prob <- pt(q = q, df = nu)
       } else {
         if (gui == "plot") {
-          nu <- argaddit$df
           plotptstudentltfplot(q, nu, rounding, main)
         }
         if (gui == "rstudio") {
-          nu <- argaddit$df
           manipulate::manipulate(plotptstudentltfplot(q, nu, rounding, main),
                                  q = manipulate::slider(-lim, lim, q),
                                  nu = manipulate::slider(1, nu+100, nu))
@@ -2524,8 +2613,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #options(warn = - 1)
           war <- options(warn = - 1)
           on.exit(options(war))
-
-          nu <- argaddit$df
           # plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
           #   q[1] <- q1
           #   q[2] <- q2
@@ -2626,7 +2713,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       rmin <- ceiling(lambda - 4 * sqrt(lambda))
       if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
       rmax <- ceiling(lambda + 4 * sqrt(lambda))
-      if (lower.tail) {
+      if (isTRUE(lower.tail)) {
         if (gui == "plot") {
           plotppoissonlttplot(q, lambda, rounding, main)
         }
@@ -2638,7 +2725,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         prob <- ppois(q = q, lambda = lambda)
       }
-      else {
+      if (isFALSE(lower.tail)) {
         if (gui == "plot") {
           plotppoissonltfplot(q, lambda, rounding, main)
         }
@@ -2649,6 +2736,18 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           )
         }
         prob <- ppois(q = q, lambda = lambda, lower.tail = FALSE)
+      }
+      if(is.null(lower.tail)){
+        if (gui == "plot") {
+          plotppoissonltnplot(q, lambda, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotppoissonltnplot(q, lambda, rounding, main),
+                                 q = manipulate::slider(0, lambda+30, q),
+                                 lambda = manipulate::slider(1, lambda + 30, lambda)
+          )
+        }
+        prob <- dpois(q, lambda=lambda)
       }
     }
     if (dist == "binomial") {
@@ -2687,6 +2786,47 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           )
         }
         prob <- pbinom(q, size, prob, lower.tail = FALSE)
+      }
+    }
+    if (dist == "chisq") {
+      if (!any(names(argaddit) == "ncp")) {
+        ncp <- readline(gettext("Insert the value of 'ncp' argument: ", domain = "R-leem"))
+        argaddit$ncp <- as.numeric(ncp)
+      }
+      if (!any(names(argaddit) == "df")) {
+        df <- readline(gettext("Insert the value of 'df' argument: ", domain = "R-leem"))
+        argaddit$df <- as.numeric(df)
+      }
+      ncp <- argaddit$ncp
+      df <- argaddit$df
+      minimo <- if (q <=  ncp - 4 * df) q - 4 * df else 0
+      maximo <- if (q > ncp + 4 * df) q + 4 * df else ncp + 4 * df
+
+      if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+      if (lower.tail) {
+        # Auxiliar variables
+        if (gui == "plot" ) {
+          plotpchisqlttplot(q, df, ncp, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpchisqlttplot(q, df, ncp, rounding, main),
+                                 q = manipulate::slider(q, ncp + 4 * df, q),
+                                 df = manipulate::slider(df, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(ncp, ncp + 2 * df, ncp))
+        }
+        prob <- pchisq(q = q, df = df, ncp = ncp)
+      }
+      else {
+        if (gui == "plot" ) {
+          plotpchisqltfplot(q, ncp, df, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpchisqltfplot(q, df, ncp, rounding, main),
+                                 q = manipulate::slider(q, ncp + 4 * df, q),
+                                 df = manipulate::slider(df, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(ncp, ncp + 2 * df, ncp))
+        }
+        prob <- pchisq(q = q, df = df, ncp = ncp, lower.tail = FALSE)
       }
     }
     if (dist == "gumbel") {
