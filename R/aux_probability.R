@@ -1,5 +1,5 @@
 ###########################
-# Auxiliar functions of P()
+## Auxiliar functions of P()
 ###########################
 # Observations:
 #    - `%<=X<=%`() internal function
