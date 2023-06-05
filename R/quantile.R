@@ -1260,6 +1260,131 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
       }
     }
   }
+  if (dist == "t-student") {
+    if (!any(names(argaddit) == "df")) {
+      df <- readline(gettext("Insert the 'df' argument: ", domain = "R-leem"))
+      argaddit$df <- as.numeric(df)
+      df <- argaddit$df
+    }
+    if (argaddit$df <= 0 ) stop("The 'df' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+    if (two.sided) {
+      if (type == "both") {
+        # Plot size title
+        cex.main <- 0.7
+        if (gui == "plot") {
+          plotqtstudenttsboth(p, df, rounding, mfrow, cex.main = cex.main)
+
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotqtstudenttsboth(p, df, rounding, mfrow, cex.main = cex.main),
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df = manipulate::slider(df, df + 4 * df, df)
+          )
+        }
+      }
+      if (type == "cdf") {
+        if (gui == "plot") {
+          plotqtstudenttscdf(p, df, rounding)
+
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotqtstudenttscdf(p, df, rounding),
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df = manipulate::slider(df, df + 4 * df, df)
+          )
+        }
+      }
+      if (type == "pdf") {
+        if (gui == "plot") {
+          plotqtstudenttspdf(p, df, rounding)
+
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotqtstudenttspdf(p, df, rounding),
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df = manipulate::slider(df, df + 4 * df, df)
+          )
+        }
+      }
+      point <- qt(c(p/2, 1 - p/2), df = df)
+    } else{
+      if (lower.tail) {
+        if (type == "both") {
+          cex.main <- 0.7
+          if (gui == "plot") {
+            plotqtstudentlttboth(p, df, rounding, mfrow, cex.main = cex.main)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentlttboth(p, df, rounding, mfrow, cex.main = cex.main),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df = manipulate::slider(df, df + 4  * df, df)
+            )
+          }
+        }
+        if (type == "cdf") {
+          if (gui == "plot") {
+            plotqtstudentlttcdf(p, df, rounding)
+
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentlttcdf(p, df, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   mean = manipulate::slider(df, df + 4 * df, df)
+            )
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqtstudentlttpdf(p, df, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentlttpdf(p, df, rounding),
+                                   p = manipulate::slider(0.001, 0.999, p),
+                                   mean = manipulate::slider(df, df + 4* df, df)
+            )
+          }
+        }
+        point <- qt(p, df = df)
+      } else {
+        if (type == "both") {
+          cex.main <- 0.7
+          if (gui == "plot") {
+            plotqtstudentltfboth(p, df, rounding, mfrow, cex.main = cex.main)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentltfboth(p, df, rounding, mfrow, cex.main = cex.main),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df = manipulate::slider(df, df + 4  * df, df)
+            )
+          }
+        }
+        if (type == "cdf") {
+          if (gui == "plot") {
+            plotqtstudentltfsf(p, df, rounding)
+
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentltfsf(p, df, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   mean = manipulate::slider(df, df + 4 * df, df)
+            )
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqtstudentltfpdf(p, df, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentltfpdf(p, df, rounding),
+                                   p = manipulate::slider(0.001, 0.999, p),
+                                   mean = manipulate::slider(df, df + 4* df, df)
+            )
+          }
+        }
+        point <- qt(p, df = df, lower.tail = FALSE)
+      }
+    }
+  }
   if (dist == "poisson") {
     if (!any(names(argaddit) == "lambda")) {
       lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
@@ -2077,7 +2202,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
 
     }
   }
-  if (dist == "nbinom") {
+  if (dist == "nbinomial") {
     size <- argaddit$size
     prob <- argaddit$prob
     # Seguranças da distribuição nbinom .
@@ -2321,211 +2446,100 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
         )
       }
     }
-  }
-  if (dist == "t-student"){
-    nu <- argaddit$df
-    if (!any(names(argaddit) == "df")) {
-      df <- readline("Insert the value of degree of freedom (df): ")
-      argaddit$df <- as.numeric(df)
-    }
-    if (lower.tail) {
-      plotcurve <- function(p, nu) {
-        x <- qt(p,nu)
-        x <- seq(-6, x[1], by=0.01)
-        y <- seq(x[1], 6, by=0.01)
-        fx <- pt(x, df = nu)
-        fy <- pt(y, df = nu)
-        curve(pt(x, df = nu), -6, 6, ylab = expression(f[T](t)),
-              xlab="T", ylim = c(0, 1.2 * max(c(fx, fy))), panel.first = grid(col = "gray"),
-              main = gettext("Quantitative Function: T-Student.", domain = "R-leem"))
-        polygon(c(y, rev(y)),
-                c(fy, rep(0, length(fy))),
-                col="gray90")
-        polygon(c(x, rev(x)),
-                c(fx, rep(0, length(fx))),
-                col="red")
-        abline(v=0, lty=2)
-        qq <- round(p, digits=2)
-        qqaux <-round(qt(p,nu), digits=4)
-        Pr <- round(qt(p, df = nu, lower.tail = T), digits=4)
-        Pr <- gsub("\\.", ",", Pr)
-        qq <- gsub("\\.", ",", qq)
-        axis(side=1, at=qqaux, , labels = qqaux, tick = TRUE, lwd = 0,
-             col="red", font = 2, lwd.ticks = 1, col.axis="red")
-        axis(side=1, at=as.character(c(-6, qqaux)), tick = TRUE, lwd = 1,
-             col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-        abline(v = qqaux, lty=2, col = "red")
-        legend("topleft", bty="n", fill="red",
-               legend=substitute(Q("P=" ~ p ~";"~ df == nu)~"<="~Pr~"\n\n", list(p = qq, Pr = Pr, nu = nu)))
-      }
-      if (gui == "plot" ) {
-        nu <- argaddit$df
-        point <- qt(p, df = nu)
-        plotcurve(p, nu)
-      }
-      if (gui == "rstudio") {
-        nu <- argaddit$df
-        manipulate::manipulate(plotcurve(qaux, nuaux),
-                               qaux = manipulate::slider(-6, 6, p),
-                               nuaux = manipulate::slider(1, 200, nu))
-        point <- qt(p, df = nu)
-      }
-    }
-    else {
-      #options(warn = - 1)
-      war <- options(warn = - 1)
-      on.exit(options(war))
-      plotcurve <- function(p, nu) {
-        x <- qt(p,nu)
-        x <- seq(x[1], 6, by=0.01)
-        y <- seq(-6, x[1], by=0.01)
-        fx <- pt(x, df = nu)
-        fy <- pt(y, df = nu)
-        curve(pt(x, df = nu), -6, 6, ylab = expression(f[T](t)),
-              xlab="T", ylim = c(0, 1.2 * max(c(fx,fy))), panel.first = grid(col = "gray"),
-              main = gettext("Quantitative Function: T-Student.", domain = "R-leem"))
-        polygon(c(x, rev(x)),
-                c(fx, rep(0, length(fx))),
-                col="red")
-        polygon(c(y, rev(y)),
-                c(fy, rep(0, length(fy))),
-                col="gray90")
-        abline(v=0, lty=2)
-        qq <- round(p, digits=2)
-        qqaux <-round(qt(p,nu, lower.tail = F), digits= 4) *-1
-        qq <- gsub("\\.", ",", qq)
-        axis(side=1, at=qqaux, labels = qqaux, col.axis = "red", tick = TRUE, lwd = 0,
-             col="red", font = 2, lwd.ticks = 1)
-        axis(side=1, at=as.character(c(qqaux, 6)), tick = TRUE, lwd = 1,
-             col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-        abline(v = qqaux, lty=2, col = "red")
-        legend("topleft", bty="n", fill="red",
-               legend=substitute(Q("P=" ~ p ~";"~ df == nu)~">"~Pr~"\n\n", list(p = qq, Pr = qqaux, nu = nu)))
-      }
-      if (gui == "plot") {
-        nu <- argaddit$df
-        point <- qt(p, df = nu, lower.tail = F) *-1
-        plotcurve(p, nu)
-      }
-      if (gui == "rstudio") {
-        nu <- argaddit$df
-        manipulate::manipulate(plotcurve(p, df),
-                               p = manipulate::slider(-6, 6, p),
-                               df = manipulate::slider(1, 200, nu))
-        point <- qt(p, nu)
-      }
-    }
-  }
+}
   if (dist == "binomial") {
-    if (!any(names(argaddit) == "size")){
-      size <- readline(expression("Insert the 'size' argument: ",domain = "R-leem"))
-      argaddit$size <- as.numeric(size)
-    }
-    if (!any(names(argaddit) == "prob")){
-      prob <- readline(expression("Insert the 'prob' argument: ",domain = "R-leem"))
+      if (!any(names(argaddit) == "size")) {
+        size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+        argaddit$size <- as.numeric(size)
+      }
+    if (!any(names(argaddit) == "prob")) {
+      prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
       argaddit$prob <- as.numeric(prob)
     }
     size <- argaddit$size
-    sucesso <- argaddit$prob
-    if (lower.tail) {
-      plotcurve <- function(p, size, prob) {
-        q <- qbinom(p, size, prob)
-        rmin <- 0
-        if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-        x <- rmin:size
-        x1 <- rmin:q
-        x2 <- (q + 1):size
-        probx <- dbinom(x, size = size, prob = prob)
-        probx1 <- dbinom(x1, size = size, prob = prob)
-        probx2 <- dbinom(x2, size = size, prob = prob)
-        xlim <- c(rmin, size)
-        ylim <- c(min(probx), max(probx) + 0.1)
-        plot.new()
-        plot.window(xlim, ylim)
-        axis(1)
-        axis(2)
-        title(ylab = expression(F[X](x)), xlab = "X",
-              main = gettext("Quantitative Function: Binomial.", domain = "R-leem"))
-        lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-        points(x1, probx1, lwd = 2, col = "red", pch = 19)
-        lines(x2, probx2, type = "h", lwd = 2)
-        points(x2, probx2, lwd = 2, pch = 19)
-        abline(v = size * prob, lty = 2)
-        qq <- round(q, digits = 2)
-        qqaux <- round(q, digits = 2)
-        Pr <- round(qbinom(p, size = size, prob = prob, lower.tail = T), rounding)
-        Pr <- gsub("\\.", ",", Pr)
-        qq <- gsub("\\.", ",", qq)
-        axis(
-          side = 1, at = c(rmin, qqaux), labels = c("", qqaux),
-          col = "red", font = 2, col.axis = "red"
-        )
-        axis(
-          side = 1, at = qqaux, labels = TRUE, lwd.ticks = 1,
-          col = "red", font = 2, col.axis= "red"
-        )
-        abline(v = qqaux, lty = 2, col = "red")
-        legend("topleft",
-               bty = "n", fill = "red",
-               legend = substitute(Q("P=" ~ py ~"; " ~ size == n~"; " ~ p == prob)~"<="~Pr ~ "\n\n" ,
-                                   list(py = p, Pr = Pr, n = size, prob = prob))
-        )
+    prob <- argaddit$prob
+      if (two.sided) {
+        if (type == "both") {
+          # Plot size title
+          cex.main <- 0.7
+          if (gui == "plot") {
+            plotqbinomialtsboth(p, size, prob, rounding, mfrow, cex.main = cex.main) # aux_quantile.R
+          }
+          if (gui == "rstudio") {
+            # Plot
+            manipulate::manipulate(plotqbinomialtsboth(p, size, prob, rounding, mfrow, cex.main = cex.main), # aux_quantile.R
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   size = manipulate::slider(size, size + size, size),
+                                   prob = manipulate::slider(0, 1, prob)
+            )
+          }
+        }
+        if (type == "cdf") {
+          if (gui == "plot") {
+            plotqbinomialtscdf(p, size, prob, rounding)
+
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqbinomialtscdf(p, size, prob, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   size = manipulate::slider(size, size + size, size),
+                                   prob = manipulate::slider(0, 1, prob)
+            )
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqbinomialtspdf(p, size, prob, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqbinomialtspdf(p, size, prob, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   size = manipulate::slider(size, size + size, size),
+                                   prob = manipulate::slider(0, 1, prob)
+            )
+          }
+        }
+
+        point <- qbinom(c(p/2, 1 - p/2), size, prob)
+      } else{
+        if(lower.tail == TRUE){
+          # Only type == "cdf"
+          type <- "cdf"
+          if (type == "cdf") {
+            if (gui == "plot") {
+              lambda <- argaddit$lambda
+              plotqpoissonlttcdf(p, lambda, rounding)
+            }
+            if (gui == "rstudio") {
+              lambda <- argaddit$lambda
+              manipulate::manipulate(plotqpoissonlttcdf(p, lambda, rounding),
+                                     p = manipulate::slider(0.01, 0.99, p),
+                                     lambda = manipulate::slider(lambda, lambda + 200, lambda)
+              )
+            }
+          }
+          point <- qpois(p = p, lambda = argaddit$lambda)
+        } else {
+          # Only type == "cdf"
+          type <- "cdf"
+          if (type == "cdf") {
+            if (gui == "plot") {
+              lambda <- argaddit$lambda
+              plotqpoissonlttsf(p, lambda, rounding)
+            }
+            if (gui == "rstudio") {
+              lambda <- argaddit$lambda
+              manipulate::manipulate(plotqpoissonlttsf(`1-p`, lambda, rounding),
+                                     `1-p` = manipulate::slider(0.01, 0.99, p),
+                                     lambda = manipulate::slider(lambda, lambda + 200, lambda)
+              )
+            }
+          }
+          point <- qpois(p = p, lambda = argaddit$lambda, lower.tail = FALSE)
+        }
       }
-      if (gui == "plot") {
-        point <- qbinom(p, size = size, prob = sucesso)
-        plotcurve(p, size, prob = sucesso)
-      }
+
     }
-    else {
-      plotcurve <- function(q, size, prob) {
-        q <- qbinom(p, size, prob, lower.tail = F)
-        rmin <- size * prob - 4 * sqrt(size * prob * (1 - prob))
-        if (rmin < 0 || rmin>q) rmin <- 0 else rmin <- round(rmin)
-        x <- rmin:size
-        x1 <- rmin:q
-        x2 <- (q + 1):size
-        probx <- dbinom(x, size = size, prob = prob)
-        probx1 <- dbinom(x1, size = size, prob = prob)
-        probx2 <- dbinom(x2, size = size, prob = prob)
-        xlim <- c(rmin, size)
-        ylim <- c(min(probx), max(probx) + 0.1)
-        plot.new()
-        plot.window(xlim, ylim)
-        axis(1)
-        axis(2)
-        title(ylab = expression(F[X](x)), xlab = "X",
-              main = gettext("Quantitative Function: Binomial.", domain = "R-leem"))
-        lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
-        points(x1, probx1, lwd = 2, pch = 19)
-        lines(x2, probx2, type = "h", lwd = 2, col = "red")
-        points(x2, probx2, lwd = 2, pch = 19, col = "red")
-        abline(v = size * prob, lty = 2)
-        qq <- round(q, digits = 2)
-        qqaux <- round(q, digits = 2)
-        Pr <- round(qbinom(p, size = size, prob = prob, lower.tail = F), rounding)
-        Pr <- gsub("\\.", ",", Pr)
-        qq <- gsub("\\.", ",", qq)
-        axis(
-          side = 1, at = c(qqaux, size), labels = c(qqaux, ""), lwd.ticks = 0,
-          col = "red", font = 2, col.axis= "red"
-        )
-        axis(
-          side = 1, at = qqaux, labels = TRUE, lwd.ticks = 1,
-          col = "red", font = 2, col.axis= "red"
-        )
-        abline(v = qqaux, lty = 2, col = "red")
-        legend("topleft",
-               bty = "n", fill = "red",
-               legend = substitute(Q("P=" ~ py ~"; " ~ size == n~"; " ~ p == prob)~">"~Pr ~ "\n\n" ,
-                                   list(py = p, Pr = Pr, n = size, prob = prob))
-        )
-      }
-      if (gui == "plot") {
-        point <- qbinom(p, size = size, prob = sucesso, lower.tail = F)
-        plotcurve(p, size, prob = sucesso)
-      }
-    }
-  }
   if (dist == "hyper") {
     if (!any(names(argaddit) == "m")){
       m <- readline(expression("Insert the 'm' argument: ",domain = "R-leem"))
