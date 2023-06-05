@@ -280,3 +280,27 @@ msgstr "Frequência relativa"
 msgid "Percentage frequency (%)"
 msgstr "Frequência percentual (%)"
 
+msgid "Confidence interval for"
+msgstr "Intervalo de confiança para"
+
+msgid "of normal population"
+msgstr "de uma população normal"
+
+msgid "is known"
+msgstr "é conhecida"
+
+msgid "Pivotal quantity"
+msgstr "Quantidade pivotal"
+
+msgid "Confidence level"
+msgstr "Coeficiente de confiança"
+
+msgid "of symmetric distribution"
+msgstr "de uma distribuição simétrica"
+
+msgid "Degrees of freedom"
+msgstr "Graus de liberdade"
+
+msgid "is unknown"
+msgstr "é não conhecida"
+

@@ -174,7 +174,7 @@ showcdf <- function(variable = "discrete", prop = 1) {
       points(1, pnorm(1), lwd = 2, pch = 19, col = "red")
       text(0.9, 0.9, bquote(x[n]), col = "red")
       arrows(1, pnorm(0.9), 0.2, pnorm(0.1), col = "red", length = 0.1, lwd = 3)
-      text(-1, 0.8, bquote(lim(F[X](x[n]), x[n]*symbol("\257")*x[3])*symbol("\257")*F[X](x[3])), col = "red")
+      text(-1, 0.8, bquote(lim(F[X](x[n]), x[n]*symbol("\257")*x)*symbol("\257")*F[X](x)), col = "red")
     }
   }
 }

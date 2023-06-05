@@ -859,6 +859,341 @@ plotqpoissontsboth <- function(p, lambda, rounding, mfrow, ...) {
 }
 
 
+##########################
+# Chi-Squared distribution
+##########################
+
+# CDF
+plotqchisqtscdf <- function(p, df, ncp, rounding, ...) {
+  paux <- p
+  p <- c(p / 2, 1 - p / 2)
+  x <- qchisq(p, df, ncp)
+  curve(
+    pchisq(x, df = df, ncp = ncp),
+    0,
+    ncp + 4 * df,
+    ylab = expression(F[X](x)),
+    ylim = c(0, 1.2),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = bquote(
+      atop(
+        bold("Cumulative distribution plot: Chi-Squared"),
+        Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}") ~ "," ~ Q[S]("p*") ==
+          inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") * "," ~ "p*" ==
+          1 - p
+      )
+    ),
+    lwd = 4,
+    ...
+  )
+  x <- seq(ncp - 4 * df, x[1], by = 0.01)
+  y <- seq(x[1], ncp + 4 * df, by = 0.01)
+  fx <- pchisq(x, df, ncp)
+  fy <- pchisq(y, df, ncp)
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "gray90")
+  qq <- round(p, digits = rounding)
+  qqaux <- round(qchisq(p, df, ncp), digits = rounding)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qqaux[1],
+    labels = substitute(q == qtle, list(qtle = qqaux[1])),
+    col.axis = "red",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = qqaux[1],
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  axis(
+    side = 1,
+    at = qqaux[2],
+    labels = substitute(q[S] == qtle, list(qtle = qqaux[2])),
+    col.axis = "blue",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = qqaux[2],
+    labels = FALSE,
+    col.axis = "blue",
+    col = "blue",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq[1],
+    labels = substitute(p == prob1, list(prob1 = qq[1])),
+    col.axis = "red",
+    font = 2,
+    pos = aux,
+    lwd.ticks = 0
+  )
+  axis(
+    side = 2,
+    at = qq[1],
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  axis(
+    side = 2,
+    at = qq[2],
+    labels = substitute("p*" == prob2, list(prob2 = qq[2])),
+    col.axis = "blue",
+    font = 2,
+    pos = aux,
+    lwd.ticks = 0
+  )
+  axis(
+    side = 2,
+    at = qq[2],
+    labels = FALSE,
+    col.axis = "blue",
+    col = "blue",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+
+  segments(qqaux,
+           0,
+           qqaux,
+           qq,
+           lty = 2,
+           col = c("red", "blue"))
+  segments(par("usr")[1],
+           qq,
+           qqaux,
+           qq,
+           lty = 2,
+           col = c("red", "blue"))
+  points(qqaux, qq, pch = 16, col = c("red", "blue"))
+
+  rect(par("usr")[1],
+       1.03 * max(fx, fy),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legend(
+    "topleft",
+    bty = "n",
+    col = "red",
+    pch = 16,
+    legend = substitute(
+      Q(p == p1 ~ "; " ~ df == dfv ~ "," ~ ncp == ncpv) == Qr,
+      list(
+        p = "p",
+        p1 = p[1],
+        Qr = qqaux[1],
+        dfv = df,
+        ncpv = ncp
+      )
+    ),
+    cex = 0.8
+  )
+  legend(
+    par("usr")[1],
+    1.18,
+    bty = "n",
+    col = "blue",
+    pch = 16,
+    legend = substitute(
+      Q[S](p == p1 ~ "; " ~ df == dfv ~ "," ~ ncp == ncpv) == Qr,
+      list(
+        p = "p",
+        p1 = p[2],
+        Qr = qqaux[2],
+        dfv = df,
+        ncpv = ncp
+      )
+    ),
+    cex = 0.8
+  )
+} # plotcurve (older)
+
+# PDF
+plotqchisqtspdfaux <- function(q, df, ncp, rounding, ...) {
+  minimo <-
+    if (q[1] <= ncp - 4 * df)
+      q[1] - 4 * df
+  else
+    0
+  maximo <-
+    if (q[2] > ncp + 4 * df)
+      q[2] + 4 * df
+  else
+    ncp + 4 * df
+  x <- seq(minimo, q[1], by = 0.01)
+  z <- seq(q[2], maximo, by = 0.01)
+  y <- seq(minimo, maximo, by = 0.01)
+  fx <- dchisq(x, df = df, ncp = ncp)
+  fz <- dchisq(z, df = df, ncp = ncp)
+  fy <- dchisq(y, df = df, ncp = ncp)
+  main <-
+    bquote(atop(
+      bold("Probability density function plot: Chi-Squared"),
+      F[X](q) == integral(f[X](x) * dx, infinity, q) * "," ~  ~ S[X](q[S]) ==
+        integral(f[X](x) * dx, q[S], infinity)
+    ))
+  curve(
+    dchisq(x, df = df, ncp = ncp),
+    minimo,
+    maximo,
+    ylim = c(0, 1.2 * max(fx, fy, fz)),
+    xlab = "X",
+    ylab = expression(f[X](x)),
+    panel.first = grid(col = "gray90"),
+    main = main,
+    ...
+  )
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "gray90")
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
+          col = "red")
+  polygon(c(z, rev(z)), c(fz, rep(0, length(fz))),
+          col = "red")
+  qq <- round(q, digits = rounding)
+  Pr <-
+    round(
+      pchisq(
+        q[1],
+        df = df,
+        ncp = ncp,
+        lower.tail = T
+      ) +pchisq(
+        q[2],
+        df = df,
+        ncp = ncp,
+        lower.tail = F
+      ),
+      digits = rounding
+    )
+  #Pr <- gsub("\\.", ",", Pr)
+  #qq <- gsub("\\.", ",", qq)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qq[1],
+    label = substitute(q == qtle, list(qtle = qq[1])),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 0,
+    col.axis = "red",
+    pos = aux2
+  )
+  axis(
+    side = 1,
+    at = qq[2],
+    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 0,
+    col.axis = "red",
+    pos = aux2
+  )
+  axis(
+    side = 1,
+    at = as.character(c(minimo, qq[1])),
+    tick = TRUE,
+    lwd = 1,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(
+    side = 1,
+    at = as.character(c(qq[2], maximo)),
+    tick = TRUE,
+    lwd = 1,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  abline(v = qq, lty = 2, col = "red")
+  # legend("topleft", bty="n", fill="red",
+  #        legend = substitute(atop(P(X<=t1~";" ~ mu == media ~ "," ~ sigma == varen)~"+"~"\n\n\n\n\n", "+"~P(X>=t2~";" ~ mu == media ~ "," ~ sigma == varen)==Pr),
+  #                            list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma, X ="X")))
+  rect(par("usr")[1],
+       1.03 * max(fx, fy, fz),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    fill = "red",
+    bg = "white",
+    legend = substitute(
+      F[X](t1) + S[X](t2) == Pr,
+      list(
+        t1 = qq[1],
+        t2 = qq[2],
+        Pr = Pr,
+        X = "X"
+      )
+    ),
+    cex = 0.8
+  )
+  legend(
+    minimo,
+    legaux$text$y,
+    bty = "n",
+    bg = "white",
+    legend = substitute(
+      "Parameters:" ~ df == dfv ~ "," ~ ncp == ncpv,
+      list(dfv = df, ncpv = ncp)
+    ),
+    cex = 0.8
+  )
+
+}
+plotqchisqtspdf <- function(p, df, ncp, rounding, ...) {
+  p <- c(p / 2, 1 - p / 2)
+  q <- qchisq(p, df, ncp)
+  plotqchisqtspdfaux(q[1] %<=X<=% q[2], df, ncp, rounding, ...) # plotcurve2 (older)
+}
+
+# BOTH
+plotqchisqtsboth <- function(p, df, ncp, rounding, mfrow, ...) {
+  op <- par(mfrow = mfrow)
+  plotqchisqtscdf(p, df, ncp, rounding, ...)
+  plotqchisqtspdf(p, df, ncp, rounding, ...)
+  # Preserving the global variable
+  par(op)
+}
+
+
+
+
 ################################################################################
 ## lower.tail == TRUE (name: plot+q+name_distribution+ltt+type_distribution)
 ################################################################################
@@ -1254,6 +1589,254 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
 
 }
 
+##########################
+# Chi-Squared distribution
+##########################
+
+# CDF
+plotqchisqlttcdf <- function(p, df, ncp, rounding, ...) {
+  x <- qchisq(p, df = df, ncp = ncp)
+  curve(
+    pchisq(x, df = df, ncp = ncp),
+    0,
+    ncp + 4 * df,
+    ylab = expression(F[X](x)),
+    ylim = c(0, 1.2),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = bquote(atop(
+      bold("Cumulative distribution plot: Chi-Squared"),
+      Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
+    )),
+    lwd = 4,
+    ...
+  )
+  x <- seq(ncp - 4 * df, x[1], by = 0.01)
+  y <- seq(x[1], ncp + 4 * df, by = 0.01)
+  fx <- pchisq(x, df, ncp)
+  fy <- pchisq(y, df, ncp)
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "gray90")
+  # polygon(c(x, rev(x)),
+  #         c(fx, rep(0, length(fx))),
+  #         col = "red"
+  # )
+  #abline(v = mu, lty = 2)
+  qq <- round(p, digits = rounding)
+  qqaux <- round(qchisq(p, df, ncp), digits = rounding)
+  # Pr <- gsub("\\.", ",", Pr)
+  # qq <- gsub("\\.", ",", qq)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = substitute(q == qtle, list(qtle = qqaux)),
+    col.axis = "red",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  # auxiliar variable
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq,
+    labels = substitute(p == prob, list(prob = qq)),
+    col.axis = "red",
+    font = 2,
+    pos = aux,
+    lwd.ticks = 0
+  )
+  axis(
+    side = 2,
+    at = qq,
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+
+
+  segments(qqaux, 0, qqaux, qq, lty = 2, col = "red")
+  segments(par("usr")[1],
+           qq,
+           qqaux,
+           qq,
+           lty = 2,
+           col = "red")
+  points(qqaux, qq, pch = 16, col = "red")
+  rect(par("usr")[1],
+       1.03 * max(fx, fy),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    col = "red",
+    pch = 16,
+    legend = substitute(Q(p == p1) == Qr,
+                        list(
+                          p = "p", p1 = qq, Qr = qqaux
+                        )),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    bg = "white",
+    legend = substitute(
+      "Parameters:" ~ df == dfv ~ "," ~ ncp == ncpv,
+      list(dfv = df, ncpv = ncp)
+    ),
+    cex = 0.8
+  )
+}
+
+# PDF
+plotqchisqlttpdfaux <- function(q, df, ncp, rounding, ...) {
+  minimo <-
+    if (q <=  ncp - 4 * df)
+      q - 4 * sigma
+  else
+    0
+  maximo <-
+    if (q > ncp + 4 * df)
+      q + 4 * df
+  else
+    ncp + 4 * df
+  x <- seq(minimo, q, by = 0.01)
+  y <- seq(q, maximo, by = 0.01)
+  fx <- dchisq(x, df = df, ncp = ncp)
+  fy <- dchisq(y, df = df, ncp = ncp)
+  # if (!any(names(argaddit) == "main")) {
+  #   main <- gettext("Distribution Function: Normal", domain = "R-leem")
+  # } else {
+  #   main <- argaddit$main
+  # }
+  main <-
+    bquote(atop(
+      bold("Probability density function plot: Chi-Squared"),
+      F[X](q) == integral(f[X](x) * dx, infinity, q)
+    ))
+  curve(
+    dchisq(x, df = df, ncp = ncp),
+    minimo,
+    maximo,
+    ylim = c(0, 1.2 * max(fx, fy)),
+    ylab = expression(f[X](x)),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = main,
+    ...
+  )
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
+          col = "red")
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "gray90")
+  # Insert vertical line over the mean
+  qq <- round(q, digits = rounding)
+  qqaux <- round(q, digits = rounding)
+  Pr <-
+    round(pchisq(
+      qq,
+      df = df,
+      ncp = ncp,
+      lower.tail = TRUE
+    ), digits = rounding)
+  #Pr <- gsub("\\.", ",", Pr)
+  #qq <- gsub("\\.", ",", qq)
+  # Insert red q point and vertical line (X-axis)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = substitute(q == qtle, list(qtle = qqaux)),
+    col = "red",
+    font = 2,
+    col.axis = "red",
+    tick = FALSE,
+    pos = aux2
+  )
+  # Insert red horizontal and vertical line (X-axis)
+  axis(
+    side = 1,
+    at = as.character(qqaux),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(
+    side = 1,
+    at = as.character(c(minimo, qqaux)),
+    tick = TRUE,
+    lwd = 1,
+    col = "red",
+    font = 2,
+    lwd.ticks = 0,
+    labels = FALSE
+  )
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1],
+       1.03 * max(fx, fy),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    col = "red",
+    fill = "red",
+    legend = substitute(F[X](q1) == p,
+                        list(q1 = qqaux, p = Pr)),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    bg = "white",
+    legend = substitute(
+      "Parameters:" ~ df == dfv ~ "," ~ ncp == ncpv,
+      list(dfv = df, ncpv = ncp)
+    ),
+    cex = 0.8
+  )
+}
+plotqchisqlttpdf <- function(p, df, ncp, rounding, ...) {
+  q <- qchisq(p, df, ncp)
+  plotqchisqlttpdfaux(q, df, ncp, rounding, ...) # plotcurve2 (older)
+}
+
+# BOTH
+plotqchisqlttboth <- function(p, df, ncp, rounding, mfrow, ...) {
+  op <- par(mfrow = mfrow)
+  plotqchisqlttcdf(p, df, ncp, rounding, ...)
+  plotqchisqlttpdf(p, df, ncp, rounding, ...)
+  # Preserving the global variable
+  par(op)
+}
 
 
 
@@ -1656,3 +2239,249 @@ plotqpoissonlttsf <- function(p, lambda, rounding) {
   )
 
 }
+
+
+##########################
+# Chi-Squared distribution
+##########################
+
+# Survival function (type == cdf)
+plotqchisqltfsf <- function(p, df, ncp, rounding, ...) {
+  x <- qchisq(p, df, ncp, lower.tail = FALSE)
+  curve(
+    pchisq(
+      x,
+      df = df,
+      ncp = ncp,
+      lower.tail = FALSE
+    ),
+    ncp - 4 * df,
+    ncp + 4 * df,
+    ylab = expression(F[X](x)),
+    ylim = c(0, 1.2),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = bquote(atop(
+      bold("Survival function plot: Chi-Squared"),
+      Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
+        "," ~ "p*" == 1 - p
+    )),
+    lwd = 4,
+    ...
+  )
+  x <- seq(ncp - 4 * df, x[1], by = 0.01)
+  y <- seq(x[1], ncp + 4 * df, by = 0.01)
+  fx <- pchisq(x, df, ncp, lower.tail = FALSE)
+  fy <- pchisq(y, df, ncp, lower.tail = FALSE)
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "gray90")
+  qq <- round(p, digits = rounding)
+  qqaux <-
+    round(qchisq(p, df, ncp, lower.tail = FALSE), digits = rounding)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = substitute(q[S] == qtle, list(qtle = qqaux)),
+    col.axis = "red",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  # auxiliar variable
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq,
+    labels = substitute("p*" == prob, list(prob = qq)),
+    col.axis = "red",
+    font = 2,
+    pos = aux,
+    lwd.ticks = 0
+  )
+  axis(
+    side = 2,
+    at = qq,
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+
+
+  segments(qqaux, 0, qqaux, qq, lty = 2, col = "red")
+  segments(par("usr")[1],
+           qq,
+           qqaux,
+           qq,
+           lty = 2,
+           col = "red")
+  points(qqaux, qq, pch = 16, col = "red")
+  rect(par("usr")[1],
+       1.03 * max(fx, fy),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    col = "red",
+    pch = 16,
+    legend = substitute(Q[S]("p*" == p1) == Qr,
+                        list(p1 = qq, Qr = qqaux)),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    bg = "white",
+    legend = substitute(
+      "Parameters:" ~ df == dfv ~ "," ~ ncp == ncpv,
+      list(dfv = df, ncpv = ncp)
+    ),
+    cex = 0.8
+  )
+}
+
+
+# PDF
+plotqchisqltfpdfaux <- function(q, df, ncp, rounding, ...) {
+  minimo <-
+    if (q <=  ncp - 4 * df)
+      q - 4 * df
+  else
+    0
+  maximo <-
+    if (q > ncp + 4 * df)
+      q + 4 * df
+  else
+    ncp + 4 * df
+  x <- seq(minimo, q, by = 0.01)
+  y <- seq(q, maximo, by = 0.01)
+  fx <- dchisq(x, df = df, ncp = ncp)
+  fy <- dchisq(y, df = df, ncp = ncp)
+
+  main <-
+    bquote(atop(
+      bold("Probability density function plot: Chi-Squared"),
+      S[X]("q*") == integral(f[X](x) * dx, "q*", infinity)
+    ))
+  curve(
+    dchisq(x, df = df, ncp = ncp),
+    minimo,
+    maximo,
+    ylim = c(0, 1.2 * max(fx, fy)),
+    ylab = expression(f[X](x)),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = main,
+    ...
+  )
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
+          col = "gray90")
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "red")
+  # Insert vertical line over the mean
+  qq <- round(q, digits = rounding)
+  qqaux <- round(q, digits = rounding)
+  Pr <-
+    round(pchisq(
+      qq,
+      df = df,
+      ncp = ncp,
+      lower.tail = FALSE
+    ), digits = rounding)
+  #Pr <- gsub("\\.", ",", Pr)
+  #qq <- gsub("\\.", ",", qq)
+  # Insert red q point and vertical line (X-axis)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = substitute(q[S] == qtle, list(qtle = qqaux)),
+    col = "red",
+    font = 2,
+    col.axis = "red",
+    tick = FALSE,
+    pos = aux2
+  )
+  # Insert red horizontal and vertical line (X-axis)
+  axis(
+    side = 1,
+    at = as.character(qqaux),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(
+    side = 1,
+    at = as.character(c(qqaux, maximo)),
+    tick = TRUE,
+    lwd = 1,
+    col = "red",
+    font = 2,
+    lwd.ticks = 0,
+    labels = FALSE
+  )
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1],
+       1.03 * max(fx, fy),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    col = "red",
+    fill = "red",
+    legend = substitute(S[X](q1) == p,
+                        list(q1 = qqaux, p = Pr)),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    bg = "white",
+    legend = substitute(
+      "Parameters:" ~ df == dfv ~ "," ~ ncp == ncpv,
+      list(dfv = df, ncpv = ncp)
+    ),
+    cex = 0.8
+  )
+}
+plotqchisqltfpdf <- function(p, df, ncp, rounding, ...) {
+  q <- qchisq(p, df, ncp, lower.tail = FALSE)
+  plotqchisqltfpdfaux(q, df, ncp, rounding, ...) # plotcurve2 (older)
+}
+
+# BOTH
+plotqchisqltfboth <- function(p, df, ncp, rounding, mfrow, ...) {
+  op <- par(mfrow = mfrow)
+  plotqchisqltfsf(p, df, ncp, rounding, ...)
+  plotqchisqltfpdf(p, df, ncp, rounding, ...)
+  # Preserving the global variable
+  par(op)
+}
+

@@ -1714,6 +1714,155 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
     }
 
   }
+  if (dist == "chisq") {
+    if (!any(names(argaddit) == "df")) {
+      df <- readline(gettext("Insert the 'df' argument: ", domain = "R-leem"))
+      argaddit$df <- as.numeric(df)
+    }
+    if (!any(names(argaddit) == "ncp")) {
+      ncp <- readline(gettext("Insert the 'ncp' argument: ", domain = "R-leem"))
+      argaddit$ncp <- as.numeric(ncp)
+    }
+    if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+    df <- argaddit$df
+    ncp <- argaddit$ncp
+    if (two.sided) {
+      if (type == "both") {
+        # Plot size title
+        cex.main <- 0.7
+        if (gui == "plot") {
+
+          plotqchisqtsboth(p, df, ncp, rounding, mfrow, cex.main = cex.main) # aux_quantile.R
+        }
+        if (gui == "rstudio") {
+          # Plot
+          manipulate::manipulate(plotqchisqtsboth(p, df, ncp, rounding, mfrow, cex.main = cex.main), # aux_quantile.R
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df = manipulate::slider(df, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(ncp, df * 2, ncp)
+          )
+        }
+      }
+      if (type == "cdf") {
+        if (gui == "plot") {
+          plotqchisqtscdf(p, df, ncp, rounding)
+
+        }
+        if (gui == "rstudio") {
+          # Plot
+          manipulate::manipulate(plotqchisqtscdf(p, df, ncp, rounding),
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df = manipulate::slider(df, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(ncp, df * 2, ncp)
+          )
+        }
+      }
+      if (type == "pdf") {
+        if (gui == "plot") {
+          plotqchisqtspdf(p, df, ncp, rounding)
+        }
+        if (gui == "rstudio") {
+          # Plot
+          manipulate::manipulate(plotqchisqtspdf(p, df, ncp, rounding),
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df = manipulate::slider(df, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(ncp, df * 2, ncp)
+          )
+        }}
+      point <- qchisq(c(p/2, 1 - p/2), df = df, ncp = ncp)
+    } else{
+      if (lower.tail) {
+        if (type == "both") {
+          cex.main <- 0.7
+          if (gui == "plot") {
+            plotqchisqlttboth(p, df, ncp, rounding, mfrow, cex.main = cex.main)
+          }
+          if (gui == "rstudio") {
+            # Plot
+            Q(0.8, mean = 0, sd = 1)
+            manipulate::manipulate(plotqchisqlttboth(p, df, ncp, rounding, mfrow, cex.main = cex.main),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df = manipulate::slider(df, ncp + 2 * df, df),
+                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+            )
+          }
+        }
+        if (type == "cdf") {
+          if (gui == "plot") {
+            plotqchisqlttcdf(p, df, ncp, rounding)
+
+          }
+          if (gui == "rstudio") {
+            # Plot
+            manipulate::manipulate(plotqchisqlttcdf(p, df, ncp, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df = manipulate::slider(df, ncp + 2 * df, df),
+                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+            )
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+
+            plotqchisqlttpdf(p, df, ncp, rounding)
+          }
+          if (gui == "rstudio") {
+            # Plot
+            manipulate::manipulate(plotqchisqlttpdf(p, df, ncp, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df = manipulate::slider(df, ncp + 2 * df, df),
+                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+            )
+          }
+        }
+        point <- qchisq(p, df = df, ncp = ncp)
+      } else {
+        if (type == "both") {
+          if (gui == "plot") {
+            cex.main <- 0.8
+            plotqchisqltfboth(p, df, ncp, rounding, mfrow, cex.main = cex.main)
+          }
+          if (gui == "rstudio") {
+            # Plot
+            cex.main <- 0.8
+            manipulate::manipulate(plotqchisqltfboth(p, df, ncp, rounding, mfrow, cex.main = cex.main),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df = manipulate::slider(df, ncp + 2 * df, df),
+                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+            )
+          }
+        }
+        if (type == "cdf") {
+          warning("The plot shown is based on the survival function", call. = FALSE, domain = "R-leem")
+          if (gui == "plot") {
+            plotqchisqltfsf(p, df, ncp, rounding)
+          }
+          if (gui == "rstudio") {
+            # Plot
+            manipulate::manipulate(plotqchisqltfsf(p, df, ncp, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df = manipulate::slider(df, ncp + 2 * df, df),
+                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+            )
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqchisqltfpdf(p, df, ncp, rounding)
+          }
+          if (gui == "rstudio") {
+            # Plot
+            manipulate::manipulate(plotqchisqltfpdf(p, df, ncp, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df = manipulate::slider(df, ncp + 2 * df, df),
+                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+            )
+          }
+        }
+        point <- qchisq(p, df = df, ncp = ncp, lower.tail = FALSE)
+      }
+    }
+  }
   if (dist == "gumbel") {
     if (!any(names(argaddit) == "location")) {
       location <- readline(gettext("Insert the value of 'location' argument: ",  domain = "R-leem"))
