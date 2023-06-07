@@ -2684,6 +2684,215 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
 
 }
 
+# PF
+plotqpoissonlttpdfaux <- function(q, lambda, rounding, ...) {
+
+  rmin <-
+    if (q < lambda) {
+      trunc(q - 4 * sqrt(lambda))
+    } else {
+      trunc(lambda - 4 * sqrt(lambda))
+    }
+  if (rmin < 0) {
+    rmin <- 0
+  } else {
+    rmin <- round(rmin)
+  }
+  rmax <-
+    if (q > lambda) {
+      ceiling(q + 4 * sqrt(lambda))
+    } else {
+      ceiling(lambda + 4 * sqrt(lambda))
+    }
+  x <- rmin:rmax
+  probx <- dpois(x, lambda = lambda)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5 * (0:rmax))
+  axis(2)
+  points(
+    x,
+    probx,
+    lwd = 2,
+    pch = 19,
+    panel.first = grid(col = "gray90")
+  )
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  Pr <-
+    round(
+      ppois(q = q, lambda = lambda),
+      digits = rounding
+    )
+
+  # red vertical lines and points
+  x1 <- if (rmin > qq) {
+    qqmin
+  } else {
+    rmin:qq
+  }
+  x2 <- qq:rmax
+  probx1 <- dpois(x1, lambda = lambda)
+  probx2 <- dpois(x2, lambda = lambda)
+
+  lines(x2,
+        probx2,
+        type = "h",
+        lwd = 2,
+        col = "black")
+  points(x2,
+         probx2,
+         lwd = 2,
+         pch = 19,
+         col = "black")
+  lines(x1,
+        probx1,
+        type = "h",
+        lwd = 2,
+        col = "red")
+  points(x1,
+         probx1,
+         lwd = 2,
+         pch = 19,
+         col = "red")
+  axis(
+    side = 1,
+    at = qq,
+    labels = substitute(q == q1, list(q1 = qq)),
+    lwd = 0,
+    col = "red",
+    font = 2,
+    tick = FALSE,
+    col.axis = "red",
+    pos = aux2
+  )
+
+  axis(
+    side = 1,
+    at = as.character(qq),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+
+  # intervals
+  abline(v = qq,
+         lty = 2,
+         col = "red")
+  # rectangle
+  rect(par("usr")[1],
+       1.03 * max(probx),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # title and legends
+  if (qq < 0) {
+    axis(
+      side = 1,
+      at = as.character(qq),
+      tick = TRUE,
+      lwd = 1,
+      col = "red",
+      font = 2,
+      lwd.ticks = 1,
+      labels = FALSE
+    )
+    title(
+      ylab = expression(p[X](x)),
+      xlab = "X",
+      main = substitute(
+        atop(
+          bold("Probability function plot: Poisson"),
+          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+            "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t1) == sum(p[X](x), x >= t1, infinity)
+        ),
+        list(t1 = qq, x = "x", t3 = qq -1)
+      ),
+      ...
+    )
+    # legends
+    legaux <- legend(
+      "topleft",
+      bty = "n",
+      fill = "red",
+      legend = substitute(F[X](t1) == Pr,
+                          list(
+                            t1 = qq, Pr = Pr
+                          )), cex = 0.8
+    )
+    legend(
+      rmin,
+      legaux$text$y,
+      bty = "n",
+      bg = "white",
+      legend = substitute("Parameters:" ~ lambda == lambd,
+                          list(lambd = lambda)), cex = 0.8
+    )
+  } else{
+    axis(
+      side = 1,
+     at = as.character(c(rmin, qq)),
+      tick = TRUE,
+      lwd = 1,
+      col = "red",
+      font = 2,
+      lwd.ticks = 0,
+      labels = FALSE
+    )
+    title(
+      ylab = expression(p[X](x)),
+      xlab = "X",
+      main = substitute(
+        atop(
+          bold("Probability function plot: Poisson"),
+          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+            "," ~  ~ F[X](q*"*") == sum(p[X](x), x <= q*"*", "")
+        ),
+        list(t1 = qq, x = "x", t3 = qq -1)
+      ),
+      ...
+    )
+    # legends
+    legaux <- legend(
+      "topleft",
+      bty = "n",
+      fill = "red",
+      legend = substitute(F[X](q*"*"~"="~t1) == p[X](t1) ~"="~ Pr,
+                          list(
+                            t1 = qq, Pr = Pr
+                          )), cex = 0.8
+    )
+    legend(
+      rmin,
+      legaux$text$y,
+      bty = "n",
+      bg = "white",
+      legend = substitute("Parameters:" ~ lambda == lambd,
+                          list(lambd = lambda)), cex = 0.8
+    )
+  }
+}
+plotqpoissonlttpdf <- function(p, lambda, rounding, ...) {
+  q <- qpois(p, lambda)
+  plotqpoissonlttpdfaux(q, lambda, rounding, ...)
+}
+
+# BOTH
+plotqpoissonlttboth <- function(p, lambda, rounding, mfrow, cex.main, ...) {
+  op <- par(mfrow = mfrow)
+  plotqpoissonlttcdf(p, lambda, rounding, ...)
+  plotqpoissonlttpdf(p, lambda, rounding, ...)
+  # Preserving the global variable
+  par(op)
+}
+
 
 
 
@@ -2693,11 +2902,11 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
 
 
 #CDF
-plotqpoissonlttcdf <- function(p, lambda, rounding) {
+plotqbinomiallttcdf <- function(p, size, prob, rounding) {
   rmin <- 0
-  rmax <- ceiling(lambda + 4 * sqrt(lambda))
+  rmax <- ceiling(size + 4 * sqrt(size))
   x <- rmin:rmax
-  pointx <- ppois(x, lambda = lambda)
+  pointx <- pbinom(x, size, prob)
   xlim <- c(rmin, rmax)
   ylim <- c(0, 1.2)
   plot.new()
@@ -2710,16 +2919,16 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
     xlab = "X",
     panel.first = grid(col = "gray90"),
     main = bquote(atop(
-      bold("Cumulative distribution plot: Poisson"),
+      bold("Cumulative distribution plot: Binomial"),
       Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
     )),
     cex.main = 1
   )
-  points(x, ppois(x - 1, lambda = lambda), lwd = 2, pch = 1)
+  points(x, pbinom(x - 1, size, prob), lwd = 2, pch = 1)
   points(x, pointx, lwd = 2, pch = 19)
   #abline(v = lambda, lty = 2)
   qq <- round(p, digits = rounding)
-  qqaux <- round(qpois(p, lambda), digits = rounding)
+  qqaux <- round(qbinom(p, size, prob), digits = rounding)
   aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
   axis(
     side = 1,
@@ -2772,16 +2981,16 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
   for (i in 1:length(w)) {
     segments(
       w[i],
-      ppois(w[i], lambda = lambda),
+      pbinom(w[i], size, prob),
       w[i + 1],
-      max(ppois(w[i], lambda = lambda)),
+      max(pbinom(w[i], size, prob)),
       lty = 1,
       col = "black"
     )
     segments(w[i + 1],
-             min(ppois(w[i + 1], lambda = lambda)),
+             min(pbinom(w[i + 1], size, prob)),
              w[i + 1],
-             max(ppois(w[i], lambda = lambda)),
+             max(pbinom(w[i], size, prob)),
              lty = 2,
              col = "black")
   }
@@ -2817,8 +3026,8 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ lambda == lambd,
-                        list(lambd = lambda))
+    legend = substitute("Parameters:" ~ size == sizev ~ ";" ~ prob == probv,
+                        list(sizev = size, probv = prob))
   )
 
 }
@@ -3731,6 +3940,354 @@ plotqpoissonlttsf <- function(p, lambda, rounding) {
     bg = "white",
     legend = substitute("Parameter:" ~ lambda == lambd,
                         list(lambd = lambda))
+  )
+
+}
+
+# PF
+plotqpoissonltfpdfaux <- function(q, lambda, rounding, ...) {
+
+  rmin <-
+    if (q < lambda) {
+      trunc(q - 4 * sqrt(lambda))
+    } else {
+      trunc(lambda - 4 * sqrt(lambda))
+    }
+  if (rmin < 0) {
+    rmin <- 0
+  } else {
+    rmin <- round(rmin)
+  }
+  rmax <-
+    if (q > lambda) {
+      ceiling(q + 4 * sqrt(lambda))
+    } else {
+      ceiling(lambda + 4 * sqrt(lambda))
+    }
+  x <- rmin:rmax
+  probx <- dpois(x, lambda = lambda)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5 * (0:rmax))
+  axis(2)
+  points(
+    x,
+    probx,
+    lwd = 2,
+    pch = 19,
+    panel.first = grid(col = "gray90")
+  )
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  Pr <-
+    round(
+      ppois(q = q,
+            lambda = lambda,
+            lower.tail = FALSE
+      ),
+      digits = rounding
+    )
+  x1 <- if (rmin > qq) {
+    qqmin
+  } else {
+    rmin:qq
+  }
+  x2 <- qq:rmax
+  probx1 <- dpois(x1, lambda = lambda)
+  probx2 <- dpois(x2, lambda = lambda)
+  lines(x1,
+        probx1,
+        type = "h",
+        lwd = 2,
+        col = "black")
+  points(x1,
+         probx1,
+         lwd = 2,
+         pch = 19,
+         col = "black")
+  lines(x2,
+        probx2,
+        type = "h",
+        lwd = 2,
+        col = "red")
+  points(x2,
+         probx2,
+         lwd = 2,
+         pch = 19,
+         col = "red")
+  axis(
+    side = 1,
+    at = qq,
+    labels = substitute(q == q1, list(q1 = qq)),
+    lwd = 0,
+    col = "red",
+    font = 2,
+    tick = FALSE,
+    col.axis = "red",
+    pos = aux2
+  )
+
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+
+  # intervals
+  abline(v = qq,
+         lty = 2,
+         col = "red")
+  # rectangle
+  rect(par("usr")[1],
+       1.03 * max(probx),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # title and legends
+  if (qq < 0) {
+    axis(
+      side = 1,
+      at = as.character(qq),
+      tick = TRUE,
+      lwd = 1,
+      col = "red",
+      font = 2,
+      lwd.ticks = 1,
+      labels = FALSE
+    )
+    title(
+      ylab = expression(p[X](x)),
+      xlab = "X",
+      main = substitute(
+        atop(
+          bold("Probability function plot: Poisson"),
+          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+            "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t1) == sum(p[X](x), x >= t1, infinity)
+        ),
+        list(t1 = qq, x = "x", t3 = qq -1)
+      ),
+      ...
+    )
+    # legends
+    legaux <- legend(
+      "topleft",
+      bty = "n",
+      fill = "red",
+      legend = substitute(F[X](t1) == Pr,
+                          list(
+                            t1 = qq, Pr = Pr
+                          )), cex = 0.8
+    )
+    legend(
+      rmin,
+      legaux$text$y,
+      bty = "n",
+      bg = "white",
+      legend = substitute("Parameters:" ~ lambda == lambd,
+                          list(lambd = lambda)), cex = 0.8
+    )
+  } else{
+    axis(
+      side = 1,
+      at = as.character(c(q, rmax)),
+      tick = TRUE,
+      lwd = 1,
+      col = "red",
+      font = 2,
+      lwd.ticks = 0,
+      labels = FALSE
+    )
+    title(
+      ylab = expression(p[X](x)),
+      xlab = "X",
+      main = substitute(
+        atop(
+          bold("Probability function plot: Poisson"),
+          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+            "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "")
+        ),
+        list(t1 = qq, x = "x", t3 = qq -1)
+      ),
+      ...
+    )
+    # legends
+    legaux <- legend(
+      "topleft",
+      bty = "n",
+      fill = "red",
+      legend = substitute(F[X](t1) == p[X](t1) ~"="~ Pr,
+                          list(
+                            t1 = qq, Pr = Pr
+                          )), cex = 0.8
+    )
+    legend(
+      rmin,
+      legaux$text$y,
+      bty = "n",
+      bg = "white",
+      legend = substitute("Parameters:" ~ lambda == lambd,
+                          list(lambd = lambda)), cex = 0.8
+    )
+  }
+}
+plotqpoissonltfpdf <- function(p, lambda, rounding, ...) {
+  q <- qpois(p, lambda, lower.tail = FALSE)
+  plotqpoissonltfpdfaux(q, lambda, rounding, ...)
+}
+
+# BOTH
+plotqpoissonltfboth <- function(p, lambda, rounding, mfrow, cex.main, ...) {
+  op <- par(mfrow = mfrow)
+  plotqpoissonlttsf(p, lambda, rounding, ...)
+  plotqpoissonltfpdf(p, lambda, rounding, ...)
+  # Preserving the global variable
+  par(op)
+}
+
+
+
+
+######################
+# Binomial distribution
+######################
+# Survival function
+plotqbinomiallttsf <- function(p, size, prob, rounding) {
+  rmin <- 0
+  rmax <- ceiling(size + 4 * sqrt(size))
+  x <- rmin:rmax
+  pointx <- pbinom(x, size, prob, lower.tail = FALSE)
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = x)
+  axis(2)
+  title(
+    ylab = expression(1 - F[X](x)),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = bquote(atop(
+      bold("Survival function plot: Binomial"),
+      Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
+        "," ~ "p*" == 1 - p
+    )),
+    cex.main = 1
+  )
+  rect(par("usr")[1], 1.03 * 1, par("usr")[2], par("usr")[4], col = "gray")
+
+  points(x,
+         pbinom(x - 1, size, prob, lower.tail = FALSE),
+         lwd = 2,
+         pch = 1)
+  points(x, pointx, lwd = 2, pch = 19)
+  #abline(v = lambda, lty = 2)
+  qq <- round(p, digits = rounding)
+  qqaux <-
+    round(qbinom(p, size, prob, lower.tail = FALSE), digits = rounding)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = substitute(q[S] == qtle, list(qtle = qqaux)),
+    col.axis = "red",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  # auxiliar variable
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 40
+  axis(
+    side = 2,
+    at = qq,
+    labels = substitute("p*" == prob, list(prob = qq)),
+    col.axis = "red",
+    font = 2,
+    pos = aux,
+    tick = FALSE
+  )
+  axis(
+    side = 2,
+    at = qq,
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  w <- c(par("usr")[1], x)
+  for (i in 1:length(w)) {
+    segments(
+      w[i],
+      pbinom(w[i], size, prob, lower.tail = FALSE),
+      w[i + 1],
+      pbinom(w[i], size, prob, lower.tail = FALSE),
+      lty = 1,
+      col = "black"
+    )
+    segments(
+      w[i + 1],
+      pbinom(w[i + 1], size, prob, lower.tail = FALSE),
+      w[i + 1],
+      pbinom(w[i], size, prob, lower.tail = FALSE),
+      lty = 2,
+      col = "black"
+    )
+  }
+
+  # Quantile
+  segments(qqaux,
+           par("usr")[3],
+           qqaux,
+           qq,
+           lty = 2,
+           col = "red")
+  segments(par("usr")[1],
+           qq,
+           qqaux,
+           qq,
+           lty = 2,
+           col = "red")
+  points(qqaux, qq, pch = 16, col = "red")
+
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    ,
+    legend = substitute(Q[S](p == p1) == Qr ~ "\n\n",
+                        list(
+                          Qr = qqaux, `p` = "p*", p1 = qq
+                        )),
+    pch = 19,
+    col = "red"
+  )
+  legend(
+    rmin,
+    legaux$text$y,
+    bty = "n",
+    bg = "white",
+    legend = substitute("Parameter:" ~ size == sizev ~";"~ prob == probv,
+                        list(sizev = size, probv = prob))
   )
 
 }
