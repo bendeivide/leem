@@ -1,6 +1,6 @@
-#' Plot of distribution function of any discrete variable
+#' Plot of cumulative distribution function of any discrete variable
 #'
-#' Help in building the plot of the distribution function of any discrete variable
+#' Help in building the plot of the cumulative distribution function of any discrete variable
 #'
 #' @param x numeric vector of values of \eqn{X}. See __Details__.
 #' @param fda numeric vector of \eqn{F_X(x)}. See __Details__.
@@ -28,16 +28,16 @@
 #' \end{array}\right.
 #' }
 #'
-#' This way, the \code{fdad} function  needs to consider only the vectors `x <- 1:5` and
+#' This way, the \code{cdfd} function  needs to consider only the vectors `x <- 1:5` and
 #' `fda <- c(0.23, 0.50, 0.80, 0.92, 1)`, that is, only the equality conditions for \eqn{x}. See *Example 1*.
 #' @md
 #' @examples
 #' # Example 1
 #' x <- 1:5
 #' fda <- c(0.23, 0.5, 0.8, 0.92, 1)
-#' fdad(x, fda)
+#' cdfd(x, fda)
 #' @export
-fdad <- function(x, fda, main = NULL, xlab = NULL, ylab = NULL) {
+cdfd <- function(x, fda, main = NULL, xlab = NULL, ylab = NULL) {
   xlim <- c(min(x) - 1, max(x) + 1)
   ylim <- c(0, 1.2)
   plot.new()
