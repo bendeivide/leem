@@ -16,7 +16,7 @@
 #' # Example 1
 #' showcdf()
 #' @export
-showcdf <- function(variable = "discrete", prop = 1) {
+showcdf <- function(variable = "discrete", prop = NULL) {
   if (variable == 1) variable <- "discrete"
   if (variable == 2) variable <- "continuous"
   if (variable == "discrete") {
@@ -30,8 +30,14 @@ showcdf <- function(variable = "discrete", prop = 1) {
     plot.new()
     plot.window(xlim, ylim)
 
-    title(bquote(atop(bold("Distribution Function Properties"), "Discrete variable")),
-          xlab = bquote(X), ylab = bquote(F[X](x)), col.lab = "blue")
+    if (is.null(prop)) {
+      title(bquote(atop(bold("Distribution Function"), "Discrete variable")),
+            xlab = bquote(X), ylab = bquote(F[X](x)), col.lab = "blue")
+    } else {
+      title(bquote(atop(bold("Distribution Function Properties"), "Discrete variable")),
+            xlab = bquote(X), ylab = bquote(F[X](x)), col.lab = "blue")
+    }
+
 
     for(i in 3:7) {
       axis(1, at = x[i], labels = substitute(x[i], list(i = i-2)), tick = TRUE, lwd = 0, lwd.ticks = 1,
@@ -49,9 +55,7 @@ showcdf <- function(variable = "discrete", prop = 1) {
     arrows(x[8]+0.5, 0, x[10], 0, col = "blue", length = 0.1)
     #axis(2)
     x <- x[c(3:7, 9)]
-    points(x, ppois(x - 1, lambda = lambda), lwd = 2, pch = 1)
-    pointx <- ppois(x, lambda = 2)
-    points(x, pointx, lwd = 2, pch = 19)
+
 
 
     w <- c(par("usr")[1], x[-6])
@@ -79,6 +83,31 @@ showcdf <- function(variable = "discrete", prop = 1) {
       lty = 1,
       col = "black"
     )
+
+    if (is.null(prop)) {
+      for (i in 1:length(w)) {
+        # segments(
+        #   w[i],
+        #   ppois(w[i], lambda = lambda),
+        #   w[i + 1],
+        #   max(ppois(w[i], lambda = lambda)),
+        #   lty = 1,
+        #   col = "black"
+        # )
+        segments(w[i + 1],
+                 min(ppois(w[i + 1], lambda = lambda)),
+                 w[i + 1],
+                 max(ppois(w[i], lambda = lambda)),
+                 lty = 2,
+                 col = "black")
+      }
+    }
+
+    points(x, ppois(x - 1, lambda = lambda), lwd = 2, pch = 19, bg = "white", col = "white")
+    points(x, ppois(x - 1, lambda = lambda), lwd = 2, pch = 1)
+    pointx <- ppois(x, lambda = 2)
+    points(x, pointx, lwd = 2, pch = 19)
+
     text(5.3, ppois(4, 2), "...", srt = 30)
     axis(2, at = c(0, 0.5, 1), col.axis = "blue", col = "blue", las = 2)
 

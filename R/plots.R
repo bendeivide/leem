@@ -134,9 +134,9 @@ stickchart <- function(x,
       xmin <- x$table$Groups[1]
       xmax <- max(x$table$Groups)
       xvar <- x$table$Groups
-      if (freq == "a") yvar <- c(0, x$table$Fi, 0)
-      if (freq == "r") yvar <- c(0, x$table$Fr, 0)
-      if (freq == "p") yvar <- c(0, x$table$Fp, 0)
+      if (freq == "a") yvar <- x$table$Fi
+      if (freq == "r") yvar <- x$table$Fr
+      if (freq == "p") yvar <- x$table$Fp
 
       # Limiares
       xlim <- c(xmin - 0.5, xmax + 0.5)
@@ -174,10 +174,25 @@ stickchart <- function(x,
       grids
 
       # Inserindo hastes
-      lines(1:length(x$table$Groups), x$table$Fi, type = "h",
-            lty = lty, lwd = lwd, col = lcol)
-      points(1:length(x$table$Groups), x$table$Fi, pch  = pty, lwd = pwd,
-             col = pcol)
+      if (freq == "a") {
+        lines(x$table$Groups, x$table$Fi, type = "h",
+              lty = lty, lwd = lwd, col = lcol)
+        points(1:length(x$table$Groups), x$table$Fi, pch  = pty, lwd = pwd,
+               col = pcol)
+      }
+      if (freq == "r") {
+        lines(x$table$Groups, x$table$Fr, type = "h",
+              lty = lty, lwd = lwd, col = lcol)
+        points(x$table$Groups, x$table$Fr, pch  = pty, lwd = pwd,
+               col = pcol)
+      }
+      if (freq == "p") {
+        lines(x$table$Groups, x$table$Fp, type = "h",
+              lty = lty, lwd = lwd, col = lcol)
+        points(1:length(x$table$Groups), x$table$Fp, pch  = pty, lwd = pwd,
+               col = pcol)
+      }
+
     } else {
       ngroups <- length(x$table$Groups)
       aux <- 1:ngroups
@@ -228,12 +243,28 @@ stickchart <- function(x,
       grids
 
       # Inserindo hastes
-      lines(1:length(x$table$Groups), x$table$Fi, type = "h",
-            lty = lty, lwd = lwd, col = lcol)
-      points(1:length(x$table$Groups), x$table$Fi, pch  = pty, lwd = pwd,
-             col = pcol)
-
+      # Inserindo hastes
+      if (freq == "a") {
+        lines(1:length(x$table$Groups), x$table$Fi, type = "h",
+              lty = lty, lwd = lwd, col = lcol)
+        points(1:length(x$table$Groups), x$table$Fi, pch  = pty, lwd = pwd,
+               col = pcol)
+      }
+      if (freq == "r") {
+        lines(1:length(x$table$Groups), x$table$Fr, type = "h",
+              lty = lty, lwd = lwd, col = lcol)
+        points(1:length(x$table$Groups), x$table$Fr, pch  = pty, lwd = pwd,
+               col = pcol)
+      }
+      if (freq == "p") {
+        lines(1:length(x$table$Groups), x$table$Fp, type = "h",
+              lty = lty, lwd = lwd, col = lcol)
+        points(1:length(x$table$Groups), x$table$Fp, pch  = pty, lwd = pwd,
+               col = pcol)
+      }
     }
+  } else {
+    stop("Chart not used for this data type", call. = FALSE, domain = "R-leem")
   }
   invisible(x)
 }

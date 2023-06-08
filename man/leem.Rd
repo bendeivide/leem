@@ -14,7 +14,7 @@ leem(gui = TRUE)
 }
 \description{
 \code{leem} A Graphical User Interface (GUI) for
-    the leem package
+the leem package
 }
 \examples{
 # Loading package

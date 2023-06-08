@@ -31,3 +31,4 @@ URL: https://bendeivide.github.io/project/leem/, https://github.com/bendeivide/l
 BugReports: https://github.com/bendeivide/leem/issues
 LazyData: TRUE
 RoxygenNote: 7.2.3
+Roxygen: list(markdown = TRUE)
