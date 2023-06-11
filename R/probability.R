@@ -1539,6 +1539,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         # readjusting the range
         ## ab-region
+        # readjusting the range
+        ## ab-region
         if (is.double(q)) {
           if (attr(q, "region") == "region5") {
             q[2] <- q[2] + 1
@@ -1567,8 +1569,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
             stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
           }
         }
-        prob <- round(pbinom(q = q[2], size = size, prob = prob) - pbinom(q = q[1], size = size, prob = prob),
-                      digits = rounding)
+        prob <- round(pbinom(q = q[2], size, prob) - pbinom(q = q[1],size, prob), digits = rounding)
       }
       if (dist == "chisq") {
         if (!any(names(argaddit) == "ncp")) {

@@ -1881,16 +1881,16 @@ plotqchisqtscdf <- function(p, df, ncp, rounding, ...) {
 
 # PDF
 plotqchisqtspdfaux <- function(q, df, ncp, rounding, ...) {
-  minimo <-
-    if (q[1] <= ncp - 4 * df)
-      q[1] - 4 * df
-  else
-    0
+  minimo <- if (q[1] <=  ncp - 4 * df){
+                q - 4 * sigma
+            }
+            else{0}
+
   maximo <-
     if (q[2] > ncp + 4 * df)
-      q[2] + 4 * df
+      q + 5 * df
   else
-    ncp + 4 * df
+    ncp + 5 * df
   x <- seq(minimo, q[1], by = 0.01)
   z <- seq(q[2], maximo, by = 0.01)
   y <- seq(minimo, maximo, by = 0.01)
@@ -2671,7 +2671,7 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
     legend = substitute(Q(p == p1) == Qr,
                         list(
                           Qr = qqaux, p = "p", p1 = qq
-                        ))
+                        )), cex = 0.8
   )
   legend(
     legaux$rect$left,
@@ -2679,7 +2679,7 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
     bty = "n",
     bg = "white",
     legend = substitute("Parameters:" ~ lambda == lambd,
-                        list(lambd = lambda))
+                        list(lambd = lambda)), cex = 0.8
   )
 
 }
@@ -3019,7 +3019,7 @@ plotqbinomiallttcdf <- function(p, size, prob, rounding) {
     legend = substitute(Q(p == p1) == Qr,
                         list(
                           Qr = qqaux, p = "p", p1 = qq
-                        ))
+                        )),  cex = 0.8
   )
   legend(
     legaux$rect$left,
@@ -3027,7 +3027,7 @@ plotqbinomiallttcdf <- function(p, size, prob, rounding) {
     bty = "n",
     bg = "white",
     legend = substitute("Parameters:" ~ size == sizev ~ ";" ~ prob == probv,
-                        list(sizev = size, probv = prob))
+                        list(sizev = size, probv = prob)),  cex = 0.8
   )
 
 }
@@ -3162,9 +3162,9 @@ plotqchisqlttpdfaux <- function(q, df, ncp, rounding, ...) {
     0
   maximo <-
     if (q > ncp + 4 * df)
-      q + 4 * df
+      q + 5 * df
   else
-    ncp + 4 * df
+    ncp + 5 * df
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- dchisq(x, df = df, ncp = ncp)
@@ -3929,7 +3929,7 @@ plotqpoissonlttsf <- function(p, lambda, rounding) {
     legend = substitute(Q[S](p == p1) == Qr ~ "\n\n",
                         list(
                           Qr = qqaux, `p` = "p*", p1 = qq
-                        )),
+                        )), cex = 0.8,
     pch = 19,
     col = "red"
   )
@@ -3939,7 +3939,7 @@ plotqpoissonlttsf <- function(p, lambda, rounding) {
     bty = "n",
     bg = "white",
     legend = substitute("Parameter:" ~ lambda == lambd,
-                        list(lambd = lambda))
+                        list(lambd = lambda)),  cex = 0.8
   )
 
 }
@@ -4308,7 +4308,7 @@ plotqchisqltfsf <- function(p, df, ncp, rounding, ...) {
       ncp = ncp,
       lower.tail = FALSE
     ),
-    ncp - 4 * df,
+    0,
     ncp + 4 * df,
     ylab = expression(F[X](x)),
     ylim = c(0, 1.2),
@@ -4322,7 +4322,7 @@ plotqchisqltfsf <- function(p, df, ncp, rounding, ...) {
     lwd = 4,
     ...
   )
-  x <- seq(ncp - 4 * df, x[1], by = 0.01)
+  x <- seq(0, x[1], by = 0.01)
   y <- seq(x[1], ncp + 4 * df, by = 0.01)
   fx <- pchisq(x, df, ncp, lower.tail = FALSE)
   fy <- pchisq(y, df, ncp, lower.tail = FALSE)
@@ -4416,14 +4416,14 @@ plotqchisqltfsf <- function(p, df, ncp, rounding, ...) {
 plotqchisqltfpdfaux <- function(q, df, ncp, rounding, ...) {
   minimo <-
     if (q <=  ncp - 4 * df)
-      q - 4 * df
+      q - 4 * sigma
   else
     0
   maximo <-
     if (q > ncp + 4 * df)
-      q + 4 * df
+      q + 5 * df
   else
-    ncp + 4 * df
+    ncp + 5 * df
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- dchisq(x, df = df, ncp = ncp)
