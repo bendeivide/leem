@@ -1616,8 +1616,6 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
       point <- qbinom(c(p/2, 1 - p/2), size, prob)
     } else{
       if(lower.tail == TRUE){
-        # Only type == "cdf"
-        type <- "cdf"
         if (type == "cdf") {
           if (gui == "plot") {
             plotqbinomiallttcdf(p, size, prob, rounding)
@@ -1630,10 +1628,32 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             )
           }
         }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqbinomiallttpdf(p, size, prob, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqbinomiallttpdf(p, size, prob, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   size = manipulate::slider(size, size + sqrt(size), size),
+                                   prob = manipulate::slider(0, 1, prob)
+            )
+          }
+        }
+        if (type == "both") {
+          if (gui == "plot") {
+            plotqbinomiallttboth(p, size, prob, rounding,mfrow, cex.main)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqbinomiallttboth(p, size, prob, rounding, mfrow, cex.main),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   size = manipulate::slider(size, size + sqrt(size), size),
+                                   prob = manipulate::slider(0, 1, prob)
+            )
+          }
+        }
         point <- qbinom(p, size, prob)
       } else {
-        # Only type == "cdf"
-        type <- "cdf"
         if (type == "cdf") {
           if (gui == "plot") {
             plotqbinomiallttsf(p, size, prob, rounding)
