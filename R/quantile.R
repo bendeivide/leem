@@ -1616,8 +1616,6 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
       point <- qbinom(c(p/2, 1 - p/2), size, prob)
     } else{
       if(lower.tail == TRUE){
-        # Only type == "cdf"
-        type <- "cdf"
         if (type == "cdf") {
           if (gui == "plot") {
             plotqbinomiallttcdf(p, size, prob, rounding)
@@ -1630,10 +1628,32 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             )
           }
         }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqbinomiallttpdf(p, size, prob, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqbinomiallttpdf(p, size, prob, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   size = manipulate::slider(size, size + sqrt(size), size),
+                                   prob = manipulate::slider(0, 1, prob)
+            )
+          }
+        }
+        if (type == "both") {
+          if (gui == "plot") {
+            plotqbinomiallttboth(p, size, prob, rounding,mfrow, cex.main)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqbinomiallttboth(p, size, prob, rounding, mfrow, cex.main),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   size = manipulate::slider(size, size + sqrt(size), size),
+                                   prob = manipulate::slider(0, 1, prob)
+            )
+          }
+        }
         point <- qbinom(p, size, prob)
       } else {
-        # Only type == "cdf"
-        type <- "cdf"
         if (type == "cdf") {
           if (gui == "plot") {
             plotqbinomiallttsf(p, size, prob, rounding)
@@ -1658,7 +1678,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
       argaddit$df <- as.numeric(df)
     }
     if (!any(names(argaddit) == "ncp")) {
-      ncp <- readline(gettext("Insert the 'ncp' argument: ", domain = "R-leem"))
+      ncp <- 0
       argaddit$ncp <- as.numeric(ncp)
     }
     if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
@@ -1676,8 +1696,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           # Plot
           manipulate::manipulate(plotqchisqtsboth(p, df, ncp, rounding, mfrow, cex.main = cex.main), # aux_quantile.R
                                  p = manipulate::slider(0.01, 0.99, p),
-                                 df = manipulate::slider(df, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(ncp, df * 2, ncp)
+                                 df = manipulate::slider(df, df + 5 * df, df),
+                                 ncp = manipulate::slider(ncp, df + 5 * df, ncp)
           )
         }
       }
@@ -1690,8 +1710,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           # Plot
           manipulate::manipulate(plotqchisqtscdf(p, df, ncp, rounding),
                                  p = manipulate::slider(0.01, 0.99, p),
-                                 df = manipulate::slider(df, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(ncp, df * 2, ncp)
+                                 df = manipulate::slider(df, df + 5 * df, df),
+                                 ncp = manipulate::slider(ncp, df + 5 * df, ncp)
           )
         }
       }
@@ -1703,8 +1723,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           # Plot
           manipulate::manipulate(plotqchisqtspdf(p, df, ncp, rounding),
                                  p = manipulate::slider(0.01, 0.99, p),
-                                 df = manipulate::slider(df, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(ncp, df * 2, ncp)
+                                 df = manipulate::slider(df, df + 5 * df, df),
+                                 ncp = manipulate::slider(ncp, df + 5 * df, ncp)
           )
         }}
       point <- qchisq(c(p/2, 1 - p/2), df = df, ncp = ncp)
@@ -1720,8 +1740,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             Q(0.8, mean = 0, sd = 1)
             manipulate::manipulate(plotqchisqlttboth(p, df, ncp, rounding, mfrow, cex.main = cex.main),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, ncp + 2 * df, df),
-                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+                                   df = manipulate::slider(df, df + 5 * df, df),
+                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
             )
           }
         }
@@ -1734,8 +1754,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             # Plot
             manipulate::manipulate(plotqchisqlttcdf(p, df, ncp, rounding),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, ncp + 2 * df, df),
-                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+                                   df = manipulate::slider(df, df + 5 * df, df),
+                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
             )
           }
         }
@@ -1748,13 +1768,14 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             # Plot
             manipulate::manipulate(plotqchisqlttpdf(p, df, ncp, rounding),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, ncp + 2 * df, df),
-                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+                                   df = manipulate::slider(df, df + 5 * df, df),
+                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
             )
           }
         }
         point <- qchisq(p, df = df, ncp = ncp)
-      } else {
+      }
+      else {
         if (type == "both") {
           if (gui == "plot") {
             cex.main <- 0.8
@@ -1765,8 +1786,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             cex.main <- 0.8
             manipulate::manipulate(plotqchisqltfboth(p, df, ncp, rounding, mfrow, cex.main = cex.main),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, ncp + 2 * df, df),
-                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+                                   df = manipulate::slider(df, df + 5 * df, df),
+                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
             )
           }
         }
@@ -1779,8 +1800,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             # Plot
             manipulate::manipulate(plotqchisqltfsf(p, df, ncp, rounding),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, ncp + 2 * df, df),
-                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+                                   df = manipulate::slider(df, df + 5 * df, df),
+                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
             )
           }
         }
@@ -1792,8 +1813,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             # Plot
             manipulate::manipulate(plotqchisqltfpdf(p, df, ncp, rounding),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, ncp + 2 * df, df),
-                                   ncp = manipulate::slider(ncp, df * 2, ncp)
+                                   df = manipulate::slider(df, df + 5 * df, df),
+                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
             )
           }
         }

@@ -71,34 +71,34 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region1") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma)))
   }
   if (attr(q, "region") == "region3") {
-    legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma)))
   }
   if (attr(q, "region") == "region5") {
-    legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.7,
+    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma)))
   }
   if ( attr(q, "region") == "region6") {
-    legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma)))
   }
@@ -176,34 +176,34 @@ plotptstudentarplot <- function(q, df, rounding, main = NULL){
   abline(v = qq, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region1") {
-    legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(-llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~nu == df,
                                list(df = nu)))
   }
   if (attr(q, "region") == "region3") {
-    legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(-llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~nu == df,
                                list(df = nu)))
   }
   if (attr(q, "region") == "region5") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(-llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~nu == df,
                                list(df = nu)))
   }
   if (attr(q, "region") == "region6") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(-llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~nu == df,
                                list(df = nu)))
   }
@@ -300,10 +300,10 @@ plotppoissonarplot <- function(q, lambda, rounding, main = NULL){
     title(ylab = expression(p[X](x)), xlab = "X",
           main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~P(X <= t1)== 0*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")))
     # legends
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qqmin,t2=qqmax, Pr = Pr)))
-    legend(rmin, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~lambda == lambd,
                                list(lambd = lambda)))
   } else{
@@ -312,10 +312,10 @@ plotppoissonarplot <- function(q, lambda, rounding, main = NULL){
     title(ylab = expression(p[X](x)), xlab = "X",
           main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
     # legends
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qqmin,t2=qqmax, Pr = Pr)))
-    legend(rmin, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~lambda == lambd,
                                list(lambd = lambda)))
   }
@@ -413,9 +413,9 @@ plotpbinomialarplot <- function(q, size, prob, rounding, main = NULL){
           main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
     # legends
     legaux <- legend("topleft", bty="n", fill="red",
-                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,cex =1,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr, cex = 0.8,
                                          list(t1=qqmin,t2=qqmax, Pr = Pr)))
-    legend(rmin, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
                                list( N = size, P = prob)))
   } else{
@@ -424,10 +424,10 @@ plotpbinomialarplot <- function(q, size, prob, rounding, main = NULL){
     title(ylab = expression(p[X](x)), xlab = "X",
           main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
     # legends
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qqmin,t2=qqmax, Pr = Pr)))
-    legend(rmin, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
                                list( N = size, P = prob)))
   }
@@ -502,18 +502,18 @@ plotpchisqarplot <- function(q, df, ncp, rounding, main = NULL) {
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region1") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
                                list(ncpv = ncp, dfv = df)))
   }
   if (attr(q, "region") == "region3") {
-    legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
            legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
                                list(ncpv = ncp, dfv = df)))
   }
@@ -526,10 +526,10 @@ plotpchisqarplot <- function(q, df, ncp, rounding, main = NULL) {
                                list(ncpv = ncp, dfv = df)))
   }
   if ( attr(q, "region") == "region6") {
-    legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
                                list(ncpv = ncp, dfv = df)))
   }
@@ -602,34 +602,34 @@ plotpnormalbrplot <- function(q, mu, sigma, rounding, main = NULL) {
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region2") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma)))
   }
   if (attr(q, "region") == "region4") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<=~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma)))
   }
   if (attr(q, "region") == "region7") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<=~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma)))
   }
   if ( attr(q, "region") == "region8") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma)))
   }
@@ -696,34 +696,34 @@ plotptstudentbrplot <- function(q, df, rounding, main = NULL){
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region2") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X>t1)+P(X<t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(-llower, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute("Parameters:"~nu == df,
                                list(df = nu)))
   }
   if (attr(q, "region") == "region4") {
-    legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X>=t1)+P(X<=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(-llower, legaux$text$y, bty="n", bg = "white",cex=0.8,
            legend = substitute("Parameters:"~nu == df,
                                list(df = nu)))
   }
   if (attr(q, "region") == "region7") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X>=t1)+P(X<t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(-llower, legaux$text$y, bty="n", bg = "white",cex=0.8,
            legend = substitute("Parameters:"~nu == df,
                                list(df = nu)))
   }
   if (attr(q, "region") == "region8") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X>t1)+P(X<=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+    legend(-llower, legaux$text$y, bty="n", bg = "white",cex=0.8,
            legend = substitute("Parameters:"~nu == df,
                                list(df = nu)))
   }
@@ -816,10 +816,10 @@ plotppoissonbrplot <- function(q, lambda, rounding, main = NULL){
   title(ylab = expression(p[X](x)), xlab = "X",
         main = main, cex = 1)
   # legends
-  legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                    legend = substitute(P(t1<=~X<=~t2)==Pr,
                                        list(t1=qqmin,t2=qqmax, Pr = Pr)))
-  legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
          legend = substitute("Parameters:"~lambda == lambd,
                              list(lambd = lambda)))
 }
@@ -906,10 +906,10 @@ plotpbinomialbrplot <- function(q, size, prob, rounding, main = NULL){
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
   title(ylab = expression(p[X](x)), xlab = "X",
         main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)), list(t1 = qqmin, t2 = qqmax, x = "x")))
-  legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                    legend = substitute(P(t1<=~X<=~t2)==Pr,
                                        list(t1=qqmin,t2=qqmax, Pr = Pr)))
-  legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
          legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
                              list( N = size, P = prob)))
 }
@@ -973,34 +973,34 @@ plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region2") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
                                list(ncpv = ncp, dfv = df)))
   }
   if (attr(q, "region") == "region4") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<=~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
                                list(ncpv = ncp, dfv = df)))
   }
   if (attr(q, "region") == "region7") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<=~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
                                list(ncpv = ncp, dfv = df)))
   }
   if ( attr(q, "region") == "region8") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+    legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+    legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
            legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
                                list(ncpv = ncp, dfv = df)))
   }
@@ -1066,10 +1066,10 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+  legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
-  legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+  legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
          legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                              list(media = mu, varen = sigma)))
 } # plotcurve (older)
@@ -1113,10 +1113,10 @@ plotptstudentlttplot <- function(q, df, rounding, main = NULL){
   # Insert red horizontal line (X-axis)
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                    legend = substitute(Fx(q)==P(X<=~q)*"="~Pr,
                                        list(q = qq, Pr = Pr)))
-  legend(-lim, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+  legend(-lim, legaux$text$y, bty="n", bg = "white",cex=0.8,
          legend = substitute("Parameters:"~nu == df,
                              list(df = nu)))
 }
@@ -1172,10 +1172,10 @@ plotppoissonlttplot <- function(q, lambda, rounding, main = NULL){
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",
                    legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
-                                       list(q = qq, Pr = Pr)), cex = 1)
+                                       list(q = qq, Pr = Pr)), cex=0.8)
   legend(rmin, legaux$text$y, bty="n", bg = "white",
          legend = substitute("Parameters:"~lambda == lambd,
-                             list(lambd = lambda)), cex = 0.9)
+                             list(lambd = lambda)), cex=0.8)
 }
 
 
@@ -1224,10 +1224,10 @@ plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
   axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2, lwd.ticks = 0, lwd = 1)
   abline(v = qqaux, lty = 2, col = "red")
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red", cex = 1,
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                    legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
                                        list(q = qq, Pr = Pr)))
-  legend(rmin, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+  legend(rmin, legaux$text$y, bty="n", bg = "white",cex=0.8,
          legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
                              list( N = size, P = prob)))
 }
@@ -1276,10 +1276,10 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+  legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
-  legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+  legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
          legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
                              list(ncpv = ncp, dfv = df)))
 }
@@ -1337,10 +1337,10 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
 
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+  legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
                                        list(q = qq, Pr = Pr)))
-  legend(minimo, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+  legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
          legend = substitute("Parameters:"~mu ==  mean ~ "," ~ sigma == varen,
                              list(mean = mu, varen = sigma)))
 }
@@ -1386,10 +1386,10 @@ plotptstudentltfplot <- function(q, df, rounding, main = NULL){
 
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+  legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
                                        list(q = qq, Pr = Pr)))
-  legend(-lim, legaux$text$y, bty="n", bg = "white",cex = 0.9,
+  legend(-lim, legaux$text$y, bty="n", bg = "white",cex=0.8,
          legend = substitute("Parameters:"~nu == df,
                              list(df = nu)))
 }
@@ -1447,10 +1447,10 @@ plotppoissonltfplot <- function(q, lambda, rounding, main = NULL){
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
-                                       list(q = qq, Pr = Pr, q2 = qq + 1)), cex = 1)
+                                       list(q = qq, Pr = Pr, q2 = qq + 1)),cex=0.8)
   legend(rmin, legaux$text$y, bty="n", bg = "white",
          legend = substitute("Parameters:"~lambda == lambd,
-                             list(lambd = lambda)), cex = 0.9)
+                             list(lambd = lambda)), cex=0.8)
 }
 
 
@@ -1503,8 +1503,8 @@ plotpbinomialltfplot <- function(q, size, prob, rounding, main = NULL){
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
-                                       list(q = qq, Pr = Pr, q2 = qq + 1)), cex = 1)
-  legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+                                       list(q = qq, Pr = Pr, q2 = qq + 1)), cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
          legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
                              list( N = size, P = prob)))
 }
@@ -1553,10 +1553,10 @@ plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red",cex = 1,
+  legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(Fx(t1)==P(X>t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
-  legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.9,
+  legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
          legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
                              list(ncpv = ncp, dfv = df)))
 }
@@ -1618,10 +1618,10 @@ plotppoissonltnplot <- function(q, lambda, rounding, main = NULL){
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",
                    legend = substitute(P[X](q)~"="~P(X == q) == Pr,
-                                       list(q = qq, Pr = Pr)), cex = 1)
+                                       list(q = qq, Pr = Pr)), cex=0.8)
   legend(rmin, legaux$text$y, bty="n", bg = "white",
          legend = substitute("Parameters:"~lambda == lambd,
-                             list(lambd = lambda)), cex = 0.9)
+                             list(lambd = lambda)), cex=0.8)
 }
 
 
