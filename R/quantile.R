@@ -1952,7 +1952,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    df2 = manipulate::slider(df2, df2 * 2, df2))
           }
         }
-        point <- qf(p, mean = mu, sd = sigma, lower.tail = FALSE)
+        point <- qf(p, df1, df2, lower.tail = FALSE)
       }
     }
   }

@@ -3838,6 +3838,245 @@ plotqchisqlttboth <- function(p, df, ncp, rounding, mfrow, ...) {
 
 
 
+#####################
+# F distribution
+#####################
+
+# CDF
+plotqflttcdf <- function(p, df1, df2, rounding, ...) {
+  x <- qf(p, df1, df2)
+  curve(
+    pf(x, df1, df2),
+    0,
+    4 * mean(df1+df2),
+    ylab = expression(F[X](x)),
+    ylim = c(0, 1.2),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = bquote(atop(
+      bold("Cumulative distribution plot: F"),
+      Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
+    )),
+    lwd = 4,
+    ...
+  )
+  x <- seq(0, x[1], by = 0.01)
+  y <- seq(x[1], 4 * mean(df1+df2), by = 0.01)
+  fx <- pf(x, df1, df2)
+  fy <- pf(y, df1, df2)
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "gray90")
+  # polygon(c(x, rev(x)),
+  #         c(fx, rep(0, length(fx))),
+  #         col = "red"
+  # )
+  #abline(v = mu, lty = 2)
+  qq <- round(p, digits = rounding)
+  qqaux <- round(qf(p, df1, df2), digits = rounding)
+  # Pr <- gsub("\\.", ",", Pr)
+  # qq <- gsub("\\.", ",", qq)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = substitute(q == qtle, list(qtle = qqaux)),
+    col.axis = "red",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  # auxiliar variable
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq,
+    labels = substitute(p == prob, list(prob = qq)),
+    col.axis = "red",
+    font = 2,
+    pos = aux,
+    lwd.ticks = 0
+  )
+  axis(
+    side = 2,
+    at = qq,
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+
+
+  segments(qqaux, 0, qqaux, qq, lty = 2, col = "red")
+  segments(par("usr")[1],
+           qq,
+           qqaux,
+           qq,
+           lty = 2,
+           col = "red")
+  points(qqaux, qq, pch = 16, col = "red")
+  rect(par("usr")[1],
+       1.03 * max(fx, fy),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    col = "red",
+    pch = 16,
+    legend = substitute(Q(p == p1) == Qr,
+                        list(
+                          p = "p", p1 = qq, Qr = qqaux
+                        )),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    bg = "white",
+    legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
+                        list(df1v = df1, df2v = df2)),
+    cex = 0.8
+  )
+}
+
+# PDF
+plotqflttpdfaux <- function(q, df1, df2, rounding, ...) {
+  minimo <- if (q <= df1 - 4 * df2) q - 4 * df2 else 0
+  maximo <- if (q > df1 + 4 * df2) q + 4 * sqrt(df1+df2) else df1 + 4 * df2
+  x <- seq(minimo, q, by = 0.01)
+  y <- seq(q, maximo, by = 0.01)
+  fx <- df(x, df1, df2)
+  fy <- df(y, df1, df2)
+  # if (!any(names(argaddit) == "main")) {
+  #   main <- gettext("Distribution Function: Normal", domain = "R-leem")
+  # } else {
+  #   main <- argaddit$main
+  # }
+  main <-
+    bquote(atop(
+      bold("Probability density function plot: F"),
+      F[X](q) == integral(f[X](x) * dx, infinity, q)
+    ))
+  curve(
+    df(x, df1, df2),
+    minimo,
+    maximo,
+    ylim = c(0, 1.2 * max(fx, fy)),
+    ylab = expression(f[X](x)),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = main,
+    ...
+  )
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
+          col = "red")
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "gray90")
+  # Insert vertical line over the mean
+  qq <- round(q, digits = rounding)
+  qqaux <- round(q, digits = rounding)
+  Pr <-
+    round(pf(
+      qq,
+      df1, df2,
+      lower.tail = TRUE
+    ), digits = rounding)
+  #Pr <- gsub("\\.", ",", Pr)
+  #qq <- gsub("\\.", ",", qq)
+  # Insert red q point and vertical line (X-axis)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = substitute(q == qtle, list(qtle = qqaux)),
+    col = "red",
+    font = 2,
+    col.axis = "red",
+    tick = FALSE,
+    pos = aux2
+  )
+  # Insert red horizontal and vertical line (X-axis)
+  axis(
+    side = 1,
+    at = as.character(qqaux),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(
+    side = 1,
+    at = as.character(c(minimo, qqaux)),
+    tick = TRUE,
+    lwd = 1,
+    col = "red",
+    font = 2,
+    lwd.ticks = 0,
+    labels = FALSE
+  )
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1],
+       1.03 * max(fx, fy),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    col = "red",
+    fill = "red",
+    legend = substitute(F[X](q1) == p,
+                        list(q1 = qqaux, p = Pr)),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    bg = "white",
+    legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
+                          list(df1v = df1, df2v = df2)),
+    cex = 0.8
+  )
+}
+plotqflttpdf <- function(p, df1, df2, rounding, ...) {
+  q <- qf(p, df1, df2)
+  plotqflttpdfaux(q, df1, df2, rounding, ...) # plotcurve2 (older)
+}
+
+# BOTH
+plotqflttboth <- function(p, df1, df2, rounding, mfrow, ...) {
+  op <- par(mfrow = mfrow)
+  plotqflttcdf(p, df1, df2, rounding, ...)
+  plotqflttpdf(p, df1, df2, rounding, ...)
+  # Preserving the global variable
+  par(op)
+}
+
+
+
+
 ################################################################################
 ## lower.tail == FALSE (name: plot+q+name_distribution+ltf+type_distribution)
 ################################################################################
@@ -5300,4 +5539,249 @@ plotqchisqltfboth <- function(p, df, ncp, rounding, mfrow, ...) {
   # Preserving the global variable
   par(op)
 }
+
+
+######################
+# F distribution
+#####################
+
+# Survival function (type == cdf)
+plotqfltfsf <- function(p, df1, df2, rounding, ...) {
+  x <- qf(p, df1, df2, lower.tail = FALSE)
+  curve(
+    pf(
+      x,
+      df1, df2,
+      lower.tail = FALSE
+    ),
+    0,
+    4 * mean(df1+df2),
+    ylab = expression(F[X](x)),
+    ylim = c(0, 1.2),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = bquote(atop(
+      bold("Survival function plot: F"),
+      Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
+        "," ~ "p*" == 1 - p
+    )),
+    lwd = 4,
+    ...
+  )
+  x <- seq(0, x[1], by = 0.01)
+  y <- seq(x[1], 4 * mean(df1+df2), by = 0.01)
+  fx <- pf(x, df1, df2, lower.tail = FALSE)
+  fy <- pf(y, df1, df2, lower.tail = FALSE)
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "gray90")
+  # polygon(c(x, rev(x)),
+  #         c(fx, rep(0, length(fx))),
+  #         col = "red"
+  # )
+  #abline(v = mu, lty = 2)
+  qq <- round(p, digits = rounding)
+  qqaux <-
+    round(qf(p, df1, df2, lower.tail = FALSE), digits = rounding)
+  # Pr <- gsub("\\.", ",", Pr)
+  # qq <- gsub("\\.", ",", qq)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = substitute(q[S] == qtle, list(qtle = qqaux)),
+    col.axis = "red",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  # auxiliar variable
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq,
+    labels = substitute("p*" == prob, list(prob = qq)),
+    col.axis = "red",
+    font = 2,
+    pos = aux,
+    lwd.ticks = 0
+  )
+  axis(
+    side = 2,
+    at = qq,
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+
+
+  segments(qqaux, 0, qqaux, qq, lty = 2, col = "red")
+  segments(par("usr")[1],
+           qq,
+           qqaux,
+           qq,
+           lty = 2,
+           col = "red")
+  points(qqaux, qq, pch = 16, col = "red")
+  rect(par("usr")[1],
+       1.03 * max(fx, fy),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    col = "red",
+    pch = 16,
+    legend = substitute(Q[S]("p*" == p1) == Qr,
+                        list(p1 = qq, Qr = qqaux)),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    bg = "white",
+    legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
+                        list(df1v = df1, df2v = df2)),
+    cex = 0.8
+  )
+}
+
+
+# PDF
+plotqfltfpdfaux <- function(q, df1, df2, rounding, ...) {
+  minimo <- if (q <= df1 - 4 * df2) q - 4 * df2 else 0
+  maximo <- if (q > df1 + 4 * df2) q + 4 * sqrt(df1+df2) else df1 + 4 * df2
+  x <- seq(minimo, q, by = 0.01)
+  y <- seq(q, maximo, by = 0.01)
+  fx <- df(x, df1, df2)
+  fy <- df(y, df1, df2)
+  # if (!any(names(argaddit) == "main")) {
+  #   main <- gettext("Distribution Function: Normal", domain = "R-leem")
+  # } else {
+  #   main <- argaddit$main
+  # }
+  main <-
+    bquote(atop(
+      bold("Probability density function plot: F"),
+      S[X]("q*") == integral(f[X](x) * dx, "q*", infinity)
+    ))
+  curve(
+    df(x, df1, df2),
+    minimo,
+    maximo,
+    ylim = c(0, 1.2 * max(fx, fy)),
+    ylab = expression(f[X](x)),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = main,
+    ...
+  )
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
+          col = "gray90")
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "red")
+  # Insert vertical line over the mean
+  qq <- round(q, digits = rounding)
+  qqaux <- round(q, digits = rounding)
+  Pr <-
+    round(pf(
+      qq,
+      df1, df2,
+      lower.tail = FALSE
+    ), digits = rounding)
+  #Pr <- gsub("\\.", ",", Pr)
+  #qq <- gsub("\\.", ",", qq)
+  # Insert red q point and vertical line (X-axis)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qqaux,
+    labels = substitute(q[S] == qtle, list(qtle = qqaux)),
+    col = "red",
+    font = 2,
+    col.axis = "red",
+    tick = FALSE,
+    pos = aux2
+  )
+  # Insert red horizontal and vertical line (X-axis)
+  axis(
+    side = 1,
+    at = as.character(qqaux),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(
+    side = 1,
+    at = as.character(c(qqaux, maximo)),
+    tick = TRUE,
+    lwd = 1,
+    col = "red",
+    font = 2,
+    lwd.ticks = 0,
+    labels = FALSE
+  )
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1],
+       1.03 * max(fx, fy),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    col = "red",
+    fill = "red",
+    legend = substitute(S[X](q1) == p,
+                        list(q1 = qqaux, p = Pr)),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    bg = "white",
+    legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
+                        list(df1v = df1, df2v = df2)),
+    cex = 0.8
+  )
+}
+plotqfltfpdf <- function(p, df1, df2, rounding, ...) {
+  q <- qf(p, df1, df2, lower.tail = FALSE)
+  plotqfltfpdfaux(q, df1, df2, rounding, ...) # plotcurve2 (older)
+}
+
+# BOTH
+plotqfltfboth <- function(p, df1, df2, rounding, mfrow, ...) {
+  op <- par(mfrow = mfrow)
+  plotqfltfsf(p, df1, df2, rounding, ...)
+  plotqfltfpdf(p, df1, df2, rounding, ...)
+  # Preserving the global variable
+  par(op)
+}
+
+
+
 
