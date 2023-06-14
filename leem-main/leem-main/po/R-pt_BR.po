@@ -1,0 +1,306 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: leem 0.1.0\n"
+"POT-Creation-Date: 2022-02-25 15:22\n"
+"PO-Revision-Date: 2022-02-25 14:17-0300\n"
+"Last-Translator: U-DESKTOP-O4D8283\\bende <ben.deivide@ufsj.edu.br>\n"
+"Language-Team: Language C\n"
+"Language: C\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "leem package"
+msgstr "Pacote leem"
+
+msgid "Configurations of the data"
+msgstr "Configurações dos dados"
+
+msgid "Comma as decimal points"
+msgstr "Vírgula como separador decimal"
+
+msgid "Separator of variables:"
+msgstr "Separador de variáveis"
+
+msgid "Enter the data"
+msgstr "Entre com os dados"
+
+msgid "No data set has been entered!"
+msgstr "Nenhum dado foi inserido!"
+
+msgid "Choose directory..."
+msgstr "Escolha o diretório..."
+
+msgid "File"
+msgstr "Arquivo"
+
+msgid "Open file (.txt or .csv)..."
+msgstr "Abra o arquivo (.txt ou .csv)"
+
+msgid "Restart"
+msgstr "Reiniciando"
+
+msgid "Edit"
+msgstr "Edite"
+
+msgid "Data set..."
+msgstr "Conjunto de dados..."
+
+msgid "Data"
+msgstr "Dado"
+
+msgid "Calculate"
+msgstr "Calcular"
+
+msgid "Insert Model"
+msgstr "Insira o modelo"
+
+msgid "Plot"
+msgstr "Gráfico"
+
+msgid "Analysis"
+msgstr "Análise"
+
+msgid "Mathematics"
+msgstr "Matemática"
+
+msgid "Elementary school"
+msgstr "Ensino básico"
+
+msgid "Higher education"
+msgstr "Ensino superior"
+
+msgid "Statistics"
+msgstr "Estatística"
+
+msgid "About"
+msgstr "Sobre"
+
+msgid "leem"
+msgstr "leem"
+
+msgid "Authors"
+msgstr "Autores"
+
+msgid "Contact"
+msgstr "Contato"
+
+msgid "1st and 2nd degree functions"
+msgstr "Funções do 1º e 2º grau"
+
+msgid "Coefficients"
+msgstr "Coeficientes"
+
+msgid "Limit of axes"
+msgstr "Limite dos eixos"
+
+msgid "xlimits"
+msgstr "limite-x"
+
+msgid "ylimits"
+msgstr "limite-y"
+
+msgid "1st degree function Additional"
+msgstr "Função do 1º grau"
+
+msgid "Interpretation of intercept (c)"
+msgstr "Interpretação do intercepto (c)"
+
+msgid "Interpretation of the angular coefficient (b)"
+msgstr "Interpretação do coeficiente angular (b)"
+
+msgid "2st degree function Additional"
+msgstr "Função do 2º grau"
+
+msgid "Root(s)"
+msgstr "Raiz(es)"
+
+msgid "Maximum or minimum"
+msgstr "Máximo ou mínimo"
+
+msgid "Results"
+msgstr "Resultados"
+
+msgid "The results..."
+msgstr "Resultados..."
+
+msgid "Minimum point"
+msgstr "Ponto de mínimo"
+
+msgid "Maximun point"
+msgstr "Ponto de máximo"
+
+msgid "(1st degree function)"
+msgstr "(Função do 1º grau)"
+
+msgid "(2st degree function)"
+msgstr "(Função do 2º grau)"
+
+msgid "Angular coefficient:"
+msgstr "Coeficiente angular:"
+
+msgid "Intercept:"
+msgstr "Intercepto"
+
+msgid "Interpretation of"
+msgstr "Interpretação de"
+
+msgid ""
+"For each increase of one unit of x, \n"
+" an increase/decrease will occur from"
+msgstr ""
+"Para cada acréscimo de uma unidade de x, \n"
+" haverá um acréscimo/decréscimo de"
+
+msgid "to y."
+msgstr "para y."
+
+msgid "When x = 0, y will assume"
+msgstr "Quando x = 0, y assumirá"
+
+msgid ""
+". Otherwise, the intercection point \n"
+" between the line and the y-axis is (0,"
+msgstr ""
+". Por outro lado, o ponto de intersecção \n"
+" entre a reta e o eixo y é (0,"
+
+msgid "Maximum/Minimum point:"
+msgstr "Ponto de máximo/mínimo"
+
+msgid "Root(s):"
+msgstr "Raiz(es)"
+
+msgid "Results..."
+msgstr "Resultados..."
+
+msgid "Function:"
+msgstr "Função:"
+
+msgid ""
+"To contact the maintainer, \n"
+" please send an email to \n"
+" ben.deivide@ufsj.edu.br"
+msgstr ""
+"Para entrar em contato com o mantenedor, \n"
+" envie um e-mail para \n"
+" ben.deivide@ufsj.edu.br"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "Ogives"
+msgstr "Gráfico de ogivas"
+
+msgid "Groups"
+msgstr "Grupos"
+
+msgid "Frequency"
+msgstr "Frequência"
+
+msgid "Ogive larger than"
+msgstr "Ogiva crescente"
+
+msgid "Ogive less than"
+msgstr "Ogiva decrescente"
+
+msgid "Classes"
+msgstr "Classes"
+
+msgid "Polygon"
+msgstr "Polígono de frequências"
+
+msgid "Bar plot"
+msgstr "Gráfico de barras"
+
+msgid "Histogram"
+msgstr "Histograma de frequências"
+
+msgid "Stick chart"
+msgstr "Gráfico de hastes ou bastão"
+
+msgid "Mean"
+msgstr "Média"
+
+msgid "Median"
+msgstr "Mediana"
+
+msgid "Mode"
+msgstr "Moda"
+
+msgid "Use the 'new_leem()' function to create an object of class leem!"
+msgstr "Use a função 'new_leem()' para criar um objeto de classe 'leem'!"
+
+msgid "The argument should be numerical!"
+msgstr "O argumento deve ser numérico!"
+
+msgid "The k argument should be greater than 1!"
+msgstr "O argumento k deve ser maior que 1!"
+
+msgid "Table of frequency"
+msgstr "Tabela de frequência"
+
+msgid "Type of variable:"
+msgstr "Tipo de variável:"
+
+msgid "Classes: Grouping of classes"
+msgstr "Classes: Agrupamento de classes"
+
+msgid "Fi: Absolute frequency"
+msgstr "Fi: Frequência absoluta"
+
+msgid "PM: Midpoint"
+msgstr "PM: Ponto médio"
+
+msgid "Fr: Relative frequency"
+msgstr "Fr: Frequência relativa"
+
+msgid "Fac1: Cumulative frequency (below)"
+msgstr "Fac1: Frequência acumulada (abaixo de)"
+
+msgid "Fac2: Cumulative frequency (above)"
+msgstr "Fac2: Frequência acumulada (acima de)"
+
+msgid "Fp: Percentage frequency"
+msgstr "Fp: Frequência percentual"
+
+msgid "Fac1p: Cumulative percentage frequency (below)"
+msgstr "Fac1p: Frequência acumulada percentual (abaixo de)"
+
+msgid "Fac2p: Cumulative percentage frequency (above)"
+msgstr "Fac2p: Frequência acumulada percentual (acima de)"
+
+msgid "Groups: Discretized grouping"
+msgstr "Groups: Agrupamento discretizado"
+
+msgid "Relative frequency"
+msgstr "Frequência relativa"
+
+msgid "Percentage frequency (%)"
+msgstr "Frequência percentual (%)"
+
+msgid "Confidence interval for"
+msgstr "Intervalo de confiança para"
+
+msgid "of normal population"
+msgstr "de uma população normal"
+
+msgid "is known"
+msgstr "é conhecida"
+
+msgid "Pivotal quantity"
+msgstr "Quantidade pivotal"
+
+msgid "Confidence level"
+msgstr "Coeficiente de confiança"
+
+msgid "of symmetric distribution"
+msgstr "de uma distribuição simétrica"
+
+msgid "Degrees of freedom"
+msgstr "Graus de liberdade"
+
+msgid "is unknown"
+msgstr "é não conhecida"
+
