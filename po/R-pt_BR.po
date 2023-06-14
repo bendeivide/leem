@@ -304,3 +304,18 @@ msgstr "Graus de liberdade"
 msgid "is unknown"
 msgstr "é não conhecida"
 
+msgid "Skewness"
+msgstr "Assimetria"
+
+msgid "Symmetric distribution"
+msgstr "Distribuição simétrica"
+
+msgid "skew"
+msgstr "AS"
+
+msgid "Positive skew"
+msgstr "Assimetria positiva"
+
+msgid "Negative skew"
+msgstr "Assimetria negativa"
+
