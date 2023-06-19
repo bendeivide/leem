@@ -555,8 +555,8 @@ plotpchisqarrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
 #####################
 # Plot
 plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
-  minimo <- if (q[1] >= df1 - 4 * df2) q[1] - 4 * df2 else 0
-  maximo <- if (q[2] > df1 + 4 * df2) q[2] + 4 * df2 else df1 + 4 * df2
+  minimo <- 0
+  maximo <- 10
 
   x <- seq(minimo, q[1], by = 0.01)
   z <- seq(q[2], maximo, by = 0.01)
@@ -566,16 +566,16 @@ plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
   fy <- df(y, df1, df2)
   if (is.null(main)) {###Ajustar
     if (attr(q, "region") == "region1") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == frac(root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]})), xB(frac(d[1],2),frac(d[2],2)))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region3") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == frac(root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]})), xB(frac(d[1],2),frac(d[2],2)))*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region5") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == frac(root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]})), xB(frac(d[1],2),frac(d[2],2)))*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region6") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == frac(root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]})), xB(frac(d[1],2),frac(d[2],2)))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
   }
   curve(df(x, df1, df2), minimo, maximo,
@@ -583,7 +583,7 @@ plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
         ylab = expression(f[X](X)),
         panel.first = grid(col="gray90"),
         main = main,
-        cex.main=0.8)
+        cex.main=1)
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
           col="gray90")
@@ -1122,8 +1122,8 @@ plotpchisqbrrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
 #####################
 # Plot
 plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
-  minimo <- if (q[1] >= df1 - 4 * df2) q[1] - 4 * df2 else 0
-  maximo <- if (q[2] > df1 + 4 * df2) q[2] + 4 * df2 else df1 + 4 * df2
+  minimo <- 0
+  maximo <- 10
 
   x <- seq(q[1], q[2], by = 0.01)
   y <- seq(minimo, maximo, by = 0.01)
@@ -1131,16 +1131,16 @@ plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
   fy <- df(y, df1, df2)
   if (is.null(main)) {
     if (attr(q, "region") == "region2") {
-      main <- substitute(atop(bold("Probability function plot: F"), frac(root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]})), xB(frac(d[1],2),frac(d[2],2)))*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: F"), root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region4") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == frac(root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]})), xB(frac(d[1],2),frac(d[2],2)))*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region7") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == frac(root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]})), xB(frac(d[1],2),frac(d[2],2)))*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region8") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == frac(root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]})), xB(frac(d[1],2),frac(d[2],2)))*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
   }
   curve(df(x, df1, df2), minimo, maximo,
@@ -1148,7 +1148,7 @@ plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
         ylim = c(0, 1.2 * max(fx,fy)),
         panel.first = grid(col="gray90"),
         main = main,
-        cex.main = 0.8)
+        cex.main = 1)
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
           col="gray90")
@@ -1488,8 +1488,8 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
 
 # Plot
 plotpflttplot <- function(q, df1, df2, rounding, main = NULL) {
-  minimo <- if (q >= df1 - 4 * df2) q - 4 * df2 else 0
-  maximo <- if (q > df1 + 4 * df2) q + 4 * df2 else df1 + 4 * df2
+  minimo <- 0
+  maximo <- 10
 
 
   x <- seq(minimo, q, by = 0.01)
@@ -1497,13 +1497,13 @@ plotpflttplot <- function(q, df1, df2, rounding, main = NULL) {
   fx <- df(x, df1, df2)
   fy <- df(y, df1, df2)
   if (is.null(main)) {
-    main <- substitute(atop(bold("Probability function plot: F"), f[X](x) ==frac(root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]})), xB(frac(d[1],2),frac(d[2],2)))*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
+    main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/ xB(frac(d[1],2),frac(d[2],2))*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
   }
   curve(df(x, df1, df2), minimo, maximo,
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
         main = main,
-        cex.main = 0.8)
+        cex.main = 1)
   polygon(c(x, rev(x)),
           c(fx, rep(0, length(fx))),
           col="red")
@@ -1823,21 +1823,21 @@ plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
 #####################
 # Plot
 plotpfltfplot <- function(q, df1, df2, rounding, main = NULL) {
-  minimo <- if (q >= df1 - 4 * df2) q - 4 * df2 else 0
-  maximo <- if (q > df1 + 4 * df2) q + 4 * df2 else df1 + 4 * df2
+  minimo <- 0
+  maximo <- 10
 
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- df(x, df1, df2)
   fy <- df(y, df1, df2)
   if (is.null(main)) {
-    main = substitute(atop(bold("Probability function plot: F"), f[X](x) == frac(root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]})), xB(frac(d[1],2),frac(d[2],2)))*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)), list(t = q))
+    main = substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)), list(t = q))
   }
   curve(df(x, df1, df2), minimo, maximo,
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
         main = main,
-        cex.main = 0.8)
+        cex.main = 1)
   polygon(c(x, rev(x)),
           c(fx, rep(0, length(fx))),
           col="gray90")

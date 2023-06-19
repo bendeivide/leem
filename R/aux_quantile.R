@@ -2054,7 +2054,7 @@ plotqftscdf <- function(p, df1, df2, rounding, ...) {
   curve(
     pf(x, df1, df2),
     0,
-    df1 + 4 * df2,
+    10,
     ylab = expression(F[X](x)),
     ylim = c(0, 1.2),
     xlab = "X",
@@ -2230,8 +2230,8 @@ plotqftscdf <- function(p, df1, df2, rounding, ...) {
 
 # PDF
 plotqftspdfaux <- function(q, df1, df2, rounding, ...) {
-  minimo <- if (q[1] >= df1 - 4 * df2) q[1] - 4 * df2 else 0
-  maximo <- if (q[2] > df1 + 4 * df2) q[2] + 4 * df2 else df1 + 4 * df2
+  minimo <- 0
+  maximo <- 10
 
   x <- seq(minimo, q[1], by = 0.01)
   z <- seq(q[2], maximo, by = 0.01)
@@ -3848,7 +3848,7 @@ plotqflttcdf <- function(p, df1, df2, rounding, ...) {
   curve(
     pf(x, df1, df2),
     0,
-    4 * mean(df1+df2),
+   10,
     ylab = expression(F[X](x)),
     ylim = c(0, 1.2),
     xlab = "X",
@@ -3957,8 +3957,8 @@ plotqflttcdf <- function(p, df1, df2, rounding, ...) {
 
 # PDF
 plotqflttpdfaux <- function(q, df1, df2, rounding, ...) {
-  minimo <- if (q <= df1 - 4 * df2) q - 4 * df2 else 0
-  maximo <- if (q > df1 + 4 * df2) q + 4 * sqrt(df1+df2) else df1 + 4 * df2
+  minimo <- 0
+  maximo <- 10
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- df(x, df1, df2)
@@ -5555,7 +5555,7 @@ plotqfltfsf <- function(p, df1, df2, rounding, ...) {
       lower.tail = FALSE
     ),
     0,
-    4 * mean(df1+df2),
+    10,
     ylab = expression(F[X](x)),
     ylim = c(0, 1.2),
     xlab = "X",
@@ -5665,8 +5665,8 @@ plotqfltfsf <- function(p, df1, df2, rounding, ...) {
 
 # PDF
 plotqfltfpdfaux <- function(q, df1, df2, rounding, ...) {
-  minimo <- if (q <= df1 - 4 * df2) q - 4 * df2 else 0
-  maximo <- if (q > df1 + 4 * df2) q + 4 * sqrt(df1+df2) else df1 + 4 * df2
+  minimo <- 0
+  maximo <- 10
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- df(x, df1, df2)
