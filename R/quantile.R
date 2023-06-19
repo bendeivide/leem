@@ -1667,6 +1667,32 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             )
           }
         }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqbinomiallttpdf(p, size, prob, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqbinomialltfpdf(`1-p`, size, prob, rounding),
+                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   size = manipulate::slider(size, size + sqrt(size), size),
+                                   prob = manipulate::slider(0, 1, prob)
+            )
+          }
+        }
+        if (type == "both") {
+          if (gui == "plot") {
+            plotqbinomiallttboth(p, size, prob, rounding,mfrow, cex.main)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqbinomialltfboth(`1-p`, size, prob, rounding, mfrow, cex.main),
+                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   size = manipulate::slider(size, size + sqrt(size), size),
+                                   prob = manipulate::slider(0, 1, prob)
+            )
+          }
+        }
         point <- qbinom(p, size, prob, lower.tail = FALSE)
       }
     }
@@ -1695,10 +1721,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
         if (gui == "rstudio") {
           # Plot
           manipulate::manipulate(plotqchisqtsboth(p, df, ncp, rounding, mfrow, cex.main = cex.main), # aux_quantile.R
-                                 p = manipulate::slider(0.01, 0.99, p),
-                                 df = manipulate::slider(df, df + 5 * df, df),
-                                 ncp = manipulate::slider(ncp, df + 5 * df, ncp)
-          )
+                                 p = manipulate::slider(0.00, 0.99, p),
+                                 df = manipulate::slider(1, 100, df),
+                                 ncp = manipulate::slider(0, 100, ncp))
         }
       }
       if (type == "cdf") {
@@ -1709,9 +1734,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
         if (gui == "rstudio") {
           # Plot
           manipulate::manipulate(plotqchisqtscdf(p, df, ncp, rounding),
-                                 p = manipulate::slider(0.01, 0.99, p),
-                                 df = manipulate::slider(df, df + 5 * df, df),
-                                 ncp = manipulate::slider(ncp, df + 5 * df, ncp)
+                                 p = manipulate::slider(0.00, 0.99, p),
+                                 df = manipulate::slider(1, 100, df),
+                                 ncp = manipulate::slider(0, 100, ncp)
           )
         }
       }
@@ -1722,9 +1747,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
         if (gui == "rstudio") {
           # Plot
           manipulate::manipulate(plotqchisqtspdf(p, df, ncp, rounding),
-                                 p = manipulate::slider(0.01, 0.99, p),
-                                 df = manipulate::slider(df, df + 5 * df, df),
-                                 ncp = manipulate::slider(ncp, df + 5 * df, ncp)
+                                 p = manipulate::slider(0.00, 0.99, p),
+                                 df = manipulate::slider(1, 100, df),
+                                 ncp = manipulate::slider(0, 100, ncp)
           )
         }}
       point <- qchisq(c(p/2, 1 - p/2), df = df, ncp = ncp)
@@ -1739,9 +1764,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             # Plot
             Q(0.8, mean = 0, sd = 1)
             manipulate::manipulate(plotqchisqlttboth(p, df, ncp, rounding, mfrow, cex.main = cex.main),
-                                   p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, df + 5 * df, df),
-                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
             )
           }
         }
@@ -1753,9 +1778,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           if (gui == "rstudio") {
             # Plot
             manipulate::manipulate(plotqchisqlttcdf(p, df, ncp, rounding),
-                                   p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, df + 5 * df, df),
-                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
             )
           }
         }
@@ -1767,9 +1792,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           if (gui == "rstudio") {
             # Plot
             manipulate::manipulate(plotqchisqlttpdf(p, df, ncp, rounding),
-                                   p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, df + 5 * df, df),
-                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
             )
           }
         }
@@ -1785,9 +1810,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             # Plot
             cex.main <- 0.8
             manipulate::manipulate(plotqchisqltfboth(p, df, ncp, rounding, mfrow, cex.main = cex.main),
-                                   p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, df + 5 * df, df),
-                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
             )
           }
         }
@@ -1799,9 +1824,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           if (gui == "rstudio") {
             # Plot
             manipulate::manipulate(plotqchisqltfsf(p, df, ncp, rounding),
-                                   p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, df + 5 * df, df),
-                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
             )
           }
         }
@@ -1812,9 +1837,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           if (gui == "rstudio") {
             # Plot
             manipulate::manipulate(plotqchisqltfpdf(p, df, ncp, rounding),
-                                   p = manipulate::slider(0.01, 0.99, p),
-                                   df = manipulate::slider(df, df + 5 * df, df),
-                                   ncp = manipulate::slider(ncp, df + 5 * df, ncp)
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
             )
           }
         }
@@ -1846,10 +1871,11 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           plotqftsboth(p, df1, df2, rounding, mfrow, cex.main = cex.main) # aux_quantile.R
         }
         if (gui == "rstudio") {
+          cex.main <- 0.7
           manipulate::manipulate(plotqftsboth(p, df1, df2, rounding, mfrow, cex.main = cex.main), # aux_quantile.R
                                  p = manipulate::slider(0.01, 0.99, p),
-                                 df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                 df2 = manipulate::slider(df2, df2 * 2, df2))
+                                 df1 = manipulate::slider(1, 100, df1),
+                                 df2 = manipulate::slider(1, 100, df2))
         }
       }
       if (type == "cdf") {
@@ -1860,8 +1886,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
         if (gui == "rstudio") {
           manipulate::manipulate(plotqftscdf(p, df1, df2, rounding),
                                  p = manipulate::slider(0.01, 0.99, p),
-                                 df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                 df2 = manipulate::slider(df2, df2 * 2, df2))
+                                 df1 = manipulate::slider(1, 100, df1),
+                                 df2 = manipulate::slider(1, 100, df2))
         }
       }
       if (type == "pdf") {
@@ -1871,8 +1897,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
         if (gui == "rstudio") {
           manipulate::manipulate(plotqftspdf(p, df1, df2, rounding),
                                  p = manipulate::slider(0.01, 0.99, p),
-                                 df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                 df2 = manipulate::slider(df2, df2 * 2, df2))
+                                 df1 = manipulate::slider(1, 100, df1),
+                                 df2 = manipulate::slider(1, 100, df2))
         }
       }
       point <- qf(c(p/2, 1 - p/2), df1, df2)
@@ -1885,10 +1911,10 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           }
           if (gui == "rstudio") {
             Q(0.8, mean = 0, sd = 1)
-            manipulate::manipulate(plotqflttboth(p, df1, df2, rounding, mfrow, cex.main = cex.main),
+            manipulate::manipulate(plotqflttboth(p, df1, df2, rounding, mfrow),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                   df2 = manipulate::slider(df2, df2 * 2, df2))
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
           }
         }
         if (type == "cdf") {
@@ -1899,8 +1925,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           if (gui == "rstudio") {
             manipulate::manipulate(plotqfltcdf(p, df1, df2, rounding),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                   df2 = manipulate::slider(df2, df2 * 2, df2))
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
           }
         }
         if (type == "pdf") {
@@ -1909,9 +1935,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           }
           if (gui == "rstudio") {
             manipulate::manipulate(plotqflttpdf(p, df1, df2, rounding),
-                                   p = manipulate::slider(0.001, 0.999, p),
-                                   df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                   df2 = manipulate::slider(df2, df2 * 2, df2))
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
           }
         }
         point <- qf(p, df1, df2)
@@ -1925,8 +1951,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             cex.main <- 0.8
             manipulate::manipulate(plotqfltfboth(p, df1, df2, rounding, mfrow, cex.main = cex.main),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                   df2 = manipulate::slider(df2, df2 * 2, df2))
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
           }
         }
         if (type == "cdf") {
@@ -1937,8 +1963,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           if (gui == "rstudio") {
             manipulate::manipulate(plotqfltfsf(p, df1, df2, rounding),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                   df2 = manipulate::slider(df2, df2 * 2, df2))
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
           }
         }
         if (type == "pdf") {
@@ -1948,8 +1974,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           if (gui == "rstudio") {
             manipulate::manipulate(plotfltfpdf(p, df1, df2, rounding),
                                    p = manipulate::slider(0.01, 0.99, p),
-                                   df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                   df2 = manipulate::slider(df2, df2 * 2, df2))
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
           }
         }
         point <- qf(p, df1, df2, lower.tail = FALSE)

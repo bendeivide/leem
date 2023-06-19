@@ -5278,16 +5278,16 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
     )
   }
 }
-plotqpoissonltfpdf <- function(p, lambda, rounding, ...) {
-  q <- qpois(p, lambda, lower.tail = FALSE)
-  plotqpoissonltfpdfaux(q, lambda, rounding, ...)
+plotqbinomialltfpdf <- function(p, size, prob, rounding, ...) {
+  q <- qbinom(p, size, prob, lower.tail = FALSE)
+  plotqbinomialltfpdfaux(q, size, prob, rounding, ...)
 }
 
 # BOTH
-plotqpoissonltfboth <- function(p, lambda, rounding, mfrow, cex.main, ...) {
+plotqbinomialltfboth <- function(p, size, prob, rounding, mfrow, cex.main, ...) {
   op <- par(mfrow = mfrow)
-  plotqpoissonlttsf(p, lambda, rounding, ...)
-  plotqpoissonltfpdf(p, lambda, rounding, ...)
+  plotqbinomiallttsf(p, size, prob, rounding, ...)
+  plotqbinomialltfpdf(p, size, prob, rounding, ...)
   # Preserving the global variable
   par(op)
 }

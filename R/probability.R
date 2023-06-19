@@ -463,7 +463,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if (dist == "chisq") {
         if (!any(names(argaddit) == "ncp")) {
-          ncp <- readline(gettext("Insert the value of 'ncp' argument: ", domain = "R-leem"))
+          ncp <- 0
           argaddit$ncp <- as.numeric(ncp)
         }
         if (!any(names(argaddit) == "df")) {
@@ -477,6 +477,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         df <- argaddit$df
         minimo <- if (q[1] <= ncp - 4 * df) ncp - 4 * df else 0
         maximo <- if (q[2] > ncp + 4 * df) q[2] + 4 * df else ncp + 4 * df
+
         if (gui == "plot") {
           plotpchisqarplot(q, df, ncp, rounding, main)
         }
@@ -484,8 +485,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           manipulate::manipulate(plotpchisqarrstudio(q1, q2, df, ncp, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
-                                 df = manipulate::slider(df, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(ncp, ncp + 2 * df, ncp))
+                                 df = manipulate::slider(1, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(0, ncp + 2 * df, ncp))
         }
         prob <- pchisq(q[1], df = df, ncp = ncp, lower.tail = T) +
           pchisq(q[2], df = df, ncp = ncp, lower.tail = F)
@@ -506,18 +507,16 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         df1 <- argaddit$df1
         df2 <- argaddit$df2
         # Auxiliar variables
-        minimo <- if (q[1] >= df1 - 4 * df2) q[1] - 4 * df2 else 0
-        maximo <- if (q[2] > df1 + 4 * df2) q[2] + 4 * df2 else df1 + 4 * df2
 
         if (gui == "plot") {
           plotpfarplot(q, df1, df2, rounding, main)
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotpfarrstudio(q1, q2, df1, df2, rounding, main, q),
-                                 q1 = manipulate::slider(minimo, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], maximo, q[2]),
-                                 df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                 df2 = manipulate::slider(df2, df2 * 2, df2))
+                                 q1 = manipulate::slider(0, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], 20, q[2]),
+                                 df1 = manipulate::slider(1, df1  * 2 , df1),
+                                 df2 = manipulate::slider(1, df2 * 2, df2))
         }
         if (gui == "tcltk") {
           stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
@@ -1609,7 +1608,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if (dist == "chisq") {
         if (!any(names(argaddit) == "ncp")) {
-          ncp <- readline(gettext("Insert the value of 'ncp' argument: ", domain = "R-leem"))
+          ncp <-0
           argaddit$ncp <- as.numeric(ncp)
         }
         if (!any(names(argaddit) == "df")) {
@@ -1630,8 +1629,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           manipulate::manipulate(plotpchisqbrrstudio(q1, q2, df, ncp, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
-                                 df = manipulate::slider(df, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(ncp, ncp + 2 * df, ncp))
+                                 df = manipulate::slider(1, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(0, ncp + 2 * df, ncp))
         }
         prob <- pchisq(q = q[2], df = df, ncp= ncp) - pchisq(q = q[1], df = df, ncp = ncp)
       }
@@ -1659,10 +1658,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotpfbrrstudio(q1, q2, df1, df2, rounding, main, q),
-                                 q1 = manipulate::slider(minimo, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], maximo, q[2]),
-                                 df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                 df2 = manipulate::slider(df2, df2 * 2, df2))
+                                 q1 = manipulate::slider(0, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], 20, q[2]),
+                                 df1 = manipulate::slider(1, df1  * 2 , df1),
+                                 df2 = manipulate::slider(1, df2 * 2, df2))
         }
         if (gui == "tcltk") {
           stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
@@ -2863,7 +2862,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
     }
     if (dist == "chisq") {
       if (!any(names(argaddit) == "ncp")) {
-        ncp <- readline(gettext("Insert the value of 'ncp' argument: ", domain = "R-leem"))
+        ncp <- 0
         argaddit$ncp <- as.numeric(ncp)
       }
       if (!any(names(argaddit) == "df")) {
@@ -2883,21 +2882,21 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotpchisqlttplot(q, df, ncp, rounding, main),
-                                 q = manipulate::slider(q, ncp + 4 * df, q),
-                                 df = manipulate::slider(df, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(ncp, ncp + 2 * df, ncp))
+                                 q = manipulate::slider(0, ncp + 4 * df, q),
+                                 df = manipulate::slider(1, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(0, ncp + 2 * df, ncp))
         }
         prob <- pchisq(q = q, df = df, ncp = ncp)
       }
       else {
         if (gui == "plot" ) {
-          plotpchisqltfplot(q, ncp, df, rounding, main)
+          plotpchisqltfplot(q, df, ncp, rounding, main)
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotpchisqltfplot(q, df, ncp, rounding, main),
-                                 q = manipulate::slider(q, ncp + 4 * df, q),
-                                 df = manipulate::slider(df, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(ncp, ncp + 2 * df, ncp))
+                                 q = manipulate::slider(0, ncp + 4 * df, q),
+                                 df = manipulate::slider(1, ncp + 2 * df, df),
+                                 ncp = manipulate::slider(0, ncp + 2 * df, ncp))
         }
         prob <- pchisq(q = q, df = df, ncp = ncp, lower.tail = FALSE)
       }
@@ -2928,8 +2927,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "rstudio") {
           manipulate::manipulate(plotpflttrstudio(q, df1, df2, rounding, main),
                                  q = manipulate::slider(0, df1+df1+30, q),
-                                 df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                 df2 = manipulate::slider(df2, df2 * 2, df2))
+                                 df1 = manipulate::slider(1, df1  * 2 , df1),
+                                 df2 = manipulate::slider(1, df2 * 2, df2))
         }
         if (gui == "tcltk") {
           stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
