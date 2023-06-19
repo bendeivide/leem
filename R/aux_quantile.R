@@ -1617,7 +1617,7 @@ plotqbinomialtspdfaux <- function(q, size, prob, rounding, ...) {
       main = substitute(
         atop(
           bold("Probability function plot: Binomial"),
-          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!") *
             "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
         ),
         list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
@@ -1659,7 +1659,7 @@ plotqbinomialtspdfaux <- function(q, size, prob, rounding, ...) {
       main = substitute(
         atop(
           bold("Probability function plot: Binomial"),
-          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
             "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
         ),
         list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
@@ -3502,7 +3502,7 @@ plotqbinomiallttpdfaux <- function(q, size, prob, rounding, ...) {
       main = substitute(
         atop(
           bold("Probability function plot: Binomial"),
-          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
             "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t1) == sum(p[X](x), x >= t1, infinity)
         ),
         list(t1 = qq, x = "x", t3 = qq -1)
@@ -3544,7 +3544,7 @@ plotqbinomiallttpdfaux <- function(q, size, prob, rounding, ...) {
       main = substitute(
         atop(
           bold("Probability function plot: Binomial"),
-          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
             "," ~  ~ F[X](q*"*") == sum(p[X](x), x <= q*"*", "")
         ),
         list(t1 = qq, x = "x", t3 = qq -1)
@@ -5098,13 +5098,13 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
     rmin <- round(rmin)
   }
   rmax <-
-    if (q > lambda) {
-      ceiling(q + 4 * sqrt(lambda))
+    if (q > size) {
+      ceiling(q + 4 * sqrt(size))
     } else {
-      ceiling(lambda + 4 * sqrt(lambda))
+      ceiling(size + 4 * sqrt(size))
     }
   x <- rmin:rmax
-  probx <- dpois(x, lambda = lambda)
+  probx <- dbinom(x, size, prob)
 
   xlim <- c(rmin, rmax)
   ylim <- c(0, max(probx) * 1.2)
@@ -5124,8 +5124,8 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
   aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
   Pr <-
     round(
-      ppois(q = q,
-            lambda = lambda,
+      pbinom(q = q,
+            size, prob,
             lower.tail = FALSE
       ),
       digits = rounding
@@ -5136,8 +5136,8 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
     rmin:qq
   }
   x2 <- qq:rmax
-  probx1 <- dpois(x1, lambda = lambda)
-  probx2 <- dpois(x2, lambda = lambda)
+  probx1 <- dbinom(x1, size, prob)
+  probx2 <- dbinom(x2, size, prob)
   lines(x1,
         probx1,
         type = "h",
@@ -5208,8 +5208,8 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
       xlab = "X",
       main = substitute(
         atop(
-          bold("Probability function plot: Poisson"),
-          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+          bold("Probability function plot: Binomial"),
+          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
             "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t1) == sum(p[X](x), x >= t1, infinity)
         ),
         list(t1 = qq, x = "x", t3 = qq -1)
@@ -5231,8 +5231,8 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ lambda == lambd,
-                          list(lambd = lambda)), cex = 0.8
+      legend = substitute("Parameters:" ~ size == sizev ~";"~prob == probv~".",
+                          list(sizev = size, probv = prob)), cex = 0.8
     )
   } else{
     axis(
@@ -5250,8 +5250,8 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
       xlab = "X",
       main = substitute(
         atop(
-          bold("Probability function plot: Poisson"),
-          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+          bold("Probability function plot: Binomial"),
+          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
             "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "")
         ),
         list(t1 = qq, x = "x", t3 = qq -1)
@@ -5273,8 +5273,8 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ lambda == lambd,
-                          list(lambd = lambda)), cex = 0.8
+      legend = substitute("Parameters:" ~ size == sizev ~";"~prob == probv~".",
+                          list(sizev = size, probv = prob)), cex = 0.8
     )
   }
 }

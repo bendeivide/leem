@@ -10,7 +10,6 @@
 ################################################################################
 # OBS.: ar - A-region; gui: "plot", "rstudio", "tcltk"
 #-------------------------------------------------------------------------------
-
 #####################
 # Normal distribution
 #####################
@@ -655,7 +654,6 @@ plotpfarrstudio <- function(q1, q2, df1, df2, rounding, main = NULL, q) {
 ################################################################################
 # OBS.: br - B-region; gui: "plot", "rstudio", "tcltk"
 #-------------------------------------------------------------------------------
-
 #####################
 # Normal distribution
 #####################
@@ -1214,7 +1212,6 @@ plotpfbrrstudio <- function(q1, q2, df1, df2, rounding, main = NULL, q) {
 #       type_distribution: cdf - cumulative distribution function;
 #       pdf - probability density function
 #-------------------------------------------------------------------------------
-
 #####################
 # Normal distribution
 #####################
@@ -1543,7 +1540,6 @@ plotpflttplot <- function(q, df1, df2, rounding, main = NULL) {
 #       type_distribution: cdf - cumulative distribution function;
 #       pdf - probability density function
 #-------------------------------------------------------------------------------
-
 #####################
 # Normal distribution
 #####################
@@ -1934,6 +1930,60 @@ plotppoissonltnplot <- function(q, lambda, rounding, main = NULL){
   legend(rmin, legaux$text$y, bty="n", bg = "white",
          legend = substitute("Parameters:"~lambda == lambd,
                              list(lambd = lambda)), cex=0.8)
+}
+
+######################
+# F distribution
+######################
+# Plot
+plotpbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
+  rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- q
+  probx <- dbinom(x, size, prob)
+  probx2 <- dbinom(x2, size, prob)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!",x*"!"*(n-x)*"!")*","~~p[X](t1) ~"="~ P(X == 20)),
+                          list(t1 = q)))
+  lines(x, probx, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  points(x, probx, lwd = 2, pch = 19)
+  lines(x2, probx2, type = "h", lwd = 2, col = "red")
+  points(x2, probx2, lwd = 2, col = "red", pch = 19)
+  # Mean
+  #abline(v = lambda, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(dbinom(qq, size, prob), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(P[X](q)~"="~P(X == q) == Pr,
+                                       list(q = qq, Pr = Pr)), cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white",
+         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
+                             list( N = size, P = prob)),cex = 0.8)
 }
 
 

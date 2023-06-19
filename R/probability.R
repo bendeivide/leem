@@ -2834,7 +2834,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       size <- argaddit$size
       prob <- argaddit$prob
 
-      if (lower.tail) {
+      if (isTRUE(lower.tail)) {
         if (gui == "plot") {
           plotpbinomiallttplot(q, size, prob, rounding, main)
         }
@@ -2846,7 +2846,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           )
         }
         prob <- pbinom(q, size, prob)
-      } else {
+      }
+      if(isFALSE(lower.tail)) {
         if (gui == "plot") {
           plotpbinomialltfplot(q, size, prob, rounding, main)
         }
@@ -2859,7 +2860,20 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         prob <- pbinom(q, size, prob, lower.tail = FALSE)
       }
-    }
+      if(is.null(lower.tail)){
+        if (gui == "plot") {
+          plotpbinomialltnplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpbinomialltnplot(q, size, prob, rounding, main),
+                                 q = manipulate::slider(0, size, q),
+                                 size = manipulate::slider(1, size+30, size),
+                                 prob = manipulate::slider(0, 1, prob)
+          )
+        }
+        prob <- dbinom(q, size, prob)
+      }
+      }
     if (dist == "chisq") {
       if (!any(names(argaddit) == "ncp")) {
         ncp <- 0

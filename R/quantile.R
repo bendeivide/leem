@@ -1600,7 +1600,12 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           )
         }
       }
-      if (type == "pdf") {
+      if (type == "pdf" || type  == "pf") {
+        if(type == "pdf"){
+          warning("The type of 'Probability Density Function' (pdf) doesen't exist for this distribution, are you seeing the 'Probability Function' (pf). See more in help.",
+                  call. = FALSE,
+                  domain = "R-leem")
+        }
         if (gui == "plot") {
           plotqbinomialtspdf(p, size, prob, rounding)
         }
@@ -1628,7 +1633,12 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             )
           }
         }
-        if (type == "pdf") {
+        if (type == "pdf" || type  == "pf") {
+          if(type == "pdf"){
+            warning("The type of 'Probability Density Function' (pdf) doesen't exist for this distribution, are you seeing the 'Probability Function' (pf). See more in help.",
+                    call. = FALSE,
+                    domain = "R-leem")
+          }
           if (gui == "plot") {
             plotqbinomiallttpdf(p, size, prob, rounding)
           }
@@ -1667,7 +1677,12 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             )
           }
         }
-        if (type == "pdf") {
+        if (type == "pdf" || type  == "pf") {
+          if(type == "pdf"){
+            warning("The type of 'Probability Density Function' (pdf) doesen't exist for this distribution, are you seeing the 'Probability Function' (pf). See more in help.",
+                    call. = FALSE,
+                    domain = "R-leem")
+          }
           if (gui == "plot") {
             plotqbinomiallttpdf(p, size, prob, rounding)
           }
@@ -1682,7 +1697,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
         }
         if (type == "both") {
           if (gui == "plot") {
-            plotqbinomiallttboth(p, size, prob, rounding,mfrow, cex.main)
+            plotqbinomialltfboth(p, size, prob, rounding,mfrow, cex.main)
           }
           if (gui == "rstudio") {
             manipulate::manipulate(plotqbinomialltfboth(`1-p`, size, prob, rounding, mfrow, cex.main),
