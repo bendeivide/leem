@@ -319,3 +319,15 @@ msgstr "Assimetria positiva"
 msgid "Negative skew"
 msgstr "Assimetria negativa"
 
+msgid "Kurtosis"
+msgstr "Curtose"
+
+msgid "Leptokurtic distribution"
+msgstr "Distribuição leptocúrtica"
+
+msgid "Mesokurtic distribution"
+msgstr "Distribuição mesocúrtica"
+
+msgid "Platykurtic distribution"
+msgstr "Distribuição platicúrtica"
+

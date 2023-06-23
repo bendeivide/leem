@@ -16,3 +16,6 @@ tools::xngettext()
 base::gettext()
 base::ngettext()
 base::bindtextdomain()
+
+# Inserir no prompt de comando:
+# msgfmt -c --statistics -o inst/po/pt_BR/LC_MESSAGES/R-leem.mo po/R-pt_BR.po
