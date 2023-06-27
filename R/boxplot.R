@@ -15,7 +15,7 @@
 #' @examples
 #' library(leem)
 #' # Example 1
-#' x <- c(rnorm(30, 100, 2)) |>
+#' x <- rnorm(30, 100, 2) |>
 #'   new_leem(variable = 2) |>
 #'   tabfreq()
 #' boxplot(x, details = TRUE)
@@ -39,6 +39,7 @@ boxplot.leem <- function(x,
   if(is.null(main)) main <- gettext("Box Plots", domain = "R-leem")
 
   if (attr(x, "variable") == "discrete") {
+    # Terminar!
   }
   if (attr(x, "variable") == "continuous") {
     if (type == "rawdata") {

@@ -1,1 +1,0 @@
-msgfmt -c --statistics -o ../inst/po/sl/LC_MESSAGES/R-leem.mo po/R-ppo.po
