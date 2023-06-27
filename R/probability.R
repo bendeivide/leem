@@ -2939,10 +2939,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           plotpflttplot(q, df1, df2, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpflttrstudio(q, df1, df2, rounding, main),
-                                 q = manipulate::slider(0, df1+df1+30, q),
-                                 df1 = manipulate::slider(1, df1  * 2 , df1),
-                                 df2 = manipulate::slider(1, df2 * 2, df2))
+          manipulate::manipulate(plotpflttplot(q, df1, df2, rounding, main),
+                                 q = manipulate::slider(0, 10, q),
+                                 df1 = manipulate::slider(1, df1  + 2 * df1, df1),
+                                 df2 = manipulate::slider(1, df2 + 2 * df2, df2))
         }
         if (gui == "tcltk") {
           stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
@@ -2956,10 +2956,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           plotpfltfplot(q, df1, df2, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpfltfrstudio(q1, q2, df1, df2, rounding, main, q),
-                                 q = manipulate::slider(0, df1+df1+30, q),
-                                 df1 = manipulate::slider(df1, df1  * 2 , df1),
-                                 df2 = manipulate::slider(df2, df2 * 2, df2))
+          manipulate::manipulate(plotpfltfplot(q, df1, df2, rounding, main),
+                                 q = manipulate::slider(0, 10, q),
+                                 df1 = manipulate::slider(1, df1  + 2 * df1, df1),
+                                 df2 = manipulate::slider(1, df2 + 2 * df2, df2))
         }
         # Compute the desired probability
         prob <- pf(q, df1, df2, lower.tail = F)

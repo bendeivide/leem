@@ -108,7 +108,7 @@ showkur <- function(){
 }
 
 # export png
-png(file = "E:/BEN_PROD/LIVROS/ESTATISTICA BASICA APLICADA AS CIENCIAS AGRARIAS/kutosis.png", width = 2500, height = 1500, res = 300, bg = "transparent")
-dev.off()
+#png(file = "E:/BEN_PROD/LIVROS/ESTATISTICA BASICA APLICADA AS CIENCIAS AGRARIAS/kutosis.png", width = 2500, height = 1500, res = 300, bg = "transparent")
+#dev.off()
 
 
