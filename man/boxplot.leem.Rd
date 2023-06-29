@@ -22,7 +22,7 @@
 
 \item{type}{character argument. Default is \code{rawdata}. If \code{type = "classes"}, the function returns a boxplot plot for each set of data grouped of classes of \code{x} object.}
 
-\item{details}{Logical argument. Default is \code{FALSE}, otherwise, in addition to the plot, the measurements necessary for the development of the plot will be displayed on the console..}
+\item{details}{Logical argument. Default is \code{FALSE}, otherwise, in addition to the plot, the measurements necessary for the development of the plot will be displayed on the console.}
 
 \item{horizontal}{Logical argument indicating if the boxplots should be horizontal; default \code{FALSE} means vertical boxes.}
 
@@ -44,7 +44,7 @@ Produce box-and-whisker plot(s) of leem class object and computes the necessary 
 \examples{
 library(leem)
 # Example 1
-x <- c(rnorm(30, 100, 2)) |>
+x <- rnorm(30, 100, 2) |>
   new_leem(variable = 2) |>
   tabfreq()
 boxplot(x, details = TRUE)

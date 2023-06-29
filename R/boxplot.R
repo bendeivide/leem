@@ -4,7 +4,7 @@
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
 #' @param type character argument. Default is \code{rawdata}. If \code{type = "classes"}, the function returns a boxplot plot for each set of data grouped of classes of \code{x} object.
-#' @param details Logical argument. Default is \code{FALSE}, otherwise, in addition to the plot, the measurements necessary for the development of the plot will be displayed on the console..
+#' @param details Logical argument. Default is \code{FALSE}, otherwise, in addition to the plot, the measurements necessary for the development of the plot will be displayed on the console.
 #' @param horizontal Logical argument indicating if the boxplots should be horizontal; default \code{FALSE} means vertical boxes.
 #' @param coef this determines how far the plot whiskers extend out from the box. If \code{coef} is positive, the whiskers extend to the most extreme data point which is no more than \code{coef} times the interquartile range from the box. A value of zero causes the whiskers to extend to the data extremes.
 #' @param main Title name. Defaults is \code{NULL}.

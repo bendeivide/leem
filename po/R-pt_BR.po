@@ -331,3 +331,27 @@ msgstr "Distribuição mesocúrtica"
 msgid "Platykurtic distribution"
 msgstr "Distribuição platicúrtica"
 
+msgid "(Interquartile \n Range)"
+msgstr "(Ampl. \n interquartílica)"
+
+msgid "(Interquartile Range)"
+msgstr "(Ampl. interquartílica)"
+
+msgid "(25th percentile)"
+msgstr "(25° percentil)"
+
+msgid "(50th percentile)"
+msgstr "(50° percentil)"
+
+msgid "(75th percentile)"
+msgstr "(75° percentil)"
+
+msgid "Outlier"
+msgstr "Dado discrepante"
+
+msgid "Upper whisker limit"
+msgstr "Limite superior"
+
+msgid "Lower whisker limit"
+msgstr "Limite inferior"
+
