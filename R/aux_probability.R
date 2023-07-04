@@ -458,6 +458,13 @@ plotpchisqarplot <- function(q, df, ncp, rounding, main = NULL) {
   fx <- dchisq(x, df = df, ncp = ncp)
   fz <- dchisq(z, df = df, ncp = ncp)
   fy <- dchisq(y, df = df, ncp = ncp)
+  if(is.infinite(1.2 * max(fx,fy,fz))){
+    auxmain <- c(0, 2.5 + df);
+    auxrect <- c(2 + df, 3.5 + df)
+  }else{
+    auxrect <- max(fx,fy,fz)
+    auxmain <- c(0, 1.2 * max(fx,fy,fz))
+  }
   if (is.null(main)) {
     if (attr(q, "region") == "region1") {
       main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
@@ -473,8 +480,9 @@ plotpchisqarplot <- function(q, df, ncp, rounding, main = NULL) {
     }
   }
   curve(dchisq(x, df = df, ncp = ncp), minimo, maximo,
-        ylim = c(0, 1.2 * max(fx,fy,fz)),xlab="X",
-        ylab = expression(f[X](X)),
+        ylim = auxmain,
+        xlab="X",
+        ylab = expression(f[X](x)),
         panel.first = grid(col="gray90"),
         main = main,
         cex=0.8)
@@ -503,7 +511,7 @@ plotpchisqarplot <- function(q, df, ncp, rounding, main = NULL) {
   axis(side=1, at=as.character(qq[2]), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 1, labels = FALSE)
   abline(v = qqaux, lty=2, col = "red")
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region1") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
@@ -556,13 +564,22 @@ plotpchisqarrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
 plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
   minimo <- 0
   maximo <- 10
-
+  if(q[2]>10){
+    maximo <- q[2]+ 2*(df1/df2)
+  }
   x <- seq(minimo, q[1], by = 0.01)
   z <- seq(q[2], maximo, by = 0.01)
-  y <-seq(minimo, maximo, by = 0.01)
+  y <- seq(minimo, maximo, by = 0.01)
   fx <- df(x, df1, df2)
   fz <- df(z, df1, df2)
   fy <- df(y, df1, df2)
+  if(is.infinite(1.2 * max(fx,fy,fz))){
+    auxmain <- c(0, 2.5 + (df1/df2));
+    auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy,fz))
+  }
   if (is.null(main)) {###Ajustar
     if (attr(q, "region") == "region1") {
       main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
@@ -577,8 +594,11 @@ plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
       main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
   }
-  curve(df(x, df1, df2), minimo, maximo,
-        ylim = c(0, 1.2 * max(fx,fy,fz)),xlab="X",
+  curve(df(x, df1, df2),
+        minimo,
+        maximo,
+        ylim = auxmain,
+        xlab="X",
         ylab = expression(f[X](X)),
         panel.first = grid(col="gray90"),
         main = main,
@@ -589,7 +609,8 @@ plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
   polygon(c(x, rev(x)),
           c(fx, rep(0, length(fx))),
           col="red")
-  polygon(c(z,rev(z)), c(fz,rep(0,length(fz))),
+  polygon(c(z,rev(z)),
+          c(fz,rep(0,length(fz))),
           col="red" )
   qq <- round(q, digits=2)
   qqaux <- qq
@@ -608,7 +629,7 @@ plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
   axis(side=1, at=as.character(qq[2]), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 1, labels = FALSE)
   abline(v = qqaux, lty=2, col = "red")
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region1") {
     legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
@@ -1033,6 +1054,13 @@ plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
   y <- seq(minimo, maximo, by = 0.01)
   fx <- dchisq(x, df = df, ncp = ncp)
   fy <- dchisq(y, df = df, ncp = ncp)
+  if(is.infinite(1.2 * max(fx,fy))){
+    auxmain <- c(0, 2.5 + df);
+    auxrect <- c(2 + df, 3.5 + df)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy))
+  }
   if (is.null(main)) {
     if (attr(q, "region") == "region2") {
       main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
@@ -1049,7 +1077,7 @@ plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
   }
   curve(dchisq(x, df = df, ncp = ncp), minimo, maximo,
         ylab = expression(f[X](x)), xlab = "X",
-        ylim = c(0, 1.2 * max(fx,fy)),
+        ylim = auxmain,
         panel.first = grid(col="gray90"),
         main = main,
         cex = 0.8)
@@ -1070,7 +1098,7 @@ plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
   axis(side=1, at=qqaux, labels=FALSE,
        col="red", font = 2, col.axis = "red")
   abline(v = qqaux, lty=2, col = "red")
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region2") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<~t2)==Pr,
@@ -1122,14 +1150,23 @@ plotpchisqbrrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
 plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
   minimo <- 0
   maximo <- 10
-
+  if(q[2]>10){
+    maximo <- q[2]+ 2*(df1/df2)
+  }
   x <- seq(q[1], q[2], by = 0.01)
   y <- seq(minimo, maximo, by = 0.01)
   fx <- df(x, df1, df2)
   fy <- df(y, df1, df2)
+  if(is.infinite(1.2 * max(fx,fy))){
+    auxmain <- c(0, 2.5 + (df1/df2));
+    auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy))
+  }
   if (is.null(main)) {
     if (attr(q, "region") == "region2") {
-      main <- substitute(atop(bold("Probability function plot: F"), root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region4") {
       main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
@@ -1143,7 +1180,7 @@ plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
   }
   curve(df(x, df1, df2), minimo, maximo,
         ylab = expression(f[X](x)), xlab = "X",
-        ylim = c(0, 1.2 * max(fx,fy)),
+        ylim = auxmain,
         panel.first = grid(col="gray90"),
         main = main,
         cex.main = 1)
@@ -1164,7 +1201,7 @@ plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
   axis(side=1, at=qqaux, labels=FALSE,
        col="red", font = 2, col.axis = "red")
   abline(v = qqaux, lty=2, col = "red")
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region2") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<~t2)==Pr,
@@ -1438,11 +1475,19 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
   y <- seq(q, maximo, by = 0.01)
   fx <- dchisq(x, df = df, ncp = ncp)
   fy <- dchisq(y, df = df, ncp = ncp)
+  if(is.infinite(1.2 * max(fx,fy))){
+    auxmain <- c(0, 2.5 + df);
+    auxrect <- c(2 + df, 3.5 + df)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy))
+  }
   if (is.null(main)) {
     main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~Fx(t1)== integral(f[X](x^2)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
   }
   curve(dchisq(x, df = df, ncp = ncp), minimo, maximo,
-        ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
+        ylim = auxmain,
+        ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
         main = main,
         cex = 0.8)
@@ -1468,7 +1513,7 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
   axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   abline(v = qqaux, lty=2, col = "red")
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
@@ -1487,17 +1532,25 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
 plotpflttplot <- function(q, df1, df2, rounding, main = NULL) {
   minimo <- 0
   maximo <- 10
-
-
+  if(q>10){
+    maximo <- q+ 2*(df1/df2)
+  }
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- df(x, df1, df2)
   fy <- df(y, df1, df2)
+  if(is.infinite(1.2 * max(fx,fy))){
+    auxmain <- c(0, 2.5 + (df1/df2));
+    auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy))
+  }
   if (is.null(main)) {
     main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/ xB(frac(d[1],2),frac(d[2],2))*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
   }
   curve(df(x, df1, df2), minimo, maximo,
-        ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
+        ylim = auxmain, ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
         main = main,
         cex.main = 1)
@@ -1523,7 +1576,7 @@ plotpflttplot <- function(q, df1, df2, rounding, main = NULL) {
   axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   abline(v = qqaux, lty=2, col = "red")
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
@@ -1773,11 +1826,19 @@ plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
   y <- seq(q, maximo, by = 0.01)
   fx <- dchisq(x, df = df, ncp = ncp)
   fy <- dchisq(y, df = df, ncp = ncp)
+  if(is.infinite(1.2 * max(fx,fy))){
+    auxmain <- c(0, 2.5 + df);
+    auxrect <- c(2 + df, 3.5 + df)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy))
+  }
   if (is.null(main)) {
     main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2}*","~~S[X](t1)~"="~1-Fx(t1)~"="~1-integral(f[X](x^2)*"dx", -infinity, t1)~"="~P(X>5)~"="~integral(f[X](x^2)*"dx", t1, infinity)), list(t1 = q, x = "x"))
   }
   curve(dchisq(x, df = df, ncp = ncp), minimo, maximo,
-        ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
+        ylim = auxmain,
+        ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
         main = main,
         cex = 0.8)
@@ -1803,7 +1864,7 @@ plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
   axis(side=1, at=as.character(c(qqaux, maximo)), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   abline(v = qqaux, lty=2, col = "red")
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(Fx(t1)==P(X>t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
@@ -1821,16 +1882,25 @@ plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
 plotpfltfplot <- function(q, df1, df2, rounding, main = NULL) {
   minimo <- 0
   maximo <- 10
-
+  if(q>10){
+    maximo <- q+ 2*(df1/df2)
+  }
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- df(x, df1, df2)
   fy <- df(y, df1, df2)
   if (is.null(main)) {
+    if(is.infinite(1.2 * max(fx,fy))){
+      auxmain <- c(0, 2.5 + (df1/df2));
+      auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
+    }else{
+      auxrect <- max(fx,fy)
+      auxmain <- c(0, 1.2 * max(fx,fy))
+    }
     main = substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)), list(t = q))
   }
   curve(df(x, df1, df2), minimo, maximo,
-        ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
+        ylim = auxmain, ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
         main = main,
         cex.main = 1)
@@ -1858,7 +1928,7 @@ plotpfltfplot <- function(q, df1, df2, rounding, main = NULL) {
   axis(side=1, at=as.character(c(qqaux, maximo)), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
 
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
                                        list(q = qq, Pr = Pr)))

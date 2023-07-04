@@ -514,9 +514,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "rstudio") {
           manipulate::manipulate(plotpfarrstudio(q1, q2, df1, df2, rounding, main, q),
                                  q1 = manipulate::slider(0, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], 20, q[2]),
-                                 df1 = manipulate::slider(1, df1  * 2 , df1),
-                                 df2 = manipulate::slider(1, df2 * 2, df2))
+                                 q2 = manipulate::slider(q[1], 20, q[2]),
+                                 df1 = manipulate::slider(1, df1  * 10 , df1),
+                                 df2 = manipulate::slider(1, df2 * 10, df2))
         }
         if (gui == "tcltk") {
           stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
