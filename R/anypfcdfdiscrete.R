@@ -48,7 +48,7 @@ cdfd <- function(x, fda, main = NULL, xlab = NULL, ylab = NULL) {
     title(bquote(atop(bold("Distribution Function"), "Discrete variable")),
           xlab = bquote(X), ylab = bquote(F[X](x)), col.lab = "blue")
   } else{
-    title(main = main, xlab = xlab, ylab = ylab)
+    title(main = main, xlab = xlab, ylab = ylab, col.lab = "blue")
   }
 
   # Axis
@@ -75,9 +75,10 @@ cdfd <- function(x, fda, main = NULL, xlab = NULL, ylab = NULL) {
              lty = 2,
              col = "black")
   }
-  points(x[2:6], fda[1:5], lwd = 2, pch = 19, bg = "white", col = "white")
-  points(x[2:6], fda[1:5], lwd = 2, pch = 1)
-  points(x[2:6], fda[2:6], lwd = 2, pch = 19)
+  n <- length(x)
+  points(x[2:(n-1)], fda[1:(n - 2)], lwd = 2, pch = 19, bg = "white", col = "white")
+  points(x[2:(n-1)], fda[1:(n - 2)], lwd = 2, pch = 1)
+  points(x[2:(n-1)], fda[2:(n - 1)], lwd = 2, pch = 19)
 
 }
 
@@ -118,7 +119,7 @@ apf <- function(x, p, main = NULL, xlab = NULL, ylab = NULL) {
     title(bquote(atop(bold("Probability Function"), "Discrete variable")),
           xlab = bquote(X), ylab = bquote(p[X](x)), col.lab = "blue")
   } else{
-    title(main = main, xlab = xlab, ylab = ylab)
+    title(main = main, xlab = xlab, ylab = ylab, col.lab = "blue")
   }
 
   # Axis

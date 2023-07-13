@@ -45,10 +45,11 @@ boxplot.leem <- function(x,
     if (type == "rawdata") {
       if (horizontal) {
         boxplot(x$statistics$raw_data, axes = FALSE, main = main, col = col,
-                horizontal = TRUE, range = coef, ...)
+                horizontal = TRUE, range = coef, xlab = xlab, ylab = ylab, ...)
         axis(1)
       } else{
-        boxplot(x$statistics$raw_data, axes = FALSE, main = main, col = col, range = coef, ...)
+        boxplot(x$statistics$raw_data, axes = FALSE, main = main, col = col,
+                range = coef, xlab = xlab, ylab = ylab, ...)
         axis(2)
       }
       # Details
