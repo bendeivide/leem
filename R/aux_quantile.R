@@ -1718,7 +1718,7 @@ plotqchisqtscdf <- function(p, df, ncp, rounding, ...) {
   curve(
     pchisq(x, df = df, ncp = ncp),
     0,
-    ncp + 4 * df,
+    x[2]+5*sqrt(df),
     ylab = expression(F[X](x)),
     ylim = c(0, 1.2),
     xlab = "X",
@@ -1734,7 +1734,7 @@ plotqchisqtscdf <- function(p, df, ncp, rounding, ...) {
     lwd = 4,
     ...
   )
-  x <- seq(ncp - 4 * df, x[1], by = 0.01)
+  x <- seq(0, x[2]+5*sqrt(x[2]), by = 0.01)
   y <- seq(x[1], ncp + 4 * df, by = 0.01)
   fx <- pchisq(x, df, ncp)
   fy <- pchisq(y, df, ncp)
@@ -1881,16 +1881,8 @@ plotqchisqtscdf <- function(p, df, ncp, rounding, ...) {
 
 # PDF
 plotqchisqtspdfaux <- function(q, df, ncp, rounding, ...) {
-  minimo <- if (q[1] <=  ncp - 4 * df){
-                q - 4 * sigma
-            }
-            else{0}
-
-  maximo <-
-    if (q[2] > ncp + 4 * df)
-      q + 5 * df
-  else
-    ncp + 5 * df
+  minimo <- if (q[1] <= ncp - 4 * df) ncp - 4 * df else 0
+  maximo <- if (q[2] > ncp + 4 * df) q[2] + 4 * df else ncp + 4 * df
   x <- seq(minimo, q[1], by = 0.01)
   z <- seq(q[2], maximo, by = 0.01)
   y <- seq(minimo, maximo, by = 0.01)
@@ -2054,7 +2046,7 @@ plotqftscdf <- function(p, df1, df2, rounding, ...) {
   curve(
     pf(x, df1, df2),
     0,
-    10,
+    x[2] + 5*(df1/df2),
     ylab = expression(F[X](x)),
     ylim = c(0, 1.2),
     xlab = "X",
@@ -2070,12 +2062,12 @@ plotqftscdf <- function(p, df1, df2, rounding, ...) {
     lwd = 4,
     ...
   )
-  x <- seq(0, x[1], by = 0.01)
-  y <- seq(x[1], df1 + 4 * df2, by = 0.01)
+  x <- seq(0, x[2]+ 5*(df1/df2), by = 0.01)
+  y <- seq(x[1], x[2], by = 0.01)
   fx <- pf(x, df1, df2)
   fy <- pf(y, df1, df2)
-  polygon(c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
           col = "gray90")
   # polygon(c(x, rev(x)),
   #         c(fx, rep(0, length(fx))),
@@ -2232,13 +2224,22 @@ plotqftscdf <- function(p, df1, df2, rounding, ...) {
 plotqftspdfaux <- function(q, df1, df2, rounding, ...) {
   minimo <- 0
   maximo <- 10
-
+  if(q[2]>10){
+    maximo <- q[2]+ 2*(df1/df2)
+  }
   x <- seq(minimo, q[1], by = 0.01)
   z <- seq(q[2], maximo, by = 0.01)
   y <- seq(minimo, maximo, by = 0.01)
   fx <- df(x, df1, df2)
   fz <- df(z, df1, df2)
   fy <- df(y, df1, df2)
+  if(is.infinite(1.2 * max(fx,fy,fz))){
+    auxmain <- c(0, 2.5 + (df1/df2));
+    auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy,fz))
+  }
   # if (!any(names(argaddit) == "main")) {
   #   main <- gettext("Distribution Function: Normal", domain = "R-leem")
   # } else {
@@ -2254,7 +2255,7 @@ plotqftspdfaux <- function(q, df1, df2, rounding, ...) {
     df(x, df1, df2),
     minimo,
     maximo,
-    ylim = c(0, 1.2 * max(fx, fy, fz)),
+    ylim = auxmain,
     xlab = "X",
     ylab = expression(f[X](x)),
     panel.first = grid(col = "gray90"),
@@ -2335,7 +2336,7 @@ plotqftspdfaux <- function(q, df1, df2, rounding, ...) {
   #        legend = substitute(atop(P(X<=t1~";" ~ mu == media ~ "," ~ sigma == varen)~"+"~"\n\n\n\n\n", "+"~P(X>=t2~";" ~ mu == media ~ "," ~ sigma == varen)==Pr),
   #                            list(t1=qq[1],t2=qq[2], Pr = Pr, media = mu, varen = sigma, X ="X")))
   rect(par("usr")[1],
-       1.03 * max(fx, fy, fz),
+       1.03 * auxrect,
        par("usr")[2],
        par("usr")[4],
        col = "gray")
@@ -3596,7 +3597,7 @@ plotqchisqlttcdf <- function(p, df, ncp, rounding, ...) {
   curve(
     pchisq(x, df = df, ncp = ncp),
     0,
-    ncp + 4 * df,
+    x+5*sqrt(df),
     ylab = expression(F[X](x)),
     ylim = c(0, 1.2),
     xlab = "X",
@@ -3848,7 +3849,7 @@ plotqflttcdf <- function(p, df1, df2, rounding, ...) {
   curve(
     pf(x, df1, df2),
     0,
-   10,
+    x+10,
     ylab = expression(F[X](x)),
     ylim = c(0, 1.2),
     xlab = "X",
@@ -3860,12 +3861,12 @@ plotqflttcdf <- function(p, df1, df2, rounding, ...) {
     lwd = 4,
     ...
   )
-  x <- seq(0, x[1], by = 0.01)
-  y <- seq(x[1], 4 * mean(df1+df2), by = 0.01)
+  x <- seq(0, x + 10, by = 0.01)
+  y <- seq(x[1], x[2], by = 0.01)
   fx <- pf(x, df1, df2)
   fy <- pf(y, df1, df2)
-  polygon(c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
           col = "gray90")
   # polygon(c(x, rev(x)),
   #         c(fx, rep(0, length(fx))),
@@ -3959,10 +3960,20 @@ plotqflttcdf <- function(p, df1, df2, rounding, ...) {
 plotqflttpdfaux <- function(q, df1, df2, rounding, ...) {
   minimo <- 0
   maximo <- 10
+  if(q>10){
+    maximo <- q+ 2*(df1/df2)
+  }
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- df(x, df1, df2)
   fy <- df(y, df1, df2)
+  if(is.infinite(1.2 * max(fx,fy))){
+    auxmain <- c(0, 2.5 + (df1/df2));
+    auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy))
+  }
   # if (!any(names(argaddit) == "main")) {
   #   main <- gettext("Distribution Function: Normal", domain = "R-leem")
   # } else {
@@ -3977,7 +3988,7 @@ plotqflttpdfaux <- function(q, df1, df2, rounding, ...) {
     df(x, df1, df2),
     minimo,
     maximo,
-    ylim = c(0, 1.2 * max(fx, fy)),
+    ylim = auxmain,
     ylab = expression(f[X](x)),
     xlab = "X",
     panel.first = grid(col = "gray90"),
@@ -4036,7 +4047,7 @@ plotqflttpdfaux <- function(q, df1, df2, rounding, ...) {
   )
   abline(v = qqaux, lty = 2, col = "red")
   rect(par("usr")[1],
-       1.03 * max(fx, fy),
+       1.03 * auxrect,
        par("usr")[2],
        par("usr")[4],
        col = "gray")
@@ -5311,7 +5322,7 @@ plotqchisqltfsf <- function(p, df, ncp, rounding, ...) {
       lower.tail = FALSE
     ),
     0,
-    ncp + 4 * df,
+    x+5*sqrt(df),
     ylab = expression(F[X](x)),
     ylim = c(0, 1.2),
     xlab = "X",
@@ -5555,7 +5566,7 @@ plotqfltfsf <- function(p, df1, df2, rounding, ...) {
       lower.tail = FALSE
     ),
     0,
-    10,
+    x+10,
     ylab = expression(F[X](x)),
     ylim = c(0, 1.2),
     xlab = "X",
@@ -5568,12 +5579,12 @@ plotqfltfsf <- function(p, df1, df2, rounding, ...) {
     lwd = 4,
     ...
   )
-  x <- seq(0, x[1], by = 0.01)
-  y <- seq(x[1], 4 * mean(df1+df2), by = 0.01)
-  fx <- pf(x, df1, df2, lower.tail = FALSE)
-  fy <- pf(y, df1, df2, lower.tail = FALSE)
-  polygon(c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
+  x <- seq(0, x+10, by = 0.01)
+  y <- seq(x[1], x[2], by = 0.01)
+  fx <- pf(x, df1, df2, lower.tail = F)
+  fy <- pf(y, df1, df2, lower.tail = F)
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
           col = "gray90")
   # polygon(c(x, rev(x)),
   #         c(fx, rep(0, length(fx))),
@@ -5667,10 +5678,20 @@ plotqfltfsf <- function(p, df1, df2, rounding, ...) {
 plotqfltfpdfaux <- function(q, df1, df2, rounding, ...) {
   minimo <- 0
   maximo <- 10
+  if(q>10){
+    maximo <- q+ 2*(df1/df2)
+  }
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- df(x, df1, df2)
   fy <- df(y, df1, df2)
+  if(is.infinite(1.2 * max(fx,fy))){
+    auxmain <- c(0, 2.5 + (df1/df2));
+    auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy))
+  }
   # if (!any(names(argaddit) == "main")) {
   #   main <- gettext("Distribution Function: Normal", domain = "R-leem")
   # } else {
@@ -5685,7 +5706,7 @@ plotqfltfpdfaux <- function(q, df1, df2, rounding, ...) {
     df(x, df1, df2),
     minimo,
     maximo,
-    ylim = c(0, 1.2 * max(fx, fy)),
+    ylim = auxmain,
     ylab = expression(f[X](x)),
     xlab = "X",
     panel.first = grid(col = "gray90"),
@@ -5744,7 +5765,7 @@ plotqfltfpdfaux <- function(q, df1, df2, rounding, ...) {
   )
   abline(v = qqaux, lty = 2, col = "red")
   rect(par("usr")[1],
-       1.03 * max(fx, fy),
+       1.03 * auxrect,
        par("usr")[2],
        par("usr")[4],
        col = "gray")
