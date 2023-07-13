@@ -534,97 +534,27 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           scale <- readline(gettext("Insert the value of 'scale' argument: ",  domain = "R-leem"))
           argaddit$scale <- as.numeric(scale)
         }
-        if (argaddit$scale <= 0 ) stop("The 'scale' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
-        plotcurve <- function(q, location, scale){
-          xvq <- 5*q[1]
-          xvq1 <- 5*q[2]
-          if ( q[1] >= 0) {
-            xvq <- -5*q[1]
-            xvq1 <- 5*q[2]
-          }
-          if ( q[1] == 0 ) { xvq <- -5*( 1 + q[1]) }
-          if ( q[2] == 0 ) { xvq1 <- 5*(1 + q[2]) }
-          curve(dgumbel(x, location, scale),xvq, xvq1,ylim = c(0,1.5*(dgumbel(1, location, scale)))
-                ,xlim = c(xvq,xvq1),
-                ylab = expression(f[G](g)),
-                xlab = "G",panel.first = grid(col = "gray90"),
-                main = gettext("Distribution Function: Gumbel", domain = "R-leem"))
-          aux <- seq(xvq,xvq1, by = 0.01)
-          y <- seq(q[1],q[2],by = 0.01)
-          fx <- dgumbel(aux, location, scale)
-          fy <- dgumbel(y, location, scale)
-          polygon(c(aux, rev(aux)),
-                  c(fx, rep(0, length(fx))),
-                  col = "red")
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col = "gray90")
-          abline(v = location, lty = 2)
-          locaux <- location
-          scaux <- scale
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pgumbel(q[1], location, scale) + pgumbel(q[2], location, scale), digits = rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qq, tick = TRUE, lwd = 0,
-               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
-          axis(side=1, at=as.character(c(xvq, qq[1])), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          axis(side=1, at=as.character(c(qq[2], xvq1)), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          abline(v = qqaux, lty = 2, col = "red")
-          if (attr(q, "region") == "region1") {
-            legend("topleft", bty ="n", fill ="red",
-                   legend =substitute(P(t1>~G>~t2 ~";"~ scale==scaux ~";"~ location==locaux)==Pr~"\n\n",
-                                      list(t1=qq[1],t2=qq[2],scaux=scaux,locaux=locaux, Pr = Pr)))
-          }
-          if (attr(q, "region") == "region3") {
-            legend("topleft", bty="n", fill = "red",
-                   legend=substitute(P(t1>=~G>=~t2 ~";"~ scale==scaux ~";"~ location==locaux)==Pr~"\n\n",
-                                     list(t1=qq[1],t2=qq[2],scaux=scaux,locaux=locaux, Pr = Pr)))
-          }
-          if (attr(q, "region") == "region5") {
-            legend("topleft", bty="n", fill = "red",
-                   legend = substitute(P(t1>=~G>~t2 ~";"~ scale==scaux ~";"~ location==locaux)==Pr~"\n\n",
-                                       list(t1=qq[1],t2=qq[2],scaux=scaux,locaux=locaux, Pr = Pr)))
-          }
-          if (attr(q, "region") == "region6") {
-            legend("topleft", bty="n", fill = "red",
-                   legend=substitute(P(t1>~G >=~t2 ~";"~ scale==scaux ~";"~ location==locaux)==Pr~"\n\n",
-                                     list(t1=qq[1],t2=qq[2],scaux=scaux,locaux=locaux, Pr = Pr)))
-          }
-        }
+        if (argaddit$scale <= 0 ) stop("The 'scale' argument must be greater than zero!",
+                                       call. = FALSE, domain = "R-leem")
+        location <- argaddit$location
+        scale <- argaddit$scale
+
+        minimo <- if (q[1] <=  scale - 10 * location) q[1] - 10 * location else scale - 10 * location
+        maximo <- if (q[2] > scale + 10 * location) q[2] + 10 * location else scale + 10 * location
+
         if (gui == "plot" ) {
-          location <- argaddit$location
-          scale <- argaddit$scale
-          prob <- pgumbel(q = q[1], location, scale) + pgumbel(q = q[2], location, scale)
-          plotcurve(q, location, scale)
+          plotpgumbelarplot(q, location, scale, rounding, main)
         }
         if (gui == "rstudio") {
-          location <- argaddit$location
-          scale <- argaddit$scale
-          xvq <- 5*q[1]
-          xvq1 <- 5*q[2]
-          if ( q[1] >= 0) {
-            xvq <- -5*q[1]
-            xvq1 <- 5*q[2]
-          }
-          if ( q[1] == 0 ) { xvq <- -5*( 1 + q[1]) }
-          if ( q[2] == 0 ) { xvq1 <- 5*(1 + q[2]) }
-          plotcurveaux <- function(q1 = q[1], q2 = q[2], location,scale) {
-            q[1] <- q1
-            q[2] <- q2
-            plotcurve(q, location, scale)
-          }
-          manipulate::manipulate(plotcurveaux(q1 , q2 , location, scale),
-                                 q1 = manipulate::slider(xvq, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], xvq1, q[2]),
+          manipulate::manipulate(plotpgumbelarrstudio(q1 , q2 , location, scale, rounding, main, q),
+                                 q1 = manipulate::slider(minimo, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], maximo, q[2]),
                                  location = manipulate::slider(location - 10, location + 10, location ),
                                  scale = manipulate::slider(1, scale + 100, scale))
-          prob <- pgumbel(q = q[1], location, scale) + pgumbel(q = q[2], location, scale)
         }
-      }
+        prob <- pgumbel(q[1], location, scale, lower.tail = T) +
+          pgumbel(q[2], location, scale, lower.tail = F)
+        }
       if (dist == "beta") {
         if (!any(names(argaddit) == "alpha")) {
           alpha <- readline(gettext("Insert the value of 'alpha' argument: ",  domain = "R-leem"))
@@ -1681,92 +1611,23 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         if (argaddit$scale <= 0 ) stop("The 'scale' argument must be greater than zero!",
                                        call. = FALSE, domain = "R-leem")
-        plotcurve <- function(q, location, scale){
-          xvq <- 5*q[1]
-          xvq1 <- 5*q[2]
-          if ( q[1] >= 0) {
-            xvq <- -5*q[1]
-            xvq1 <- 5*q[2]
-          }
-          if ( q[1] == 0 ) { xvq <- -5*( 1 + q[1]) }
-          if ( q[2] == 0 ) { xvq1 <- 5*(1 + q[2]) }
-          curve(dgumbel(x, location, scale),xvq, xvq1,
-                ylim = c(0,1.5*(dgumbel(1, location, scale))),
-                xlim = c(xvq,xvq1), ylab = expression(f[G](g)),
-                xlab = "G",panel.first = grid(col = "gray90"),
-                main = gettext("Distribution Function: Gumbel", domain = "R-leem"))
-          aux <- seq(xvq,xvq1, by = 0.01)
-          y <- seq(q[1],q[2], by = 0.01)
-          fx <- dgumbel(aux, location, scale)
-          fy <- dgumbel(y, location, scale)
-          polygon(c(aux, rev(aux)),
-                  c(fx, rep(0, length(fx))),
-                  col = "gray90")
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="red")
-          abline(v = location, lty = 2)
-          locaux <- location
-          scaux <- scale
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round( pgumbel(max(q[1],q[2]), location, scale) - pgumbel(min(q[1],q[2]),
-                                                                          location, scale) , digits = rounding)
-          #Pr <- gsub("\\.", ",", Pr)
-          #qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2, col.axis = "red")
-          abline(v = qqaux, lty = 2, col = "red")
-          if (attr(q, "region") == "region2") {
-            legend("topleft", bty="n", fill = "red",
-                   legend=substitute(P(t1<~G<~t2 ~";"~ scale==scaux ~";"~ location==locaux)==Pr~"\n\n",
-                                     list(t1=qq[1],t2=qq[2],scaux=scaux,locaux=locaux, Pr = Pr)))
-          }
-          if (attr(q, "region") == "region4") {
-            legend("topleft", bty="n", fill = "red",
-                   legend=substitute(P(t1<=~ G<=~t2 ~";"~ scale==scaux ~";"~ location==locaux)==Pr~"\n\n",
-                                     list(t1=qq[1],t2=qq[2],scaux=scaux,locaux=locaux, Pr = Pr)))
-          }
-          if (attr(q, "region") == "region7") {
-            legend("topleft", bty="n", fill = "red",
-                   legend=substitute(P(t1<=~G<~t2 ~";"~ scale==scaux ~";"~ location==locaux)==Pr~"\n\n",
-                                     list(t1=qq[1],t2=qq[2],scaux=scaux,locaux=locaux, Pr = Pr)))
-          }
-          if (attr(q, "region") == "region8") {
-            legend("topleft", bty="n", fill = "red",
-                   legend=substitute(P(t1<~G<=~t2 ~";"~ scale==scaux ~";"~ location==locaux)==Pr~"\n\n",
-                                     list(t1=qq[1],t2=qq[2],scaux=scaux,locaux=locaux, Pr = Pr)))
-          }
-        }
+        location <- argaddit$location
+        scale <- argaddit$scale
+
+        minimo <- if (q[1] <=  scale - 10 * location) q[1] - 10 * location else scale - 10 * location
+        maximo <- if (q[2] > scale + 10 * location) q[2] + 10 * location else scale + 10 * location
+
         if (gui == "plot" ) {
-          location <- argaddit$location
-          scale <- argaddit$scale
-          prob <- pgumbel(q = max(q[1],q[2]), location, scale) - pgumbel(q = min(q[1],q[2]), location, scale)
-          plotcurve(q, location, scale)
+          plotpgumbelbrplot(q, location, scale, rounding, main)
         }
         if (gui == "rstudio") {
-          location <- argaddit$location
-          scale <- argaddit$scale
-          xvq <- 5*q[1]
-          xvq1 <- 5*q[2]
-          if ( q[1] >= 0) {
-            xvq <- -5*q[1]
-            xvq1 <- 5*q[2]
-          }
-          if ( q[1] == 0 ) { xvq <- -5*( 1 + q[1]) }
-          if ( q[2] == 0 ) { xvq1 <- 5*(1 + q[2]) }
-          plotcurveaux <- function(q1 = q[1], q2 = q[2], location,scale) {
-            q[1] <- q1
-            q[2] <- q2
-            plotcurve(q, location, scale)
-          }
-          manipulate::manipulate(plotcurveaux(q1 , q2 , location, scale),
-                                 q1 = manipulate::slider(xvq, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], xvq1, q[2]),
+          manipulate::manipulate(plotpgumbelbrrstudio(q1 , q2 , location, scale, rounding, main, q),
+                                 q1 = manipulate::slider(minimo, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], maximo, q[2]),
                                  location = manipulate::slider(location - 10, location + 10, location ),
                                  scale = manipulate::slider(1, scale + 100, scale))
-          prob <- pgumbel(q = max(q[1],q[2]), location, scale) - pgumbel(q = min(q[1],q[2]), location, scale)
         }
+        prob <- pgumbel(q = max(q[1],q[2]), location, scale) - pgumbel(q = min(q[1],q[2]), location, scale)
       }
       if (dist == "beta") {
         if (!any(names(argaddit) == "alpha")) {
@@ -2975,121 +2836,36 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         argaddit$scale <- as.numeric(scale)
       }
       if (argaddit$scale <= 0 ) stop("The 'scale' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+      location <- argaddit$location
+      scale <- argaddit$scale
+
+      minimo <- if (q <=  scale - 10 * location) q - 10 * location else scale - 10 * location
+      maximo <- if (q > scale + 10 * location) q + 10 * location else scale + 10 * location
+
       if (lower.tail) {
-        xvq <- 5*q
-        xvq1 <- -5*q
-        if ( q >= 0) {
-          xvq <- 5*q
-          xvq1 <- -5*q
-        }
-        if ( q == 0 ) { xvq <- 5*( 1 + q) }
-        if ( q == 0 ) { xvq1 <- -5*(1 + q) }
-        plotcurve <- function(q, location, scale){
-          curve(dgumbel(x, location, scale),xvq1, xvq,
-                ylim = c(0,1.5*(dgumbel(1, location, scale))),
-                xlim = c(xvq1,xvq), ylab = expression(f[G](g)),
-                xlab = "G",panel.first = grid(col = "gray90"),
-                main = gettext("Distribution Function: Gumbel", domain = "R-leem"))
-          aux <- seq(q, xvq, by=0.01)
-          y <- seq(xvq1, q, by=0.01)
-          fx <- dgumbel(aux, location, scale)
-          fy <- dgumbel(y, location, scale)
-          polygon(c(aux, rev(aux)),
-                  c(fx, rep(0, length(fx))),
-                  col="gray90")
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="red")
-          abline(v = location, lty=2)
-          locaux <- location
-          scaux <- scale
-          qq <- round(q, digits=2)
-          qqaux <- qq
-          Pr <- round(pgumbel(qq, location, scale), digits = rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
-               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
-          axis(side=1, at=as.character(c(xvq1, qqaux)), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          abline(v = qqaux, lty=2, col = "red")
-          legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(G<= ~ q ~ ";" ~ scale==scaux ~ ";" ~ location ==locaux)==Pr~"\n\n",
-                                   list(q=qq,scaux=scaux,locaux=locaux, Pr = Pr)))
-        }
         if (gui == "plot" ) {
-          location <- argaddit$location
-          scale <- argaddit$scale
-          prob <- pgumbel(q = q, location, scale)
-          plotcurve(q, location, scale)
+          plotpgumbellttplot(q, location, scale, rounding, main)
         }
         if (gui == "rstudio") {
-          location <- argaddit$location
-          scale <- argaddit$scale
-          manipulate::manipulate(plotcurve(q, location, scale),
-                                 q = manipulate::slider(-5, 10, q),
-                                 location = manipulate::slider(location - 10, location + 10, location ),
+          manipulate::manipulate(plotpgumbellttplot(q, location, scale, rounding, main),
+                                 q = manipulate::slider(minimo, maximo, q),
+                                 location = manipulate::slider(minimo, maximo, location ),
                                  scale = manipulate::slider(1, scale + 100, scale))
-          prob <- pgumbel(q = q, location, scale)
+
         }
+        prob <- pgumbel(q = q, location, scale)
       } else {
-        xvq <- 5*q
-        xvq1 <- -5*q
-        if ( q >= 0) {
-          xvq <- 5*q
-          xvq1 <- -5*q
-        }
-        if ( q == 0 ) { xvq <- 5*( 1 + q) }
-        if ( q == 0 ) { xvq1 <- -5*(1 + q) }
-        plotcurve <- function(q, location, scale){
-          curve(dgumbel(x, location, scale),xvq1, xvq,
-                ylim = c(0,1.5*(dgumbel(1, location, scale))),
-                xlim = c(xvq1,xvq),
-                ylab = expression(f[G](g)),
-                xlab = "G",panel.first = grid(col = "gray90"),
-                main = gettext("Distribution Function: Gumbel", domain = "R-leem"))
-          aux <- seq(q, xvq, by=0.01)
-          y <- seq(xvq1, q, by=0.01)
-          fx <- dgumbel(aux, location, scale)
-          fy <- dgumbel(y, location, scale)
-          polygon(c(aux, rev(aux)),
-                  c(fx, rep(0, length(fx))),
-                  col="red")
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="gray90")
-          abline(v = location, lty=2)
-          locaux <- location
-          scaux <- scale
-          qq <- round(q, digits=2)
-          qqaux <-round(q, digits=2)
-          Pr <- round(pgumbel(qq, location, scale, lower.tail = FALSE), digits = rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
-               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
-          axis(side=1, at=as.character(c(xvq, qqaux)), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          abline(v = qqaux, lty=2, col = "red")
-          legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(G> ~ q ~ ";" ~ scale==scaux ~ ";" ~ location ==locaux)==Pr~"\n\n",
-                                   list(q=qq,scaux=scaux,locaux=locaux, Pr = Pr)))
-        }
         if (gui == "plot" ) {
-          location <- argaddit$location
-          scale <- argaddit$scale
-          prob <- pgumbel(q = q, location, scale, lower.tail = FALSE)
-          plotcurve(q, location, scale)
+          plotpgumbelltfplot(q, location, scale, rounding, main)
         }
         if (gui == "rstudio") {
-          location <- argaddit$location
-          scale <- argaddit$scale
-          manipulate::manipulate(plotcurve(q, location, scale),
-                                 q = manipulate::slider(-5, 10, q),
-                                 location = manipulate::slider(location - 10, location + 10, location ),
+          manipulate::manipulate(plotpgumbelltfplot(q, location, scale, rounding, main),
+                                 q = manipulate::slider(minimo, maximo, q),
+                                 location = manipulate::slider(minimo, maximo, location ),
                                  scale = manipulate::slider(1, scale + 100, scale))
-          prob <- pgumbel(q = q, location, scale, lower.tail = FALSE)
+
         }
+          prob <- pgumbel(q = q, location, scale, lower.tail = FALSE)
       }
     }
     if (dist == "beta") {
