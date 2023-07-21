@@ -375,6 +375,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  q2 = manipulate::slider(q[2], rmax, q[2]),
                                  lambda = manipulate::slider(1, lambda+30, lambda))
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         # readjusting the range
         ## ab-region
         if (is.double(q)) {
@@ -429,6 +432,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  q2 = manipulate::slider(q[2], q[2]+size, q[2]),
                                  size = manipulate::slider(1, size+30, size),
                                  prob = manipulate::slider(0, 1, prob))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
         if (is.double(q)) {
           if (attr(q, "region") == "region5") {
@@ -487,6 +493,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
                                  df = manipulate::slider(1, ncp + 2 * df, df),
                                  ncp = manipulate::slider(0, ncp + 2 * df, ncp))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
         prob <- pchisq(q[1], df = df, ncp = ncp, lower.tail = T) +
           pchisq(q[2], df = df, ncp = ncp, lower.tail = F)
@@ -552,6 +561,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  location = manipulate::slider(location - 10, location + 10, location ),
                                  scale = manipulate::slider(1, scale + 100, scale))
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         prob <- pgumbel(q[1], location, scale, lower.tail = T) +
           pgumbel(q[2], location, scale, lower.tail = F)
         }
@@ -564,72 +576,23 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           beta <- readline(gettext("Insert the value of 'beta' argument: ",  domain = "R-leem"))
           argaddit$beta <- as.numeric(beta)
         }
+        if (q[1]<0 || q[2]>1 || q[1]>1 || q[2]<0){
+          stop("The quantile argument must be on the interval 0 and 1!",  call. = FALSE, domain = "R-leem")
+        }
         shape1 <- argaddit$alpha
         shape2 <- argaddit$beta
-        plotcurve <- function(q, shape1, shape2) {
-          curve(dbeta(x, shape1, shape2), 0, 1,
-                xlab="X",
-                ylab = expression(f[X](x)),
-                panel.first = grid(col="gray90"), main = gettext("Distribution Function: Beta", domain = "R-leem"))
-          x <- seq(0, q[1], by = 0.01)
-          z <- seq(q[2],1, by = 0.01)
-          y <-seq(q[1], q[2], by = 0.01)
-          fx <- dbeta(x, shape1, shape2)
-          fz <- dbeta(z, shape1, shape2)
-          fy <- dbeta(y, shape1, shape2)
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="gray90")
-          polygon(c(x, rev(x)),
-                  c(fx, rep(0, length(fx))),
-                  col="red")
-          polygon(c(z,rev(z)), c(fz,rep(0,length(fz))),
-                  col="red" )
-          abline(v=argaddit$alpha, lty=2)
-          qq <- round(q, digits=2)
-          qqaux <- qq
-          Pr <- round(pbeta(q[1], shape1, shape2, lower.tail = T) + pbeta(q[2], shape1, shape2, lower.tail = F), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
-               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
-          axis(side=1, at=as.character(c(0, qqaux[1])), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          axis(side=1, at=as.character(c(qqaux[2], 1)), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          abline(v = qqaux, lty=2, col = "red")
-          if (attr(q, "region") == "region1") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1>~X>~t2 ~";"~ alpha == alpha1 ~ ";" ~ beta == beta1 )==Pr~"\n\n",
-                                       list(t1 = qq[1], t2 = qq[2], q=qq, Pr=Pr, alpha1 = shape1, beta1 = shape2)))
-          }
-          if (attr(q, "region") == "region3") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1>=~X>=~ t2 ~";"~ alpha == alpha1 ~ ";" ~ beta == beta1 )==Pr~"\n\n",
-                                       list(t1 = qq[1], t2 = qq[2], q=qq, Pr=Pr, alpha1 = shape1, beta1 = shape2)))
-          }
-          if (attr(q, "region") == "region5") {
-            legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1>=~X>~t2 ~";"~ alpha == alpha1 ~ ";" ~ beta == beta1 )==Pr~"\n\n",
-                                     list(t1 = qq[1], t2 = qq[2], q=qq, Pr=Pr, alpha1 = shape1, beta1 = shape2)))
-          }
-          if ( attr(q, "region") == "region6") {
-            legend( "topleft", bty="n", fill="red",
-                    legend = substitute(P(t1>~X>=~t2 ~";"~ alpha == alpha1 ~ ";" ~ beta == beta1 )==Pr~"\n\n",
-                                        list(t1 = qq[1], t2 = qq[2], q=qq, Pr=Pr, alpha1 = shape1, beta1 = shape2)))
-          }
-        }
+
         if (gui == "plot") {
-          shape1 <- argaddit$alpha
-          shape2 <- argaddit$beta
-          prob <- pbeta(q[1], shape1, shape2, lower.tail = T) + pbeta(q[2], shape1, shape2, lower.tail = F)
-          plotcurve(q, shape1, shape2)
+          plotpbetaarplot(q, shape1, shape2, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotcurve(qaux, muaux),
-                                 qaux = manipulate::slider(0, 1, q),
-                                 muaux = manipulate::slider(shape1, shape1 + 200, shape1))
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pbeta(q[1], shape1, shape2, lower.tail = T) + pbeta(q[2], shape1, shape2, lower.tail = F)
       }
       if (dist == "exp") {
         if (!any(names(argaddit) == "rate")) {
@@ -637,110 +600,18 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                    domain = "R-leem"))
           argaddit$rate <- as.numeric(rate)
         }
-        plotcurve <- function(q, rate) {
-          rmax <- q[2] + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
-          x1 <- seq(0, q[1], by = 0.01)
-          x2 <- seq(q[2], rmax, by = 0.01)
-          y <- seq(0, rmax, by = 0.01)
-          probx1 <- dexp(x1, rate = rate)
-          probx2 <- dexp(x2, rate = rate)
-          proby <- dexp(y, rate = rate)
-          curve(dexp(x, rate), 0, rmax,
-                ylab = expression(p[x](q)),
-                xlab = "x", ylim = c(0, 1.2 * max(c(c(probx1,probx2), proby))),
-                panel.first = grid(col = "gray90"),
-                main = gettext("Distribution Function: Exponential", domain = "R-leem"))
-          polygon(c(y, rev(y)),
-                  c(proby, rep(0,length(proby))),
-                  col = "gray90")
-          polygon(c(x1, rev(x1)),
-                  c(probx1, rep(0,length(probx1))),
-                  col = "red")
-          polygon(c(x2, rev(x2)),
-                  c(probx2, rep(0,length(probx2))),
-                  col = "red")
-          abline(v = 1 / rate, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pexp(qq[1], rate = rate, lower.tail = T) +
-                        pexp(qq[2], rate = rate, lower.tail = F), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          rate2 <- gsub("\\.", ",", rate)
-          axis(
-            side = 1, at = c(qqaux[1],0), labels = c(qqaux[1],""),
-            col = "red", font = 2, col.axis = "red"
-          )
-          axis(
-            side = 1, at = c(qqaux[2],rmax+1), labels = c(qqaux[2],""),
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          if (attr(q, "region") == "region1") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>~X>~ t2~ ";" ~ lambda == rat) == Pr ~ "\n\n",
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region3") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>=~X>=~ t2~ ";" ~ lambda == rat) == Pr ~ "\n\n",
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region5") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>=~X>~ t2~ ";" ~ lambda == rat) == Pr ~ "\n\n",
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region6") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>~X>=~ t2~ ";" ~ lambda == rat) == Pr ~ "\n\n",
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
-                   )
-            )
-          }
-        }
+        rate <- argaddit$rate
         if (gui == "plot") {
-          rate <- argaddit$rate
-          prob <- round(pexp(q[1], rate = rate, lower.tail = T) +
-                          pexp(q[2], rate = rate, lower.tail = F), rounding)
-          plotcurve(q, rate)
+        plotpexparplot(q, rate, rounding, main = NULL)
         }
         if (gui == "rstudio") {
-          rate <- argaddit$rate
-          xvq <- 5*q[1]
-          xvq1 <- 5*q[2]
-          if ( q[1] >= 0) {
-            xvq <- -5*q[1]
-            xvq1 <- 5*q[2]
-          }
-          if ( q[1] == 0 ) { xvq <- -5*( 1 + q[1]) }
-          if ( q[2] == 0 ) { xvq1 <- 5*(1 + q[2]) }
-          plotcurveaux <- function(q1 = q[1], q2 = q[2],rate) {
-            q[1] <- q1
-            q[2] <- q2
-            plotcurve(q,rate)
-          }
-          prob <- round(pexp(q[1], rate = rate, lower.tail = T) +
-                          pexp(q[2], rate = rate, lower.tail = F), rounding)
-          manipulate::manipulate(plotcurveaux(q1,q2, rate),
-                                 q1 = manipulate::slider(0, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], 260, q[2]),
-                                 lambda = manipulate::slider(rate, rate + 200, rate))
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- round(pexp(q[1], rate = rate, lower.tail = T) +
+                        pexp(q[2], rate = rate, lower.tail = F), rounding)
       }
       if (dist == "hyper") {
         if (!any(names(argaddit) == "m")) {
@@ -1447,6 +1318,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  q2 = manipulate::slider(q[2], rmax, q[2]),
                                  lambda = manipulate::slider(1, lambda+30, lambda))
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         # readjusting the range
         ## ab-region
         if (is.double(q)) {
@@ -1501,6 +1375,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  q2 = manipulate::slider(q[2], q[2]+size, q[2]),
                                  size = manipulate::slider(1, size+30, size),
                                  prob = manipulate::slider(0, 1, prob))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
         # readjusting the range
         ## ab-region
@@ -1561,6 +1438,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
                                  df = manipulate::slider(1, ncp + 2 * df, df),
                                  ncp = manipulate::slider(0, ncp + 2 * df, ncp))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
         prob <- pchisq(q = q[2], df = df, ncp= ncp) - pchisq(q = q[1], df = df, ncp = ncp)
       }
@@ -1627,6 +1507,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  location = manipulate::slider(location - 10, location + 10, location ),
                                  scale = manipulate::slider(1, scale + 100, scale))
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         prob <- pgumbel(q = max(q[1],q[2]), location, scale) - pgumbel(q = min(q[1],q[2]), location, scale)
       }
       if (dist == "beta") {
@@ -1638,63 +1521,24 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           beta <- readline(gettext("Insert the value of 'beta' argument: ",  domain = "R-leem"))
           argaddit$beta <- as.numeric(beta)
         }
+        if (q[1]<0 || q[2]>1 || q[1]>1 || q[2]<0){
+          stop("The quantile argument must be on the interval 0 and 1!",  call. = FALSE, domain = "R-leem")
+        }
         shape1 <- argaddit$alpha
         shape2 <- argaddit$beta
-        plotcurve <- function(q, shape1, shape2) {
-          curve(dbeta(x, shape1, shape2), 0, 1 ,
-                ylab = expression(f[X](x)), xlab = "X",
-                panel.first = grid(col="gray90"), main = expression("Distribution Function: Beta", domain = "R-leem"))
-          x <- seq(q[1],q[2], by = 0.01)
-          y <- seq(0, 1, by = 0.01)
-          fx <- dbeta(x, shape1, shape2)
-          fy <- dbeta(y, shape1, shape2)
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="gray90")
-          polygon(c(x, rev(x)),
-                  c(fx, rep(0, length(fx))),
-                  col="red")
-          abline(v=argaddit$alpha, lty=2)
-          qq <- round(q, digits=2)
-          qqaux <- qq
-          Pr <- round(pbeta(q[2], shape1,shape2, lower.tail = T) - pbeta(q[1], shape1, shape2, lower.tail = T), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2, col.axis = "red")
-          abline(v = qqaux, lty=2, col = "red")
-          if (attr(q, "region") == "region2") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1<~X<~t2 ~";"~ alpha == alpha1 ~ ";" ~ beta == beta1 )==Pr~"\n\n",
-                                       list(t1 = qq[1], t2 = qq[2], q=qq, Pr=Pr, alpha1 = shape1, beta1 = shape2)))
-          }
-          if (attr(q, "region") == "region4") {
-            legend("topleft", bty="n", fill="red",
-                   legend = substitute(P(t1<=~X<=~t2~";"~ alpha == alpha1 ~ ";" ~ beta == beta1 )==Pr~"\n\n",
-                                       list(t1 = qq[1], t2 = qq[2], q=qq, Pr=Pr, alpha1 = shape1, beta1 = shape2)))
-          }
-          if (attr(q, "region") == "region7") {
-            legend("topleft", bty="n", fill="red",
-                   legend=substitute(P(t1<=~X<~t2 ~";"~ alpha == alpha1 ~ ";" ~ beta == beta1 )==Pr~"\n\n",
-                                     list(t1 = qq[1], t2 = qq[2], q=qq, Pr=Pr, alpha1 = shape1, beta1 = shape2)))
-          }
-          if ( attr(q, "region") == "region8") {
-            legend( "topleft", bty="n", fill="red",
-                    legend = substitute(P(t1<~X<=~t2~";"~ alpha == alpha1 ~ ";" ~ beta == beta1 )==Pr~"\n\n",
-                                        list(t1 = qq[1], t2 = qq[2], q=qq, Pr=Pr, alpha1 = shape1, beta1 = shape2)))
-          }
-        }
         if (gui == "plot") {
-          shape1 <- argaddit$alpha
-          shape2 <- argaddit$beta
-          prob <- pbeta(q = q[2], shape1, shape2) - pbeta(q = q[1], shape1, shape2)
-          plotcurve(q, shape1, shape2)
+          plotpbetabrplot(q, shape1, shape2, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotcurve(qaux, muaux),
-                                 qaux = manipulate::slider(q[1], q[2], q),
-                                 muaux = manipulate::slider(shape1, shape1 + 200, shape1))
+          manipulate::manipulate(plotpbetabrplot(q, shape1, shape2, rounding, main),
+                                 q = manipulate::slider(0, 1, q),
+                                 shape1 = manipulate::slider(shape1, shape1 + 200, shape1),
+                                 shape2 = manipulate::slider(shape2, shape2 +200, shape2))
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pbeta(q = q[2], shape1, shape2) - pbeta(q = q[1], shape1, shape2)
       }
       if (dist == "exp") {
         if (!any(names(argaddit) == "rate")) {
@@ -1702,102 +1546,18 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                    domain = "R-leem"))
           argaddit$rate <- as.numeric(rate)
         }
-        plotcurve <- function(q, rate) {
-          rmax <- q[2] + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
-          x <- seq(q[1], q[2], by = 0.01)
-          y <- seq(0, rmax, by = 0.01)
-          probx <- dexp(x, rate = rate)
-          proby <- dexp(y, rate = rate)
-
-          # Curve
-          curve(dexp(x, rate), 0, rmax,
-                ylab = expression(p[x](q)),
-                xlab = "x", ylim = c(0, 1.2 * max(c(probx, proby))),
-                panel.first = grid(col = "gray90"),
-                main = gettext("Distribution Function: Exponential", domain = "R-leem"))
-
-
-          polygon(c(y, rev(y)),
-                  c(proby, rep(0,length(proby))),
-                  col = "gray90")
-
-          polygon(c(x, rev(x)),
-                  c(probx, rep(0,length(probx))),
-                  col = "red")
-
-          abline(v = 1 / rate, lty = 2)
-
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pexp(qq[2], rate = rate, lower.tail = T) -
-                        pexp(qq[1], rate = rate, lower.tail = T), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          rate2 <- gsub("\\.", ",", rate)
-          axis(
-            side = 1, at = qqaux, labels = qqaux,
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-
-          if (attr(q, "region") == "region2") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<~X<~ t2 ~ ";"~lambda == rat) == Pr,
-                     list(t1=qq[1],t2=qq[2], q = qq, Pr = Pr, rat = rate)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region4") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<=~X<=~t2~ ";"~lambda == rat) == Pr,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region7") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<=~X<~ t2~ ";"~lambda == rat) == Pr,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region8") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<~X<=~t2~ ";"~lambda == rat) == Pr,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, rat = rate)
-                   )
-            )
-          }
-        }
+        rate <- argaddit$rate
 
         if (gui == "plot") {
-          # Probability
-          rate <- argaddit$rate
-          prob <- (pexp(q = q[1], rate = rate) - pexp(q = q[2],rate = rate))*-1
-          # Plot
-          plotcurve(q, rate)
+          plotpexpbrplot(q, rate, rounding, main)
         }
         if (gui == "rstudio") {
-          rate <- argaddit$rate
-          plotcurveaux <- function(q1 = q[1], q2 = q[2],rate) {
-            q[1] <- q1
-            q[2] <- q2
-            plotcurve(q, rate)
-          }
-          prob <- (pexp(q = q[1], rate = rate) - pexp(q = q[2],rate = rate))*-1
-          manipulate::manipulate(plotcurveaux(q1,q2, rate),
-                                 q1 = manipulate::slider(0, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], 260, q[2]),
-                                 lambda = manipulate::slider(rate, rate + 200, rate))
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- (pexp(q = q[1], rate = rate) - pexp(q = q[2],rate = rate))*-1
       }
       if (dist == "hyper") {
         if (!any(names(argaddit) == "m")) {
@@ -2656,6 +2416,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  lambda = manipulate::slider(1, lambda + 30, lambda)
           )
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         prob <- ppois(q = q, lambda = lambda)
       }
       if (isFALSE(lower.tail)) {
@@ -2668,6 +2431,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  lambda = manipulate::slider(1, lambda + 30, lambda)
           )
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         prob <- ppois(q = q, lambda = lambda, lower.tail = FALSE)
       }
       if(is.null(lower.tail)){
@@ -2679,6 +2445,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  q = manipulate::slider(0, lambda+30, q),
                                  lambda = manipulate::slider(1, lambda + 30, lambda)
           )
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
         prob <- dpois(q, lambda=lambda)
       }
@@ -2706,6 +2475,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  prob = manipulate::slider(0, 1, prob)
           )
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         prob <- pbinom(q, size, prob)
       }
       if(isFALSE(lower.tail)) {
@@ -2719,6 +2491,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  prob = manipulate::slider(0, 1, prob)
           )
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         prob <- pbinom(q, size, prob, lower.tail = FALSE)
       }
       if(is.null(lower.tail)){
@@ -2731,6 +2506,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  size = manipulate::slider(1, size+30, size),
                                  prob = manipulate::slider(0, 1, prob)
           )
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
         prob <- dbinom(q, size, prob)
       }
@@ -2761,6 +2539,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  df = manipulate::slider(1, ncp + 2 * df, df),
                                  ncp = manipulate::slider(0, ncp + 2 * df, ncp))
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         prob <- pchisq(q = q, df = df, ncp = ncp)
       }
       else {
@@ -2772,6 +2553,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  q = manipulate::slider(0, ncp + 4 * df, q),
                                  df = manipulate::slider(1, ncp + 2 * df, df),
                                  ncp = manipulate::slider(0, ncp + 2 * df, ncp))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
         prob <- pchisq(q = q, df = df, ncp = ncp, lower.tail = FALSE)
       }
@@ -2822,6 +2606,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  df1 = manipulate::slider(1, df1  + 2 * df1, df1),
                                  df2 = manipulate::slider(1, df2 + 2 * df2, df2))
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         # Compute the desired probability
         prob <- pf(q, df1, df2, lower.tail = F)
       }
@@ -2853,6 +2640,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  scale = manipulate::slider(1, scale + 100, scale))
 
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
         prob <- pgumbel(q = q, location, scale)
       } else {
         if (gui == "plot" ) {
@@ -2865,11 +2655,16 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  scale = manipulate::slider(1, scale + 100, scale))
 
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
           prob <- pgumbel(q = q, location, scale, lower.tail = FALSE)
       }
     }
     if (dist == "beta") {
-      if (q > 1) stop("The 'q' argument must be lower then 1.", call. = FALSE, domain = "R-leem")
+      if (q<0 || q>1){
+        stop("The quantile argument must be on the interval 0 and 1!",  call. = FALSE, domain = "R-leem")
+      }
       if (!any(names(argaddit) == "alpha")) {
         alpha <- readline(gettext("Insert the value of 'alpha' argument: ",  domain = "R-leem"))
         argaddit$alpha <- as.numeric(alpha)
@@ -2881,89 +2676,34 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       shape1 <- argaddit$alpha
       shape2 <- argaddit$beta
       if (lower.tail) {
-        plotcurve <- function(q, shape1, shape2) {
-          x <- seq(0, q[1], by = 0.01)
-          y <- seq(q[1], 1, by = 0.01)
-          fx <- dbeta(x, shape1, shape2)
-          fy <- dbeta(y, shape1, shape2)
-          curve(dbeta(x, shape1, shape2), 0,1 ,
-                ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)),xlab = "X",panel.first = grid(col = "gray90"),
-                main = gettext("Distribution Function: Beta", domain = "R-leem"))
-          polygon(c(x, rev(x)),
-                  c(fx, rep(0, length(fx))),
-                  col="red")
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="gray90")
-          abline(v=argaddit$alpha, lty=2)
-          qq <- round(q, digits=2)
-          qqaux <-round(q, digits=2)
-          Pr <- round(pbeta(qq,  shape1, shape2), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2, col.axis = "red")
-          axis(side = 1, at = as.character(c(qqaux, 0)), labels = FALSE, lwd.ticks = 0 , col = "red", font = 2)
-          abline(v = qqaux, lty = 2, col = "red")
-          abline(v = qqaux, lty=2, col = "red")
-          legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(X<= ~ q ~ ";" ~ alpha == alpha1 ~ ";" ~ beta == beta1) == Pr~"\n\n",
-                                   list(q = qq, Pr = Pr, alpha1 = shape1, beta1= shape2)))
-        }
         if (gui == "plot" ) {
-          shape1 <- argaddit$alpha
-          shape2 <- argaddit$beta
-          prob <- pbeta(q ,shape1,  shape2)
-          plotcurve(q, shape1 ,shape2)
+          plotpbetalttplot(q, shape1 ,shape2, rounding, main)
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotcurve(qaux, muaux),
-                                 qaux = manipulate::slider(shape1 - 4 * shape2, shape1 + 4 * shape2, q),
-                                 muaux = manipulate::slider(shape1, shape1 + 200, shape1))
+                                 q = manipulate::slider(0, 1, q),
+                                 shape1 = manipulate::slider(shape1, shape1 + 200, shape1),
+                                 shape2 = manipulate::slider(shape2, shape2 +200, shape2))
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pbeta(q ,shape1,  shape2)
       }
       else{
-        plotcurve <- function(q, shape1 , shape2 ) {
-          x <- seq(q[1], 1, by=0.01)
-          y <- seq(0, q[1], by=0.01)
-          fx <- dbeta(x, shape1, shape2)
-          fy <- dbeta(y, shape1, shape2)
-          curve(dbeta(x, shape1, shape2), 1, 0,
-                ylim = c(0, 1.2*max(fx,fy))  ,ylab = expression(f[X](x)), xlab="X",
-                panel.first = grid(col = "gray90"),
-                main = gettext("Distribution Function: Beta.", domain = "R-leem"))
-          polygon(c(x, rev(x)),
-                  c(fx, rep(0, length(fx))),
-                  col="red")
-          polygon(c(y, rev(y)),
-                  c(fy, rep(0, length(fy))),
-                  col="gray90")
-          abline(v=argaddit$alpha, lty=2)
-          qq <- round(q, digits=2)
-          qqaux <-round(q, digits=2)
-          Pr <- round(pbeta(qq, shape1, shape1, lower.tail = F), digits=rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2, col.axis = "red")
-          axis(side = 1, at = as.character(c(qqaux, 1)), labels = FALSE, lwd.ticks = 0 , col = "red", font = 2)
-          abline(v = qqaux, lty = 2, col = "red")
-          abline(v = qqaux, lty=2, col = "red")
-          legend("topleft", bty="n", fill="red",
-                 legend=substitute(P(X>~q ~ ";" ~ alpha == alpha1 ~ ";" ~ beta == beta1 )==Pr~"\n\n",
-                                   list(q=qq, Pr=Pr, alpha1 = shape1, beta1 = shape2)))
-        }
         if (gui == "plot") {
-          shape1 <- argaddit$alpha
-          shape2 <- argaddit$beta
-          prob <- pbeta(q, shape1, shape2, lower.tail = F)
-          plotcurve(q, shape1, shape2)
+          plotpbetaltfplot(q, shape1, shape2, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotcurve(qaux, muaux),
-                                 qaux = manipulate::slider(0, 1, q),
-                                 muaux = manipulate::slider(shape1, shape1 + 200, shape1))
+          manipulate::manipulate(plotpbetaltfplot(q, shape1, shape2, rounding, main),
+                                 q = manipulate::slider(0, 1, q),
+                                 shape1 = manipulate::slider(shape1, shape1 + 200, shape1),
+                                 shape2 = manipulate::slider(shape2, shape2 +200, shape2))
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pbeta(q, shape1, shape2, lower.tail = F)
       }
     }
     if (dist == "exp") {
@@ -2971,122 +2711,30 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         rate <- readline("Insert the value of 'rate' argument: ")
         argaddit$rate <- as.numeric(rate)
       }
-
+      rate <- argaddit$rate
       if (lower.tail) {
-        plotcurve <- function(q, rate) {
-          rmin <- 0
-          rmax <- q + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
-          x <- rmin:rmax
-          x1 <- seq(rmin, q, by = 0.01)
-          x2 <- seq(q, rmax, by = 0.01)
-          probx <- dexp(x, rate = rate)
-          probx1 <- dexp(x1, rate = rate)
-          probx2 <- dexp(x2, rate = rate)
-          xlim <- c(rmin, rmax)
-          ylim <- c(min(probx), max(probx) + 2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(f[X](x)), xlab = "X")
-          curve(dexp(x, rate), rmin, rmax,
-                ylab = expression(p[x](q)),
-                xlab = "x", ylim = ylim,
-                panel.first = grid(col = "gray90"),
-                main = gettext("Distribution Function: Exponential.", domain = "R-leem"))
-          polygon(c(x2, rev(x2)),
-                  c(probx2, rep(0,length(probx2))),
-                  col = "gray90")
-          polygon(c(x1, rev(x1)),
-                  c(probx1, rep(0,length(probx1))),
-                  col = "red")
-          abline(v = 1 / rate, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pexp(qq, rate = rate, lower.tail = T), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          rate2 <- gsub("\\.", ",", rate)
-          axis(
-            side = 1, at = qqaux, labels = qqaux,
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P(X<= ~ q ~";"~~ lambda == rat) == Pr, list(q = qq, Pr = Pr, rat = rate))
-          )
-        }
         if (gui == "plot") {
-          rate <- argaddit$rate
-          prob <- pexp(q = q, rate = rate)
-          plotcurve(q, rate)
+          plotpexplttplot(q, rate, rounding, main)
         }
         if (gui == "rstudio") {
-          rate <- argaddit$rate
-          prob <- pexp(q = q, rate = rate)
-          manipulate::manipulate(plotcurve(q, rate),
-                                 q = manipulate::slider(0, q + 30, q),
-                                 rate = manipulate::slider(rate, rate + 200, rate)
-          )
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pexp(q = q, rate = rate)
       } else {
-        plotcurve <- function(q, rate) {
-          rmin <- 0
-          rmax <- (q + ceiling(1 / rate + 7 * sqrt(1 / rate^2)))
-          x <- rmin:rmax
-          x1 <- seq(rmin, q, by = 0.01)
-          x2 <- seq(q, rmax, by = 0.01)
-          probx <- dexp(x, rate = rate)
-          probx1 <- dexp(x1, rate = rate)
-          probx2 <- dexp(x2, rate = rate)
-          xlim <- c(rmin, rmax)
-          ylim <- c(min(probx), max(probx) + 2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X")
-          curve(dexp(x, rate), rmin, rmax,
-                ylab = expression(p[x](q)),
-                xlab = "x", ylim = ylim,
-                panel.first = grid(col = "gray90"),
-                main = gettext("Distribution Function: Exponential.", domain = "R-leem"))
-          polygon(c(x2, rev(x2)),
-                  c(probx2, rep(0,length(probx2))),
-                  col = "red")
-          polygon(c(x1, rev(x1)),
-                  c(probx1, rep(0,length(probx1))),
-                  col = "gray90")
-          abline(v = rate, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pexp(qq, rate = rate, lower.tail = F), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = qqaux, labels = qqaux,
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P(X> ~ q ~";"~~ lambda == rat) == Pr, list(q = qq, Pr = Pr, rat = rate))
-          )
-        }
         if (gui == "plot") {
-          rate <- argaddit$rate
-          prob <- pexp(q = q, rate = rate, lower.tail = F)
-          plotcurve(q, rate = rate)
+          plotpexpltfplot(q, rate, rounding, main)
         }
         if (gui == "rstudio") {
-          rate <- argaddit$rate
-          prob <- pexp(q = q, rate = rate, lower.tail = F)
-          manipulate::manipulate(plotcurve(q, rate),
-                                 q = manipulate::slider(q, q + 30, q),
-                                 lambda = manipulate::slider(rate, rate + 200, rate)
-          )
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pexp(q = q, rate = rate, lower.tail = F)
+
       }
     }
     if (dist == "hyper") {

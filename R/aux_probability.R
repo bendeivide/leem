@@ -770,6 +770,210 @@ plotpgumbelarrstudio <- function(q1, q2, location, scale, rounding, main = NULL,
 }
 
 
+####################
+# Beta distribution
+####################
+plotpbetaarplot <- function(q, shape1, shape2, rounding, main = NULL) {
+
+  x <- seq(0, q[1], by = 0.01)
+  z <- seq(q[2],1, by = 0.01)
+  y <-seq(q[1], q[2], by = 0.01)
+  fx <- dbeta(x, shape1, shape2)
+  fz <- dbeta(z, shape1, shape2)
+  fy <- dbeta(y, shape1, shape2)
+
+  if (is.null(main)) {
+    if (attr(q, "region") == "region1") {
+      main <- substitute(atop(bold("Probability function plot: Beta"), f[X](x) == frac(x^{alpha-1}*(1-x)^{beta-1}, B(alpha,beta))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region3") {
+      main <- substitute(atop(bold("Probability function plot: Beta"), f[X](x) == frac(x^{alpha-1}*(1-x)^{beta-1}, B(alpha,beta))*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region5") {
+      main <- substitute(atop(bold("Probability function plot: Beta"), f[X](x) == frac(x^{alpha-1}*(1-x)^{beta-1}, B(alpha,beta))*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region6") {
+      main <- substitute(atop(bold("Probability function plot: Beta"), f[X](x) == frac(x^{alpha-1}*(1-x)^{beta-1}, B(alpha,beta))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+  }
+  if(is.infinite(1.2 * max(fx,fy,fz))){
+    auxmain <- c(0, 2.5 + (shape1/shape2));
+    auxrect <- c(2 + shape1/shape2, 3.5 + shape1/shape2)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy,fz))
+  }
+
+  curve(dbeta(x, shape1, shape2), 0, 1,
+        ylim = auxmain,
+        xlab="X",
+        ylab = expression(f[X](x)),
+        panel.first = grid(col="gray90"), main = main)
+
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col="gray90")
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
+          col="red")
+  polygon(c(z,rev(z)), c(fz,rep(0,length(fz))),
+          col="red" )
+  qq <- round(q, digits=2)
+  qqaux <- qq
+  Pr <- round(pbeta(q[1], shape1, shape2, lower.tail = T) + pbeta(q[2], shape1, shape2, lower.tail = F), digits=rounding)
+  Pr <- gsub("\\.", ",", Pr)
+  qq <- gsub("\\.", ",", qq)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=qq, lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(c(0, qq[1])), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(qq[1]), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  axis(side=1, at=as.character(c(qq[2], 1)), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(qq[2]), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  abline(v = qqaux, lty=2, col = "red")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
+  if (attr(q, "region") == "region1") {
+    legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
+                     legend = substitute(P(X<t1)+P(X>t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~alpha == alphav ~ "," ~ beta == betav,
+                               list(alphav = shape1, betav = shape2)))
+  }
+  if (attr(q, "region") == "region3") {
+    legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~alpha == alphav ~ "," ~ beta == betav,
+                               list(alphav = shape1, betav = shape2)))
+  }
+  if (attr(q, "region") == "region5") {
+    legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~alpha == alphav ~ "," ~ beta == betav,
+                               list(alphav = shape1, betav = shape2)))
+  }
+  if ( attr(q, "region") == "region6") {
+    legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
+                     legend = substitute(P(X<t1)+P(X>=t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~alpha == alphav ~ "," ~ beta == betav,
+                               list(alphav = shape1, betav = shape2)))
+  }
+}
+####################
+# Exponential
+####################
+plotpexparplot <- function(q, rate, rounding, main) {
+  rmax <- q[2] + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
+  x1 <- seq(0, q[1], by = 0.01)
+  x2 <- seq(q[2], rmax, by = 0.01)
+  y <- seq(0, rmax, by = 0.01)
+  probx1 <- dexp(x1, rate = rate)
+  probx2 <- dexp(x2, rate = rate)
+  proby <- dexp(y, rate = rate)
+
+  if (is.null(main)) {
+    if (attr(q, "region") == "region1") {
+      main <- substitute(atop(bold("Probability function plot: Exponential"), f[X](x) == lambda*e^{-lambda*x}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region3") {
+      main <- substitute(atop(bold("Probability function plot: Exponential"), f[X](x) == lambda*e^{-lambda*x}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region5") {
+      main <- substitute(atop(bold("Probability function plot: Exponential"), f[X](x) == lambda*e^{-lambda*x}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region6") {
+      main <- substitute(atop(bold("Probability function plot: Exponential"), f[X](x) == lambda*e^{-lambda*x}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+  }
+
+  if(is.infinite(1.2 *max(probx1, probx2, proby))){
+    auxmain <- c(0, 2.5 + rate);
+    auxrect <- c(2 + rate, 3.5 + rate)
+  }else{
+    auxrect <- max(probx1, probx2, proby)
+    auxmain <- c(0, 1.2 * max(probx1, probx2, proby))
+  }
+
+
+  curve(dexp(x, rate), 0, rmax,
+        ylab = expression(p[x](q)),
+        xlab = "x", ylim = auxmain,
+        panel.first = grid(col = "gray90"),
+        main = main)
+  polygon(c(y, rev(y)),
+          c(proby, rep(0,length(proby))),
+          col = "gray90")
+  polygon(c(x1, rev(x1)),
+          c(probx1, rep(0,length(probx1))),
+          col = "red")
+  polygon(c(x2, rev(x2)),
+          c(probx2, rep(0,length(probx2))),
+          col = "red")
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(pexp(qq[1], rate = rate, lower.tail = T) +
+                pexp(qq[2], rate = rate, lower.tail = F), rounding)
+  Pr <- gsub("\\.", ",", Pr)
+  qq <- gsub("\\.", ",", qq)
+  rate2 <- gsub("\\.", ",", rate)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=qq, lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(c(0, qq[1])), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(qq[1]), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  axis(side=1, at=as.character(c(qq[2], rmax)), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(qq[2]), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  abline(v = qqaux, lty=2, col = "red")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
+
+  if (attr(q, "region") == "region1") {
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+                     legend = substitute(P(X<t1)+P(X>t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute("Parameters:"~rate == rat,
+                               list(rat = rate)))
+  }
+  if (attr(q, "region") == "region3") {
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute("Parameters:"~rate == rat,
+                               list(rat = rate)))
+  }
+  if (attr(q, "region") == "region5") {
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute("Parameters:"~rate == rat,
+                               list(rat = rate)))
+  }
+  if (attr(q, "region") == "region6") {
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+                     legend = substitute(P(X<t1)+P(X>=t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute("Parameters:"~rate == rat,
+                               list(rat = rate)))
+  }
+}
+
 ################################################################################
 ## B-region (name: plot+p+name_distribution+br+gui)
 ################################################################################
@@ -1432,6 +1636,195 @@ plotpgumbelbrrstudio <- function(q1, q2, location, scale, rounding, main = NULL,
   plotpgumbelbrplot(q, location, scale, rounding, main)
 }
 
+####################
+# Beta distribution
+####################
+plotpbetabrplot <- function(q, shape1, shape2, rounding, main = NULL) {
+
+  x <- seq(q[1],q[2], by = 0.01)
+  y <- seq(0, 1, by = 0.01)
+  fx <- dbeta(x, shape1, shape2)
+  fy <- dbeta(y, shape1, shape2)
+
+  if (is.null(main)) {
+    if (attr(q, "region") == "region2") {
+      main <- substitute(atop(bold("Probability function plot: Beta"), f[X](x) == frac(x^{alpha-1}*(1-x)^{beta-1}, B(alpha,beta))*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region4") {
+      main <- substitute(atop(bold("Probability function plot: Beta"), f[X](x) == frac(x^{alpha-1}*(1-x)^{beta-1}, B(alpha,beta))*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region7") {
+      main <- substitute(atop(bold("Probability function plot: Beta"), f[X](x) == frac(x^{alpha-1}*(1-x)^{beta-1}, B(alpha,beta))*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region8") {
+      main <- substitute(atop(bold("Probability function plot: Beta"), f[X](x) == frac(x^{alpha-1}*(1-x)^{beta-1}, B(alpha,beta))*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+  }
+
+  if(is.infinite(1.2 * max(fx,fy))){
+    auxmain <- c(0, 2.5 + (shape1/shape2));
+    auxrect <- c(2 + shape1/shape2, 3.5 + shape1/shape2)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy))
+  }
+
+  curve(dbeta(x, shape1, shape2), 0, 1,
+        ylim = auxmain,
+        xlab="X",
+        ylab = expression(f[X](x)),
+        panel.first = grid(col="gray90"), main = main)
+
+polygon(c(y, rev(y)),
+        c(fy, rep(0, length(fy))),
+        col="gray90")
+polygon(c(x, rev(x)),
+        c(fx, rep(0, length(fx))),
+        col="red")
+qq <- round(q, digits=2)
+qqaux <- qq
+Pr <- round(pbeta(q[2], shape1,shape2, lower.tail = T) - pbeta(q[1], shape1, shape2, lower.tail = T), digits=rounding)
+Pr <- gsub("\\.", ",", Pr)
+qq <- gsub("\\.", ",", qq)
+aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+axis(side=1, at=qq, lwd = 0,
+     col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+axis(side=1, at=qqaux, labels=FALSE,
+     col="red", font = 2, col.axis = "red")
+abline(v = qqaux, lty=2, col = "red")
+rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
+if (attr(q, "region") == "region2") {
+  legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
+                   legend = substitute(P(X>t1)+P(X<t2)==Pr,
+                                       list(t1=qq[1],t2=qq[2], Pr = Pr)))
+  legend(0, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+         legend = substitute("Parameters:"~alpha == alphav ~ "," ~ beta == betav,
+                             list(alphav = shape1, betav = shape2)))
+}
+if (attr(q, "region") == "region4") {
+  legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
+                   legend = substitute(P(X>=t1)+P(X<=t2)==Pr,
+                                       list(t1=qq[1],t2=qq[2], Pr = Pr)))
+  legend(0, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+         legend = substitute("Parameters:"~alpha == alphav ~ "," ~ beta == betav,
+                             list(alphav = shape1, betav = shape2)))
+}
+if (attr(q, "region") == "region7") {
+  legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
+                   legend = substitute(P(X>=t1)+P(X<t2)==Pr,
+                                       list(t1=qq[1],t2=qq[2], Pr = Pr)))
+  legend(0, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+         legend = substitute("Parameters:"~alpha == alphav ~ "," ~ beta == betav,
+                             list(alphav = shape1, betav = shape2)))
+}
+if ( attr(q, "region") == "region8") {
+  legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
+                   legend = substitute(P(X>t1)+P(X<=t2)==Pr,
+                                       list(t1=qq[1],t2=qq[2], Pr = Pr)))
+  legend(0, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+         legend = substitute("Parameters:"~alpha == alphav ~ "," ~ beta == betav,
+                             list(alphav = shape1, betav = shape2)))
+}
+}
+
+####################
+# Exponential
+####################
+plotpexpbrplot <- function(q, rate, rounding, main = NULL){
+  rmax <- q[2] + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
+  x <- seq(q[1], q[2], by = 0.01)
+  y <- seq(0, rmax, by = 0.01)
+  probx <- dexp(x, rate = rate)
+  proby <- dexp(y, rate = rate)
+  if (is.null(main)) {
+    if (attr(q, "region") == "region2") {
+      main <- substitute(atop(bold("Probability function plot: Exponential"), f[X](x) == lambda*e^{-lambda*x}*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region4") {
+      main <- substitute(atop(bold("Probability function plot: Exponential"), f[X](x) == lambda*e^{-lambda*x}*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region7") {
+      main <- substitute(atop(bold("Probability function plot: Exponential"), f[X](x) == lambda*e^{-lambda*x}*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+    if (attr(q, "region") == "region8") {
+      main <- substitute(atop(bold("Probability function plot: Exponential"), f[X](x) == lambda*e^{-lambda*x}*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+    }
+  }
+  if(is.infinite(1.2 *max(probx, proby))){
+    auxmain <- c(0, 2.5 + rate);
+    auxrect <- c(2 + rate, 3.5 + rate)
+  }else{
+    auxrect <- max(probx, proby)
+    auxmain <- c(0, 1.2 * max(probx, proby))
+  }
+
+
+  # Curve
+  curve(dexp(x, rate), 0, rmax,
+        ylab = expression(p[x](q)),
+        xlab = "x", ylim = auxmain,
+        panel.first = grid(col = "gray90"),
+        main = main)
+
+
+  polygon(c(y, rev(y)),
+          c(proby, rep(0,length(proby))),
+          col = "gray90")
+
+  polygon(c(x, rev(x)),
+          c(probx, rep(0,length(probx))),
+          col = "red")
+
+  abline(v = 1 / rate, lty = 2)
+
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(pexp(qq[2], rate = rate, lower.tail = T) -
+                pexp(qq[1], rate = rate, lower.tail = T), rounding)
+  Pr <- gsub("\\.", ",", Pr)
+  qq <- gsub("\\.", ",", qq)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=qq, lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=qqaux, labels=FALSE,
+       col="red", font = 2, col.axis = "red")
+  abline(v = qqaux, lty=2, col = "red")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
+
+  if (attr(q, "region") == "region2") {
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+                     legend = substitute(P(X<t1)+P(X>t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute("Parameters:"~rate == rat,
+                               list(rat = rate)))
+  }
+  if (attr(q, "region") == "region4") {
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute("Parameters:"~rate == rat,
+                               list(rat = rate)))
+  }
+  if (attr(q, "region") == "region7") {
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute("Parameters:"~rate == rat,
+                               list(rat = rate)))
+  }
+  if (attr(q, "region") == "region8") {
+    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+                     legend = substitute(P(X<t1)+P(X>=t2)==Pr,
+                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    legend(0, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute("Parameters:"~rate == rat,
+                               list(rat = rate)))
+  }
+}
+
 ################################################################################
 ## lower.tail = TRUE (name: plot+q+name_distribution+ltt+type_distribution)
 ################################################################################
@@ -1826,6 +2219,118 @@ plotpgumbellttplot <- function(q, location, scale, rounding, main = NULL){
            legend = substitute("Parameters:"~location == locationv ~ "," ~ scale == scalev,
                                list(scalev = scale, locationv = location)))
 
+}
+
+#####################
+# Beta distribution
+#####################
+plotpbetalttplot <- function(q, shape1, shape2, rounding, main) {
+  x <- seq(0, q, by = 0.01)
+  y <- seq(0, 1, by = 0.01)
+  fx <- dbeta(x, shape1, shape2)
+  fy <- dbeta(y, shape1, shape2)
+
+  if (is.null(main)) {
+    main <- substitute(atop(bold("Probability function plot: Beta"), f[X](x) == frac(x^{alpha-1}*(1-x)^{beta-1}, B(alpha,beta))*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
+  }
+  if(is.infinite(1.2 * max(fx,fy))){
+    auxmain <- c(0, 2.5 + (shape1/shape2));
+    auxrect <- c(2 + shape1/shape2, 3.5 + shape1/shape2)
+  }else{
+    auxrect <- max(fx,fy)
+    auxmain <- c(0, 1.2 * max(fx,fy))
+  }
+
+  curve(dbeta(x, shape1, shape2), 0,1 ,
+        ylim = auxmain, ylab = expression(f[X](x)),xlab = "X",panel.first = grid(col = "gray90"),
+        main = main)
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col="gray90")
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
+          col="red")
+
+
+  qq <- round(q, digits=2)
+  Pr <- round(pbeta(qq,  shape1, shape2), digits=rounding)
+  Pr <- gsub("\\.", ",", Pr)
+  qq <- gsub("\\.", ",", qq)
+
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(c(0, q)), labels=FALSE,
+       col="red", font = 2, col.axis = "red", tick = TRUE,lwd.ticks = 1)
+  # Insert red horizontal and vertical line (X-axis)
+  axis(side=1, at=as.character(c(0, q)), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  abline(v = q, lty=2, col = "red")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
+
+  legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
+                   legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
+                                       list(t1 = q, Pr = Pr)))
+  legend(0, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~alpha == alphav ~ "," ~ beta == betav,
+                             list(q = qq, Pr = Pr, alphav = shape1, betav= shape2)))
+}
+
+####################
+# Exponential
+####################
+plotpexplttplot <- function(q, rate, rounding, main = NULL) {
+  rmin <- 0
+  rmax <- q + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
+  x <- rmin:rmax
+  x1 <- seq(rmin, q, by = 0.01)
+  x2 <- seq(q, rmax, by = 0.01)
+  probx <- dexp(x, rate = rate)
+  probx1 <- dexp(x1, rate = rate)
+  probx2 <- dexp(x2, rate = rate)
+
+  if (is.null(main)) {
+    main <- substitute(atop(bold("Probability function plot: Exponential"), f[X](x) == lambda*e^{-lambda*x}*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
+  }
+  if(is.infinite(1.2 *max(probx, probx1, probx2))){
+    auxmain <- c(0, 2.5 + rate);
+    auxrect <- c(2 + rate, 3.5 + rate)
+  }else{
+    auxrect <- max(probx, probx1, probx2)
+    auxmain <- c(0, 1.2 *max(probx, probx1, probx2))
+  }
+
+  curve(dexp(x, rate), rmin, rmax,
+        ylab = expression(f[x](X)),
+        xlab = "x", ylim = auxmain,
+        panel.first = grid(col = "gray90"),
+        main = main)
+  polygon(c(x2, rev(x2)),
+          c(probx2, rep(0,length(probx2))),
+          col = "gray90")
+  polygon(c(x1, rev(x1)),
+          c(probx1, rep(0,length(probx1))),
+          col = "red")
+  abline(v = 1 / rate, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(pexp(qq, rate = rate, lower.tail = T), rounding)
+  Pr <- gsub("\\.", ",", Pr)
+  qq <- gsub("\\.", ",", qq)
+  rate2 <- gsub("\\.", ",", rate)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=qq, lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=qqaux, labels=FALSE,
+       col="red", font = 2, col.axis = "red")
+  abline(v = qqaux, lty=2, col = "red")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+                   legend = substitute(P(X<=t1)==Pr,
+                                       list(t1=q, Pr = Pr)))
+  legend(0, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+         legend = substitute("Parameters:"~rate == rat,
+                             list(rat = rate)))
 }
 
 ################################################################################
@@ -2231,6 +2736,126 @@ plotpgumbelltfplot <- function(q, location, scale, rounding, main = NULL){
   legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
          legend = substitute("Parameters:"~location == locationv ~ "," ~ scale == scalev,
                              list(scalev = scale, locationv = location)))
+}
+
+#####################
+# Beta distribution
+#####################
+plotpbetaltfplot <- function(q, shape1 , shape2, rounding, main = NULL ) {
+x <- seq(q, 1, by=0.01)
+y <- seq(0, 1, by=0.01)
+fx <- dbeta(x, shape1, shape2)
+fy <- dbeta(y, shape1, shape2)
+
+if (is.null(main)) {
+  main <- substitute(atop(bold("Probability function plot: Beta"), f[X](x) == frac(x^{alpha-1}*(1-x)^{beta-1}, B(alpha,beta))*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)), list(t = q))
+  }
+if(is.infinite(1.2 * max(fx,fy))){
+  auxmain <- c(0, 2.5 + (shape1/shape2));
+  auxrect <- c(2 + shape1/shape2, 3.5 + shape1/shape2)
+}else{
+  auxrect <- max(fx,fy)
+  auxmain <- c(0, 1.2 * max(fx,fy))
+}
+curve(dbeta(x, shape1, shape2), 1, 0,
+      ylim = auxmain  ,ylab = expression(f[X](x)), xlab="X",
+      panel.first = grid(col = "gray90"),
+      main = main)
+polygon(c(y, rev(y)),
+        c(fy, rep(0, length(fy))),
+        col="gray90")
+polygon(c(x, rev(x)),
+        c(fx, rep(0, length(fx))),
+        col="red")
+
+qqaux <-round(q, digits=2)
+Pr <- pbeta(q, shape1, shape2, lower.tail = F)
+aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+axis(side=1, at=q, lwd = 0,
+     col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+axis(side=1, at=as.character(c(q, 1)), labels=FALSE,
+     col="red", font = 2, col.axis = "red", tick = TRUE,lwd.ticks = 1)
+# Insert red horizontal and vertical line (X-axis)
+axis(side=1, at=as.character(c(q, 1)), tick = TRUE, lwd = 1,
+     col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+abline(v = q, lty=2, col = "red")
+abline(v = qqaux, lty = 2, col = "red")
+abline(v = qqaux, lty=2, col = "red")
+rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
+legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
+                 legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
+                                     list(q = q, Pr = Pr)))
+legend(0, legaux$text$y, bty="n", bg = "white", cex=0.8,
+       legend = substitute("Parameters:"~alpha == alphav ~ "," ~ beta == betav,
+                           list(alphav = shape1, betav = shape2)))
+}
+
+####################
+# Exponential
+####################
+plotpexpltfplot <- function(q, rate, rounding, main = NULL) {
+  rmin <- 0
+  rmax <- (q + ceiling(1 / rate + 7 * sqrt(1 / rate^2)))
+  x <- rmin:rmax
+  x1 <- seq(rmin, q, by = 0.01)
+  x2 <- seq(q, rmax, by = 0.01)
+  probx <- dexp(x, rate = rate)
+  probx1 <- dexp(x1, rate = rate)
+  probx2 <- dexp(x2, rate = rate)
+
+  if (is.null(main)) {
+    main <- substitute(atop(bold("Probability function plot: Exponential"), f[X](x) == lambda*e^{-lambda*x}*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)), list(t = q))
+  }
+
+  if(is.infinite(1.2 *max(probx, probx1, probx2))){
+    auxmain <- c(0, 2.5 + rate);
+    auxrect <- c(2 + rate, 3.5 + rate)
+  }else{
+    auxrect <- max(probx, probx1, probx2)
+    auxmain <- c(0, 1.2 *max(probx, probx1, probx2))
+  }
+
+
+  curve(dexp(x, rate), rmin, rmax,
+        ylab = expression(p[x](q)),
+        xlab = "x", ylim = auxmain,
+        panel.first = grid(col = "gray90"),
+        main = main)
+  polygon(c(x2, rev(x2)),
+          c(probx2, rep(0,length(probx2))),
+          col = "red")
+  polygon(c(x1, rev(x1)),
+          c(probx1, rep(0,length(probx1))),
+          col = "gray90")
+  abline(v = rate, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(pexp(qq, rate = rate, lower.tail = F), rounding)
+  Pr <- gsub("\\.", ",", Pr)
+  qq <- gsub("\\.", ",", qq)
+  axis(
+    side = 1, at = qqaux, labels = qqaux,
+    col = "red", font = 2, col.axis = "red"
+  )
+  abline(v = qqaux, lty = 2, col = "red")
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(c(q, 1)), labels=FALSE,
+       col="red", font = 2, col.axis = "red", tick = TRUE,lwd.ticks = 1)
+  # Insert red horizontal and vertical line (X-axis)
+  axis(side=1, at=as.character(c(q, 1)), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  abline(v = q, lty=2, col = "red")
+  abline(v = qqaux, lty = 2, col = "red")
+  abline(v = qqaux, lty=2, col = "red")
+  rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
+                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
+                                       list(q = qq, Pr = Pr)))
+  legend(0, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~rate == rat,
+                             list(rat = rate)))
 }
 
 ################################################################################
