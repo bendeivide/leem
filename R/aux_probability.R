@@ -10,6 +10,7 @@
 ################################################################################
 # OBS.: ar - A-region; gui: "plot", "rstudio", "tcltk"
 #-------------------------------------------------------------------------------
+#---------------------------- Continuous Distributions -------------------------
 #####################
 # Normal distribution
 #####################
@@ -213,232 +214,6 @@ plotptstudentarrstudio <- function(q1,q2, df, rounding, main = NULL, q){
   q[1] <- q1
   q[2] <- q2
   plotptstudentarplot(q, df, rounding, main)
-}
-# Tcl/tk
-## Soon...
-
-
-
-######################
-# Poisson distribution
-######################
-# Plot
-plotppoissonarplot <- function(q, lambda, rounding, main = NULL){
-  # readjusting the range
-  ## ab-region
-  if (is.double(q)) {
-    if (attr(q, "region") == "region5") {
-      q[2] <- q[2] + 1
-    }
-    if (attr(q, "region") == "region1") {
-      q[1] <- q[1] - 1
-      q[2] <- q[2] + 1
-    }
-    if (attr(q, "region") == "region6") {
-      q[1] <- q[1] - 1
-    }
-    ## b-region
-    if (attr(q, "region") == "region7") {
-      q[2] <- q[2] - 1
-    }
-    if (attr(q, "region") == "region2") {
-      q[1] <- q[1] + 1
-      q[2] <- q[2] - 1
-    }
-    if (attr(q, "region") == "region8") {
-      q[1] <- q[1] + 1
-    }
-    if (q[1] >= q[2]) stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
-  }
-
-  rmin <- if (q[1] < lambda) trunc(q[1] - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
-  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-  rmax <- if (q[2] > lambda) ceiling(q[2] + 4 * sqrt(lambda)) else ceiling(lambda + 4 * sqrt(lambda))
-  x <- rmin:rmax
-  probx <- dpois(x, lambda = lambda)
-
-  xlim <- c(rmin, rmax)
-  ylim <- c(0, max(probx)*1.2)
-  plot.new()
-  plot.window(xlim, ylim)
-  axis(1, at = 5*(0:rmax))
-  axis(2)
-  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
-  lines(x, probx, type = "h", lwd = 2)
-  qq <- round(q, digits = rounding)
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  Pr <- round(ppois(q = q[1], lambda = lambda) + ppois(q = q[2] - 1, lambda = lambda, lower.tail = FALSE),
-              digits = rounding)
-  qqmin <- qq[1]
-  qqmax <- qq[2]
-  # red vertical lines and points
-  x1 <- if (rmin > qqmin) qqmin else rmin:qqmin
-  x2 <- qqmax:rmax
-  probx1 <- dpois(x1, lambda = lambda)
-  probx2 <- dpois(x2, lambda = lambda)
-  lines(x1, probx1, type = "h", lwd = 2,col="red")
-  points(x1, probx1, lwd = 2, pch = 19,col="red")
-  lines(x2, probx2, type = "h", lwd = 2,col="red")
-  points(x2, probx2, lwd = 2, pch = 19,col="red")
-  # red x-axis
-  # red x-axis
-  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
-       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
-  axis(side=1, at=as.character(c(qqmax, rmax)), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-  axis(side=1, at=as.character(x1), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-  axis(side=1, at=as.character(q), tick = TRUE, lwd = 0,
-       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-  # intervals
-  abline(v = c(qqmin, qqmax), lty=2, col = "red")
-  # rectangle
-  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
-  # title and legends
-  if (qqmin < 0) {
-    axis(side=1, at=as.character(qqmin), tick = TRUE, lwd = 1,
-         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-    title(ylab = expression(p[X](x)), xlab = "X",
-          main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~P(X <= t1)== 0*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")))
-    # legends
-    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
-                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
-    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~lambda == lambd,
-                               list(lambd = lambda)))
-  } else{
-    axis(side=1, at=as.character(c(rmin, qqmin)), tick = TRUE, lwd = 1,
-         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-    title(ylab = expression(p[X](x)), xlab = "X",
-          main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
-    # legends
-    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
-                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
-    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~lambda == lambd,
-                               list(lambd = lambda)))
-  }
-}
-
-# RStudio
-plotppoissonarrstudio <- function(q1, q2, lambda, rounding, main = NULL, q){
-  q[1] <- q1
-  q[2] <- q2
-  plotppoissonarplot(q,lambda, rounding, main)
-}
-# Tcl/tk
-## Soon...
-
-
-######################
-# Binomial distribution
-######################
-# Plot
-plotpbinomialarplot <- function(q, size, prob, rounding, main = NULL){
-  # readjusting the range
-  ## ab-region
-  if (is.double(q)) {
-    if (attr(q, "region") == "region5") {
-      q[2] <- q[2] + 1
-    }
-    if (attr(q, "region") == "region1") {
-      q[1] <- q[1] - 1
-      q[2] <- q[2] + 1
-    }
-    if (attr(q, "region") == "region6") {
-      q[1] <- q[1] - 1
-    }
-    ## b-region
-    if (attr(q, "region") == "region7") {
-      q[2] <- q[2] - 1
-    }
-    if (attr(q, "region") == "region2") {
-      q[1] <- q[1] + 1
-      q[2] <- q[2] - 1
-    }
-    if (attr(q, "region") == "region8") {
-      q[1] <- q[1] + 1
-    }
-    if (q[1] >= q[2]) stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
-  }
-
-  rmin <- if (q[1] < size) trunc(q[1] - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
-  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-  rmax <- if (q[2] > size) ceiling(q[2] + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
-  x <- rmin:rmax
-  probx <- dbinom(x, size = size, prob = prob)
-
-  xlim <- c(rmin, rmax)
-  ylim <- c(0, max(probx)*1.2)
-  plot.new()
-  plot.window(xlim, ylim)
-  axis(1, at = 5*(0:rmax))
-  axis(2)
-  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
-  lines(x, probx, type = "h", lwd = 2)
-  qq <- round(q, digits = rounding)
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  Pr <- round(pbinom(q = q[1], size = size, prob = prob) + pbinom(q = q[2] - 1, size = size, prob = prob, lower.tail = FALSE),
-              digits = rounding)
-  qqmin <- qq[1]
-  qqmax <- qq[2]
-  # red vertical lines and points
-  x1 <- if (rmin > qqmin) qqmin else rmin:qqmin
-  x2 <- qqmax:rmax
-  probx1 <- dbinom(x1, size = size, prob = prob)
-  probx2 <- dbinom(x2, size = size, prob = prob)
-  lines(x1, probx1, type = "h", lwd = 2,col="red")
-  points(x1, probx1, lwd = 2, pch = 19,col="red")
-  lines(x2, probx2, type = "h", lwd = 2,col="red")
-  points(x2, probx2, lwd = 2, pch = 19,col="red")
-  # red x-axis
-  # red x-axis
-  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
-       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
-  axis(side=1, at=as.character(c(qqmax, rmax)), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-  axis(side=1, at=as.character(x1), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-  axis(side=1, at=as.character(q), tick = TRUE, lwd = 0,
-       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-  # intervals
-  abline(v = c(qqmin, qqmax), lty=2, col = "red")
-  # rectangle
-  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
-  # title and legends
-  if (qqmin < 0) {
-    axis(side=1, at=as.character(qqmin), tick = TRUE, lwd = 1,
-         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-    title(ylab = expression(p[X](x)), xlab = "X",
-          main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
-    # legends
-    legaux <- legend("topleft", bty="n", fill="red",
-                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr, cex = 0.8,
-                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
-    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
-                               list( N = size, P = prob)))
-  } else{
-    axis(side=1, at=as.character(c(rmin, qqmin)), tick = TRUE, lwd = 1,
-         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-    title(ylab = expression(p[X](x)), xlab = "X",
-          main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
-    # legends
-    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
-                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
-    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
-                               list( N = size, P = prob)))
-  }
-}
-#Rstudio
-plotpbinomialarrstudio <- function(q1, q2, size, prob, rounding, main = NULL, q){
-  q[1] <- q1
-  q[2] <- q2
-  plotpbinomialarplot(q, size, prob, rounding, main)
 }
 # Tcl/tk
 ## Soon...
@@ -869,9 +644,9 @@ plotpbetaarplot <- function(q, shape1, shape2, rounding, main = NULL) {
                                list(alphav = shape1, betav = shape2)))
   }
 }
-####################
-# Exponential
-####################
+##########################
+# Exponential distribution
+##########################
 plotpexparplot <- function(q, rate, rounding, main) {
   rmax <- q[2] + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
   x1 <- seq(0, q[1], by = 0.01)
@@ -974,11 +749,546 @@ plotpexparplot <- function(q, rate, rounding, main) {
   }
 }
 
+#----------------------------- Discrete Distributions --------------------------
+######################
+# Poisson distribution
+######################
+# Plot
+plotppoissonarplot <- function(q, lambda, rounding, main = NULL){
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2]) stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+  }
+
+  rmin <- if (q[1] < lambda) trunc(q[1] - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q[2] > lambda) ceiling(q[2] + 4 * sqrt(lambda)) else ceiling(lambda + 4 * sqrt(lambda))
+  x <- rmin:rmax
+  probx <- dpois(x, lambda = lambda)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  Pr <- round(ppois(q = q[1], lambda = lambda) + ppois(q = q[2], lambda = lambda, lower.tail = FALSE),
+              digits = rounding)
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- if (rmin > qqmin) qqmin else rmin:qqmin
+  x2 <- qqmax:rmax
+  probx1 <- dpois(x1, lambda = lambda)
+  probx2 <- dpois(x2, lambda = lambda)
+  lines(x1, probx1, type = "h", lwd = 2,col="red")
+  points(x1, probx1, lwd = 2, pch = 19,col="red")
+  lines(x2, probx2, type = "h", lwd = 2,col="red")
+  points(x2, probx2, lwd = 2, pch = 19,col="red")
+  # red x-axis
+  # red x-axis
+  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(c(qqmax, rmax)), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(x1), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(q), tick = TRUE, lwd = 0,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # intervals
+  abline(v = c(qqmin, qqmax), lty=2, col = "red")
+  # rectangle
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  # title and legends
+  if (qqmin < 0) {
+    axis(side=1, at=as.character(qqmin), tick = TRUE, lwd = 1,
+         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+    title(ylab = expression(p[X](x)), xlab = "X",
+          main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~P(X <= t1)== 0*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")))
+    # legends
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~lambda == lambd,
+                               list(lambd = lambda)))
+  } else{
+    axis(side=1, at=as.character(c(rmin, qqmin)), tick = TRUE, lwd = 1,
+         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+    title(ylab = expression(p[X](x)), xlab = "X",
+          main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
+    # legends
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~lambda == lambd,
+                               list(lambd = lambda)))
+  }
+}
+
+# RStudio
+plotppoissonarrstudio <- function(q1, q2, lambda, rounding, main = NULL, q){
+  q[1] <- q1
+  q[2] <- q2
+  plotppoissonarplot(q,lambda, rounding, main)
+}
+# Tcl/tk
+## Soon...
+
+
+######################
+# Binomial distribution
+######################
+# Plot
+plotpbinomialarplot <- function(q, size, prob, rounding, main = NULL){
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2]) stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+  }
+
+  rmin <- if (q[1] < size) trunc(q[1] - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q[2] > size) ceiling(q[2] + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+  x <- rmin:rmax
+  probx <- dbinom(x, size = size, prob = prob)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  Pr <- round(pbinom(q = q[1], size = size, prob = prob) + pbinom(q = q[2] - 1, size = size, prob = prob, lower.tail = FALSE),
+              digits = rounding)
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- if (rmin > qqmin) qqmin else rmin:qqmin
+  x2 <- qqmax:rmax
+  probx1 <- dbinom(x1, size = size, prob = prob)
+  probx2 <- dbinom(x2, size = size, prob = prob)
+  lines(x1, probx1, type = "h", lwd = 2,col="red")
+  points(x1, probx1, lwd = 2, pch = 19,col="red")
+  lines(x2, probx2, type = "h", lwd = 2,col="red")
+  points(x2, probx2, lwd = 2, pch = 19,col="red")
+  # red x-axis
+  # red x-axis
+  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(c(qqmax, rmax)), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(x1), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(q), tick = TRUE, lwd = 0,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # intervals
+  abline(v = c(qqmin, qqmax), lty=2, col = "red")
+  # rectangle
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  # title and legends
+  if (qqmin < 0) {
+    axis(side=1, at=as.character(qqmin), tick = TRUE, lwd = 1,
+         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+    title(ylab = expression(p[X](x)), xlab = "X",
+          main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
+    # legends
+    legaux <- legend("topleft", bty="n", fill="red",
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr, cex = 0.8,
+                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
+                               list( N = size, P = prob)))
+  } else{
+    axis(side=1, at=as.character(c(rmin, qqmin)), tick = TRUE, lwd = 1,
+         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+    title(ylab = expression(p[X](x)), xlab = "X",
+          main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
+    # legends
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
+                               list( N = size, P = prob)))
+  }
+}
+#Rstudio
+plotpbinomialarrstudio <- function(q1, q2, size, prob, rounding, main = NULL, q){
+  q[1] <- q1
+  q[2] <- q2
+  plotpbinomialarplot(q, size, prob, rounding, main)
+}
+# Tcl/tk
+## Soon...
+
+
+
+################################
+# Negative Binomial distribution
+################################
+plotpnbinomarplot <- function(q, size, prob, rounding, main = NULL){
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2]) stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+  }
+
+  rmin <- if (q[1] < size) trunc(q[1] - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q[2] > size) ceiling(q[2] + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+  x <- rmin:rmax
+  probx <- dnbinom(x, size, prob)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  Pr <- round(pnbinom(q = q[1], size, prob) + pnbinom(q = q[2] - 1, size, prob, lower.tail = FALSE),
+              digits = rounding)
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- if (rmin > qqmin) qqmin else rmin:qqmin
+  x2 <- qqmax:rmax
+  probx1 <- dnbinom(x1, size, prob)
+  probx2 <- dnbinom(x2, size, prob)
+  lines(x1, probx1, type = "h", lwd = 2,col="red")
+  points(x1, probx1, lwd = 2, pch = 19,col="red")
+  lines(x2, probx2, type = "h", lwd = 2,col="red")
+  points(x2, probx2, lwd = 2, pch = 19,col="red")
+  # red x-axis
+  # red x-axis
+  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(c(qqmax, rmax)), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(x1), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(q), tick = TRUE, lwd = 0,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # intervals
+  abline(v = c(qqmin, qqmax), lty=2, col = "red")
+  # rectangle
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  # title and legends
+  if (qqmin < 0) {
+    axis(side=1, at=as.character(qqmin), tick = TRUE, lwd = 1,
+         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+    title(ylab = expression(p[X](x)), xlab = "X",
+          main = substitute(atop(bold("Probability function plot: Negative Binomial"), p[X](x) == (atop(k+r-1,k))*(1-p)^n*p^k*","~~P(X <= t1)== 0*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")))
+    # legends
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~n == sizev ~ "," ~ p == probv,
+                               list(sizev = size, probv = prob)))
+  } else{
+    axis(side=1, at=as.character(c(rmin, qqmin)), tick = TRUE, lwd = 1,
+         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+    title(ylab = expression(p[X](x)), xlab = "X",
+          main = substitute(atop(bold("Probability function plot: Negative Binomial"), p[X](x) == (atop(k+r-1,k))*(1-p)^n*p^k*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
+    # legends
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~n == sizev ~ "," ~ p == probv,
+                               list(sizev = size, probv = prob)))
+  }
+}
+
+
+#############################
+# Hypergeometric distribution
+#############################
+plotphyperarplot <- function(q, m, n, k, rounding, main = NULL){
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2]) stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+  }
+
+  rmin <- if (q[1] < k) trunc(q[1] - 4 * sqrt(k)) else trunc(k - 4 * sqrt(k))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q[2] > k) ceiling(q[1] + 4 * sqrt(k)) else ceiling(k + 4 * sqrt(k))
+  x <- rmin:rmax
+  probx <- dhyper(x, m, n, k)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  Pr <- round((phyper(q = q[1], m, n, k, lower.tail = T)) + (phyper(q = q[2], m, n, k, lower.tail = F)),
+              digits = rounding)
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- if (rmin > qqmin) qqmin else rmin:qqmin
+  x2 <- qqmax:rmax
+  probx1 <- dhyper(x1, m, n, k)
+  probx2 <- dhyper(x2, m, n, k)
+  lines(x1, probx1, type = "h", lwd = 2,col="red")
+  points(x1, probx1, lwd = 2, pch = 19,col="red")
+  lines(x2, probx2, type = "h", lwd = 2,col="red")
+  points(x2, probx2, lwd = 2, pch = 19,col="red")
+  # red x-axis
+  # red x-axis
+  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(c(qqmax, rmax)), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(x1), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(q), tick = TRUE, lwd = 0,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # intervals
+  abline(v = c(qqmin, qqmax), lty=2, col = "red")
+  # rectangle
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  # title and legends
+  if (qqmin < 0) {
+    axis(side=1, at=as.character(qqmin), tick = TRUE, lwd = 1,
+         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+    title(ylab = expression(p[X](x)), xlab = "X",
+          main = substitute(atop(bold("Probability function plot: Hypergeometric"), p[X](x) == frac((atop(K,k))*(atop(N-K,n-k)),(atop(N,n)))*","~~P(X <= t1)== 0*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")))
+    # legends
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~m == mv~";"~ n == nv ~";"~ k == kv,
+                               list(mv = m, nv = n, kv = k)))
+  } else{
+    axis(side=1, at=as.character(c(rmin, qqmin)), tick = TRUE, lwd = 1,
+         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+    title(ylab = expression(p[X](x)), xlab = "X",
+          main = substitute(atop(bold("Probability function plot: Hypergeometric"), p[X](x) == frac((atop(K,k))*(atop(N-K,n-k)),(atop(N,n)))*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
+    # legends
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~m == mv~";"~ n == nv ~";"~ k == kv,
+                               list(mv = m, nv = n, kv = k)))
+  }
+}
+
+########################
+# Geometric distribution
+########################
+# Plot
+plotpgeomarplot <- function(q, prob, rounding, main = NULL){
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2]) stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+  }
+
+  rmin <- if (q[1] < 10*prob) trunc(q[1] - 4 * sqrt(10*prob)) else trunc(10*prob - 4 * sqrt(10*prob))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q[2] > 10*prob) ceiling(q[2] + 4 * sqrt(10*prob)) else ceiling(10*prob + 4 * sqrt(10*prob))
+  x <- rmin:rmax
+  probx <- dgeom(x, prob)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  Pr <- round(pgeom(q = q[1], prob) + pgeom(q = q[2], prob, lower.tail = FALSE),
+              digits = rounding)
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- if (rmin > qqmin) qqmin else rmin:qqmin
+  x2 <- qqmax:rmax
+  probx1 <- dgeom(x1, prob)
+  probx2 <- dgeom(x2, prob)
+  lines(x1, probx1, type = "h", lwd = 2,col="red")
+  points(x1, probx1, lwd = 2, pch = 19,col="red")
+  lines(x2, probx2, type = "h", lwd = 2,col="red")
+  points(x2, probx2, lwd = 2, pch = 19,col="red")
+  # red x-axis
+  # red x-axis
+  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(c(qqmax, rmax)), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(x1), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  axis(side=1, at=as.character(q), tick = TRUE, lwd = 0,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # intervals
+  abline(v = c(qqmin, qqmax), lty=2, col = "red")
+  # rectangle
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  # title and legends
+  if (qqmin < 0) {
+    axis(side=1, at=as.character(qqmin), tick = TRUE, lwd = 1,
+         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+    title(ylab = expression(p[X](x)), xlab = "X",
+          main = substitute(atop(bold("Probability function plot: Geometric"), p[X](x) == q^{k-1}*p[k]*","~~P(X <= t1)== 0*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")))
+    # legends
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~prob == probv,
+                               list(probv = prob)))
+  } else{
+    axis(side=1, at=as.character(c(rmin, qqmin)), tick = TRUE, lwd = 1,
+         col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+    title(ylab = expression(p[X](x)), xlab = "X",
+          main = substitute(atop(bold("Probability function plot: Geometric"), p[X](x) ==  q^{k-1}*p[k]*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
+    # legends
+    legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~prob == probv,
+                               list(probv = prob)))
+  }
+}
+
+
 ################################################################################
 ## B-region (name: plot+p+name_distribution+br+gui)
 ################################################################################
 # OBS.: br - B-region; gui: "plot", "rstudio", "tcltk"
 #-------------------------------------------------------------------------------
+#---------------------------- Continuous Distributions -------------------------
 #####################
 # Normal distribution
 #####################
@@ -1163,190 +1473,6 @@ plotptstudentbrrstudio <- function(q1, q2, df, rounding, main = NULL, q){
 }
 # Tcl/tk
 ## Soon...
-######################
-# Poisson distribution
-######################
-# Plot
-plotppoissonbrplot <- function(q, lambda, rounding, main = NULL){
-  # readjusting the range
-  ## ab-region
-  if (is.double(q)) {
-    if (attr(q, "region") == "region5") {
-      q[2] <- q[2] + 1
-    }
-    if (attr(q, "region") == "region1") {
-      q[1] <- q[1] - 1
-      q[2] <- q[2] + 1
-    }
-    if (attr(q, "region") == "region6") {
-      q[1] <- q[1] - 1
-    }
-    ## b-region
-    if (attr(q, "region") == "region7") {
-      q[2] <- q[2] - 1
-    }
-    if (attr(q, "region") == "region2") {
-      q[1] <- q[1] + 1
-      q[2] <- q[2] - 1
-    }
-    if (attr(q, "region") == "region8") {
-      q[1] <- q[1] + 1
-    }
-    if (q[1] >= q[2]) {
-      saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
-      cat(crayon::silver(saida))
-      stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
-    }
-  }
-
-  rmin <- if (q[1] < lambda) trunc(q[1] - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
-  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-  rmax <- if (q[2] > lambda) ceiling(q[2] + 4 * sqrt(lambda)) else ceiling(lambda + 4 * sqrt(lambda))
-  x <- rmin:rmax
-  probx <- dpois(x, lambda = lambda)
-
-  xlim <- c(rmin, rmax)
-  ylim <- c(0, max(probx)*1.2)
-  plot.new()
-  plot.window(xlim, ylim)
-  axis(1, at = 5*(0:rmax))
-  axis(2)
-  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
-  lines(x, probx, type = "h", lwd = 2)
-  qq <- round(q, digits = rounding)
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  Pr <- round(ppois(q = q[2], lambda = lambda) - ppois(q = q[1], lambda = lambda),
-              digits = rounding)
-  qqmin <- qq[1]
-  qqmax <- qq[2]
-  # red vertical lines and points
-  x1 <- qqmin:qqmax
-  probx1 <- dpois(x1, lambda = lambda)
-  lines(x1, probx1, type = "h", lwd = 2,col="red")
-  points(x1, probx1, lwd = 2, pch = 19,col="red")
-  # red x-axis
-  # red x-axis
-  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
-       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
-  axis(side=1, at=as.character(qq), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-  # intervals
-  abline(v = c(qqmin, qqmax), lty=2, col = "red")
-  # rectangle
-  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
-  # title
-  if (is.null(main)) {
-    main <- substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)), list(t1 = qqmin, t2 = qqmax, x = "x"))
-  }
-  title(ylab = expression(p[X](x)), xlab = "X",
-        main = main, cex = 1)
-  # legends
-  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
-                   legend = substitute(P(t1<=~X<=~t2)==Pr,
-                                       list(t1=qqmin,t2=qqmax, Pr = Pr)))
-  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
-         legend = substitute("Parameters:"~lambda == lambd,
-                             list(lambd = lambda)))
-}
-# RStudio
-plotppoissonbrrstudio <- function(q1, q2, lambda, rounding, main = NULL, q){
-  q[1] <- q1
-  q[2] <- q2
-  plotppoissonbrplot(q, lambda, rounding, main)
-}
-# Tcl/tk
-## Soon...
-
-
-######################
-# Binomial distribution
-######################
-# Plot
-plotpbinomialbrplot <- function(q, size, prob, rounding, main = NULL){
-  # readjusting the range
-  ## ab-region
-  if (is.double(q)) {
-    if (attr(q, "region") == "region5") {
-      q[2] <- q[2] + 1
-    }
-    if (attr(q, "region") == "region1") {
-      q[1] <- q[1] - 1
-      q[2] <- q[2] + 1
-    }
-    if (attr(q, "region") == "region6") {
-      q[1] <- q[1] - 1
-    }
-    ## b-region
-    if (attr(q, "region") == "region7") {
-      q[2] <- q[2] - 1
-    }
-    if (attr(q, "region") == "region2") {
-      q[1] <- q[1] + 1
-      q[2] <- q[2] - 1
-    }
-    if (attr(q, "region") == "region8") {
-      q[1] <- q[1] + 1
-    }
-    if (q[1] >= q[2]) {
-      saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
-      cat(crayon::silver(saida))
-      stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
-    }
-  }
-
-  rmin <- if (q[1] < size) trunc(q[1] - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
-  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-  rmax <- if (q[2] > size) ceiling(q[2] + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
-  x <- rmin:rmax
-  probx <- dbinom(x, size = size, prob = prob)
-
-  xlim <- c(rmin, rmax)
-  ylim <- c(0, max(probx)*1.2)
-  plot.new()
-  plot.window(xlim, ylim)
-  axis(1, at = 5*(0:rmax))
-  axis(2)
-  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
-  lines(x, probx, type = "h", lwd = 2)
-  qq <- round(q, digits = rounding)
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  Pr <- round(pbinom(q = q[2], size = size, prob = prob) - pbinom(q = q[1], size = size, prob = prob),
-              digits = rounding)
-  qqmin <- qq[1]
-  qqmax <- qq[2]
-  # red vertical lines and points
-  x1 <- qqmin:qqmax
-  probx1 <- dbinom(x1, size = size,prob = prob)
-  lines(x1, probx1, type = "h", lwd = 2,col="red")
-  points(x1, probx1, lwd = 2, pch = 19,col="red")
-  # red x-axis
-  # red x-axis
-  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
-       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
-  axis(side=1, at=as.character(qq), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-  # intervals
-  abline(v = c(qqmin, qqmax), lty=2, col = "red")
-  # rectangle
-  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
-  title(ylab = expression(p[X](x)), xlab = "X",
-        main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)), list(t1 = qqmin, t2 = qqmax, x = "x")))
-  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
-                   legend = substitute(P(t1<=~X<=~t2)==Pr,
-                                       list(t1=qqmin,t2=qqmax, Pr = Pr)))
-  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
-         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
-                             list( N = size, P = prob)))
-}
-# RStudio
-plotpbinomialbrrstudio <- function(q1, q2, size, prob, rouding, main = NULL, q){
-  q[1] <- q1
-  q[2] <- q2
-  plotpbinomialbrplot(q, size, prob, rouding, main)
-}
-# Tcl/tk
-## Soon...
-
 ##########################
 # Chi-Squared distribution
 ##########################
@@ -1727,9 +1853,9 @@ if ( attr(q, "region") == "region8") {
 }
 }
 
-####################
-# Exponential
-####################
+##########################
+# Exponential distribution
+##########################
 plotpexpbrplot <- function(q, rate, rounding, main = NULL){
   rmax <- q[2] + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
   x <- seq(q[1], q[2], by = 0.01)
@@ -1825,6 +1951,447 @@ plotpexpbrplot <- function(q, rate, rounding, main = NULL){
   }
 }
 
+#----------------------------- Discrete Distributions --------------------------
+######################
+# Poisson distribution
+######################
+# Plot
+plotppoissonbrplot <- function(q, lambda, rounding, main = NULL){
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2]) {
+      saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+      cat(crayon::silver(saida))
+      stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+    }
+  }
+
+  rmin <- if (q[1] < lambda) trunc(q[1] - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q[2] > lambda) ceiling(q[2] + 4 * sqrt(lambda)) else ceiling(lambda + 4 * sqrt(lambda))
+  x <- rmin:rmax
+  probx <- dpois(x, lambda = lambda)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  Pr <- round(ppois(q = q[2], lambda = lambda) - ppois(q = q[1], lambda = lambda),
+              digits = rounding)
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- qqmin:qqmax
+  probx1 <- dpois(x1, lambda = lambda)
+  lines(x1, probx1, type = "h", lwd = 2,col="red")
+  points(x1, probx1, lwd = 2, pch = 19,col="red")
+  # red x-axis
+  # red x-axis
+  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(qq), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # intervals
+  abline(v = c(qqmin, qqmax), lty=2, col = "red")
+  # rectangle
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  # title
+  if (is.null(main)) {
+    main <- substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)), list(t1 = qqmin, t2 = qqmax, x = "x"))
+  }
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = main, cex = 1)
+  # legends
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
+                   legend = substitute(P(t1<=~X<=~t2)==Pr,
+                                       list(t1=qqmin,t2=qqmax, Pr = Pr)))
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~lambda == lambd,
+                             list(lambd = lambda)))
+}
+# RStudio
+plotppoissonbrrstudio <- function(q1, q2, lambda, rounding, main = NULL, q){
+  q[1] <- q1
+  q[2] <- q2
+  plotppoissonbrplot(q, lambda, rounding, main)
+}
+# Tcl/tk
+## Soon...
+
+
+######################
+# Binomial distribution
+######################
+# Plot
+plotpbinomialbrplot <- function(q, size, prob, rounding, main = NULL){
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2]) {
+      saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+      cat(crayon::silver(saida))
+      stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+    }
+  }
+
+  rmin <- if (q[1] < size) trunc(q[1] - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q[2] > size) ceiling(q[2] + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+  x <- rmin:rmax
+  probx <- dbinom(x, size = size, prob = prob)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  Pr <- round(pbinom(q = q[2], size = size, prob = prob) - pbinom(q = q[1], size = size, prob = prob),
+              digits = rounding)
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- qqmin:qqmax
+  probx1 <- dbinom(x1, size = size,prob = prob)
+  lines(x1, probx1, type = "h", lwd = 2,col="red")
+  points(x1, probx1, lwd = 2, pch = 19,col="red")
+  # red x-axis
+  # red x-axis
+  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(qq), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # intervals
+  abline(v = c(qqmin, qqmax), lty=2, col = "red")
+  # rectangle
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)), list(t1 = qqmin, t2 = qqmax, x = "x")))
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
+                   legend = substitute(P(t1<=~X<=~t2)==Pr,
+                                       list(t1=qqmin,t2=qqmax, Pr = Pr)))
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
+                             list( N = size, P = prob)))
+}
+# RStudio
+plotpbinomialbrrstudio <- function(q1, q2, size, prob, rouding, main = NULL, q){
+  q[1] <- q1
+  q[2] <- q2
+  plotpbinomialbrplot(q, size, prob, rouding, main)
+}
+# Tcl/tk
+## Soon...
+
+################################
+# Negative Binomial distribution
+################################
+plotpnbinombrplot <- function(q, size, prob, rounding, main = NULL){
+
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2]) {
+      saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+      cat(crayon::silver(saida))
+      stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+    }
+  }
+
+  rmin <- if (q[1] < size) trunc(q[1] - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q[2] > size) ceiling(q[2] + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+  x <- rmin:rmax
+  probx <- dnbinom(x, size, prob)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  Pr <- round(pnbinom(q = q[2], size, prob) - pnbinom(q = q[1], size, prob),
+              digits = rounding)
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- qqmin:qqmax
+  probx1 <- dnbinom(x1, size, prob)
+  lines(x1, probx1, type = "h", lwd = 2,col="red")
+  points(x1, probx1, lwd = 2, pch = 19,col="red")
+  # red x-axis
+  # red x-axis
+  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(qq), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # intervals
+  abline(v = c(qqmin, qqmax), lty=2, col = "red")
+  # rectangle
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  # title
+  if (is.null(main)) {
+    main <- substitute(atop(bold("Probability function plot: Negative Binomial"), p[X](x) == (atop(k+r-1,k))*(1-p)^n*p^k*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)), list(t1 = qqmin, t2 = qqmax, x = "x"))
+  }
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = main, cex = 1)
+  # legends
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
+                   legend = substitute(P(t1<=~X<=~t2)==Pr,
+                                       list(t1=qqmin,t2=qqmax, Pr = Pr)))
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~n == sizev ~ "," ~ p == probv,
+                             list(sizev = size, probv = prob)))
+}
+
+
+#############################
+# Hypergeometric distribution
+#############################
+# Plot
+plotphyperbrplot <- function(q, m, n, k, rounding, main = NULL){
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2]) {
+      saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+      cat(crayon::silver(saida))
+      stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+    }
+  }
+  rmin <- if (q[1] < k) trunc(q[1] - 4 * sqrt(k)) else trunc(k - 4 * sqrt(k))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q[2] > k) ceiling(q[1] + 4 * sqrt(k)) else ceiling(k + 4 * sqrt(k))
+  x <- rmin:rmax
+  probx <- dhyper(x, m, n, k)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  Pr <-  round(phyper(q = q[2], m, n, k) - phyper(q = q[1], m, n, k), digits = rounding)
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- qqmin:qqmax
+  probx1 <- dhyper(x1, m, n, k)
+  lines(x1, probx1, type = "h", lwd = 2,col="red")
+  points(x1, probx1, lwd = 2, pch = 19,col="red")
+  # red x-axis
+  # red x-axis
+  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(qq), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # intervals
+  abline(v = c(qqmin, qqmax), lty=2, col = "red")
+  # rectangle
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  # title
+  if (is.null(main)) {
+    main <- substitute(atop(bold("Probability function plot: Hypergeometric"), p[X](x) == frac((atop(K,k))*(atop(N-K,n-k)),(atop(N,n)))*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)), list(t1 = qqmin, t2 = qqmax, x = "x"))
+  }
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = main, cex = 1)
+  # legends
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
+                   legend = substitute(P(t1<=~X<=~t2)==Pr,
+                                       list(t1=qqmin,t2=qqmax, Pr = Pr)))
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~m == mv~";"~ n == nv ~";"~ k == kv,
+                             list(mv = m, nv = n, kv = k)))
+}
+
+
+########################
+# Geometric distribution
+########################
+# Plot
+plotpgeombrplot <- function(q, prob, rounding, main = NULL){
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2]) {
+      saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+      cat(crayon::silver(saida))
+      stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+    }
+  }
+
+  rmin <- if (q[1] < 10*prob) trunc(q[1] - 4 * sqrt(10*prob)) else trunc(10*prob - 4 * sqrt(10*prob))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q[2] > 10*prob) ceiling(q[2] + 4 * sqrt(10*prob)) else ceiling(10*prob + 4 * sqrt(10*prob))
+  x <- rmin:rmax
+  probx <- dgeom(x, prob)
+
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  Pr <- round(pgeom(q = q[2], prob) - pgeom(q = q[1], prob),
+              digits = rounding)
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- qqmin:qqmax
+  probx1 <- dgeom(x1, prob)
+  lines(x1, probx1, type = "h", lwd = 2,col="red")
+  points(x1, probx1, lwd = 2, pch = 19,col="red")
+  # red x-axis
+  # red x-axis
+  axis(side=1, at=c(qqmin, qqmax), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(qq), tick = TRUE, lwd = 1,
+       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # intervals
+  abline(v = c(qqmin, qqmax), lty=2, col = "red")
+  # rectangle
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  # title
+  if (is.null(main)) {
+    main <- substitute(atop(bold("Probability function plot: Geometric"), p[X](x) == q^{k-1}*p[k]*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)), list(t1 = qqmin, t2 = qqmax, x = "x"))
+  }
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = main, cex = 1)
+  # legends
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
+                   legend = substitute(P(t1<=~X<=~t2)==Pr,
+                                       list(t1=qqmin,t2=qqmax, Pr = Pr)))
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~prob == probv,
+                             list(probv = prob)))
+}
+
 ################################################################################
 ## lower.tail = TRUE (name: plot+q+name_distribution+ltt+type_distribution)
 ################################################################################
@@ -1832,6 +2399,7 @@ plotpexpbrplot <- function(q, rate, rounding, main = NULL){
 #       type_distribution: cdf - cumulative distribution function;
 #       pdf - probability density function
 #-------------------------------------------------------------------------------
+#---------------------------- Continuous Distributions -------------------------
 #####################
 # Normal distribution
 #####################
@@ -1929,119 +2497,6 @@ plotptstudentlttplot <- function(q, df, rounding, main = NULL){
   legend(-lim, legaux$text$y, bty="n", bg = "white",cex=0.8,
          legend = substitute("Parameters:"~nu == df,
                              list(df = nu)))
-}
-
-
-
-######################
-# Poisson distribution
-######################
-# Plot
-plotppoissonlttplot <- function(q, lambda, rounding, main = NULL){
-  rmin <- if (q < lambda) trunc(q - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
-  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-  rmax <- if (q > lambda) ceiling(q + 4 * sqrt(lambda)) else ceiling(lambda + 4 * sqrt(lambda))
-  x <- rmin:rmax
-  x1 <- rmin:q
-  x2 <- q:rmax
-  probx <- dpois(x, lambda = lambda)
-  probx1 <- dpois(x1, lambda = lambda)
-  probx2 <- dpois(x2, lambda = lambda)
-  xlim <- c(rmin, rmax)
-  ylim <- c(min(probx), max(probx) * 1.2)
-  plot.new()
-  plot.window(xlim, ylim)
-  axis(1, at = 5*(0:rmax))
-  axis(2)
-  title(ylab = expression(p[X](x)), xlab = "X",
-        main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~F[X](t) == sum(p[X](x), x<=t, "")),
-                          list(t = q, t2 = q + 1)))
-  lines(x2, probx2, type = "h", lwd = 2, panel.first = grid(col = "gray90"))
-  points(x2, probx2, lwd = 2, pch = 19)
-  lines(x1, probx1, type = "h", lwd = 2, col = "red")
-  points(x1, probx1, lwd = 2, col = "red", pch = 19)
-  # Mean
-  #abline(v = lambda, lty = 2)
-  qq <- round(q, digits = 2)
-  qqaux <- round(q, digits = 2)
-  Pr <- round(ppois(qq, lambda = lambda, lower.tail = T), rounding)
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  axis(side=1, at=as.character(q), lwd = 0,
-       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
-  axis(
-    side = 1,
-    at = as.character(q),
-    tick = TRUE,
-    lwd = 0,
-    col = "red",
-    font = 2,
-    lwd.ticks = 1,
-    labels = FALSE
-  )
-  axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2, lwd.ticks = 0, lwd = 1)
-  abline(v = qqaux, lty = 2, col = "red")
-  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red",
-                   legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
-                                       list(q = qq, Pr = Pr)), cex=0.8)
-  legend(rmin, legaux$text$y, bty="n", bg = "white",
-         legend = substitute("Parameters:"~lambda == lambd,
-                             list(lambd = lambda)), cex=0.8)
-}
-
-
-
-#######################
-# Binomial distribution
-#######################
-# Plot
-plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
-  rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
-  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-  rmax <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
-  x <- rmin:rmax
-  x1 <- rmin:q
-  x2 <- q:rmax
-  probx <- dbinom(x, size = size, prob = prob)
-  probx1 <- dbinom(x1, size = size, prob = prob)
-  probx2 <- dbinom(x2, size = size, prob = prob)
-  xlim <- c(rmin, rmax)
-  ylim <- c(min(probx), max(probx) * 1.2)
-  plot.new()
-  plot.window(xlim, ylim)
-  axis(1, at = 5*(0:rmax))
-  axis(2)
-  title(ylab = expression(p[X](x)), xlab = "X",main=substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~F[X](t) == sum(p[X](x), x<=t, "")),
-                                                               list(t = q, t2 = q + 1)))
-  lines(x2, probx2, type = "h", lwd = 2)
-  points(x2, probx2, lwd = 2, pch = 19)
-  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-  points(x1, probx1, lwd = 2, col = "red", pch = 19)
-  qq <- round(q, digits = 2)
-  qqaux <- round(q, digits = 2)
-  Pr <- round(pbinom(q, size = size, prob = prob, lower.tail = T), rounding)
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  axis(side=1, at=as.character(q), lwd = 0,
-       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
-  axis(
-    side = 1,
-    at = as.character(q),
-    tick = TRUE,
-    lwd = 0,
-    col = "red",
-    font = 2,
-    lwd.ticks = 1,
-    labels = FALSE
-  )
-  axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2, lwd.ticks = 0, lwd = 1)
-  abline(v = qqaux, lty = 2, col = "red")
-  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
-                   legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
-                                       list(q = qq, Pr = Pr)))
-  legend(rmin, legaux$text$y, bty="n", bg = "white",cex=0.8,
-         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
-                             list( N = size, P = prob)))
 }
 
 
@@ -2276,9 +2731,9 @@ plotpbetalttplot <- function(q, shape1, shape2, rounding, main) {
                              list(q = qq, Pr = Pr, alphav = shape1, betav= shape2)))
 }
 
-####################
-# Exponential
-####################
+##########################
+# Exponential distribution
+##########################
 plotpexplttplot <- function(q, rate, rounding, main = NULL) {
   rmin <- 0
   rmax <- q + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
@@ -2333,6 +2788,288 @@ plotpexplttplot <- function(q, rate, rounding, main = NULL) {
                              list(rat = rate)))
 }
 
+#----------------------------- Discrete Distributions --------------------------
+######################
+# Poisson distribution
+######################
+# Plot
+plotppoissonlttplot <- function(q, lambda, rounding, main = NULL){
+  rmin <- if (q < lambda) trunc(q - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > lambda) ceiling(q + 4 * sqrt(lambda)) else ceiling(lambda + 4 * sqrt(lambda))
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- q:rmax
+  probx <- dpois(x, lambda = lambda)
+  probx1 <- dpois(x1, lambda = lambda)
+  probx2 <- dpois(x2, lambda = lambda)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~F[X](t) == sum(p[X](x), x<=t, "")),
+                          list(t = q, t2 = q + 1)))
+  lines(x2, probx2, type = "h", lwd = 2, panel.first = grid(col = "gray90"))
+  points(x2, probx2, lwd = 2, pch = 19)
+  lines(x1, probx1, type = "h", lwd = 2, col = "red")
+  points(x1, probx1, lwd = 2, col = "red", pch = 19)
+  # Mean
+  #abline(v = lambda, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(ppois(qq, lambda = lambda, lower.tail = T), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=as.character(q), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2, lwd.ticks = 0, lwd = 1)
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
+                                       list(q = qq, Pr = Pr)), cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white",
+         legend = substitute("Parameters:"~lambda == lambd,
+                             list(lambd = lambda)), cex=0.8)
+}
+
+
+
+#######################
+# Binomial distribution
+#######################
+# Plot
+plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
+  rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- q:rmax
+  probx <- dbinom(x, size = size, prob = prob)
+  probx1 <- dbinom(x1, size = size, prob = prob)
+  probx2 <- dbinom(x2, size = size, prob = prob)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",main=substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~F[X](t) == sum(p[X](x), x<=t, "")),
+                                                               list(t = q, t2 = q + 1)))
+  lines(x2, probx2, type = "h", lwd = 2)
+  points(x2, probx2, lwd = 2, pch = 19)
+  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
+  points(x1, probx1, lwd = 2, col = "red", pch = 19)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(pbinom(q, size = size, prob = prob, lower.tail = T), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=as.character(q), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2, lwd.ticks = 0, lwd = 1)
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
+                   legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
+                                       list(q = qq, Pr = Pr)))
+  legend(rmin, legaux$text$y, bty="n", bg = "white",cex=0.8,
+         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
+                             list( N = size, P = prob)))
+}
+
+
+
+################################
+# Negative Binomial distribution
+################################
+plotpnbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
+  rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- q:rmax
+  probx <- dnbinom(x, size = size, prob = prob)
+  probx1 <- dnbinom(x1, size = size, prob = prob)
+  probx2 <- dnbinom(x2, size = size, prob = prob)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",main=substitute(atop(bold("Probability function plot: Negative Binomial"), p[X](x) == (atop(k+r-1,k))*(1-p)^n*p^k*","~~F[X](t) == sum(p[X](x), x<=t, "")),
+                                                               list(t = q, t2 = q + 1)))
+  lines(x2, probx2, type = "h", lwd = 2)
+  points(x2, probx2, lwd = 2, pch = 19)
+  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
+  points(x1, probx1, lwd = 2, col = "red", pch = 19)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(pnbinom(q, size = size, prob = prob, lower.tail = T), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=as.character(q), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2, lwd.ticks = 0, lwd = 1)
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
+                   legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
+                                       list(q = qq, Pr = Pr)))
+  legend(rmin, legaux$text$y, bty="n", bg = "white",cex=0.8,
+         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
+                             list( N = size, P = prob)))
+}
+
+#############################
+# Hypergeometric distribution
+#############################
+# Plot
+plotphyperlttplot <- function(q, m, n, k, rounding, main = NULL){
+  rmin <- if (q < k) trunc(q - 4 * sqrt(k)) else trunc(k - 4 * sqrt(k))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > k) ceiling(q + 4 * sqrt(k)) else ceiling(k + 4 * sqrt(k))
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- q:rmax
+  probx <- dhyper(x, m, n, k)
+  probx1 <- dhyper(x1, m, n, k)
+  probx2 <- dhyper(x2, m, n, k)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Hypergeometric"), p[X](x) == frac((atop(K,k))*(atop(N-K,n-k)),(atop(N,n)))*","~~F[X](t) == sum(p[X](x), x<=t, "")),
+                          list(t = q, t2 = q + 1)))
+  lines(x2, probx2, type = "h", lwd = 2, panel.first = grid(col = "gray90"))
+  points(x2, probx2, lwd = 2, pch = 19)
+  lines(x1, probx1, type = "h", lwd = 2, col = "red")
+  points(x1, probx1, lwd = 2, col = "red", pch = 19)
+  # Mean
+  #abline(v = lambda, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(phyper(qq, m, n, k, lower.tail = T), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=as.character(q), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2, lwd.ticks = 0, lwd = 1)
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
+                                       list(q = qq, Pr = Pr)), cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white",cex = 0.8,
+         legend = substitute("Parameters:"~m == mv~";"~ n == nv ~";"~ k == kv,
+                             list(mv = m, nv = n, kv = k)))
+}
+
+
+
+########################
+# Geometric distribution
+########################
+# Plot
+plotpgeomlttplot <- function(q, prob, rounding, main = NULL){
+  rmin <- if (q < 10*prob) trunc(q - 4 * sqrt(10*prob)) else trunc(10*prob - 4 * sqrt(10*prob))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > 10*prob) ceiling(q + 4 * sqrt(10*prob)) else ceiling(10*prob + 4 * sqrt(10*prob))
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- q:rmax
+  probx <- dgeom(x, prob)
+  probx1 <- dgeom(x1, prob)
+  probx2 <- dgeom(x2, prob)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Geometric"), p[X](x) == q^{k-1}*p[k]*","~~F[X](t) == sum(p[X](x), x<=t, "")),
+                          list(t = q, t2 = q + 1)))
+  lines(x2, probx2, type = "h", lwd = 2, panel.first = grid(col = "gray90"))
+  points(x2, probx2, lwd = 2, pch = 19)
+  lines(x1, probx1, type = "h", lwd = 2, col = "red")
+  points(x1, probx1, lwd = 2, col = "red", pch = 19)
+  # Mean
+  #abline(v = lambda, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(pgeom(qq, prob, lower.tail = T), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=as.character(q), lwd = 0,
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2, lwd.ticks = 0, lwd = 1)
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
+                                       list(q = qq, Pr = Pr)), cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~prob == probv,
+                             list(probv = prob)))
+}
+
+
+
 ################################################################################
 ## lower.tail == FALSE (name: plot+q+name_distribution+ltf+type_distribution)
 ################################################################################
@@ -2340,6 +3077,7 @@ plotpexplttplot <- function(q, rate, rounding, main = NULL) {
 #       type_distribution: cdf - cumulative distribution function;
 #       pdf - probability density function
 #-------------------------------------------------------------------------------
+#---------------------------- Continuous Distributions -------------------------
 #####################
 # Normal distribution
 #####################
@@ -2441,124 +3179,6 @@ plotptstudentltfplot <- function(q, df, rounding, main = NULL){
          legend = substitute("Parameters:"~nu == df,
                              list(df = nu)))
 }
-
-
-
-######################
-# Poisson distribution
-######################
-# Plot
-plotppoissonltfplot <- function(q, lambda, rounding, main = NULL){
-  rmin <- if (q < lambda) trunc(q - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
-  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-  rmax <- if (q > lambda) ceiling(q + 4 * sqrt(lambda)) else ceiling(lambda + 4 * sqrt(lambda))
-  auxq <- q+1
-  x <- rmin:rmax
-  x1 <- rmin:q
-  x2 <- auxq:rmax
-  probx <- dpois(x, lambda = lambda)
-  probx1 <- dpois(x1, lambda = lambda)
-  probx2 <- dpois(x2, lambda = lambda)
-  xlim <- c(rmin, rmax)
-  ylim <- c(min(probx), max(probx)*1.2)
-  plot.new()
-  plot.window(xlim, ylim)
-  axis(1, at = 5*(0:rmax))
-  axis(2)
-  title(ylab = expression(p[X](x)), xlab = "X",
-        main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
-                          list(t = q, t2 = q + 1)))
-  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
-  points(x1, probx1, lwd = 2, pch = 19)
-  lines(x2, probx2, type = "h", lwd = 2, col = "red")
-  points(x2, probx2, lwd = 2, col = "red", pch = 19)
-  # Mean
-  #abline(v = lambda, lty = 2)
-  qq <- round(q, digits = 2)
-  qqaux <- round(q, digits = 2)
-  Pr <- round(ppois(qq, lambda = lambda, lower.tail = F), rounding)
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  axis(side=1, at=q + 1, lwd = 0,
-       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
-  axis(
-    side = 1,
-    at = as.character(q + 1),
-    tick = TRUE,
-    lwd = 0,
-    col = "red",
-    font = 2,
-    lwd.ticks = 1,
-    labels = FALSE
-  )
-  axis(side = 1, at = as.character(c(q+1,rmax)), labels = FALSE,col = "red",col.axis = "red",  tick = TRUE,
-       lwd.ticks = 0, lwd = 1)
-  abline(v = qqaux+1, lty = 2, col = "red")
-  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red",
-                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
-                                       list(q = qq, Pr = Pr, q2 = qq + 1)),cex=0.8)
-  legend(rmin, legaux$text$y, bty="n", bg = "white",
-         legend = substitute("Parameters:"~lambda == lambd,
-                             list(lambd = lambda)), cex=0.8)
-}
-
-
-
-#######################
-# Binomial distribution
-#######################
-# Plot
-plotpbinomialltfplot <- function(q, size, prob, rounding, main = NULL){
-  rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
-  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-  rmax <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
-  auxq <- q+1
-  x <- rmin:rmax
-  x1 <- rmin:q
-  x2 <- auxq:rmax
-  probx <- dbinom(x, size = size, prob = prob)
-  probx1 <- dbinom(x1, size = size, prob = prob)
-  probx2 <- dbinom(x2, size = size, prob = prob)
-  xlim <- c(rmin, rmax)
-  ylim <- c(min(probx), max(probx) * 1.2)
-  plot.new()
-  plot.window(xlim, ylim)
-  axis(1, at = 5*(0:rmax))
-  axis(2)
-  title(ylab = expression(p[X](x)), xlab = "X", main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
-                                                                  list(t = q, t2 = q + 1)))
-  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
-  points(x1, probx1, lwd = 2, pch = 19)
-  lines(x2, probx2, type = "h", lwd = 2, col = "red")
-  points(x2, probx2, lwd = 2, col = "red", pch = 19)
-  qq <- round(q, digits = 2)
-  qqaux <- round(q, digits = 2)
-  Pr <- round(pbinom(qq, size = size, prob = prob, lower.tail = F), digits=rounding)
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  axis(side=1, at=q + 1, lwd = 0,
-       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
-  axis(
-    side = 1,
-    at = as.character(q + 1),
-    tick = TRUE,
-    lwd = 0,
-    col = "red",
-    font = 2,
-    lwd.ticks = 1,
-    labels = FALSE
-  )
-  axis(side = 1, at = as.character(c(q+1,rmax)), labels = FALSE,col = "red",col.axis = "red",  tick = TRUE,
-       lwd.ticks = 0, lwd = 1)
-  abline(v = qqaux+1, lty = 2, col = "red")
-  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red",
-                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
-                                       list(q = qq, Pr = Pr, q2 = qq + 1)), cex=0.8)
-  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
-         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
-                             list( N = size, P = prob)))
-}
-
 
 
 
@@ -2790,9 +3410,9 @@ legend(0, legaux$text$y, bty="n", bg = "white", cex=0.8,
                            list(alphav = shape1, betav = shape2)))
 }
 
-####################
-# Exponential
-####################
+##########################
+# Exponential distribution
+##########################
 plotpexpltfplot <- function(q, rate, rounding, main = NULL) {
   rmin <- 0
   rmax <- (q + ceiling(1 / rate + 7 * sqrt(1 / rate^2)))
@@ -2858,14 +3478,307 @@ plotpexpltfplot <- function(q, rate, rounding, main = NULL) {
                              list(rat = rate)))
 }
 
+#----------------------------- Discrete Distributions --------------------------
+######################
+# Poisson distribution
+######################
+# Plot
+plotppoissonltfplot <- function(q, lambda, rounding, main = NULL){
+  rmin <- if (q < lambda) trunc(q - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > lambda) ceiling(q + 4 * sqrt(lambda)) else ceiling(lambda + 4 * sqrt(lambda))
+  auxq <- q+1
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- auxq:rmax
+  probx <- dpois(x, lambda = lambda)
+  probx1 <- dpois(x1, lambda = lambda)
+  probx2 <- dpois(x2, lambda = lambda)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
+                          list(t = q, t2 = q + 1)))
+  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  points(x1, probx1, lwd = 2, pch = 19)
+  lines(x2, probx2, type = "h", lwd = 2, col = "red")
+  points(x2, probx2, lwd = 2, col = "red", pch = 19)
+  # Mean
+  #abline(v = lambda, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(ppois(qq, lambda = lambda, lower.tail = F), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q + 1, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q + 1),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = as.character(c(q+1,rmax)), labels = FALSE,col = "red",col.axis = "red",  tick = TRUE,
+       lwd.ticks = 0, lwd = 1)
+  abline(v = qqaux+1, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
+                                       list(q = qq, Pr = Pr, q2 = qq + 1)),cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white",
+         legend = substitute("Parameters:"~lambda == lambd,
+                             list(lambd = lambda)), cex=0.8)
+}
+
+
+
+#######################
+# Binomial distribution
+#######################
+# Plot
+plotpbinomialltfplot <- function(q, size, prob, rounding, main = NULL){
+  rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+  auxq <- q+1
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- auxq:rmax
+  probx <- dbinom(x, size = size, prob = prob)
+  probx1 <- dbinom(x1, size = size, prob = prob)
+  probx2 <- dbinom(x2, size = size, prob = prob)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X", main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
+                                                                  list(t = q, t2 = q + 1)))
+  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  points(x1, probx1, lwd = 2, pch = 19)
+  lines(x2, probx2, type = "h", lwd = 2, col = "red")
+  points(x2, probx2, lwd = 2, col = "red", pch = 19)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(pbinom(qq, size = size, prob = prob, lower.tail = F), digits=rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q + 1, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q + 1),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = as.character(c(q+1,rmax)), labels = FALSE,col = "red",col.axis = "red",  tick = TRUE,
+       lwd.ticks = 0, lwd = 1)
+  abline(v = qqaux+1, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
+                                       list(q = qq, Pr = Pr, q2 = qq + 1)), cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
+                             list( N = size, P = prob)))
+}
+
+
+
+
+#################################
+# Negative Binomial distribution
+################################
+plotpnbinomialltfplot <- function(q, size, prob, rounding, main = NULL){
+  rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+  auxq <- q+1
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- auxq:rmax
+  probx <- dnbinom(x, size = size, prob = prob)
+  probx1 <- dnbinom(x1, size = size, prob = prob)
+  probx2 <- dnbinom(x2, size = size, prob = prob)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X", main = substitute(atop(bold("Probability function plot: Negative Binomial"), p[X](x) == (atop(k+r-1,k))*(1-p)^n*p^k*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
+                                                                  list(t = q, t2 = q + 1)))
+  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  points(x1, probx1, lwd = 2, pch = 19)
+  lines(x2, probx2, type = "h", lwd = 2, col = "red")
+  points(x2, probx2, lwd = 2, col = "red", pch = 19)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(pnbinom(qq, size = size, prob = prob, lower.tail = F), digits=rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q + 1, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q + 1),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = as.character(c(q+1,rmax)), labels = FALSE,col = "red",col.axis = "red",  tick = TRUE,
+       lwd.ticks = 0, lwd = 1)
+  abline(v = qqaux+1, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
+                                       list(q = qq, Pr = Pr, q2 = qq + 1)), cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
+                             list( N = size, P = prob)))
+}
+
+#############################
+# Hypergeometric distribution
+#############################
+# Plot
+plotphyperltfplot <- function(q, m, n, k, rounding, main = NULL){
+  rmin <- if (q < k) trunc(q - 4 * sqrt(k)) else trunc(k - 4 * sqrt(k))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > k) ceiling(q + 4 * sqrt(k)) else ceiling(k + 4 * sqrt(k))
+  auxq <- q+1
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- auxq:rmax
+  probx <- dhyper(x, m, n, k)
+  probx1 <- dhyper(x1, m, n, k)
+  probx2 <- dhyper(x2, m, n, k)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Hypergeometric"), p[X](x) == frac((atop(K,k))*(atop(N-K,n-k)),(atop(N,n)))*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
+                          list(t = q, t2 = q + 1)))
+  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  points(x1, probx1, lwd = 2, pch = 19)
+  lines(x2, probx2, type = "h", lwd = 2, col = "red")
+  points(x2, probx2, lwd = 2, col = "red", pch = 19)
+  # Mean
+  #abline(v = lambda, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(phyper(qq, m, n, k, lower.tail = F), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q + 1, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q + 1),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = as.character(c(q+1,rmax)), labels = FALSE,col = "red",col.axis = "red",  tick = TRUE,
+       lwd.ticks = 0, lwd = 1)
+  abline(v = qqaux+1, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
+                                       list(q = qq, Pr = Pr, q2 = qq + 1)),cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+         legend = substitute("Parameters:"~m == mv~";"~ n == nv ~";"~ k == kv,
+                             list(mv = m, nv = n, kv = k)))
+}
+
+
+
+########################
+# Geometric distribution
+########################
+# Plot
+plotpgeomltfplot <- function(q, prob, rounding, main = NULL){
+  rmin <- if (q < 10*prob) trunc(q - 4 * sqrt(10*prob)) else trunc(10*prob - 4 * sqrt(10*prob))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > 10*prob) ceiling(q + 4 * sqrt(10*prob)) else ceiling(10*prob + 4 * sqrt(10*prob))
+  auxq <- q+1
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- auxq:rmax
+  probx <- dgeom(x, prob)
+  probx1 <- dgeom(x1, prob)
+  probx2 <- dgeom(x2, prob)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Geometric"), p[X](x) == q^{k-1}*p[k]*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
+                          list(t = q, t2 = q + 1)))
+  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  points(x1, probx1, lwd = 2, pch = 19)
+  lines(x2, probx2, type = "h", lwd = 2, col = "red")
+  points(x2, probx2, lwd = 2, col = "red", pch = 19)
+  # Mean
+  #abline(v = lambda, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(pgeom(qq, prob, lower.tail = F), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q + 1, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q + 1),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  axis(side = 1, at = as.character(c(q+1,rmax)), labels = FALSE,col = "red",col.axis = "red",  tick = TRUE,
+       lwd.ticks = 0, lwd = 1)
+  abline(v = qqaux+1, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
+                                       list(q = qq, Pr = Pr, q2 = qq + 1)),cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~prob == probv,
+                             list(probv = prob)))
+}
+
+
+
 ################################################################################
 ## lower.tail == NULL (name: plot+q+name_distribution+ltn+type_distribution)
 ################################################################################
-# OBS.: lt - lower.tail; ltf - lower.tail == FALSE;
+# OBS.: lt - lower.tail; ltn - lower.tail == NULL;
 #       type_distribution: cdf - cumulative distribution function;
 #       pdf - probability density function
 #-------------------------------------------------------------------------------
-
+#----------------------------- Discrete Distributions --------------------------
 ######################
 # Poisson distribution
 ######################
@@ -2920,8 +3833,8 @@ plotppoissonltnplot <- function(q, lambda, rounding, main = NULL){
                              list(lambd = lambda)), cex=0.8)
 }
 
-######################
-# F distribution
+#######################
+# Binomial distribution
 ######################
 # Plot
 plotpbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
@@ -2975,3 +3888,165 @@ plotpbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
 }
 
 
+
+
+################################
+# Negative Binomial distribution
+################################
+plotpnbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
+  rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- q
+  probx <- dnbinom(x, size, prob)
+  probx2 <- dnbinom(x2, size, prob)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Negative Binomial"), p[X](x) == (atop(k+r-1,k))*(1-p)^n*p^k*","~~p[X](t1) ~"="~ P(X == 20)),
+                          list(t1 = q)))
+  lines(x, probx, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  points(x, probx, lwd = 2, pch = 19)
+  lines(x2, probx2, type = "h", lwd = 2, col = "red")
+  points(x2, probx2, lwd = 2, col = "red", pch = 19)
+  # Mean
+  #abline(v = lambda, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(dnbinom(qq, size, prob), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(P[X](q)~"="~P(X == q) == Pr,
+                                       list(q = qq, Pr = Pr)), cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white",
+         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
+                             list( N = size, P = prob)),cex = 0.8)
+}
+
+#############################
+# Hypergeometric distribution
+#############################
+# Plot
+plotphyperltnplot <- function(q, m, n, k, rounding, main = NULL){
+  rmin <- if (q < k) trunc(q - 4 * sqrt(k)) else trunc(k - 4 * sqrt(k))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > k) ceiling(q + 4 * sqrt(k)) else ceiling(k + 4 * sqrt(k))
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- q
+  probx <- dhyper(x, m, n, k)
+  probx2 <- dhyper(x2, m, n, k)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Hypergeometric"), p[X](x) == frac((atop(K,k))*(atop(N-K,n-k)),(atop(N,n)))*","~~p[X](t1) ~"="~ P(X == 20)),
+                          list(t1 = q)))
+  lines(x, probx, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  points(x, probx, lwd = 2, pch = 19)
+  lines(x2, probx2, type = "h", lwd = 2, col = "red")
+  points(x2, probx2, lwd = 2, col = "red", pch = 19)
+  # Mean
+  #abline(v = lambda, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(dhyper(qq, m, n, k), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(P[X](q)~"="~P(X == q) == Pr,
+                                       list(q = qq, Pr = Pr)), cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white",cex = 0.8,
+         legend = substitute("Parameters:"~m == mv~";"~ n == nv ~";"~ k == kv,
+                             list(mv = m, nv = n, kv = k)))
+}
+
+########################
+# Geometric distribution
+########################
+# Plot
+plotpgeomltnplot <- function(q, prob, rounding, main = NULL){
+  rmin <- if (q < 10*prob) trunc(q - 4 * sqrt(10*prob)) else trunc(10*prob - 4 * sqrt(10*prob))
+  if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+  rmax <- if (q > 10*prob) ceiling(q + 4 * sqrt(10*prob)) else ceiling(10*prob + 4 * sqrt(10*prob))
+  x <- rmin:rmax
+  x1 <- rmin:q
+  x2 <- q
+  probx <- dgeom(x, prob)
+  probx2 <- dgeom(x2, prob)
+  xlim <- c(rmin, rmax)
+  ylim <- c(min(probx), max(probx)*1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5*(0:rmax))
+  axis(2)
+  title(ylab = expression(p[X](x)), xlab = "X",
+        main = substitute(atop(bold("Probability function plot: Geometric"), p[X](x) == q^{k-1}*p[k]*","~~p[X](t1) ~"="~ P(X == 20)),
+                          list(t1 = q)))
+  lines(x, probx, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  points(x, probx, lwd = 2, pch = 19)
+  lines(x2, probx2, type = "h", lwd = 2, col = "red")
+  points(x2, probx2, lwd = 2, col = "red", pch = 19)
+  # Mean
+  #abline(v = lambda, lty = 2)
+  qq <- round(q, digits = 2)
+  qqaux <- round(q, digits = 2)
+  Pr <- round(dgeom(qq, prob), rounding)
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+  axis(side=1, at=q, lwd = 0,
+       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
+  abline(v = qqaux, lty = 2, col = "red")
+  rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", fill="red",
+                   legend = substitute(P[X](q)~"="~P(X == q) == Pr,
+                                       list(q = qq, Pr = Pr)), cex=0.8)
+  legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute("Parameters:"~prob == probv,
+                             list(probv = prob)))
+}

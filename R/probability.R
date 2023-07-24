@@ -351,122 +351,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         # Calculates the desired probability
         prob <- pt(q[1], df = nu, lower.tail = T) + pt(q[2], df = nu, lower.tail = F)
       }
-      if (dist == "poisson") {
-        if (!any(names(argaddit) == "lambda")) {
-          lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
-          argaddit$lambda <- as.numeric(lambda)
-        }
-        while (argaddit$lambda <= 0) {
-          lambda <- readline(gettext("Please, Insert the value of 'lambda' greater then 0: ", domain = "R-leem"))
-          argaddit$lambda <- as.numeric(lambda)
-        }
-
-        lambda <- argaddit$lambda
-        rmax <- ceiling(q[2] + 4 * sqrt(lambda))
-        rmin <- ceiling(lambda - 4 * sqrt(lambda))
-        if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-
-        if (gui == "plot") {
-          plotppoissonarplot(q, lambda, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotppoissonarrstudio(q1, q2, lambda, rounding, main, q),
-                                 q1 = manipulate::slider(rmin, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], rmax, q[2]),
-                                 lambda = manipulate::slider(1, lambda+30, lambda))
-        }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-        }
-        # readjusting the range
-        ## ab-region
-        if (is.double(q)) {
-          if (attr(q, "region") == "region5") {
-            q[2] <- q[2] + 1
-          }
-          if (attr(q, "region") == "region1") {
-            q[1] <- q[1] - 1
-            q[2] <- q[2] + 1
-          }
-          if (attr(q, "region") == "region6") {
-            q[1] <- q[1] - 1
-          }
-          ## b-region
-          if (attr(q, "region") == "region7") {
-            q[2] <- q[2] - 1
-          }
-          if (attr(q, "region") == "region2") {
-            q[1] <- q[1] + 1
-            q[2] <- q[2] - 1
-          }
-          if (attr(q, "region") == "region8") {
-            q[1] <- q[1] + 1
-          }
-          if (q[1] >= q[2]) {
-            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
-            cat(saida)
-            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
-          }
-        }
-        prob <- (ppois(q = q[1], lambda = lambda, lower.tail = T)) +
-          (ppois(q = q[2] - 1,lambda = lambda, lower.tail = F))
-      }
-      if (dist == "binomial") {
-        if (!any(names(argaddit) == "size")) {
-          size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
-          argaddit$size <- as.numeric(size)
-        }
-        if (!any(names(argaddit) == "prob")) {
-          prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
-          argaddit$prob <- as.numeric(prob)
-        }
-        size <- argaddit$size
-        prob <- argaddit$prob
-
-        if (gui == "plot") {
-          plotpbinomialarplot(q, size, prob, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotpbinomialarrstudio(q1, q2, size, prob, rounding, main, q),
-                                 q1 = manipulate::slider(0, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], q[2]+size, q[2]),
-                                 size = manipulate::slider(1, size+30, size),
-                                 prob = manipulate::slider(0, 1, prob))
-        }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-        }
-        if (is.double(q)) {
-          if (attr(q, "region") == "region5") {
-            q[2] <- q[2] + 1
-          }
-          if (attr(q, "region") == "region1") {
-            q[1] <- q[1] - 1
-            q[2] <- q[2] + 1
-          }
-          if (attr(q, "region") == "region6") {
-            q[1] <- q[1] - 1
-          }
-          ## b-region
-          if (attr(q, "region") == "region7") {
-            q[2] <- q[2] - 1
-          }
-          if (attr(q, "region") == "region2") {
-            q[1] <- q[1] + 1
-            q[2] <- q[2] - 1
-          }
-          if (attr(q, "region") == "region8") {
-            q[1] <- q[1] + 1
-          }
-          if (q[1] >= q[2]) {
-            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
-            cat(saida)
-            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
-          }
-        }
-        prob <- round(pbinom(q = q[1], size = size, prob = prob) + pbinom(q = q[2] - 1, size = size, prob = prob, lower.tail = FALSE),
-                      digits = rounding)
-      }
       if (dist == "chisq") {
         if (!any(names(argaddit) == "ncp")) {
           ncp <- 0
@@ -613,6 +497,149 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         prob <- round(pexp(q[1], rate = rate, lower.tail = T) +
                         pexp(q[2], rate = rate, lower.tail = F), rounding)
       }
+      if (dist == "poisson") {
+        if (!any(names(argaddit) == "lambda")) {
+          lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
+          argaddit$lambda <- as.numeric(lambda)
+        }
+        while (argaddit$lambda <= 0) {
+          lambda <- readline(gettext("Please, Insert the value of 'lambda' greater then 0: ", domain = "R-leem"))
+          argaddit$lambda <- as.numeric(lambda)
+        }
+
+        lambda <- argaddit$lambda
+        rmax <- ceiling(q[2] + 4 * sqrt(lambda))
+        rmin <- ceiling(lambda - 4 * sqrt(lambda))
+        if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+
+        if (gui == "plot") {
+          plotppoissonarplot(q, lambda, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotppoissonarrstudio(q1, q2, lambda, rounding, main, q),
+                                 q1 = manipulate::slider(rmin, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], rmax, q[2]),
+                                 lambda = manipulate::slider(1, lambda+30, lambda))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        # readjusting the range
+        ## ab-region
+        if (is.double(q)) {
+          if (attr(q, "region") == "region5") {
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region1") {
+            q[1] <- q[1] - 1
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region6") {
+            q[1] <- q[1] - 1
+          }
+          ## b-region
+          if (attr(q, "region") == "region7") {
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region2") {
+            q[1] <- q[1] + 1
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region8") {
+            q[1] <- q[1] + 1
+          }
+          if (q[1] >= q[2]) {
+            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+            cat(saida)
+            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+          }
+        }
+        prob <- (ppois(q = q[1], lambda = lambda, lower.tail = T)) +
+          (ppois(q = q[2],lambda = lambda, lower.tail = F))
+      }
+      if (dist == "binomial") {
+        if (!any(names(argaddit) == "size")) {
+          size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+          argaddit$size <- as.numeric(size)
+        }
+        if (!any(names(argaddit) == "prob")) {
+          prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
+          argaddit$prob <- as.numeric(prob)
+        }
+        size <- argaddit$size
+        prob <- argaddit$prob
+
+        if (gui == "plot") {
+          plotpbinomialarplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpbinomialarrstudio(q1, q2, size, prob, rounding, main, q),
+                                 q1 = manipulate::slider(0, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], q[2]+size, q[2]),
+                                 size = manipulate::slider(1, size+30, size),
+                                 prob = manipulate::slider(0, 1, prob))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (is.double(q)) {
+          if (attr(q, "region") == "region5") {
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region1") {
+            q[1] <- q[1] - 1
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region6") {
+            q[1] <- q[1] - 1
+          }
+          ## b-region
+          if (attr(q, "region") == "region7") {
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region2") {
+            q[1] <- q[1] + 1
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region8") {
+            q[1] <- q[1] + 1
+          }
+          if (q[1] >= q[2]) {
+            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+            cat(saida)
+            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+          }
+        }
+        prob <- round(pbinom(q = q[1], size = size, prob = prob) + pbinom(q = q[2] - 1, size = size, prob = prob, lower.tail = FALSE),
+                      digits = rounding)
+      }
+      if (dist == "nbinom") {
+        if (!any(names(argaddit) == "prob")) {
+          prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
+          argaddit$prob <- as.numeric(prob)
+        }
+        if (argaddit$prob > 1 || argaddit$prob < 0) {
+          stop("The 'prob' argument must be between zero and one!", call. = FALSE, domain = "R-leem")
+        }
+        if (!any(names(argaddit) == "size")) {
+          size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+          argaddit$size <- as.numeric(size)
+        }
+        if (argaddit$size < 0) {
+          stop("The 'size' argument must be higther then zero!", call. = FALSE, domain = "R-leem")
+        }
+        prob <- argaddit$prob
+        size <- argaddit$size
+        if (gui == "plot" ) {
+          plotpnbinomarplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+      }
       if (dist == "hyper") {
         if (!any(names(argaddit) == "m")) {
           m <- readline(gettext("Insert the value of 'm' argument: ", domain = "R-leem"))
@@ -626,320 +653,94 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           k <- readline(gettext("Insert the value of 'k' argument: ", domain = "R-leem"))
           argaddit$k <- as.numeric(k)
         }
-        size <- argaddit$m
-        samples <- argaddit$n
-        sucess <- argaddit$k
-        plotcurve <- function(q, size, samples, sucess) {
-          rmin <- 0
-          if (rmin < 0 || rmin > q[1]) rmin <- 0 else rmin <- round(rmin)
-          x <- rmin:size
-          x1 <- rmin:q[1]
-          x2 <- (q[1] + 1):size
-          x3 <- c(1, 2)
-          if (attr(q, "region") == "region1") {
-            x3 <- q[1]:q[2]
-          } else if (attr(q, "region") == "region3") {
-            x3 <- (q[1] + 1):(q[2] - 1)
-          } else if (attr(q, "region") == "region5") {
-            x3 <- (q[1] + 1):(q[2])
-          } else {
-            x3 <- (q[1]):(q[2] - 1)
-          }
-          probx <- dhyper(x, m = size, n = samples, k = sucess)
-          probx1 <- dhyper(x1, m = size, n = samples, k = sucess)
-          probx2 <- dhyper(x2, m = size, n = samples, k = sucess)
-          probx3 <- dhyper(x3, m = size, n = samples, k = sucess)
-          xlim <- c(rmin, size)
-          ylim <- c(min(probx), max(probx) + 0.1)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X", main = "Distribution Function: Hypergeometric")
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-          points(x1, probx1, lwd = 2, col = "red", pch = 19)
-          lines(x2, probx2, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-          points(x2, probx2, lwd = 2, col = "red", pch = 19)
-          lines(x3, probx3, type = "h", lwd = 2)
-          points(x3, probx3, lwd = 2, pch = 19)
-          abline(v = match(max(dhyper(x = x, m = size, n = samples, k = sucess)),
-                           dhyper(x = x, m = size, n = samples, k = sucess))-1, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(phyper(q[1], m = size, n = samples, k = sucess) - phyper(q[2], m = size, n = samples, k = sucess, lower.tail = FALSE), rounding) * -1
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = c(rmin, qqaux[1]), labels = c("", qqaux[1]),
-            col = "red", font = 2, col.axis = "red"
-          )
-          axis(
-            side = 1, at = c(qqaux[2], size), labels = c(qqaux[2], ""),
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          if (attr(q, "region") == "region1") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(P(t1>~X>~t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n" ,
-                                       list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
-            )
-          }
-          if (attr(q, "region") == "region3") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(P(t1>=~X>=~t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n",
-                                       list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
-            )
-          }
+        m <- argaddit$m
+        n <- argaddit$n
+        k <- argaddit$k
+        if (gui == "plot") {
+          plotphyperarplot(q, m, n, k, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (is.double(q)) {
           if (attr(q, "region") == "region5") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(P(t1>=~X>~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n", list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
-            )
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region1") {
+            q[1] <- q[1] - 1
+            q[2] <- q[2] + 1
           }
           if (attr(q, "region") == "region6") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(P(t1>~X>=~t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n", list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
-            )
+            q[1] <- q[1] - 1
+          }
+          ## b-region
+          if (attr(q, "region") == "region7") {
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region2") {
+            q[1] <- q[1] + 1
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region8") {
+            q[1] <- q[1] + 1
+          }
+          if (q[1] >= q[2]) {
+            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+            cat(saida)
+            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
           }
         }
-        if (gui == "plot") {
-          prob <- round(phyper(q[1], m = size, n = samples, k = sucess) - phyper(q[2], m = size, n = samples, k = sucess, lower.tail = FALSE), digits = rounding) * -1
-          plotcurve(q, size, samples, sucess)
-        }
+
+        prob <- round((phyper(q = q[1], m, n, k, lower.tail = T)) + (phyper(q = q[2], m, n, k, lower.tail = F)),
+                      digits = rounding)
       }
-      if (dist == "nbinom") {
+      if (dist == "geom") {
         if (!any(names(argaddit) == "prob")) {
           prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
           argaddit$prob <- as.numeric(prob)
         }
-        if (argaddit$prob > 1 ) {
-          stop("The 'prob' argument must be lower then zero!", call. = FALSE, domain = "R-leem")
-        }
-        if (!any(names(argaddit) == "size")) {
-          size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
-          argaddit$size <- as.numeric(size)
-        }
-        xvq <- 2*q[2]
-        xvq1 <- 2*q[1]
-        if ( q[1] >= 0) {
-          xvq <- 2*q[2]
-          xvq1 <- -2*q[1]
-        }
-        if ( q[1] == 0 ) { xvq <- 10 }
-        if ( q[2] == 0 ) { xvq1 <- -10 }
-        plotcurve <- function(q, s, p){
-          x <- xvq1:xvq
-          fx <- dnbinom(x,s,p)
-          xlim <- c(xvq1, xvq)
-          ylim <- c(min(fx), max(fx) + (max(fx)/2))
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(f[X](x)), xlab = "X",main = gettext("Distribution Function: Negative Binomial", domain = "R-leem"))
-          if (attr(q, "region") == "region1") {
-            x2 <- (q[1]-1):(q[2]+1)
-          } else if(attr(q, "region") == "region3"){
-            x2 <- (q[1]+1):(q[2]-1)
-          } else if(attr(q, "region") == "region5") {
-            x2 <- (q[1]+1):q[2]
-          } else {
-            x2 <- q[1]:(q[2]-1)
-          }
-          x1 <- xvq1:xvq
-          fx1 <- dnbinom(x1,s,p)
-          lines(x1, fx1, type = "h", lwd = 2,col = "red", panel.first = grid(col = "gray90"))
-          points(x1, fx1, lwd = 2, pch = 19, col = "red")
-          fx2 <- dnbinom(x2,s,p)
-          lines(x2, fx2, type = "h", lwd = 2)
-          points(x2, fx2, lwd = 2, pch = 19)
-          qq <- round(q, digits = rounding)
-          qqaux <- round(q, digits = rounding)
-          Pr <- round(pnbinom(qq[2],s,p) - pnbinom(qq[1],s,p), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side = 1, at = c(q[1],q[2]),labels = c(q[1],q[2]),col = "red", font = 2, col.axis = "red")
-          abline(v = q[1], lty = 2, col = "red")
-          abline(v = q[2], lty = 2, col = "red")
-          if (attr(q, "region") == "region1") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>~X>~t2) == Pr ~ "\n\n" ~ size == si ~ prob == pro,
-                     list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region3") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>=~X>=~t2 )== Pr ~ "\n\n" ~ size == si ~ prob == pro,
-                     list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region5") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>=~X>~t2) == Pr ~ "\n\n" ~ size == si ~ prob == pro,
-                     list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region6") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>~X>=~t2) == Pr ~ "\n\n" ~ size == si ~ prob == pro,
-                     list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
-                   )
-            )
-          }
-        }
-        if (gui == "plot" ) {
-          pro <- argaddit$prob
-          size <- argaddit$size
-          prob <- pnbinom(q = q[2] , size = size , prob = pro) - pnbinom(q = q[1] , size = size , prob = pro)
-          plotcurve(q,size,pro)
-        }
-        if (gui == "rstudio") {
-          xvq <- 2*q
-          xvq1 <- -2*q
-          if ( q >= 0) {
-            xvq <- 2*q
-            xvq1 <- -2*q
-          }
-          if ( q == 0 ) { xvq <- 10*( 1 + q) }
-          if ( q == 0 ) { xvq1 <- -10*(1 + q) }
-          pro <- argaddit$prob
-          size <- argaddit$size
-          manipulate::manipulate(plotcurve(q, pro, size),
-                                 q = manipulate::slider(xvq1,xvq, q),
-                                 pro = manipulate::slider(0.1,1, pro ),
-                                 size = manipulate::slider(1,xvq, size))
-          prob <- pnbinom(q,pro,size,lower.tail = TRUE)
-        }
-      }##########INCORRECT
-      if (dist == "geometric") {
-        if (!any(names(argaddit) == "probability")) {
-          probability <- readline(gettext("Insert the value of 'probability' argument: ", domain = "R-leem"))
-          argaddit$probability <- as.numeric(probability)
-        }
-        plotcurve <- function(q, probability) {
-          rmin <- -5*q[1]
-          rmax <- +5*q[2]
-          if (rmin < 0) rmin <- 0
-          x <- rmin:rmax
-          x1 <- rmin:q[1]
-          x2 <- q[2]:rmax
-          x3 <- c(1, 2)
-          if (attr(q, "region") == "region1") {
-            x3 <- q[1]:q[2]
-          } else if(attr(q, "region") == "region3"){
-            x3 <- (q[1]+1):(q[2]-1)
-          } else if(attr(q, "region") == "region5") {
-            x3 <- (q[1]+1):(q[2])
-          } else {
-            x3 <- (q[1]):(q[2]-1)
-          }
-          probx <- dgeom(x, prob = probability)
-          probx1 <- dgeom(x1, prob = probability)
-          probx2 <- dgeom(x2, prob = probability)
-          probx3 <- dgeom(x3, prob = probability)
-          xlim <- c(rmin, rmax)
-          ylim <- c(min(probx), max(probx) + 0.2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(P[X](x)), xlab = "X", main = gettext("Distribution Function: Geometric", domain = "R-leem"))
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2,col="red")
-          points(x1, probx1, lwd = 2, pch = 19,col="red")
-          lines(x2, probx2, type = "h", lwd = 2,col="red")
-          points(x2, probx2, lwd = 2, pch = 19,col="red")
-          lines(x3, probx3, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
-          points(x3, probx3, lwd = 2, pch = 19)
-          abline(v = q, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability, lower.tail = F),digits = rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qq, tick = TRUE, lwd = 0,
-               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
-          axis(side=1, at=as.character(c(rmin, qq[1])), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-          axis(side=1, at=as.character(c(qq[2], rmax)), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          abline(v = qqaux, lty = 2, col = "red")
-          if (attr(q, "region") == "region1") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>~X>~t2 ~ " ;" ~ p == probability) == Pr ~ "\n\n" ,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, probability = probability)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region3") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>=~X>=~t2 ~ " ;" ~ p == probability )== Pr ~ "\n\n" ,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, probability = probability)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region5") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>=~X>~t2 ~ " ;" ~ p == probability) == Pr ~ "\n\n" ,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, probability = probability)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region6") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1>~X>=~t2 ~ " ;" ~ p == probability) == Pr ~ "\n\n" ,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, probability = probability)
-                   )
-            )
-          }
-        }
+        prob <- argaddit$prob
         if (gui == "plot") {
-          probability <- argaddit$probability
-          prob <- round(pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability, lower.tail = F),digits = rounding)
-          plotcurve(q, probability)
+          plotpgeomarplot(q, prob, rounding, main)
         }
         if (gui == "rstudio") {
-          probability <- argaddit$probability
-          xvq <- 5*q[1]
-          xvq1 <- 5*q[2]
-          if ( q[1] >= 0) {
-            xvq <- -5*q[1]
-            xvq1 <- 5*q[2]
-          }
-          if ( q[1] == 0 ) { xvq <- -5*( 1 + q[1]) }
-          if ( q[2] == 0 ) { xvq1 <- 5*(1 + q[2]) }
-          plotcurveaux <- function(q1 = q[1], q2 = q[2], probability) {
-            q[1] <- q1
-            q[2] <- q2
-            plotcurve(q,probability)
-          }
-          prob <- round(pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability, lower.tail = F),digits = rounding)
-          manipulate::manipulate(plotcurveaux(q1,q2, probability),
-                                 q1 = manipulate::slider(0, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], 260, q[2]),
-                                 p = manipulate::slider(probability, probability + 200, probability))
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (is.double(q)) {
+          if (attr(q, "region") == "region5") {
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region1") {
+            q[1] <- q[1] - 1
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region6") {
+            q[1] <- q[1] - 1
+          }
+          ## b-region
+          if (attr(q, "region") == "region7") {
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region2") {
+            q[1] <- q[1] + 1
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region8") {
+            q[1] <- q[1] + 1
+          }
+          if (q[1] >= q[2]) {
+            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+            cat(saida)
+            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+          }
+        }
+        prob <- round(pgeom(q = q[1], prob) - pgeom(q = q[2], prob, lower.tail = F),digits = rounding)
       }
     }
     if (any(attr(q, "region") == regionb)) {
@@ -1294,125 +1095,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         # Compute the desired probability
         prob <- pt(q[2], df = nu) - pt(q[1], df = nu)
       }
-      if (dist == "poisson") {
-        if (!any(names(argaddit) == "lambda")) {
-          lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
-          argaddit$lambda <- as.numeric(lambda)
-        }
-        while (argaddit$lambda <= 0) {
-          lambda <- readline(gettext("Please, Insert the value of 'lambda' greater then 0: ", domain = "R-leem"))
-          argaddit$lambda <- as.numeric(lambda)
-        }
-
-        lambda <- argaddit$lambda
-        rmax <- ceiling(q[2] + 4 * sqrt(lambda))
-        rmin <- ceiling(lambda - 4 * sqrt(lambda))
-        if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-
-        if (gui == "plot") {
-          plotppoissonbrplot(q, lambda, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotppoissonbrrstudio(q1, q2, lambda, rounding, main, q),
-                                 q1 = manipulate::slider(rmin, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], rmax, q[2]),
-                                 lambda = manipulate::slider(1, lambda+30, lambda))
-        }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-        }
-        # readjusting the range
-        ## ab-region
-        if (is.double(q)) {
-          if (attr(q, "region") == "region5") {
-            q[2] <- q[2] + 1
-          }
-          if (attr(q, "region") == "region1") {
-            q[1] <- q[1] - 1
-            q[2] <- q[2] + 1
-          }
-          if (attr(q, "region") == "region6") {
-            q[1] <- q[1] - 1
-          }
-          ## b-region
-          if (attr(q, "region") == "region7") {
-            q[2] <- q[2] - 1
-          }
-          if (attr(q, "region") == "region2") {
-            q[1] <- q[1] + 1
-            q[2] <- q[2] - 1
-          }
-          if (attr(q, "region") == "region8") {
-            q[1] <- q[1] + 1
-          }
-          if (q[1] >= q[2]) {
-            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
-            cat(saida)
-            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
-          }
-        }
-        prob <- round(ppois(q = q[2], lambda = lambda) - ppois(q = q[1],lambda = lambda), digits = rounding)
-      }
-      if (dist == "binomial") {
-        if (!any(names(argaddit) == "size")) {
-          size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
-          argaddit$size <- as.numeric(size)
-        }
-        if (!any(names(argaddit) == "prob")) {
-          prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
-          argaddit$prob <- as.numeric(prob)
-        }
-
-        size <- argaddit$size
-        prob <- argaddit$prob
-
-        if (gui == "plot") {
-          plotpbinomialbrplot(q, size, prob, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotpbinomialbrrstudio(q1, q2, size, prob, rounding, main, q),
-                                 q1 = manipulate::slider(0, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], q[2]+size, q[2]),
-                                 size = manipulate::slider(1, size+30, size),
-                                 prob = manipulate::slider(0, 1, prob))
-        }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-        }
-        # readjusting the range
-        ## ab-region
-        # readjusting the range
-        ## ab-region
-        if (is.double(q)) {
-          if (attr(q, "region") == "region5") {
-            q[2] <- q[2] + 1
-          }
-          if (attr(q, "region") == "region1") {
-            q[1] <- q[1] - 1
-            q[2] <- q[2] + 1
-          }
-          if (attr(q, "region") == "region6") {
-            q[1] <- q[1] - 1
-          }
-          ## b-region
-          if (attr(q, "region") == "region7") {
-            q[2] <- q[2] - 1
-          }
-          if (attr(q, "region") == "region2") {
-            q[1] <- q[1] + 1
-            q[2] <- q[2] - 1
-          }
-          if (attr(q, "region") == "region8") {
-            q[1] <- q[1] + 1
-          }
-          if (q[1] >= q[2]) {
-            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
-            cat(saida)
-            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
-          }
-        }
-        prob <- round(pbinom(q = q[2], size, prob) - pbinom(q = q[1],size, prob), digits = rounding)
-      }
       if (dist == "chisq") {
         if (!any(names(argaddit) == "ncp")) {
           ncp <-0
@@ -1559,6 +1241,154 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         prob <- (pexp(q = q[1], rate = rate) - pexp(q = q[2],rate = rate))*-1
       }
+      if (dist == "poisson") {
+        if (!any(names(argaddit) == "lambda")) {
+          lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
+          argaddit$lambda <- as.numeric(lambda)
+        }
+        while (argaddit$lambda <= 0) {
+          lambda <- readline(gettext("Please, Insert the value of 'lambda' greater then 0: ", domain = "R-leem"))
+          argaddit$lambda <- as.numeric(lambda)
+        }
+
+        lambda <- argaddit$lambda
+        rmax <- ceiling(q[2] + 4 * sqrt(lambda))
+        rmin <- ceiling(lambda - 4 * sqrt(lambda))
+        if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+
+        if (gui == "plot") {
+          plotppoissonbrplot(q, lambda, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotppoissonbrrstudio(q1, q2, lambda, rounding, main, q),
+                                 q1 = manipulate::slider(rmin, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], rmax, q[2]),
+                                 lambda = manipulate::slider(1, lambda+30, lambda))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        # readjusting the range
+        ## ab-region
+        if (is.double(q)) {
+          if (attr(q, "region") == "region5") {
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region1") {
+            q[1] <- q[1] - 1
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region6") {
+            q[1] <- q[1] - 1
+          }
+          ## b-region
+          if (attr(q, "region") == "region7") {
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region2") {
+            q[1] <- q[1] + 1
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region8") {
+            q[1] <- q[1] + 1
+          }
+          if (q[1] >= q[2]) {
+            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+            cat(saida)
+            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+          }
+        }
+        prob <- round(ppois(q = q[2], lambda = lambda) - ppois(q = q[1],lambda = lambda), digits = rounding)
+      }
+      if (dist == "binomial") {
+        if (!any(names(argaddit) == "size")) {
+          size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+          argaddit$size <- as.numeric(size)
+        }
+        if (!any(names(argaddit) == "prob")) {
+          prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
+          argaddit$prob <- as.numeric(prob)
+        }
+
+        size <- argaddit$size
+        prob <- argaddit$prob
+
+        if (gui == "plot") {
+          plotpbinomialbrplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpbinomialbrrstudio(q1, q2, size, prob, rounding, main, q),
+                                 q1 = manipulate::slider(0, q[2], q[1]),
+                                 q2 = manipulate::slider(q[2], q[2]+size, q[2]),
+                                 size = manipulate::slider(1, size+30, size),
+                                 prob = manipulate::slider(0, 1, prob))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        # readjusting the range
+        ## ab-region
+        # readjusting the range
+        ## ab-region
+        if (is.double(q)) {
+          if (attr(q, "region") == "region5") {
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region1") {
+            q[1] <- q[1] - 1
+            q[2] <- q[2] + 1
+          }
+          if (attr(q, "region") == "region6") {
+            q[1] <- q[1] - 1
+          }
+          ## b-region
+          if (attr(q, "region") == "region7") {
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region2") {
+            q[1] <- q[1] + 1
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region8") {
+            q[1] <- q[1] + 1
+          }
+          if (q[1] >= q[2]) {
+            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+            cat(saida)
+            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+          }
+        }
+        prob <- round(pbinom(q = q[2], size, prob) - pbinom(q = q[1],size, prob), digits = rounding)
+      }
+      if (dist == "nbinom") {
+        if (!any(names(argaddit) == "prob")) {
+          prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
+          argaddit$prob <- as.numeric(prob)
+        }
+        if (argaddit$prob > 1 || argaddit$prob < 0) {
+          stop("The 'prob' argument must be between zero and one!", call. = FALSE, domain = "R-leem")
+        }
+        if (!any(names(argaddit) == "size")) {
+          size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+          argaddit$size <- as.numeric(size)
+        }
+        if (argaddit$size < 0) {
+          stop("The 'size' argument must be higther then zero!", call. = FALSE, domain = "R-leem")
+        }
+        prob <- argaddit$prob
+        size <- argaddit$size
+        if (gui == "plot" ) {
+          plotpnbinombrplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <-  round(pnbinom(q = q[2], size, prob) - pnbinom(q = q[1], size, prob),
+                       digits = rounding)
+      }
       if (dist == "hyper") {
         if (!any(names(argaddit) == "m")) {
           m <- readline(gettext("Insert the value of 'm' argument: ", domain = "R-leem"))
@@ -1572,310 +1402,96 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           k <- readline(gettext("Insert the value of 'k' argument: ", domain = "R-leem"))
           argaddit$k <- as.numeric(k)
         }
-        size <- argaddit$m
-        samples <- argaddit$n
-        sucess <- argaddit$k
-        plotcurve <- function(q, size, samples, sucess) {
-          rmin <- 0
-          if (rmin < 0 || rmin > q[1]) rmin <- 0 else rmin <- round(rmin)
-          x <- rmin:size
-          x1 <- rmin:q[1]
-          x2 <- q[2]:size
-          x3 <- c(1, 2)
-          if (attr(q, "region") == "region2") {
-            x3 <- (q[1] + 1):(q[2] - 1)
-          } else if (attr(q, "region") == "region4") {
-            x3 <- (q[1]):(q[2])
-          } else if (attr(q, "region") == "region7") {
-            x3 <- (q[1]):(q[2] - 1)
-          } else {
-            x3 <- (q[1] + 1):(q[2])
+        m <- argaddit$m
+        n <- argaddit$n
+        k <- argaddit$k
+        if (gui == "plot") {
+          plotphyperbrplot(q, m, n, k, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (is.double(q)) {
+          if (attr(q, "region") == "region5") {
+            q[2] <- q[2] + 1
           }
-          probx <- dhyper(x, m = size, n = samples, k = sucess)
-          probx1 <- dhyper(x1, m = size, n = samples, k = sucess)
-          probx2 <- dhyper(x2, m = size, n = samples, k = sucess)
-          probx3 <- dhyper(x3, m = size, n = samples, k = sucess)
-          xlim <- c(rmin, size)
-          ylim <- c(min(probx), max(probx) + 0.1)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X", main = "Distribution Function: Hypergeometric")
-          lines(x1, probx1, type = "h", lwd = 2)
-          points(x1, probx1, lwd = 2, pch = 19)
-          lines(x2, probx2, type = "h", lwd = 2)
-          points(x2, probx2, lwd = 2, pch = 19)
-          lines(x3, probx3, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-          points(x3, probx3, lwd = 2, col = "red", pch = 19)
-          abline(v = match(max(dhyper(x = x, m = size, n = samples, k = sucess)),dhyper(x = x, m = size, n = samples, k = sucess))-1, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(phyper(q[1], m = size, n = samples, k = sucess) - phyper(q[2], m = size, n = samples, k = sucess), rounding) * -1
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = qqaux, labels = qqaux,
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          if (attr(q, "region") == "region2") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(P(t1<~X<~t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n",
-                                       list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
-            )
+          if (attr(q, "region") == "region1") {
+            q[1] <- q[1] - 1
+            q[2] <- q[2] + 1
           }
-          if (attr(q, "region") == "region4") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(P(t1<=~X<=~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n",
-                                       list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
-            )
+          if (attr(q, "region") == "region6") {
+            q[1] <- q[1] - 1
           }
+          ## b-region
           if (attr(q, "region") == "region7") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(P(t1<=~X<~ t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n",
-                                       list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
-            )
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region2") {
+            q[1] <- q[1] + 1
+            q[2] <- q[2] - 1
           }
           if (attr(q, "region") == "region8") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(P(t1<~X<=~t2 ~ ";" ~ m == size ~ ";" ~ n == samples ~";"~ k == sucess) == Pr ~ "\n\n",
-                                       list(t1 = qq[1], t2 = qq[2], Pr = Pr, size = size, samples = samples, sucess = sucess))
-            )
+            q[1] <- q[1] + 1
+          }
+          if (q[1] >= q[2]) {
+            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+            cat(saida)
+            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
           }
         }
-        if (gui == "plot") {
-          prob <- round(phyper(q[1], m = size, n = samples, k = sucess) - phyper(q[2], m = size, n = samples, k = sucess), rounding) * -1
-          plotcurve(q, size, samples, sucess)
+
+        prob <-  round(phyper(q = q[2], m, n, k) - phyper(q = q[1], m, n, k), digits = rounding)
         }
-      }
-      if (dist == "nbinom") {
+      if (dist == "geom") {
         if (!any(names(argaddit) == "prob")) {
           prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
           argaddit$prob <- as.numeric(prob)
         }
-        if (argaddit$prob > 1 ) {
-          stop("The 'prob' argument must be lower then zero!", call. = FALSE, domain = "R-leem")
-        }
-        if (!any(names(argaddit) == "size")) {
-          size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
-          argaddit$size <- as.numeric(size)
-        }
-        xvq <- 2*q[2]
-        xvq1 <- 2*q[1]
-        if ( q[1] >= 0) {
-          xvq <- 2*q[2]
-          xvq1 <- -2*q[1]
-        }
-        if ( q[1] == 0 ) { xvq <- 10 }
-        if ( q[2] == 0 ) { xvq1 <- -10 }
-        plotcurve <- function(q, s, p){
-          x <- xvq1:xvq
-          fx <- dnbinom(x,s,p)
-          xlim <- c(xvq1, xvq)
-          ylim <- c(min(fx), max(fx) + (max(fx)/2))
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(f[X](x)), xlab = "X", main = gettext("Distribution Function: Negative Binomial", domain = "R-leem"))
-          if (attr(q, "region") == "region2") {
-            x2 <- (q[1] + 1):(q[2] - 1)
-          } else if(attr(q, "region") == "region4"){
-            x2 <- (q[1]):(q[2])
-          } else if(attr(q, "region") == "region7") {
-            x2 <- (q[1]):(q[2] - 1 )
-          } else {
-            x2 <- (q[1] + 1 ):(q[2])
-          }
-          x1 <- xvq1:xvq
-          fx1 <- dnbinom(x1,s,p)
-          lines(x1, fx1, type = "h", lwd = 2)
-          points(x1, fx1, lwd = 2, pch = 19)
-          fx2 <- dnbinom(x2,s,p)
-          lines(x2, fx2, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-          points(x2, fx2, lwd = 2, col = "red", pch = 19)
-          title(ylab = expression(f[X](x)), xlab = "X")
-          qq <- round(q, digits = rounding)
-          qqaux <- round(q, digits = rounding)
-          Pr <- round(pnbinom(qq[2],s,p) - pnbinom(qq[1],s,p), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side = 1, at = c(q[1],q[2]),labels = c(q[1],q[2]),col = "red", font = 2, col.axis = "red")
-          abline(v = q[1], lty = 2, col = "red")
-          abline(v = q[2], lty = 2, col = "red")
-          if (attr(q, "region") == "region2") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<~X<~ t2~ ";" ~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n",
-                     list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region4") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<=~X<=~ t2~ ";" ~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n",
-                     list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region7") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<=~X<~t2~ ";" ~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n",
-                     list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
-                   )
-            )
-          }
-          if (attr(q, "region") == "region8") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<~X<=~t2~ ";" ~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n",
-                     list(t1=qq[1],t2=qq[2],si = s, Pr = Pr, pro = p)
-                   )
-            )
-          }
-        }
-        if (gui == "plot" ) {
-          pro <- argaddit$prob
-          size <- argaddit$size
-          prob <- pnbinom(q = q[2] , size = size , prob = pro) - pnbinom(q = q[1] , size = size , prob = pro)
-          plotcurve(q,size,pro)
+        prob <- argaddit$prob
+        if (gui == "plot") {
+          plotpgeombrplot(q, prob, rounding, main)
         }
         if (gui == "rstudio") {
-          xvq <- 2*q
-          xvq1 <- -2*q
-          if ( q >= 0) {
-            xvq <- 2*q
-            xvq1 <- -2*q
-          }
-          if ( q == 0 ) { xvq <- 10*( 1 + q) }
-          if ( q == 0 ) { xvq1 <- -10*(1 + q) }
-          pro <- argaddit$prob
-          size <- argaddit$size
-          manipulate::manipulate(plotcurve(q, pro, size),
-                                 q = manipulate::slider(xvq1,xvq, q),
-                                 pro = manipulate::slider(0.1,1, pro ),
-                                 size = manipulate::slider(1,xvq, size))
-          prob <- pnbinom(q,pro,size,lower.tail = TRUE)
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
-      }###########INCORREC
-      if (dist == "geometric") {
-        if (!any(names(argaddit) == "probability")) {
-          probability <- readline(gettext("Insert the value of 'probability' argument: ", domain = "R-leem"))
-          argaddit$probability <- as.numeric(probability)
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
-        plotcurve <- function(q, probability) {
-          rmin <- -5*q[1]
-          rmax <-  5*q[2]
-          if (rmin < 0) rmin <- 0
-          x <- rmin:rmax
-          x1 <- rmin:q[1]
-          x2 <- q[2]:rmax
-          x3 <- c(1, 2)
-          if (attr(q, "region") == "region2") {
-            x3 <- (q[1] + 1):(q[2] - 1)
-          } else if(attr(q, "region") == "region4"){
-            x3 <- (q[1]):(q[2])
-          } else if(attr(q, "region") == "region7") {
-            x3 <- (q[1]):(q[2]-1)
-          } else {
-            x3 <- (q[1]+1):(q[2])
+        if (is.double(q)) {
+          if (attr(q, "region") == "region5") {
+            q[2] <- q[2] + 1
           }
-          probx <- dgeom(x, prob = probability)
-          probx1 <- dgeom(x1, prob = probability)
-          probx2 <- dgeom(x2, prob = probability)
-          probx3 <- dgeom(x3, prob = probability)
-          xlim <- c(rmin, rmax)
-          ylim <- c(min(probx), max(probx) + 0.1)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(P[X](x)), xlab = "X", main = gettext("Distribution Function: Geometric", domain = "R-leem"))
-          lines(x1, probx1, type = "h", lwd = 2)
-          points(x1, probx1, lwd = 2, pch = 19)
-          lines(x2, probx2, type = "h", lwd = 2)
-          points(x2, probx2, lwd = 2, pch = 19)
-          lines(x3, probx3, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-          points(x3, probx3, lwd = 2, col = "red", pch = 19)
-          abline(v = q, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability),digits = rounding)*- 1
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, labels=qqaux,
-               col="red", font = 2, col.axis = "red")
-          abline(v = qqaux, lty = 2, col = "red")
-          if (attr(q, "region") == "region2") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<~X<~t2 ~ "; " ~ p == probability) == Pr ~ "\n\n" ,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, probability = probability)
-                   )
-            )
+          if (attr(q, "region") == "region1") {
+            q[1] <- q[1] - 1
+            q[2] <- q[2] + 1
           }
-          if (attr(q, "region") == "region4") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<=~X<=~t2 ~ "; " ~ p == probability) == Pr ~ "\n\n" ,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, probability = probability)
-                   )
-            )
+          if (attr(q, "region") == "region6") {
+            q[1] <- q[1] - 1
           }
+          ## b-region
           if (attr(q, "region") == "region7") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<=~X<~t2 ~ "; " ~ p == probability) == Pr ~ "\n\n" ,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, probability = probability)
-                   )
-            )
+            q[2] <- q[2] - 1
+          }
+          if (attr(q, "region") == "region2") {
+            q[1] <- q[1] + 1
+            q[2] <- q[2] - 1
           }
           if (attr(q, "region") == "region8") {
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(
-                     P(t1<~X<=~t2 ~ "; " ~ p == probability) == Pr ~ "\n\n" ,
-                     list(t1=qq[1],t2=qq[2],q = qq, Pr = Pr, probability = probability)
-                   )
-            )
+            q[1] <- q[1] + 1
+          }
+          if (q[1] >= q[2]) {
+            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+            cat(saida)
+            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
           }
         }
 
-        if (gui == "plot") {
-          probability <- argaddit$probability
-          prob <- (pgeom(q[1], prob = probability) - pgeom(q[2], prob = probability))*-1
-          plotcurve(q, probability)
+        prob <- round(pgeom(q[2], prob) - pgeom(q[1], prob), rounding)
         }
-        if (gui == "rstudio") {
-          probability <- argaddit$probability
-          plotcurveaux <- function(q1 = q[1], q2 = q[2],p = probability) {
-            q[1] <- q1
-            q[2] <- q2
-            plotcurve(q,probability)
-          }
-          prob <- (pgeom(q = q[1], prob = probability) - pgeom(q = q[2], prob = probability))*-1
-          manipulate::manipulate(plotcurveaux(q1,q2, p = probability),
-                                 q1 = manipulate::slider(0, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], 260, q[2]),
-                                 probability = manipulate::slider(p, p + 200, p))
-        }
-      }
-    }
-  }
+    }}
   else {
     if (dist == "normal") {
       if (!any(names(argaddit) == "mean")) {
@@ -2397,122 +2013,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
       }
     }
-    if (dist == "poisson") {
-      if (!any(names(argaddit) == "lambda")) {
-        lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
-        argaddit$lambda <- as.numeric(lambda)
-      }
-      lambda <- argaddit$lambda
-      rmin <- ceiling(lambda - 4 * sqrt(lambda))
-      if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-      rmax <- ceiling(lambda + 4 * sqrt(lambda))
-      if (isTRUE(lower.tail)) {
-        if (gui == "plot") {
-          plotppoissonlttplot(q, lambda, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotppoissonlttplot(q, lambda, rounding, main),
-                                 q = manipulate::slider(0, lambda+30, q),
-                                 lambda = manipulate::slider(1, lambda + 30, lambda)
-          )
-        }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-        }
-        prob <- ppois(q = q, lambda = lambda)
-      }
-      if (isFALSE(lower.tail)) {
-        if (gui == "plot") {
-          plotppoissonltfplot(q, lambda, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotppoissonltfplot(q, lambda, rounding, main),
-                                 q = manipulate::slider(0, lambda+30, q),
-                                 lambda = manipulate::slider(1, lambda + 30, lambda)
-          )
-        }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-        }
-        prob <- ppois(q = q, lambda = lambda, lower.tail = FALSE)
-      }
-      if(is.null(lower.tail)){
-        if (gui == "plot") {
-          plotppoissonltnplot(q, lambda, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotppoissonltnplot(q, lambda, rounding, main),
-                                 q = manipulate::slider(0, lambda+30, q),
-                                 lambda = manipulate::slider(1, lambda + 30, lambda)
-          )
-        }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-        }
-        prob <- dpois(q, lambda=lambda)
-      }
-    }
-    if (dist == "binomial") {
-      if (!any(names(argaddit) == "size")) {
-        size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
-        argaddit$size <- as.numeric(size)
-      }
-      if (!any(names(argaddit) == "prob")) {
-        prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
-        argaddit$prob <- as.numeric(prob)
-      }
-      size <- argaddit$size
-      prob <- argaddit$prob
-
-      if (isTRUE(lower.tail)) {
-        if (gui == "plot") {
-          plotpbinomiallttplot(q, size, prob, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotpbinomiallttplot(q, size, prob, rounding, main),
-                                 q = manipulate::slider(0, size, q),
-                                 size = manipulate::slider(1, size+30, size),
-                                 prob = manipulate::slider(0, 1, prob)
-          )
-        }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-        }
-        prob <- pbinom(q, size, prob)
-      }
-      if(isFALSE(lower.tail)) {
-        if (gui == "plot") {
-          plotpbinomialltfplot(q, size, prob, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotpbinomialltfplot(q, size, prob, rounding, main),
-                                 q = manipulate::slider(0, size, q),
-                                 size = manipulate::slider(1, size+30, size),
-                                 prob = manipulate::slider(0, 1, prob)
-          )
-        }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-        }
-        prob <- pbinom(q, size, prob, lower.tail = FALSE)
-      }
-      if(is.null(lower.tail)){
-        if (gui == "plot") {
-          plotpbinomialltnplot(q, size, prob, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotpbinomialltnplot(q, size, prob, rounding, main),
-                                 q = manipulate::slider(0, size, q),
-                                 size = manipulate::slider(1, size+30, size),
-                                 prob = manipulate::slider(0, 1, prob)
-          )
-        }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-        }
-        prob <- dbinom(q, size, prob)
-      }
-      }
     if (dist == "chisq") {
       if (!any(names(argaddit) == "ncp")) {
         ncp <- 0
@@ -2737,6 +2237,176 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
       }
     }
+    if (dist == "poisson") {
+      if (!any(names(argaddit) == "lambda")) {
+        lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
+        argaddit$lambda <- as.numeric(lambda)
+      }
+      lambda <- argaddit$lambda
+      rmin <- ceiling(lambda - 4 * sqrt(lambda))
+      if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
+      rmax <- ceiling(lambda + 4 * sqrt(lambda))
+      if (isTRUE(lower.tail)) {
+        if (gui == "plot") {
+          plotppoissonlttplot(q, lambda, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotppoissonlttplot(q, lambda, rounding, main),
+                                 q = manipulate::slider(0, lambda+30, q),
+                                 lambda = manipulate::slider(1, lambda + 30, lambda)
+          )
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- ppois(q = q, lambda = lambda)
+      }
+      if (isFALSE(lower.tail)) {
+        if (gui == "plot") {
+          plotppoissonltfplot(q, lambda, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotppoissonltfplot(q, lambda, rounding, main),
+                                 q = manipulate::slider(0, lambda+30, q),
+                                 lambda = manipulate::slider(1, lambda + 30, lambda)
+          )
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- ppois(q = q, lambda = lambda, lower.tail = FALSE)
+      }
+      if(is.null(lower.tail)){
+        if (gui == "plot") {
+          plotppoissonltnplot(q, lambda, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotppoissonltnplot(q, lambda, rounding, main),
+                                 q = manipulate::slider(0, lambda+30, q),
+                                 lambda = manipulate::slider(1, lambda + 30, lambda)
+          )
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- dpois(q, lambda=lambda)
+      }
+    }
+    if (dist == "binomial") {
+      if (!any(names(argaddit) == "size")) {
+        size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+        argaddit$size <- as.numeric(size)
+      }
+      if (!any(names(argaddit) == "prob")) {
+        prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
+        argaddit$prob <- as.numeric(prob)
+      }
+      size <- argaddit$size
+      prob <- argaddit$prob
+
+      if (isTRUE(lower.tail)) {
+        if (gui == "plot") {
+          plotpbinomiallttplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpbinomiallttplot(q, size, prob, rounding, main),
+                                 q = manipulate::slider(0, size, q),
+                                 size = manipulate::slider(1, size+30, size),
+                                 prob = manipulate::slider(0, 1, prob)
+          )
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pbinom(q, size, prob)
+      }
+      if(isFALSE(lower.tail)) {
+        if (gui == "plot") {
+          plotpbinomialltfplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpbinomialltfplot(q, size, prob, rounding, main),
+                                 q = manipulate::slider(0, size, q),
+                                 size = manipulate::slider(1, size+30, size),
+                                 prob = manipulate::slider(0, 1, prob)
+          )
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pbinom(q, size, prob, lower.tail = FALSE)
+      }
+      if(is.null(lower.tail)){
+        if (gui == "plot") {
+          plotpbinomialltnplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpbinomialltnplot(q, size, prob, rounding, main),
+                                 q = manipulate::slider(0, size, q),
+                                 size = manipulate::slider(1, size+30, size),
+                                 prob = manipulate::slider(0, 1, prob)
+          )
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- dbinom(q, size, prob)
+      }
+    }
+    if (dist == "nbinom") {
+      if (!any(names(argaddit) == "prob")) {
+        prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
+        argaddit$prob <- as.numeric(prob)
+      }
+      if (argaddit$prob > 1 || argaddit$prob < 0) {
+        stop("The 'prob' argument must be between zero and one!", call. = FALSE, domain = "R-leem")
+      }
+      if (!any(names(argaddit) == "size")) {
+        size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+        argaddit$size <- as.numeric(size)
+      }
+      if (argaddit$size < 0) {
+        stop("The 'size' argument must be higther then zero!", call. = FALSE, domain = "R-leem")
+      }
+      prob <- argaddit$prob
+      size <- argaddit$size
+      if (isTRUE(lower.tail)) {
+        if (gui == "plot" ) {
+          plotpnbinomiallttplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pnbinom(q, size, prob)
+      }
+      if (isFALSE(lower.tail)) {
+        if (gui == "plot" ) {
+          plotpnbinomialltfplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pnbinom(q, size, prob, lower.tail = FALSE)
+      }
+      if (is.null(lower.tail)) {
+        if (gui == "plot" ) {
+          plotpnbinomialltnplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- dnbinom(q, size, prob)
+      }
+    }
     if (dist == "hyper") {
       if (!any(names(argaddit) == "m")) {
         m <- readline(gettext("Insert the value of 'm' argument: ", domain = "R-leem"))
@@ -2750,364 +2420,90 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         k <- readline(gettext("Insert the value of 'k' argument: ", domain = "R-leem"))
         argaddit$k <- as.numeric(k)
       }
-      size <- argaddit$m
-      samples <- argaddit$n
-      sucess <- argaddit$k
-      if (lower.tail) {
-        plotcurve <- function(q, size, samples, sucess) {
-          rmin <- 0
-          x <- rmin:size
-          x1 <- rmin:q
-          x2 <- q:size
-          probx <- dhyper(x, m = size, n = samples, k = sucess)
-          probx1 <- dhyper(x1, m = size, n = samples, k = sucess)
-          probx2 <- dhyper(x2, m = size, n = samples, k = sucess)
-          xlim <- c(rmin, size)
-          ylim <- c(min(probx), max(probx) + 0.1)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X", main = "Distribution Function: Hypergeometric")
-          lines(x2, probx2, type = "h", lwd = 2)
-          points(x2, probx2, lwd = 2, pch = 19)
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-          points(x1, probx1, lwd = 2, col = "red", pch = 19)
-          abline(v = samples, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(phyper(q, m = size, n = samples, k = sucess), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = c(qqaux, rmin), labels = c(qqaux, ""),
-            col = "red", font = 2, col.axis = "red"
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P(X<= ~ q ~ ";" ~ m == size ~ ";" ~  n == samples ~ ";" ~ k == sucess) == Pr ~ "\n\n",
-                                     list(q = q, t1 = qq[1], t2 = qq[2],
-                                          Pr = Pr, size = size, samples = samples, sucess = sucess))
-          )
-        }
-        if (gui == "plot") {
-          prob <- phyper(q = q, m = size, n = samples, k = sucess)
-          plotcurve(q, size, samples, sucess)
-        }
-      } else {
-        plotcurve <- function(q, size, samples, sucess) {
-          rmin <- 0
-          if (rmin < 0 || rmin > q) rmin <- 0 else rmin <- round(rmin)
-          x <- rmin:size
-          x1 <- rmin:q
-          x2 <- q+1:size
-          probx <- dhyper(x, m = size, n = samples, k = sucess)
-          probx1 <- dhyper(x1, m = size, n = samples, k = sucess)
-          probx2 <- dhyper(x2, m = size, n = samples, k = sucess)
-          xlim <- c(rmin, size)
-          ylim <- c(min(probx), max(probx) + 0.1)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X", main = "Distribution Function:Hypergeometric")
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
-          points(x1, probx1, lwd = 2, pch = 19)
-          lines(x2, probx2, type = "h", lwd = 2, col = "red")
-          points(x2, probx2, lwd = 2, pch = 19, col = "red")
-          abline(v = samples, lty = 2)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(phyper(q, m = size, n = samples, k = sucess, lower.tail = F), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(
-            side = 1, at = c(qqaux, size),
-            col = "red", col.axis = "red",labels =
-          )
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P(X> ~ q ~ ";" ~ m == size ~ ";" ~ n == samples ~ ";" ~ k == sucess) == Pr ~ "\n\n" ,
-                                     list(t1 = qq[1], t2 = qq[2],
-                                          Pr = Pr, size = size, samples = samples, sucess = sucess, q = q))
-          )
-        }
-        if (gui == "plot") {
-          prob <- phyper(q = q, m = size, n = samples, k = sucess, lower.tail = F)
-          plotcurve(q, size, samples, sucess)
-        }
+      m <- argaddit$m
+      n <- argaddit$n
+      k <- argaddit$k
+      if (isTRUE(lower.tail)) {
+      if (gui == "plot") {
+        plotphyperlttplot(q, m, n, k, rounding, main)
       }
+      if (gui == "rstudio") {
+        stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+      }
+      if (gui == "tcltk") {
+        stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+      }
+      prob <- round(phyper(q, m, n, k), digits = rounding)
+      }
+      if (isFALSE(lower.tail)) {
+        if (gui == "plot") {
+          plotphyperltfplot(q, m, n, k, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- round(phyper(q, m, n, k, lower.tail = FALSE), digits = rounding)
+      }
+      if (is.null(lower.tail)) {
+        if (gui == "plot") {
+          plotphyperltnplot(q, m, n, k, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- round(dhyper(q, m, n, k), digits = rounding)
+      }
+
     }
-    if (dist == "nbinom") {
+    if (dist == "geom") {
       if (!any(names(argaddit) == "prob")) {
         prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
         argaddit$prob <- as.numeric(prob)
       }
-      if (argaddit$prob > 1 ) {
-        stop("The 'prob' argument must be lower then zero!", call. = FALSE, domain = "R-leem")
-      }
-      if (!any(names(argaddit) == "size")) {
-        size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
-        argaddit$size <- as.numeric(size)
-      }
-      if (lower.tail) {
-
-        # Desabilitar warnings global
-        #options(warn = - 1)
-        war <- options(warn = - 1)
-        on.exit(options(war))
-        xvq <- 2*q
-        xvq1 <- -2*q
-        if ( q >= 0) {
-          xvq <- 2*q
-          xvq1 <- -2*q
-        }
-        if ( q == 0 ) { xvq <- 10*( 1 + q) }
-        if ( q == 0 ) { xvq1 <- -10*(1 + q) }
-        plotcurve <- function(q, s, p){
-          x <- xvq1:xvq
-          fx <- dnbinom(x,s,p)
-          xlim <- c(xvq1, xvq)
-          ylim <- c(min(fx), max(fx) + (max(fx)/2))
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(f[X](x)), xlab = "X",main = gettext("Distribution Function: Negative Binomial", domain = "R-leem"))
-          x1 <- q:xvq1
-          fx1 <- dnbinom(x1,s,p)
-          x2 <- q:xvq
-          fx2 <- dnbinom(x2,s,p)
-          lines(x2, fx2, type = "h", lwd = 2)
-          points(x2, fx2, lwd = 2, pch = 19)
-          lines(x1, fx1, type = "h", panel.first = grid(), lwd = 2, col = "red")
-          points(x1, fx1, lwd = 2, col = "red", pch = 19)
-          abline(v = s, lty = 2)
-          qq <- round(q, digits = rounding)
-          qqaux <- round(q, digits = rounding)
-          Pr <- round(pnbinom(qq,s,p,lower.tail = T), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
-               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
-          axis(side=1, at=as.character(c(xvq1, qqaux)), tick = TRUE, lwd = 1,
-               col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P(X<=~ q~ ";" ~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n", list(q = qq, Pr = Pr, si = s, po = p))
-          )
-        }
-        if (gui == "plot" ) {
-          pro <- argaddit$prob
-          size <- argaddit$size
-          prob <- pnbinom(q = q , size = size , prob = pro ,lower.tail = T)
-          plotcurve(q,size,pro)
-        }
-        if (gui == "rstudio") {
-          xvq <- 2*q
-          xvq1 <- -2*q
-          if ( q >= 0) {
-            xvq <- 2*q
-            xvq1 <- -2*q
-          }
-          if ( q == 0 ) { xvq <- 10*( 1 + q) }
-          if ( q == 0 ) { xvq1 <- -10*(1 + q) }
-          pro <- argaddit$prob
-          size <- argaddit$size
-          manipulate::manipulate(plotcurve(q, pro, size),
-                                 q = manipulate::slider(xvq1,xvq, q),
-                                 pro = manipulate::slider(0.1,1, pro ),
-                                 size = manipulate::slider(1,xvq, size))
-          prob <- pnbinom(q,pro,size,lower.tail = TRUE)
-        }
-      }  else {
-        xvq <- 2*q
-        xvq1 <- -2*q
-        if ( q >= 0) {
-          xvq <- 2*q
-          xvq1 <- -2*q
-        }
-        if ( q == 0 ) { xvq <- 10*( 1 + q) }
-        if ( q == 0 ) { xvq1 <- -10*(1 + q) }
-        plotcurve <- function(q, s, p){
-          x <- xvq1:xvq
-          fx <- dnbinom(x,s,p)
-          xlim <- c(xvq1, xvq)
-          ylim <- c(min(fx), max(fx) + (max(fx)/2))
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(f[X](x)), xlab = "X",main = gettext("Distribution Function: Negative Binomial", domain = "R-leem"))
-          x1 <- xvq1:q
-          fx1 <- dnbinom(x1,s,p)
-          lines(x1, fx1, type = "h", lwd = 2, )
-          points(x1, fx1, lwd = 2, pch = 19)
-          if (q < 0){
-            x2 <- (q - 1):xvq
-          }
-          if (q > 0){
-            x2 <- (q+1):xvq
-          }
-          fx2 <- dnbinom(x2,s,p)
-          lines(x2, fx2, type = "h", lwd = 2,panel.first = grid(col = "gray90"),col = "red")
-          points(x2, fx2, lwd = 2, pch = 19,col = "red")
-          abline(v = s, lty = 2)
-          qq <- round(q, digits = rounding)
-          qqaux <- round(q, digits = rounding)
-          Pr <- round(pnbinom(qq,s,p,lower.tail = F), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          if (q > 0){
-            axis(side = 1, at = c(qqaux,xvq),col = "red", lwd.ticks = 0)
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(P(X>~ q~ ";"~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n", list(q = qq, Pr = Pr, si = s, po = p))
-            )
-          }
-          if (q < 0){
-            axis(side = 1, at = c(qqaux,xvq),col = "red", lwd.ticks = 0)
-            legend("topleft",
-                   bty = "n", fill = "red",
-                   legend = substitute(P(X<~ q~ ";"~ size == si ~ ";" ~ prob == po) == Pr ~ "\n\n", list(q = qq, Pr = Pr, si = s, po = p))
-            )
-          }
-          axis(side = 1, at = qqaux,col = "red", font = 2, col.axis = "red")
-          abline(v = qqaux, lty = 2, col = "red")
-        }
-        if (gui == "plot" ) {
-          pro <- argaddit$prob
-          size <- argaddit$size
-          prob <- pnbinom(q = q , size = size , prob = pro ,lower.tail = F)
-          plotcurve(q,size,pro)
-        }
-        if (gui == "rstudio") {
-          xvq <- 2*q
-          xvq1 <- -2*q
-          if ( q >= 0) {
-            xvq <- 2*q
-            xvq1 <- -2*q
-          }
-          if ( q == 0 ) { xvq <- 10*( 1 + q) }
-          if ( q == 0 ) { xvq1 <- -10*(1 + q) }
-          pro <- argaddit$prob
-          size <- argaddit$size
-          manipulate::manipulate(plotcurve(q, pro, size),
-                                 q = manipulate::slider(xvq1,xvq, q),
-                                 pro = manipulate::slider(0.1,1, pro ),
-                                 size = manipulate::slider(1,xvq, size))
-          prob <- pnbinom(q,pro,size,lower.tail = F)
-        }
-      }
-    }#############INCORRECT
-    if (dist == "geometric") {
-      if (!any(names(argaddit) == "probability")) {
-        probability <- readline(gettext("Insert the value of 'probability' argument: ", domain = "R-leem"))
-        argaddit$probability <- as.numeric(probability)
-      }
-      if (lower.tail) {
-        plotcurve <- function(q, probability) {
-          rmin <- -5*q
-          rmax <- 5*q
-          if (rmin < 0) rmin <- 0
-          x <- rmin:rmax
-          x1 <- rmin:q
-          x2 <- q:rmax
-          probx <-  dgeom(x, prob = probability)
-          probx1 <- dgeom(x1, prob = probability)
-          probx2 <- dgeom(x2, prob = probability)
-          xlim <- c(rmin, rmax)
-          ylim <- c(min(probx), max(probx) + 0.2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(P[X](x)), xlab = "X",main = gettext("Distribution Function: Geometric", domain = "R-leem"))
-          lines(x2, probx2, type = "h", lwd = 2)
-          points(x2, probx2, lwd = 2, pch = 19)
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
-          points(x1, probx1, lwd = 2, col = "red", pch = 19)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pgeom(qq, prob = probability, lower.tail = T), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side=1, at=qqaux, tick = TRUE, lwd = 0,
-               col="red", font = 2, lwd.ticks = 1, col.axis = "red")
-          axis(side=1, at=as.character(c(0, qqaux)), tick = TRUE, lwd = 1,
-               col="red", font = 2, labels = FALSE)
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P(X<= ~ q ~ " ;" ~ prob == probability) == Pr ~ "\n\n" , list(q = qq, Pr = Pr, probability = probability))
-          )
-        }
+      prob <- argaddit$prob
+      if (isTRUE(lower.tail)) {
         if (gui == "plot") {
-          probability <- argaddit$probability
-          prob <- pgeom(q = q, prob = probability)
-          plotcurve(q, probability)
+          plotpgeomlttplot(q, prob, rounding, main)
         }
         if (gui == "rstudio") {
-          probability <- argaddit$probability
-          prob <- pgeom(q = q, prob = probability)
-          manipulate::manipulate(plotcurve(q, probability),
-                                 q = manipulate::slider(0, q + 30, q),
-                                 p = manipulate::slider(probability, probability + 200, probability)
-          )
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
-      } else {
-        plotcurve <- function(q, probability) {
-          rmin <- -5*q
-          rmax <-  5*q
-          if (rmin < 0) rmin <- 0
-          x <- rmin:rmax
-          x1 <- rmin:q
-          x2 <- q:rmax
-          probx <- dgeom(x, prob = probability)
-          probx1 <- dgeom(x1, prob = probability)
-          probx2 <- dgeom(x2, prob = probability)
-          xlim <- c(rmin, rmax)
-          ylim <- c(min(probx), max(probx) +0.2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1)
-          axis(2)
-          title(ylab = expression(p[X](x)), xlab = "X", main = gettext("Distribution Function: Geometric", domain = "R-leem"))
-          lines(x2, probx2, type = "h", lwd = 2, col = "red")
-          points(x2, probx2, lwd = 2, col = "red", pch = 19)
-          lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
-          points(x1, probx1, lwd = 2, pch = 19)
-          qq <- round(q, digits = 2)
-          qqaux <- round(q, digits = 2)
-          Pr <- round(pgeom(qq, prob = probability, lower.tail = T), rounding)
-          Pr <- gsub("\\.", ",", Pr)
-          qq <- gsub("\\.", ",", qq)
-          axis(side = 1, at = c(qqaux,rmax),col = "red",labels = FALSE,lwd.ticks = 0)
-          axis(side = 1, at = qqaux, col = "red",col.axis="red", font = 2)
-          abline(v = qqaux, lty = 2, col = "red")
-          legend("topleft",
-                 bty = "n", fill = "red",
-                 legend = substitute(P(X>~ q ~ " ;" ~ prob == probability) == Pr ~ "\n\n" , list(q = qq, Pr = Pr, probability = probability))
-          )
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
-        if (gui == "plot") {
-          probability <- argaddit$probability
-          prob <- pgeom(q = q, prob = probability, lower.tail= FALSE)
-          plotcurve(q, probability)
-        }
-        if (gui == "rstudio") {
-          probability <- argaddit$probability
-          prob <- pgeom(q = q, prob = probability, lower.tail = FALSE)
-          manipulate::manipulate(plotcurve(q, lambda),
-                                 q = manipulate::slider(q, q + 30, q),
-                                 p = manipulate::slider(probability, probability + 200, probability)
-          )
-        }
+        prob <- round(pgeom(q, prob), rounding)
       }
-    }
+      if (isFALSE(lower.tail)) {
+        if (gui == "plot") {
+          plotpgeomltfplot(q, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- round(pgeom(q, prob, lower.tail = FALSE), rounding)
+      }
+      if(is.null(lower.tail)){
+        if (gui == "plot") {
+          plotpgeomltnplot(q, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- round(dgeom(q, prob), rounding)
+      }
+          }
   }
   prob <- round(prob, rounding)
   if (porcentage == TRUE) prob <- prob * 100
