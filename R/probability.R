@@ -659,8 +659,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
         # Calculates the desired probability
-        prob <- plnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
-          plnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
+        prob <- plnorm(q[1], meanlog = mu, sdlog = sigma, lower.tail = T) +
+          plnorm(q[2], meanlog = mu, sdlog = sigma, lower.tail = F)
       }
       if (dist == "tukey") {
         stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
@@ -1813,7 +1813,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "tcltk") {
           stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
-        prob <- plnorm(q = q[2], mean = mu, sd=sigma) - plnorm(q = q[1], mean = mu, sd=sigma)
+        prob <- plnorm(q = q[2], meanlog = mu, sdlog=sigma) - plnorm(q = q[1], meanlog = mu, sdlog=sigma)
       }
       if (dist == "tukey") {
         stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
