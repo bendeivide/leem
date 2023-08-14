@@ -4,7 +4,7 @@
 \alias{apf}
 \title{Plot of probability function of any discrete variable}
 \usage{
-apf(x, p, main = NULL, xlab = NULL, ylab = NULL)
+apf(x, p, main = NULL, xlab = NULL, ylab = NULL, ...)
 }
 \arguments{
 \item{x}{numeric vector of values of \eqn{X}. See \strong{Details}.}
