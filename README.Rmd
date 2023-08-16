@@ -27,11 +27,11 @@ A versão lançada do pacote `leem` está disponível no
 install.packages("leem")
 ```
 
-E a versão em desenvolvimento no [GitHub](https://github.com/) com:
+E a versão em desenvolvimento no [GitHub](https://github.com/) (**Preferível**) com:
 
 ``` r
 # Instalar os pacotes dependentes
-pkgs <- c("manipulate", "tkRplotR", "tkrplot", "crayon")
+pkgs <- c("manipulate", "tkRplotR", "tkrplot", "crayon", "diagram")
 install.packages(pkgs)
 # install.packages("devtools")
 devtools::install_github("bendeivide/leem")
