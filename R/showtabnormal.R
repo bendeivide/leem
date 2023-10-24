@@ -9,6 +9,7 @@
 #' # Example 1
 #' showtabnormal(zvalue)
 #' @importFrom diagram curvedarrow
+
 #' @export
 showtabnormal <- function(z) {
   # Change decimals
