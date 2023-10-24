@@ -29,7 +29,6 @@
 #  @import shiny
 #' @export
 Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding = 2, gui = "plot", mfrow = c(1, 2), type = "both", ...) {
-  if (p>1) stop("The 'p' argument are very large, please insert a value correct for probabilities!", call. = FALSE)
   argaddit <- list(...)
   argdef <- formals(Q)
   if (dist == "normal") {
