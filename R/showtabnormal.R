@@ -1,4 +1,5 @@
 #' @importFrom diagram curvedarrow
+
 #' @export
 showtabnormal <- function(z) {
   # Change decimals
