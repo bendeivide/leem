@@ -16,7 +16,27 @@ print.leem <- function(x, ...) {
          htest = output_htest(x),
          table = output_table(x),
          newleem = output_newleem(x),
-         rprob = output_rprob(x))
+         rprob = output_rprob(x),
+         confint = output_confint(x))
+}
+
+output_confint <- function(x) {
+  cat("\n\n", crayon::bgGreen$bold(x$title), "\n")
+  # Descritive statistics
+  cat(crayon::blue$underline$bold(gettext("Descritive Statistics:\n", domain = "R-leem")),
+      crayon::blue(gettext("  Sample mean:", domain = "R-leem")), x$mean, "\n",
+      crayon::blue(gettext("            n:", domain = "R-leem")), x$n, "\n",
+      crayon::blue(gettext("Std dev (Pop):", domain = "R-leem")), x$sd, "\n"
+      )
+  # Measures of interval
+  cat(crayon::blue$underline$bold(gettext("Measures of interval:\n", domain = "R-leem")),
+      crayon::blue(gettext("   Confidence level:", domain = "R-leem")), x$clevel, "\n",
+      crayon::blue(gettext(" Significance level:", domain = "R-leem")), x$alpha, "\n",
+      crayon::blue(gettext("     Critical point:", domain = "R-leem")), x$cp, "\n"
+  )
+  # Measures of interval
+  cat(crayon::red$underline$bold(gettext("\nClass interval:", domain = "R-leem")),
+      " [", x$confint[1], ", ", x$confint[2], "]", sep = "")
 }
 
 output_htest <- function(x) {
