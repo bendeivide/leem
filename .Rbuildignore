@@ -5,9 +5,6 @@ README.md
 README.html
 _Suporte
 .gitignore
-images
-LEEM
-logo\.png
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
