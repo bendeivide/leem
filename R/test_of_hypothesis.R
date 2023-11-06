@@ -60,7 +60,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
         }else sdev <- argaddit$sd
       }
     }
-    if (any(alternative == c("two.sided", "t", "T"))) {
+    if (any(alternative == c("two.sided", "t", "T"))) {d
       if (is.null(y)) {
         if(prop == TRUE){
           title <- paste(gettext("  One Sample z-test proportion (Two-sided test) \n", domain = "R-leem"))
@@ -364,7 +364,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
         aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
 
 
-        axis(side = 1, at = c(ztab[1], 4), font = 2, labels = FALSE, lwd.ticks = 0,
+        axis(side = 1, at = c(ztab[1], 4), font = 2, labels = FALSE, lwd.ticks = 1,
              col.axis = "#cc0000", col.ticks = "#cc0000", col = "#559ee8")
 
         axis(side=1, at=as.character(c( -4, ztab[1])), tick = TRUE, lwd = 1,
@@ -588,7 +588,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
       h0 <- readline("Insert the value of null hypothesis? ")
       h0 <- as.numeric(h0)
     }
-    if (alternative == "two.sided") {
+    if (any(alternative == c("two.sided", "t", "T"))) {
       if (is.null(y)) {
         title <- paste(gettext("  One Sample t-test (Two-sided test) \n", domain = "R-leem"))
         nullhyp <- paste(gettext("  H0: mu = ", domain = "R-leem"), round(h0, 2),
@@ -696,58 +696,67 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
                         decision2 = decision2, conclusion = conclusion)
       }
       if (plot == TRUE) {
-        par(mar = c(20,4,4,4))
-        x <- seq(- 5 * 1, ttab[1], by = 0.01)
-        z <- seq(ttab[2],  5, by = 0.01)
-        y <- seq( - 5, + 5, by = 0.01)
+        par(mar = c(10,4,4,4))
+        x <- seq(- 4 * 1, ttab[1], by = 0.01)
+        z <- seq(ttab[2],  4, by = 0.01)
+        y <- seq( - 4, + 4, by = 0.01)
         fx <- dt(x, df = nu)
         fz <- dt(z,df = nu)
         fy <- dt(y, df = nu)
-        curve(dt(x, df = nu),  - 5 , + 5 ,
+        curve(dt(x, df = nu),  - 4, + 4,
               ylim = c(0.0, 1.2 * max(fx,fy,fz)),xlab = "X",
               ylab = expression(f[X](x)),
-              panel.first = grid(col="gray90"))
+              panel.first = grid(col="gray90"), lwd = 5)
         polygon(c(y, rev(y)),
                 c(fy, rep(0, length(fy))),
-                col="#009E73")
+                col="#99ccff")
         polygon(c(x, rev(x)),
                 c(fx, rep(0, length(fx))),
-                col="red")
+                col="#cc0000")
         polygon(c(z,rev(z)), c(fz,rep(0,length(fz))),
-                col="red" )
+                col="#cc0000")
         abline(v = ttab[1], lty=2, col = "red")
         abline(v = ttab[2], lty=2, col = "red")
         abline(v = ttest, lty=2, col = "blue")
-        text(-2.5, 0.3, "Critical point")
-        arrows(ttab[1] ,0.14, -2.3, 0.3)
-        text(2.5, 0.3, "Critical point")
-        arrows(ttab[2] ,0.14,2.3, 0.3)
-        axis(side = 1, at = c(ttab[1],ttab[2]),labels = c(ttab[1],ttab[2]), font = 2, col.axis = "red", col = "#009E73")
-        axis(side=1, at=as.character(c( - 5, ttab[1])), tick = TRUE, lwd = 1,
-             col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-        axis(side=1, at=as.character(c(ttab[2], + 5)), tick = TRUE, lwd = 1,
-             col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-        axis(side = 1, at = as.character(c(ttest)), tick = TRUE, lwd = 1,
-             font = 2, lwd.ticks = 0, labels = T, col.axis = "blue",  col = "blue")
+        text(-2.5, 0.3, expression(bold("Critical point")))
+        arrows(ttab[1] ,0.14, -2.3, 0.27)
+        text(2.5, 0.3, expression(bold("Critical point")))
+        arrows(ttab[2] ,0.14, 2.3, 0.27)
+        aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+        axis(side = 1, at = c(ttab[1],ttab[2]), font = 2, labels = FALSE,
+             col.axis = "#cc0000", col.ticks = "#cc0000", col = "#559ee8")
+        axis(side=1, at=as.character(c( - 4, ttab[1])), tick = TRUE, lwd = 1,
+             col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
+        axis(side=1, at=as.character(c(ttab[2], + 4)), tick = TRUE, lwd = 1,
+             col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
+        axis(side = 1, at = c(ttab[1],ttab[2]), lwd = 0, 
+             col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)
+        axis(side = 1, at = ttest, lwd = 0, 
+             col = "blue", font = 2, tick = TRUE, col.axis="blue", pos = aux2)
+        axis(side = 1, at = ttest, tick = TRUE, lwd = 1,
+             col="blue", lwd.ticks = 1, labels = FALSE)
         title("Test of hypothesis: T-Test.")
-        text(0,0.3,"ACCEPT H0" )
-        text(ttab[1] - 1 , 0.1, "RRH0")
-        text(ttab[2] + 1 ,0.1,"RRH0")
-        arrows(ttest, 0.05, 3, 0.19)
-        text(3.1, 0.2, "ttest")
-        mtext("Step 1: Hypothesis", side = 1, line = 5, adj = 0, col = "red")
-        mtext("___________________", side = 1, line = 5, adj = 0, col = "red")
-        mtext(t = nullhyp  , side = 1, line = 6, adj = 0)
-        mtext(t = althyp , side = 1, line = 7, adj = 0)
-        mtext("Step 2: Significante level ", side = 1, line = 10, adj = 0, col = "red")
-        mtext("______________________", side = 1, line = 10, adj = 0, col = "red")
-        mtext(t = signlevel  , side = 1, line = 11, adj = 0)
-        mtext("Step 3: Rule of decision ", side = 1, line = 5, adj = 1, col = "red")
-        mtext("______________________", side = 1, line = 5, adj = 1, col = "red")
-        mtext(decisionplot, side = 1, line = 6, adj = 1)
-        mtext("Step 4: Conclusion ", side = 1, line = 10, adj = 1, col = "red")
-        mtext("_________________", side = 1, line = 10, adj = 1, col = "red")
-        mtext(conclusionplot, side = 1, line = 11, adj = 1)
+        text(0,0.1, expression(bold("ACCEPT H0" )))
+        text(ttab[1] - 1 , 0.1, expression(bold("RRH0")))
+        text(ttab[2] + 1 ,0.1, expression(bold("RRH0")))
+        arrows(ttest, 0.27, -1.5, 0.33)
+        text(-1.7, 0.35, expression(bold("ttest")))
+        mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
+        mtext(t = nullhyp  , side = 1, line = 4, adj = 0)
+        mtext(t = althyp , side = 1, line = 5, adj = 0)
+
+        mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
+        mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
+        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+
+        mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
+        mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
+        mtext(decisionplot, side = 1, line = 4, adj = 1)
+
+        mtext("Step 4: Conclusion", side = 1, line = 6, adj = 1, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 6, adj = 1, col = "#0099ff")
+        mtext(conclusionplot, side = 1, line = 7, adj = 1)
       }
     }
     if (any(alternative == c("less", "l", "L"))) {
@@ -846,49 +855,60 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
                         decision2 = decision2, conclusion = conclusion)
       }
       if (plot == TRUE) {
-        par(mar = c(20,4,4,4))
+        par(mar = c(10,4,4,4))
         x <- seq(- 4 , ttab[1], by = 0.01)
         y <- seq(ttab[1],+ 4, by = 0.01)
         fx <- dt(x, df = nu)
         fy <- dt(y, df = nu)
         curve(dt(x, df = nu), - 4 , + 4  ,
               ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
-              panel.first = grid(col="gray90"))
+              panel.first = grid(col="gray90"), lwd = 5)
         polygon(c(y, rev(y)),
                 c(fy, rep(0, length(fy))),
-                col="#009E73")
+                col="#99ccff")
         polygon(c(x, rev(x)),
                 c(fx, rep(0, length(fx))),
-                col="red")
+                col="#cc0000")
         abline(v = ttab[1], lty=2, col = "red")
         abline(v = ttest, lty=2, col = "blue")
-        text(-2.5, 0.3, "Critical point")
-        arrows(ttab[1] ,0.14, -2.3, 0.3)
-        axis(side = 1, at = c( "",ttab[1]),labels = c(-4, ttab[1]), font = 2, col.axis = "red", col = "#009E73")
-        axis(side=1, at=as.character(c(  -4, ttab[1])), tick = TRUE, lwd = 1,
-             col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-        axis(side=1, at=as.character(c(ttab[1], + 4)), tick = TRUE, lwd = 1,
-             col="#009E73", font = 2, lwd.ticks = 0, labels = FALSE)
-        axis(side = 1, at = as.character(c(ttest)), tick = TRUE, lwd = 1,
-             font = 2, lwd.ticks = 0, labels = T, col.axis = "blue",  col = "blue")
+        text(-2.5, 0.3, expression(bold("Critical point")))
+        arrows(ttab[1] ,0.14, -2.1, 0.28)
+        aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+
+
+        axis(side = 1, at = c(ttab[1], 4), font = 2, labels = FALSE, lwd.ticks = 0,
+             col.axis = "#cc0000", col.ticks = "#cc0000", col = "#559ee8")
+        axis(side=1, at=as.character(c( -4, ttab[1])), tick = ttab[1], lwd = 1,
+             col="#cc0000", font = 2, lwd.ticks = 1, labels = FALSE)
+        axis(side = 1, at = c("",ttab[1]), lwd = 0, 
+             col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)  
+        axis(side = 1, at = ttest, lwd = 0, 
+             col = "blue", font = 2, tick = TRUE, col.axis="blue", pos = aux2)
+        axis(side = 1, at = ttest, tick = TRUE, lwd = 1,
+             col="blue", lwd.ticks = 1, labels = FALSE)
+
+
         title("Test of hypothesis: T-Test.")
-        text(0, 0.3, "ACCEPT H0")
-        text(-2.5, 0.1, "RRH0")
-        arrows(ttest ,0.05, 3, 0.19)
-        text(3.1, 0.2, "ttest")
-        mtext("Step 1: Hypothesis", side = 1, line = 5, adj = 0, col = "red")
-        mtext("___________________", side = 1, line = 5, adj = 0, col = "red")
-        mtext(t = nullhyp  , side = 1, line = 6, adj = 0)
-        mtext(t = althyp , side = 1, line = 7, adj = 0)
-        mtext("Step 2: Significante level ", side = 1, line = 10, adj = 0, col = "red")
-        mtext("______________________", side = 1, line = 10, adj = 0, col = "red")
-        mtext(t = signlevel  , side = 1, line = 11, adj = 0)
-        mtext("Step 3: Rule of decision ", side = 1, line = 5, adj = 1, col = "red")
-        mtext("______________________", side = 1, line = 5, adj = 1, col = "red")
-        mtext(decisionplot, side = 1, line = 6, adj = 1)
-        mtext("Step 4: Conclusion ", side = 1, line = 10, adj = 1, col = "red")
-        mtext("_________________", side = 1, line = 10, adj = 1, col = "red")
-        mtext(conclusionplot, side = 1, line = 11, adj = 1)
+        text(0, 0.1, expression(bold("ACCEPT H0")))
+        text(-2.5, 0.1, expression(bold("RRH0")))
+        arrows(ttest , 0.27, -2.1, 0.38)
+        text(-2.3, 0.4, expression(bold("ttest")))
+        mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
+        mtext(t = nullhyp  , side = 1, line = 4, adj = 0)
+        mtext(t = althyp , side = 1, line = 5, adj = 0)
+
+        mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
+        mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
+        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+
+        mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
+        mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
+        mtext(decisionplot, side = 1, line = 4, adj = 1)
+
+        mtext("Step 4: Conclusion", side = 1, line = 6, adj = 1, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 6, adj = 1, col = "#0099ff")
+        mtext(conclusionplot, side = 1, line = 7, adj = 1)
       }
     }
     if (any(alternative == c("greater", "g", "G"))) {
