@@ -50,14 +50,18 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
       }
       }else{
         if (!any(names(argaddit) == "sd")) {
-          sdev <- c(readline("Insert the value of population 1 standard deviation: "),
-                    readline("Insert the value of population 2 standard deviation: "))
-          sdev <- as.numeric(sdev)
+          sdev <- c(as.numeric(readline("Insert the value of population 1 standard deviation: ")),
+                    as.numeric(readline("Insert the value of population 2 standard deviation: ")))
         }else if(length(argaddit$sd) < 1){
-          sdev <- c(readline("Insert the value of population 1 standard deviation: "),
-                    readline("Insert the value of population 2 standard deviation: "))
-          sdev <- as.numeric(sdev)
+          sdev <- c(as.numeric(readline("Insert the value of population 1 standard deviation: ")),
+                    as.numeric(readline("Insert the value of population 2 standard deviation: ")))
         }else sdev <- argaddit$sd
+        if(sdev[1] > length(x) || sdev[2] > length(y)){
+          stop("Error: Incorrect standard deviantion argument for 2 populations.", call. = FALSE, domain = "R-leem")
+        }
+        if ((length(x) > length(y) && sdev[1] <= sdev[2])||((length(x) < length(y) && sdev[1] >= sdev[2]))){
+            stop("Error: Incorrect standard deviantion argument for 2 populations.", call. = FALSE, domain = "R-leem")
+          }
       }
     }
     if (any(alternative == c("two.sided", "t", "T"))) {
@@ -130,7 +134,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
           signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha           ,2),sep = "")
           n <- length(x)
           n1 <- length(y)
-          ztest <- round((mean(x) - mean(y)) /sqrt((sdev[1]^2/n)-(sdev[2]^2 /n1)), 2)
+          ztest <- round(((mean(x) - mean(y))/sqrt(((sdev[1]^2)/n)-((sdev[2]^2)/n1))), 2)
           ztab <- round(qnorm(1 - (alpha)/2), 2)
           ztab <- round(c(-ztab, ztab), 2)
           pvalue <- 2 * pnorm(abs(ztest), lower.tail = FALSE)
@@ -198,16 +202,16 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
         aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
         axis(side = 1, at = c(ztab[1],ztab[2]), font = 2, labels = FALSE,
              col.axis = "#cc0000", col.ticks = "#cc0000", col = "#559ee8")
-        axis(side=1, at=as.character(c( - 5, ztab[1])), tick = TRUE, lwd = 1,
+        axis(side=1, at=as.character(c( - 4, ztab[1])), tick = TRUE, lwd = 1,
              col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
-        axis(side=1, at=as.character(c(ztab[2], + 5)), tick = TRUE, lwd = 1,
+        axis(side=1, at=as.character(c(ztab[2], + 4)), tick = TRUE, lwd = 1,
              col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side = 1, at = c(ztab[1],ztab[2]), lwd = 0, 
              col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)
         axis(side = 1, at = ztest, lwd = 0, 
              col = "blue", font = 2, tick = TRUE, col.axis="blue", pos = aux2)
         axis(side = 1, at = ztest, tick = TRUE, lwd = 1,
-             col="blue", lwd.ticks = 1)
+             col="blue", lwd.ticks = 1, labels = FALSE)
 
         if(prop == TRUE){
           title("Test of proportion: Z-Test.")
@@ -588,7 +592,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
     nu <- as.numeric(nu)
     sdev <- df
     if (missing(h0)) {
-      h0 <- readline("Insert the value of null hypothesis? ")
+      h0 <- readline("Insert the value of null hypothesis: ")
       h0 <- as.numeric(h0)
     }
     if (any(alternative == c("two.sided", "t", "T"))) {
@@ -648,22 +652,15 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
           df <- n1+n2-2
           sp <- ((n1-1)*var(x) + (n2-1)*var(y))/df
         }else{
-          df <- ((((var(x)^2)/ n1) + ((var(y)^2) / n2))^2) / (((((var(x)^2)/n1)^2)/n1 - 1) + (((var(x)^2)/n2)^2)/n2 - 1)
-          sp <- ((n1 - 1) * var(x) + (n2 - 1) * var(y)) / df
+          df <- ((sd(x)^2/n1)^2 + 2*(sd(x)^2/n1)*(sd(y)^2/n2) + (sd(y)^2/n2)^2)/((((sd(x)^2/n1)^2)/(n1-1))+(((sd(y)^2/n2)^2)/(n2-1)))
+          sp <- sqrt(((sd(x)^2)/n1)+((sd(y)^2)/n2))
         }
         title <- paste(gettext("  Two Sample t-test (Two-sided test) \n", domain = "R-leem"))
-        nullhyp <- paste(gettext("  H0: μ1 = μ2", domain = "R-leem"),
-                         sep = "")
-        althyp <- paste(gettext("  H1: μ1 != μ2", domain = "R-leem"),
-                        sep = "")
-        signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha, 2),
-                           sep = "")
+        nullhyp <- paste(gettext("  H0: μ1 = μ2", domain = "R-leem"), sep = "")
+        althyp <- paste(gettext("  H1: μ1 != μ2", domain = "R-leem"), sep = "")
+        signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
         ttest <- round((mean(x) - mean(y)) / sqrt(sp*(1/n1+1/n2)), 2)
-        if (alternative == "two.sided"){
-          ttab <- round(qt(1 - (alpha)/2, df), 2)
-        } else {
-          ttab <- round(qt(1 - alpha, df), 2)
-        }
+        ttab <- round(qt(1 - (alpha)/2, df), 2)
         ttab <- round(c(-ttab, ttab), 2)
         pvalue <- 2 * pt(df, abs(ttest), lower.tail = FALSE)
         if (abs(ttest) >= abs(ttab[2])) {
@@ -1076,6 +1073,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
         mtext(conclusionplot, side = 1, line = 7, adj = 1)
       }
     }
+  }
+  if (test == "chisqtest"){
+    stop("Em desenvolvimento", .call = FALSE, domain = "R-leem")
+  }
+  if (test == "ftest"){
+    stop("Em desenvolvimento", .call = FALSE, domain = "R-leem")
   }
   attr(results, "output") <- "htest"
   class(results) <- "leem"
