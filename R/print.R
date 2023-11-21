@@ -208,6 +208,64 @@ output_htest <- function(x) {
       cat(crayon::bold(x$conclusion))
     }
   }
+  if (x$test == "chisq") {
+
+    if(any(x$alternative == c("less","l","L"))){
+
+      cat("\n\n", crayon::bgGreen$bold(x$title), "\n")
+      # Step 1
+      cat(crayon::blue$underline$bold(gettext("Step 1:", domain = "R-leem")),
+          crayon::blue(gettext("Hypothesis", domain = "R-leem")), "\n")
+      cat(crayon::bold(x$nullhyp), "\n")
+      cat(crayon::bold(x$althyp), "\n\n")
+      # Step 2
+      cat(crayon::blue$underline$bold(gettext("Step 2:", domain = "R-leem")),
+          crayon::blue(gettext("Significance level", domain = "R-leem")), "\n")
+      cat(crayon::bold(x$signlevel), "\n\n")
+      # Step 3
+      cat(crayon::blue$underline$bold(gettext("Step 3:", domain = "R-leem")),
+          crayon::blue(gettext("Rule of decision", domain = "R-leem")), "\n")
+      cat(crayon::green$bold(gettext("   If |TR| < |CP| => Reject H0!", domain = "R-leem")), "\n")
+      cat(crayon::green(gettext("   TR - Test Result; CP - Critical Point", domain = "R-leem")), "\n")
+      cat(crayon::green(gettext("So...", domain = "R-leem")), "\n")
+      cat(crayon::bold(x$decision), "\n")
+      cat(crayon::green(gettext("Otherside...", domain = "R-leem")), "\n")
+      cat(crayon::bold(x$decision2), "\n\n")
+
+      # Step 4
+      cat(crayon::blue$underline$bold(gettext("Step 4:", domain = "R-leem")),
+          crayon::blue(gettext("Conclusion", domain = "R-leem")), "\n")
+      cat(crayon::bold(x$conclusion))
+    }
+
+    if(any(x$alternative == c("greater","g","G"))){
+
+      cat("\n\n", crayon::bgGreen$bold(x$title), "\n")
+      # Step 1
+      cat(crayon::blue$underline$bold(gettext("Step 1:", domain = "R-leem")),
+          crayon::blue(gettext("Hypothesis", domain = "R-leem")), "\n")
+      cat(crayon::bold(x$nullhyp), "\n")
+      cat(crayon::bold(x$althyp), "\n\n")
+      # Step 2
+      cat(crayon::blue$underline$bold(gettext("Step 2:", domain = "R-leem")),
+          crayon::blue(gettext("Significance level", domain = "R-leem")), "\n")
+      cat(crayon::bold(x$signlevel), "\n\n")
+      # Step 3
+      cat(crayon::blue$underline$bold(gettext("Step 3:", domain = "R-leem")),
+          crayon::blue(gettext("Rule of decision", domain = "R-leem")), "\n")
+      cat(crayon::green$bold(gettext("   If |TR| > |CP| => Reject H0!", domain = "R-leem")), "\n")
+      cat(crayon::green(gettext("   TR - Test Result; CP - Critical Point", domain = "R-leem")), "\n")
+      cat(crayon::green(gettext("So...", domain = "R-leem")), "\n")
+      cat(crayon::bold(x$decision), "\n")
+      cat(crayon::green(gettext("Otherside...", domain = "R-leem")), "\n")
+      cat(crayon::bold(x$decision2), "\n\n")
+
+      # Step 4
+      cat(crayon::blue$underline$bold(gettext("Step 4:", domain = "R-leem")),
+          crayon::blue(gettext("Conclusion", domain = "R-leem")), "\n")
+      cat(crayon::bold(x$conclusion))
+    }
+  }
 }
 output_table <- function(x) {
   cat(crayon::silver(gettext("\nTable of frequency \n", domain = "R-leem")))

@@ -17,7 +17,7 @@
 #'
 #' @import crayon
 #' @export
-th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative = c("two.sided","L",
+th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, alternative = c("two.sided","L",
                                                                 "less", "greater","G"), alpha = 0.05, exact = TRUE,
                correct = FALSE, paired = FALSE, plot = FALSE, ...) {
 
@@ -28,7 +28,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
     xfile <- file.choose(new = TRUE)
     x <- read.table(xfile, h = TRUE)
   }
-  if (test == "ztest") {
+  if (any(test ==  c("ztest", "z", "Z", "normal"))) {
     if(prop == TRUE){
         if (!any(names(argaddit) == "pa")) {
           pa <- readline("Insert the value of population sample part? ")
@@ -206,9 +206,9 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
              col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side=1, at=as.character(c(ztab[2], + 4)), tick = TRUE, lwd = 1,
              col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
-        axis(side = 1, at = c(ztab[1],ztab[2]), lwd = 0, 
+        axis(side = 1, at = c(ztab[1],ztab[2]), lwd = 0,
              col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)
-        axis(side = 1, at = ztest, lwd = 0, 
+        axis(side = 1, at = ztest, lwd = 0,
              col = "blue", font = 2, tick = TRUE, col.axis="blue", pos = aux2)
         axis(side = 1, at = ztest, tick = TRUE, lwd = 1,
              col="blue", lwd.ticks = 1, labels = FALSE)
@@ -374,13 +374,13 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
         axis(side=1, at=as.character(c( -4, ztab[1])), tick = TRUE, lwd = 1,
              col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
 
-        axis(side = 1, at = c("",ztab[1]), lwd = 0, 
+        axis(side = 1, at = c("",ztab[1]), lwd = 0,
              col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)
 
         axis(side=1, at=as.character(c( "", ztab[1])), tick = TRUE, labels = FALSE,
              lwd.ticks = 1, col="#cc0000")
 
-        axis(side = 1, at = ztest, lwd = 0, 
+        axis(side = 1, at = ztest, lwd = 0,
              col = "blue", font = 2, tick = TRUE, col.axis="blue", pos = aux2)
         axis(side = 1, at = ztest, tick = TRUE, lwd = 1,
              col="blue", lwd.ticks = 1, labels = FALSE)
@@ -546,12 +546,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
         axis(side=1, at=as.character(c( ztab[2], 4)), tick = TRUE, lwd = 1,
              col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
 
-        axis(side = 1, at = c("",ztab[2]), lwd = 0, 
-             col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)  
+        axis(side = 1, at = c("",ztab[2]), lwd = 0,
+             col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)
 
         axis(side=1, at=as.character(c( "", ztab[2])), tick = TRUE, labels = FALSE,
              lwd.ticks = 1, col="#cc0000")
-        axis(side = 1, at = ztest, lwd = 0, 
+        axis(side = 1, at = ztest, lwd = 0,
              col = "blue", font = 2, tick = TRUE, col.axis="blue", pos = aux2)
         axis(side = 1, at = ztest, tick = TRUE, lwd = 1,
              col="blue", lwd.ticks = 1, labels = FALSE)
@@ -586,7 +586,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
       }
     }
   }
-  if (test == "ttest") {
+  if (any(test ==  c("ttest", "t", "T", "tstudent"))) {
     df <- length(x) - 1
     nu <- df
     nu <- as.numeric(nu)
@@ -729,9 +729,9 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
              col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side=1, at=as.character(c(ttab[2], + 4)), tick = TRUE, lwd = 1,
              col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
-        axis(side = 1, at = c(ttab[1],ttab[2]), lwd = 0, 
+        axis(side = 1, at = c(ttab[1],ttab[2]), lwd = 0,
              col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)
-        axis(side = 1, at = ttest, lwd = 0, 
+        axis(side = 1, at = ttest, lwd = 0,
              col = "blue", font = 2, tick = TRUE, col.axis="blue", pos = aux2)
         axis(side = 1, at = ttest, tick = TRUE, lwd = 1,
              col="blue", lwd.ticks = 1, labels = FALSE)
@@ -882,9 +882,9 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
              col="#cc0000", font = 2, lwd.ticks = 0, labels = FALSE)
         axis(side=1, at=as.character(c( "", ttab[1])), tick = TRUE, labels = FALSE,
              lwd.ticks = 1, col="#cc0000")
-        axis(side = 1, at = c("",ttab[1]), lwd = 0, 
+        axis(side = 1, at = c("",ttab[1]), lwd = 0,
              col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)
-        axis(side = 1, at = ttest, lwd = 0, 
+        axis(side = 1, at = ttest, lwd = 0,
              col = "blue", font = 2, tick = TRUE, col.axis="blue", pos = aux2)
         axis(side = 1, at = ttest, tick = TRUE, lwd = 1,
              col="blue", lwd.ticks = 1, labels = FALSE)
@@ -1038,12 +1038,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
 
         axis(side=1, at=as.character(c( "", ttab[2])), tick = TRUE, labels = FALSE,
              lwd.ticks = 1, col="#cc0000")
-        
-        axis(side = 1, at = c("",ttab[2]), lwd = 0, 
-             col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)    
+
+        axis(side = 1, at = c("",ttab[2]), lwd = 0,
+             col = "#cc0000", font = 2, tick = FALSE, col.axis="#cc0000", pos = aux2)
 
 
-        axis(side = 1, at = ttest, lwd = 0, 
+        axis(side = 1, at = ttest, lwd = 0,
              col = "blue", font = 2, tick = TRUE, col.axis="blue", pos = aux2)
         axis(side = 1, at = ttest, tick = TRUE, lwd = 1,
              col="blue", lwd.ticks = 1, labels = FALSE)
@@ -1074,10 +1074,261 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, p, pa, alternative
       }
     }
   }
-  if (test == "chisqtest"){
-    stop("Em desenvolvimento", .call = FALSE, domain = "R-leem")
+  if (any(test ==  c("chisqtest", "chisq", "CHI", "chisquared"))) {
+    if (any(alternative == c("less", "l", "L"))) {
+      if (is.null(y)) {
+        aux_x <- x
+        sd <- sd(x)
+        df <- length(x)-1
+        if (missing(h0)) {
+            h0 <- readline("Insert the value of null hypothesis: ")
+            h0 <- as.numeric(h0)
+          }
+        if (!any(names(argaddit) == "s")) {
+          s <- readline("Insert the value of population variance: ")
+          s <- as.numeric(s)
+        } else s <- argaddit$s
+        title <- paste(gettext("  One Sample Chi-Squared Test (Unilateral Test) \n", domain = "R-leem"))
+
+
+        nullhyp <- paste(gettext("  H0: sigma^2 = ", domain = "R-leem"), round(h0, 2), sep = "")
+        althyp <- paste(gettext("  H1: sigma^2 != ", domain = "R-leem"), round(h0, 2), sep = "")
+        signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
+
+
+        chitest <- round((df*s)/h0, 2)
+        chitab <- round(qchisq((1-alpha), df, lower.tail = FALSE), 2)
+        pvalue <- 2 * pchisq(abs(chitest), df, lower.tail = FALSE)
+        if (abs(chitest) <= abs(chitab)) {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(chitest), " | < | CP = ", abs(chitab),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < Alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(chitest), " | < | CP = ", abs(chitab), '|')
+          conclusion <- paste(gettext("   We observed by the Chi-Squared Test that hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+
+        } else {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(chitest), " | > | CP = ", abs(chitab),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > Alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(chitest), " | > | CP = ", abs(chitab), '|')
+          conclusion <- paste(gettext("   We observed by the Chi-Squared Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        }
+        results <- list(chitest = chitest, chitab = chitab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+      }
+      else{
+        stop("Em desenvolvimento", .call = FALSE, domain = "R-leem")
+      }
+        if (plot == TRUE) {
+        par(mar = c(11,4,4,4))
+        minimo <- if (chitest <= (-4) * df) chitest - 4 * df else 0
+        maximo <- if (chitest > 4 * df) chitest + 4 * df else 4 * df
+        x <- seq(minimo, chitab, by = 0.01)
+        y <- seq(chitab, maximo, by = 0.01)
+        fx <- dchisq(x, df)
+        fy <- dchisq(y, df)
+        main <- substitute(atop(bold("One Sample Chi-Squared Test (Unilateral Test)"),chi[c]^2 == frac((n-1)*s^2,sigma^2)), list(h0 = h0))
+        curve(dchisq(x, df), minimo, maximo,
+              ylim = c(0, 1.2*max(fx,fy)),  ylab = expression(f[X](x)), xlab="",
+              panel.first = grid(col="gray90"), main = main)
+        polygon(c(y, rev(y)),
+                c(fy, rep(0, length(fy))),
+                col="#99ccff")
+        polygon(c(x, rev(x)),
+                c(fx, rep(0, length(fx))),
+                col="gray")
+        abline(v = chitab, lty=2, col = "#880000")
+
+
+        #text(chitab, 0.8*max(fx,fy), expression(bold("CRITICAL POINT")), col = "#880000")
+        #text(chitest, 0.8*max(fx,fy), expression(bold("CHISQTEST")), col = "blue")
+        legend(chitest, 0.8*max(fx, fy), bg = "#010199", cex=0.8, box.col = "#010199",
+           legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
+        legend(chitab, 0.9*max(fx, fy), bg = "#880000", cex=0.8, box.col = "#880000",
+           legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+
+
+        abline(v = chitest, lty=2, col = "#010199")
+        aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+        axis(side = 1, at = as.character(c(0, chitab)),
+             col = "#888888", col.axis = "#888888", labels = FALSE)
+        axis(side = 1, at = as.character(c(chitab, auxmaximo*10)),
+             col = "#559ee8", col.axis = "#559ee8", labels = FALSE)
+        axis(side = 1, at = chitab, tick = TRUE,
+             col.ticks = "#880000", lwd.ticks = 1, labels = FALSE)
+        axis(side = 1, at = chitab, tick = FALSE,
+             font = 2, col.axis="#880000", pos = aux2)
+        axis(side = 1, at = chitest, tick = FALSE,
+             font = 2, col.axis="#010199", pos = aux2)
+        axis(side = 1, at = chitest, tick = TRUE,
+             col.ticks = "#010199", lwd.ticks = 1, labels = FALSE)
+
+
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+           legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
+
+
+
+        mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
+        mtext(t = substitute(~~H[0]:~sigma^2 >= h0, list(h0 = h0))  , side = 1, line = 4.3, adj = 0)
+        mtext(t =substitute(~~H[1]:~sigma^2 < h0, list(h0 = h0)), side = 1, line = 5.3, adj = 0)
+        mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
+        mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
+        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+
+        mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
+        mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
+        mtext(decisionplot, side = 1, line = 4.3, adj = 1)
+
+        mtext("Step 4: Conclusion", side = 1, line = 6, adj = 1, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 6, adj = 1, col = "#0099ff")
+        mtext(conclusionplot, side = 1, line = 7, adj = 1)
+              }
+
+    }
+    if (any(alternative == c("greater", "g", "G"))) {
+      if (is.null(y)) {
+        aux_x <- x
+        sd <- sd(x)
+        df <- length(x)-1
+        if (missing(h0)) {
+            h0 <- readline("Insert the value of null hypothesis: ")
+            h0 <- as.numeric(h0)
+          }
+        if (!any(names(argaddit) == "s")) {
+          s <- readline("Insert the value of population variance: ")
+          s <- as.numeric(s)
+        } else s <- argaddit$s
+        title <- paste(gettext("  One Sample Chi-Squared Test(Greater Test) \n", domain = "R-leem"))
+        nullhyp <- paste(gettext("  H0: sgima^2 = ", domain = "R-leem"), round(h0, 2), sep = "")
+        althyp <- paste(gettext("  H1: sigma^2 != ", domain = "R-leem"), round(h0, 2), sep = "")
+        signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
+
+        chitest <- round((df*s)/h0, 2)
+        chitab <- round(qchisq(1 - alpha, df), 2)
+        pvalue <- 2 * pchisq(abs(chitest),  df, lower.tail = TRUE)
+        if (abs(chitest) >= abs(chitab)) {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(chitest), " | > | CP = ", abs(chitab),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < Alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(chitest), " | > | CP = ", abs(chitab), '|')
+          conclusion <- paste(gettext("   We observed by the Z Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+        } else {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(chitest), " | < | CP = ", abs(chitab),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > Alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(chitest), " | < | CP = ", abs(chitab), '|')
+          conclusion <- paste(gettext("   We observed by the Z Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        }
+        } else{
+        stop("Em desenvolvimento", .call = FALSE, domain = "R-leem")
+      }
+        results <- list(chitest = chitest, chitab = chitab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+ if (plot == TRUE) {
+        par(mar = c(11,4,4,4))
+        main <- substitute(atop(bold("One Sample Chi-Squared Test (Greater Test)"),chi[c]^2 == frac((n-1)*s^2,sigma^2)), list(h0 = h0))
+        minimo <- if (chitest <= (-4) * df) chitest - 4 * df else 0
+        maximo <- if (chitest > 4 * df) chitest + 4 * df else 4 * df
+        x <- seq(minimo, chitab, by = 0.01)
+        y <- seq(chitab, maximo, by = 0.01)
+        fx <- dchisq(x, df)
+        fy <- dchisq(y, df)
+        curve(dchisq(x, df), minimo, maximo,
+              ylim = c(0, 1.2*max(fx,fy)),  ylab = expression(f[X](x)), xlab="X",
+              panel.first = grid(col="gray90"), main = main)
+        polygon(c(y, rev(y)),
+                c(fy, rep(0, length(fy))),
+                col="gray")
+        polygon(c(x, rev(x)),
+                c(fx, rep(0, length(fx))),
+                col="#99ccff")
+        abline(v = chitab, lty=2, col = "#880000")
+
+
+        #text(chitab, 0.8*max(fx,fy), expression(bold("CRITICAL POINT")), col = "#880000")
+        #text(chitest, 0.8*max(fx,fy), expression(bold("CHISQTEST")), col = "blue")
+        legend(chitest, 0.8*max(fx, fy), bg = "#010199", cex=0.8, box.col = "#010199",
+           legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
+        legend(chitab, 0.9*max(fx, fy), bg = "#880000", cex=0.8, box.col = "#880000",
+           legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+
+
+        abline(v = chitest, lty=2, col = "#010199")
+        aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+        axis(side = 1, at = as.character(c(0, chitab)),
+             col = "#888888", col.axis = "#888888", labels = FALSE)
+        axis(side = 1, at = as.character(c(chitab, auxmaximo*10)),
+             col = "#559ee8", col.axis = "#559ee8", labels = FALSE)
+        axis(side = 1, at = chitab, tick = TRUE,
+             col.ticks = "#880000", lwd.ticks = 1, labels = FALSE)
+        axis(side = 1, at = chitab, tick = FALSE,
+             font = 2, col.axis="#880000", pos = aux2)
+        axis(side = 1, at = chitest, tick = FALSE,
+             font = 2, col.axis="#010199", pos = aux2)
+        axis(side = 1, at = chitest, tick = TRUE,
+             col.ticks = "#010199", lwd.ticks = 1, labels = FALSE)
+
+
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+           legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
+
+
+
+        mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
+        mtext(t = nullhyp  , side = 1, line = 4, adj = 0)
+        mtext(t = althyp , side = 1, line = 5, adj = 0)
+
+        mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
+        mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
+        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+
+        mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
+        mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
+        mtext(decisionplot, side = 1, line = 4, adj = 1)
+
+        mtext("Step 4: Conclusion", side = 1, line = 6, adj = 1, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 6, adj = 1, col = "#0099ff")
+        mtext(conclusionplot, side = 1, line = 7, adj = 1)
+              }
+    }
   }
-  if (test == "ftest"){
+  if (any(test ==  c("ftest", "f", "F"))){
+
     stop("Em desenvolvimento", .call = FALSE, domain = "R-leem")
   }
   attr(results, "output") <- "htest"
