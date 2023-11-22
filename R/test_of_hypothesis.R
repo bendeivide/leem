@@ -1216,7 +1216,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
           s <- readline("Insert the value of population variance: ")
           s <- as.numeric(s)
         } else s <- argaddit$s
-        title <- paste(gettext("  One Sample Chi-Squared Test(Greater Test) \n", domain = "R-leem"))
+        title <- paste(gettext("  One Sample Chi-Squared Test(Unilateral Test) \n", domain = "R-leem"))
         nullhyp <- paste(gettext("  H0: sgima^2 = ", domain = "R-leem"), round(h0, 2), sep = "")
         althyp <- paste(gettext("  H1: sigma^2 != ", domain = "R-leem"), round(h0, 2), sep = "")
         signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
@@ -1233,7 +1233,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
                              gettext(" then reject H0!", domain = "R-leem"), sep = "")
           decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
                                 abs(chitest), " | > | CP = ", abs(chitab), '|')
-          conclusion <- paste(gettext("   We observed by the Z Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+          conclusion <- paste(gettext("   We observed by the Chi-Squared Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
                               round(alpha * 100),
                               gettext("% probability", domain = "R-leem"), sep = "")
           conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
@@ -1246,7 +1246,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
                              gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
           decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
                                 abs(chitest), " | < | CP = ", abs(chitab), '|')
-          conclusion <- paste(gettext("   We observed by the Z Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+          conclusion <- paste(gettext("   We observed by the Chi-Squared Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
                               round(alpha * 100),
                               gettext("% probability", domain = "R-leem"), sep = "")
           conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
@@ -1310,8 +1310,8 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
 
         mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
-        mtext(t = nullhyp  , side = 1, line = 4, adj = 0)
-        mtext(t = althyp , side = 1, line = 5, adj = 0)
+        mtext(t = substitute(~~H[0]:~sigma^2 <= h0, list(h0 = h0))  , side = 1, line = 4.3, adj = 0)
+        mtext(t =substitute(~~H[1]:~sigma^2 > h0, list(h0 = h0)), side = 1, line = 5.3, adj = 0)
 
         mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
         mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
