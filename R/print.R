@@ -55,8 +55,8 @@ output_htest <- function(x) {
       # Step 3
       cat(crayon::blue$underline$bold(gettext("Step 3:", domain = "R-leem")),
           crayon::blue(gettext("Rule of decision", domain = "R-leem")), "\n")
-      cat(crayon::green$bold(gettext("   If |ztest| > |ztab| => Reject H0!", domain = "R-leem")), "\n")
-      cat(crayon::green(gettext("   ztest - test statistic; ztab - critical point", domain = "R-leem")), "\n")
+      cat(crayon::green$bold(gettext("   If |ST| > |CP| or |ST| < |CP|  => Reject H0!", domain = "R-leem")), "\n")
+      cat(crayon::green(gettext("   ST - Statistical Test; CP - Critical Point", domain = "R-leem")), "\n")
       cat(crayon::green(gettext("So...", domain = "R-leem")), "\n")
       cat(crayon::bold(x$decision), "\n")
       cat(crayon::green(gettext("Otherside...", domain = "R-leem")), "\n")
@@ -83,8 +83,8 @@ output_htest <- function(x) {
       # Step 3
       cat(crayon::blue$underline$bold(gettext("Step 3:", domain = "R-leem")),
           crayon::blue(gettext("Rule of decision", domain = "R-leem")), "\n")
-      cat(crayon::green$bold(gettext("   If |ztest| > |ztab| => Reject H0!", domain = "R-leem")), "\n")
-      cat(crayon::green(gettext("   ztest - test statistic; ztab - critical point", domain = "R-leem")), "\n")
+      cat(crayon::green$bold(gettext("   If |ST| < |CP| => Reject H0!", domain = "R-leem")), "\n")
+      cat(crayon::green(gettext("   ST - Statistical Test; CP - Critical Point", domain = "R-leem")), "\n")
       cat(crayon::green(gettext("So...", domain = "R-leem")), "\n")
       cat(crayon::bold(x$decision), "\n")
       cat(crayon::green(gettext("Otherside...", domain = "R-leem")), "\n")
@@ -111,8 +111,8 @@ output_htest <- function(x) {
       # Step 3
       cat(crayon::blue$underline$bold(gettext("Step 3:", domain = "R-leem")),
           crayon::blue(gettext("Rule of decision", domain = "R-leem")), "\n")
-      cat(crayon::green$bold(gettext("   If |ztest| > |ztab| => Reject H0!", domain = "R-leem")), "\n")
-      cat(crayon::green(gettext("   ztest - test statistic; ztab - critical point", domain = "R-leem")), "\n")
+      cat(crayon::green$bold(gettext("   If |ST| > |CP| => Reject H0!", domain = "R-leem")), "\n")
+      cat(crayon::green(gettext("   ST - Statistical Test; CP - Critical Point", domain = "R-leem")), "\n")
       cat(crayon::green(gettext("So...", domain = "R-leem")), "\n")
       cat(crayon::bold(x$decision), "\n")
       cat(crayon::green(gettext("Otherside...", domain = "R-leem")), "\n")
