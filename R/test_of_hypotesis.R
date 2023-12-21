@@ -226,15 +226,14 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
              col = "#010199", font = 2, tick = TRUE, col.axis="#010199", pos = aux3)
         axis(side = 1, at = ztest, tick = TRUE, lwd = 1,
              col="#010199", lwd.ticks = 1, labels = FALSE)
-
-        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
-               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
         legend(ztest, 1.35*max(fx, fy), bg = "#010199", cex=0.6, box.col = "#010199",
                legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
         legend(ztab[1], 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
         legend(ztab[2], 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
 
 
         mtext("Step 1: Hypothesis", side = 1, line = 4, adj = 0, col = "#0099ff", font = 2)
@@ -407,12 +406,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
              col = "#010199", font = 2, tick = TRUE, col.axis="#010199", pos = aux3)
         axis(side = 1, at = ztest, tick = TRUE, lwd = 1,
              col="#010199", lwd.ticks = 1, labels = FALSE)
-        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
-               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
         legend(ztest, 1.35*max(fx, fy), bg = "#010199", cex=0.6, box.col = "#010199",
                legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
         legend(ztab[1], 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
         mtext("Step 1: Hypothesis", side = 1, line = 4, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 4, adj = 0, col = "#0099ff")
         mtext(t = substitute(~~H[0]:~mu[1] <= mu[2])  , side = 1, line = 5.3, adj = 0)
@@ -586,13 +585,13 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
           title(title)
         }
         abline(v = ztest, lty=2, col = "#010199")
-
-        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
-               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
         legend(ztest, 1.35*max(fx, fy), bg = "#010199", cex=0.6, box.col = "#010199",
                legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
         legend(ztab[2], 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
 
         mtext("Step 1: Hypothesis", side = 1, line = 4, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 4, adj = 0, col = "#0099ff")
@@ -763,14 +762,15 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         axis(side = 1, at = ttest, tick = TRUE, lwd = 1,
              col="#010199", lwd.ticks = 1, labels = FALSE)
 
-        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
-               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
         legend(ttest, 1.35*max(fx, fy), bg = "#010199", cex=0.6, box.col = "#010199",
                legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
         legend(ttab[1], 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
         legend(ttab[2], 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
 
 
         mtext("Step 1: Hypothesis", side = 1, line = 4, adj = 0, col = "#0099ff", font = 2)
@@ -919,12 +919,14 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         axis(side = 1, at = ttest, tick = TRUE, lwd = 1,
              col="#010199", lwd.ticks = 1, labels = FALSE)
 
-        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
-               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
         legend(ttest, 1.35*max(fx, fy), bg = "#010199", cex=0.6, box.col = "#010199",
                legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
         legend(ttab, 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+
+
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
 
 
         mtext("Step 1: Hypothesis", side = 1, line = 4, adj = 0, col = "#0099ff", font = 2)
@@ -1077,12 +1079,14 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         axis(side = 1, at = ttest, tick = TRUE, lwd = 1,
              col="blue", lwd.ticks = 1, labels = FALSE)
 
-        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
-               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
+
         legend(ttest, 1.35*max(fx, fy), bg = "#010199", cex=0.6, box.col = "#010199",
                legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
         legend(ttab, 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
 
 
         mtext("Step 1: Hypothesis", side = 1, line = 4 , adj = 0, col = "#0099ff", font = 2)
@@ -1139,7 +1143,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
                              gettext(" then reject H0!", domain = "R-leem"), sep = "")
           decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
                                 abs(chitest), " | > | CP = ", abs(chitab[2]), ' |')
-          conclusion <- paste(gettext("   We observed by the Z Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+          conclusion <- paste(gettext("   We observed by the Chi-Squared Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
                               round(alpha * 100),
                               gettext("% probability", domain = "R-leem"), sep = "")
           conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
@@ -1153,7 +1157,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
                              gettext(" then reject H0!", domain = "R-leem"), sep = "")
           decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
                                 abs(chitest), " | < | CP = ", abs(chitab[1]), ' |')
-          conclusion <- paste(gettext("   We observed by the Z Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+          conclusion <- paste(gettext("   We observed by the Chi-Squared Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
                               round(alpha * 100),
                               gettext("% probability", domain = "R-leem"), sep = "")
           conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
@@ -1167,7 +1171,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
                              gettext(" | then H0 is not rejected!", domain = "R-leem"), sep = "")
           decisionplot <- paste(gettext("   As | CP = ", domain = "R-leem"),
                                 chitab[1], " | < | ST = ", chitest, " | < | CP = ", chitab[2], " |")
-          conclusion <- paste(gettext("   We observed by the Z Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+          conclusion <- paste(gettext("   We observed by the Chi-Squared Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
                               round(alpha * 100),
                               gettext("% probability", domain = "R-leem"), sep = "")
           conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
@@ -1304,8 +1308,6 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
              col.ticks = "#010199", lwd.ticks = 1, labels = FALSE)
 
 
-        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
-               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
 
         legend(chitest, 1.20*max(fx, fy, fz), bg = "#010199", cex=0.6, box.col = "#010199",
                legend = expression(bold("STATISTICAL TEST (ST)    ")), text.col = "white")
@@ -1313,6 +1315,9 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
                legend = expression(bold("CRITICAL POINT (CP)    ")), text.col = "white")
         legend(chitab[1], 1.35*max(fx, fy, fz), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT (CP)    ")), text.col = "white")
+
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
 
 
 
@@ -1492,14 +1497,14 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
              col.ticks = "#010199", lwd.ticks = 1, labels = FALSE)
 
 
-        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
-               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
 
         legend(chitest, 1.35*max(fx, fy), bg = "#010199", cex=0.6, box.col = "#010199",
                legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
         legend(chitab, 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
 
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
 
 
         mtext("Step 1: Hypothesis", side = 1, line = 4, adj = 0, col = "#0099ff", font = 2)
@@ -1668,12 +1673,13 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
              col.ticks = "#010199", lwd.ticks = 1, labels = FALSE)
 
 
-        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
-               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
         legend(chitest, 1.35*max(fx, fy), bg = "#010199", cex=0.6, box.col = "#010199",
                legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
         legend(chitab, 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
                legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
 
         mtext("Step 1: Hypothesis", side = 1, line = 4, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 4, adj = 0, col = "#0099ff")
@@ -1695,16 +1701,602 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
     }
   }
   if (any(test ==  c("ftest", "f", "F"))){
-    stop("Em desenvolvimento", .call = FALSE, domain = "R-leem")
-    #if (any(alternative == c("two.sided", "t", "T"))){
-    #
-    #}
-    #if (any(alternative == c("less", "l", "L"))) {
-    #
-    #}
-    #if (any(alternative == c("greater", "g", "G"))) {
-    #
-    #}
+    if (any(alternative == c("two.sided", "t", "T"))){
+      if (is.null(y)) {
+
+        aux_x <- x
+
+        sd <- sd(x)
+
+        df <- length(x) - 1
+
+        if (missing(h0)) {
+          h0 <- readline("Insert the value of null hypothesis: ")
+          h0 <- as.numeric(h0)
+        }
+
+        if (!any(names(argaddit) == "s")) {
+          s <- readline("Insert the value of population variance: ")
+          s <- as.numeric(s)
+        }
+        else{
+          s <- argaddit$s
+        }
+
+
+        title <- paste(gettext("  One Sample F Test (Unilateral Test) \n", domain = "R-leem"))
+
+
+        nullhyp <- paste(gettext("  H0: sigma^2 = ", domain = "R-leem"), round(h0, 2), sep = "")
+        althyp <- paste(gettext("  H1: sigma^2 != ", domain = "R-leem"), round(h0, 2), sep = "")
+        signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
+
+
+        ftest <- round(df*s/h0, 2)
+        ftab <- round(qchisq(1 - alpha, df), 2)
+        ftab <- round(c(qchisq(alpha, df), ftab), 2)
+        pvalue <- 2 * pchisq(abs(ftest), df, lower.tail = FALSE)
+        if (abs(ftest) >= ftab[2]) {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | > | CP = ", abs(ftab[2]),
+                            gettext(" | then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < Alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | > | CP = ", abs(ftab[2]), ' |')
+          conclusion <- paste(gettext("   We observed by the F Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+        }
+        else if(abs(ftest) <= ftab[1]) {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | < | CP = ", abs(ftab[1]),
+                            gettext(" | then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < Alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | < | CP = ", abs(ftab[1]), ' |')
+          conclusion <- paste(gettext("   We observed by the F Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+        }
+        else {
+          decision <- paste(gettext("   As | CP = ", domain = "R-leem"),
+                            ftab[1], " | < | ST = ", ftest, " | < | CP = ", chitab[2],
+                            gettext(" | then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > Alpha = ", alpha,
+                             gettext(" | then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | CP = ", domain = "R-leem"),
+                                ftab[1], " | < | ST = ", ftest, " | < | CP = ", chitab[2], " |")
+          conclusion <- paste(gettext("   We observed by the F Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        }
+        results <- list(ftest = ftest, ftab = ftab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+      }
+      else{
+        aux_x <- x
+
+        df <- length(x)+length(y)-2
+
+        if (missing(h0)) {
+          h0 <- readline("Insert the value of null hypothesis: ")
+          h0 <- as.numeric(h0)
+        }
+        if (!any(names(argaddit) == "s1")) {
+          s1 <- readline("Insert the value of the first population variance: ")
+          s1 <- as.numeric(s1)
+        } else s1 <- argaddit$s1
+
+        if (!any(names(argaddit) == "s2")) {
+          s2 <- readline("Insert the value of the second population variance: ")
+          s2 <- as.numeric(s2)
+        } else s1 <- argaddit$s2
+
+        title <- paste(gettext("  Two Sample F Test (Bilateral Test) \n", domain = "R-leem"))
+
+
+        nullhyp <- paste(gettext("  H0: sigma^2 = ", domain = "R-leem"), round(h0, 2), sep = "")
+        althyp <- paste(gettext("  H1: sigma^2 != ", domain = "R-leem"), round(h0, 2), sep = "")
+        signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
+
+
+        ftest <- round((df*((s1-s2)/2)^2)/h0^2, 2)
+        ftab <- round(qchisq(1 - alpha, df), 2)
+        ftab <- round(c(qchisq(alpha, df), ftab), 2)
+        pvalue <- 2 * pchisq(abs(ftest), df, lower.tail = FALSE)
+        if (abs(ftest) >= ftab[2]) {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | > | CP = ", abs(ftab[2]),
+                            gettext(" | then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < Alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | > | CP = ", abs(ftab[2]), ' |')
+          conclusion <- paste(gettext("   We observed by the F Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+        }
+        else if(abs(ftest) <= ftab[1]) {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | < | CP = ", abs(ftab[1]),
+                            gettext(" | then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < Alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | < | CP = ", abs(ftab[1]), ' |')
+          conclusion <- paste(gettext("   We observed by the F Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+        }
+        else {
+          decision <- paste(gettext("   As | CP = ", domain = "R-leem"),
+                            ftab[1], " | < | ST = ", ftest, " | < | CP = ", ftab[2],
+                            gettext(" | then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > Alpha = ", alpha,
+                             gettext(" | then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | CP = ", domain = "R-leem"),
+                                ftab[1], " | < | ST = ", ftest, " | < | CP = ", ftab[2], " |")
+          conclusion <- paste(gettext("   We observed by the F Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        }
+        results <- list(ftest = ftest, ftab = ftab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+
+      }
+      if (plot == TRUE) {
+        par(mar = c(11,4,4,4))
+        minimo <- if (ftest <= (-4) * df) ftest - 4 * df else 0
+        maximo <- if (ftest > 4 * df) ftest + 4 * df else 4 * df
+        x <- seq(minimo, ftab[1], by = 0.01)
+        z <- seq(ftab[2],  maximo, by = 0.01)
+        y <- seq(minimo, maximo, by = 0.01)
+        fx <- dchisq(x, df)
+        fz <- dchisq(z, df)
+        fy <- dchisq(y, df)
+        curve(dchisq(x, df), min(rchisq(x, df)), max(rchisq(x, df)),
+              ylim = c(0, 1.5*max(fx,fy,fz)),  ylab = expression(f[X](x)), xlab="",
+              panel.first = grid(col="gray90"), main = title)
+        polygon(c(y, rev(y)),
+                c(fy, rep(0, length(fy))),
+                col="#99ccff")
+        polygon(c(x, rev(x)),
+                c(fx, rep(0, length(fx))),
+                col="gray")
+        polygon(c(z, rev(z)),
+                c(fz, rep(0, length(fz))),
+                col="gray")
+        abline(v = ftab[1], lty=2, col = "#880000")
+        abline(v = ftab[2], lty=2, col = "#880000")
+
+        #text(chitab, 0.8*max(fx,fy), expression(bold("CRITICAL POINT")), col = "#880000")
+        #text(chitest, 0.8*max(fx,fy), expression(bold("CHISQTEST")), col = "blue")
+
+
+        abline(v = ftest, lty=2, col = "#010199")
+        aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/15
+        aux3 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/8
+        axis(side = 1, at = as.character(c(0, ftab[1])),
+             col = "#888888", col.axis = "#888888", labels = FALSE)
+        axis(side = 1, at = as.character(c(ftab[2], maximo)),
+             col = "#888888", col.axis = "#888888", labels = FALSE)
+        axis(side = 1, at = as.character(c(ftab[1], ftab[2])),
+             col = "#559ee8",col.ticks = "#880000", col.axis = "#880000", labels = FALSE)
+        axis(side = 1, at = c(ftab[1], ftab[2]), tick = FALSE,
+             font = 2, col.axis="#880000", pos = aux2)
+        axis(side = 1, at = ftest, tick = FALSE,
+             font = 2, col.axis="#010199", pos = aux3)
+        axis(side = 1, at = ftest, tick = TRUE,
+             col.ticks = "#010199", lwd.ticks = 1, labels = FALSE)
+
+
+        legend(ftest, 1.20*max(fx, fy, fz), bg = "#010199", cex=0.6, box.col = "#010199",
+               legend = expression(bold("STATISTICAL TEST (ST)    ")), text.col = "white")
+        legend(ftab[2], 1.35*max(fx, fy, fz), bg = "#880000", cex=0.6, box.col = "#880000",
+               legend = expression(bold("CRITICAL POINT (CP)    ")), text.col = "white")
+        legend(ftab[1], 1.35*max(fx, fy, fz), bg = "#880000", cex=0.6, box.col = "#880000",
+               legend = expression(bold("CRITICAL POINT (CP)    ")), text.col = "white")
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
+
+
+
+        mtext("Step 1: Hypothesis", side = 1, line = 4, adj = 0, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 4, adj = 0, col = "#0099ff")
+        mtext(t = substitute(~~H[0]:~sigma^2 == h0, list(h0 = h0))  , side = 1, line = 5.3, adj = 0)
+        mtext(t =substitute(~~H[1]:~sigma^2 != h0, list(h0 = h0)), side = 1, line = 6.3, adj = 0)
+        mtext("Step 2: Significante level", side = 1, line = 7, adj = 0, col = "#0099ff", font = 2)
+        mtext("_____________________", side = 1, line = 7, adj = 0, col = "#0099ff")
+        mtext(t =substitute(~~alpha == alpha1, list(alpha1 = alpha)), side = 1, line = 8, adj = 0)
+
+        mtext("Step 3: Rule of decision", side = 1, line = 4, adj = 1, col = "#0099ff", font = 2)
+        mtext("____________________", side = 1, line = 4, adj = 1, col = "#0099ff")
+        mtext(decisionplot, side = 1, line = 5.3, adj = 1)
+
+        mtext("Step 4: Conclusion", side = 1, line = 7, adj = 1, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 7, adj = 1, col = "#0099ff")
+        mtext(conclusionplot, side = 1, line = 8, adj = 1)
+      }
+
+
+    }
+    if (any(alternative == c("less", "l", "L"))) {
+      if (is.null(y)) {
+        aux_x <- x
+        sd <- sd(x)
+        df <- length(x)-1
+        if (missing(h0)) {
+          h0 <- readline("Insert the value of null hypothesis: ")
+          h0 <- as.numeric(h0)
+        }
+        if (!any(names(argaddit) == "s")) {
+          s <- readline("Insert the value of population variance: ")
+          s <- as.numeric(s)
+        } else s <- argaddit$s
+        title <- paste(gettext("  One Sample F Test (Unilateral Test) \n", domain = "R-leem"))
+
+
+        nullhyp <- paste(gettext("  H0: sigma^2 = ", domain = "R-leem"), round(h0, 2), sep = "")
+        althyp <- paste(gettext("  H1: sigma^2 != ", domain = "R-leem"), round(h0, 2), sep = "")
+        signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
+
+
+        ftest <- round((df*s^2)/h0^2, 2)
+        ftab <- round(qchisq((1-alpha), df, lower.tail = FALSE), 2)
+        pvalue <- 2 * pchisq(abs(ftest), df, lower.tail = FALSE)
+        if (abs(ftest) <= abs(ftab)) {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | < | CP = ", abs(ftab),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < Alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | < | CP = ", abs(ftab), '|')
+          conclusion <- paste(gettext("   We observed by the F Test that hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+
+        } else {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | > | CP = ", abs(ftab),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > Alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | > | CP = ", abs(ftab), '|')
+          conclusion <- paste(gettext("   We observed by the F Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        }
+        results <- list(ftest = ftest, ftab = ftab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+      }
+      else{
+        aux_x <- x
+        df <- length(x)+length(y)-2
+        if (missing(h0)) {
+          h0 <- readline("Insert the value of null hypothesis: ")
+          h0 <- as.numeric(h0)
+        }
+        if (!any(names(argaddit) == "s1")) {
+          s1 <- readline("Insert the value of the first population variance: ")
+          s1 <- as.numeric(s1)
+        } else s1 <- argaddit$s1
+
+        if (!any(names(argaddit) == "s2")) {
+          s2 <- readline("Insert the value of the second population variance: ")
+          s2 <- as.numeric(s2)
+        } else s1 <- argaddit$s2
+        title <- paste(gettext("  Two Sample F Test (Unilateral Test) \n", domain = "R-leem"))
+
+
+        nullhyp <- paste(gettext("  H0: sigma^2 = ", domain = "R-leem"), round(h0, 2), sep = "")
+        althyp <- paste(gettext("  H1: sigma^2 != ", domain = "R-leem"), round(h0, 2), sep = "")
+        signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
+
+
+        ftest <- round((df*((s1-s2)/2)^2)/h0^2, 2)
+        ftab <- round(qchisq((1-alpha), df, lower.tail = FALSE), 2)
+        pvalue <- 2 * pchisq(abs(ftest), df, lower.tail = FALSE)
+        if (abs(ftest) <= abs(ftab)) {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | < | CP = ", abs(ftab),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < Alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | < | CP = ", abs(ftab), '|')
+          conclusion <- paste(gettext("   We observed by the F Test that hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+
+        } else {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | > | CP = ", abs(ftab),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > Alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | > | CP = ", abs(ftab), '|')
+          conclusion <- paste(gettext("   We observed by the F Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        }
+        results <- list(ftest = ftest, ftab = ftab, pvalue = pvalue, test = test,
+                        alternative = alternative, title = title, nullhyp = nullhyp,
+                        althyp = althyp, signlevel = signlevel, decision = decision,
+                        decision2 = decision2, conclusion = conclusion)
+      }
+      if (plot == TRUE) {
+        par(mar = c(11,4,4,4))
+        minimo <- if (ftest <= (-4) * df) ftest - 4 * df else 0
+        maximo <- if (ftest > 4 * df) ftest + 4 * df else 4 * df
+        x <- seq(minimo, ftab, by = 0.01)
+        y <- seq(ftab, maximo, by = 0.01)
+        fx <- dchisq(x, df)
+        fy <- dchisq(y, df)
+        curve(dchisq(x, df), min(rchisq(x, df)), max(rchisq(x, df)),
+              ylim = c(0, 1.5*max(fx,fy)),  ylab = expression(f[X](x)), xlab="",
+              panel.first = grid(col="gray90"), main = title)
+        polygon(c(y, rev(y)),
+                c(fy, rep(0, length(fy))),
+                col="#99ccff")
+        polygon(c(x, rev(x)),
+                c(fx, rep(0, length(fx))),
+                col="gray")
+        abline(v = ftab, lty=2, col = "#880000")
+
+
+        #text(chitab, 0.8*max(fx,fy), expression(bold("CRITICAL POINT")), col = "#880000")
+        #text(chitest, 0.8*max(fx,fy), expression(bold("CHISQTEST")), col = "blue")
+
+        abline(v = ftest, lty=2, col = "#010199")
+        aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/15
+        aux3 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/8
+        axis(side = 1, at = as.character(c(0, ftab)),
+             col = "#888888", col.axis = "#888888", labels = FALSE)
+        axis(side = 1, at = as.character(c(ftab, maximo)),
+             col = "#559ee8", col.axis = "#559ee8", labels = FALSE)
+        axis(side = 1, at = ftab, tick = TRUE,
+             col.ticks = "#880000", lwd.ticks = 1, labels = FALSE)
+        axis(side = 1, at = ftab, tick = FALSE,
+             font = 2, col.axis="#880000", pos = aux2)
+        axis(side = 1, at = ftest, tick = FALSE,
+             font = 2, col.axis="#010199", pos = aux3)
+        axis(side = 1, at = ftest, tick = TRUE,
+             col.ticks = "#010199", lwd.ticks = 1, labels = FALSE)
+
+
+
+        legend(ftest, 1.35*max(fx, fy), bg = "#010199", cex=0.6, box.col = "#010199",
+               legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
+        legend(ftab, 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
+               legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
+
+
+        mtext("Step 1: Hypothesis", side = 1, line = 4, adj = 0, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 4, adj = 0, col = "#0099ff")
+        mtext(t = substitute(~~H[0]:~sigma^2 <= h0, list(h0 = h0))  , side = 1, line = 5.3, adj = 0)
+        mtext(t =substitute(~~H[1]:~sigma^2 > h0, list(h0 = h0)), side = 1, line = 6.3, adj = 0)
+        mtext("Step 2: Significante level", side = 1, line = 7, adj = 0, col = "#0099ff", font = 2)
+        mtext("_____________________", side = 1, line = 7, adj = 0, col = "#0099ff")
+        mtext(t =substitute(~~alpha == alpha1, list(alpha1 = alpha)), side = 1, line = 8, adj = 0)
+
+        mtext("Step 3: Rule of decision", side = 1, line = 4, adj = 1, col = "#0099ff", font = 2)
+        mtext("____________________", side = 1, line = 4, adj = 1, col = "#0099ff")
+        mtext(decisionplot, side = 1, line = 5.3, adj = 1)
+
+        mtext("Step 4: Conclusion", side = 1, line = 7, adj = 1, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 7, adj = 1, col = "#0099ff")
+        mtext(conclusionplot, side = 1, line = 8, adj = 1)
+      }
+
+    }
+    if (any(alternative == c("greater", "g", "G"))) {
+      if (is.null(y)) {
+        aux_x <- x
+        sd <- sd(x)
+        df <- length(x)-1
+        if (missing(h0)) {
+          h0 <- readline("Insert the value of null hypothesis: ")
+          h0 <- as.numeric(h0)
+        }
+        if (!any(names(argaddit) == "s")) {
+          s <- readline("Insert the value of population variance: ")
+          s <- as.numeric(s)
+        } else s <- argaddit$s
+        title <- paste(gettext("  One Sample F Test(Unilateral Test) \n", domain = "R-leem"))
+        nullhyp <- paste(gettext("  H0: sgima^2 = ", domain = "R-leem"), round(h0, 2), sep = "")
+        althyp <- paste(gettext("  H1: sigma^2 != ", domain = "R-leem"), round(h0, 2), sep = "")
+        signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
+
+        ftest <- round((df*s^2)/h0^2, 2)
+        ftab <- round(qchisq(1 - alpha, df), 2)
+        pvalue <- 2 * pchisq(abs(ftest),  df, lower.tail = TRUE)
+        if (abs(ftest) >= abs(ftab)) {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | > | CP = ", abs(ftab),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < Alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | > | CP = ", abs(ftab), '|')
+          conclusion <- paste(gettext("   We observed by the F Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+        } else {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | < | CP = ", abs(ftab),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > Alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | < | CP = ", abs(ftab), '|')
+          conclusion <- paste(gettext("   We observed by the F Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        }
+      }
+      else{
+        aux_x <- x
+        df <- length(x)+length(y)-2
+        if (missing(h0)) {
+          h0 <- readline("Insert the value of null hypothesis: ")
+          h0 <- as.numeric(h0)
+        }
+        if (!any(names(argaddit) == "s1")) {
+          s1 <- readline("Insert the value of the first population variance: ")
+          s1 <- as.numeric(s1)
+        } else s1 <- argaddit$s1
+
+        if (!any(names(argaddit) == "s2")) {
+          s2 <- readline("Insert the value of the second population variance: ")
+          s2 <- as.numeric(s2)
+        } else s1 <- argaddit$s2
+        title <- paste(gettext("  Two Sample F Test (Unilateral Test) \n", domain = "R-leem"))
+        nullhyp <- paste(gettext("  H0: sgima^2 = ", domain = "R-leem"), round(h0, 2), sep = "")
+        althyp <- paste(gettext("  H1: sigma^2 != ", domain = "R-leem"), round(h0, 2), sep = "")
+        signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
+
+        ftest <- round((df*((s1-s2)/2)^2)/h0^2, 2)
+        ftab <- round(qchisq(1 - alpha, df), 2)
+        pvalue <- 2 * pchisq(abs(ftest),  df, lower.tail = TRUE)
+        if (abs(ftest) >= abs(ftab)) {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | > | CP = ", abs(ftab),
+                            gettext("| then reject H0!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " < Alpha = ", alpha,
+                             gettext(" then reject H0!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | > | CP = ", abs(ftab), '|')
+          conclusion <- paste(gettext("   We observed by the F Test that the hypothesis H0 was rejected, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("H0 was rejected.", domain = "R-leem"))
+        } else {
+          decision <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                            abs(ftest), " | < | CP = ", abs(ftab),
+                            gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decision2 <- paste(gettext("   As p-value = ", domain = "R-leem"),
+                             pvalue, " > Alpha = ", alpha,
+                             gettext("| then H0 is not rejected!", domain = "R-leem"), sep = "")
+          decisionplot <- paste(gettext("   As | ST = ", domain = "R-leem"),
+                                abs(ftest), " | < | CP = ", abs(ftab), '|')
+          conclusion <- paste(gettext("   We observed by the F Test that there is no evidence to reject the H0 hypothesis, at the significance level of ", domain = "R-leem"),
+                              round(alpha * 100),
+                              gettext("% probability", domain = "R-leem"), sep = "")
+          conclusionplot <- paste(gettext("No evidence to reject H0.", domain = "R-leem"))
+        }
+      }
+      results <- list(ftest = ftest, ftab = ftab, pvalue = pvalue, test = test,
+                      alternative = alternative, title = title, nullhyp = nullhyp,
+                      althyp = althyp, signlevel = signlevel, decision = decision,
+                      decision2 = decision2, conclusion = conclusion)
+
+      if (plot == TRUE) {
+        par(mar = c(11,4,4,4))
+        minimo <- if (ftest <= (-4) * df) ftest - 4 * df else 0
+        maximo <- if (ftest > 4 * df) ftest + 4 * df else 4 * df
+        x <- seq(minimo, ftab, by = 0.01)
+        y <- seq(ftab, maximo, by = 0.01)
+        fx <- dchisq(x, df)
+        fy <- dchisq(y, df)
+        curve(dchisq(x, df), min(rchisq(x, df)), max(rchisq(x, df)),
+              ylim = c(0, 1.5*max(fx,fy)),  ylab = expression(f[X](x)), xlab="X",
+              panel.first = grid(col="gray90"), main = title)
+        polygon(c(y, rev(y)),
+                c(fy, rep(0, length(fy))),
+                col="gray")
+        polygon(c(x, rev(x)),
+                c(fx, rep(0, length(fx))),
+                col="#99ccff")
+        abline(v = ftab, lty=2, col = "#880000")
+
+
+        #text(chitab, 0.8*max(fx,fy), expression(bold("CRITICAL POINT")), col = "#880000")
+        #text(chitest, 0.8*max(fx,fy), expression(bold("CHISQTEST")), col = "blue")
+
+
+
+        abline(v = ftest, lty=2, col = "#010199")
+        aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/15
+        aux3 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/8
+        axis(side = 1, at = as.character(c(0, ftab)),
+             col = "#888888", col.axis = "#888888", labels = FALSE)
+        axis(side = 1, at = as.character(c(ftab, maximo)),
+             col = "#559ee8", col.axis = "#559ee8", labels = FALSE)
+        axis(side = 1, at = ftab, tick = TRUE,
+             col.ticks = "#880000", lwd.ticks = 1, labels = FALSE)
+        axis(side = 1, at = ftab, tick = FALSE,
+             font = 2, col.axis="#880000", pos = aux2)
+        axis(side = 1, at = ftest, tick = FALSE,
+             font = 2, col.axis="#010199", pos = aux3)
+        axis(side = 1, at = ftest, tick = TRUE,
+             col.ticks = "#010199", lwd.ticks = 1, labels = FALSE)
+
+
+        legend(ftest, 1.35*max(fx, fy), bg = "#010199", cex=0.6, box.col = "#010199",
+               legend = expression(bold("STATISTICAL TEST(ST)    ")), text.col = "white")
+        legend(ftab, 1.2*max(fx, fy), bg = "#880000", cex=0.6, box.col = "#880000",
+               legend = expression(bold("CRITICAL POINT(CP)    ")), text.col = "white")
+
+        legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
+               legend = c("REJECT H0", "ACCEPT H0"), fill = c("gray", "#559ee8"))
+
+        mtext("Step 1: Hypothesis", side = 1, line = 4, adj = 0, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 4, adj = 0, col = "#0099ff")
+        mtext(t = substitute(~~H[0]:~sigma^2 >= h0, list(h0 = h0))  , side = 1, line = 5.3, adj = 0)
+        mtext(t =substitute(~~H[1]:~sigma^2 < h0, list(h0 = h0)), side = 1, line = 6.3, adj = 0)
+
+        mtext("Step 2: Significante level", side = 1, line = 7, adj = 0, col = "#0099ff", font = 2)
+        mtext("_____________________", side = 1, line = 7, adj = 0, col = "#0099ff")
+        mtext(t =substitute(~~alpha == alpha1, list(alpha1 = alpha)), side = 1, line = 8, adj = 0)
+
+        mtext("Step 3: Rule of decision", side = 1, line = 4, adj = 1, col = "#0099ff", font = 2)
+        mtext("____________________", side = 1, line = 4, adj = 1, col = "#0099ff")
+        mtext(decisionplot, side = 1, line = 5, adj = 1)
+
+        mtext("Step 4: Conclusion", side = 1, line = 7, adj = 1, col = "#0099ff", font = 2)
+        mtext("________________", side = 1, line = 7, adj = 1, col = "#0099ff")
+        mtext(conclusionplot, side = 1, line = 8, adj = 1)
+      }
+    }
   }
   attr(results, "output") <- "htest"
   class(results) <- "leem"
