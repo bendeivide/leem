@@ -1405,6 +1405,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
     }
     if(df < 2){
       argaddit$df <- 2
+      warning("We are using degrees of freedom equals then 2, because dont make sense values lowers then 2.", call. = FALSE, domain = "R-leem")
     }
     if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
     df <- argaddit$df
