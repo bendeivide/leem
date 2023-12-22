@@ -1403,6 +1403,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
       ncp <- 0
       argaddit$ncp <- as.numeric(ncp)
     }
+    if(df < 2){
+      argaddit$df <- 2
+    }
     if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
     df <- argaddit$df
     ncp <- argaddit$ncp
