@@ -21,6 +21,46 @@ print.leem <- function(x, ...) {
 }
 
 output_confint <- function(x) {
+  if(x$pop != "normal"){
+    if(is.null(x$sd)){
+      cat("\n\n", crayon::bgGreen$bold(x$title), "\n")
+      # Descritive statistics
+      cat(crayon::blue$underline$bold(gettext("Descritive Statistics:\n", domain = "R-leem")),
+          crayon::blue(gettext("  Sample mean:", domain = "R-leem")), x$mean, "\n",
+          crayon::blue(gettext("            n1:", domain = "R-leem")), x$n1, "\n",
+          crayon::blue(gettext("            n2:", domain = "R-leem")), x$n2, "\n",
+          crayon::blue(gettext("Std dev 1 (Sample 1):", domain = "R-leem")), x$sd1, "\n",
+          crayon::blue(gettext("Std dev 2 (Sample 2):", domain = "R-leem")), x$sd2, "\n"
+      )
+      # Measures of interval
+      cat(crayon::blue$underline$bold(gettext("Measures of interval:\n", domain = "R-leem")),
+          crayon::blue(gettext("   Confidence level:", domain = "R-leem")), x$clevel, "\n",
+          crayon::blue(gettext(" Significance level:", domain = "R-leem")), x$alpha, "\n",
+          crayon::blue(gettext("     Critical point:", domain = "R-leem")), x$cp, "\n"
+      )
+      # Measures of interval
+      cat(crayon::red$underline$bold(gettext("\nClass interval:", domain = "R-leem")),
+          " [", x$confint[1], ", ", x$confint[2], "]", sep = "")
+    }else{
+      cat("\n\n", crayon::bgGreen$bold(x$title), "\n")
+      # Descritive statistics
+      cat(crayon::blue$underline$bold(gettext("Descritive Statistics:\n", domain = "R-leem")),
+          crayon::blue(gettext("  Sample mean:", domain = "R-leem")), x$mean, "\n",
+          crayon::blue(gettext("            n:", domain = "R-leem")), x$n, "\n",
+          crayon::blue(gettext("Std dev (Sample):", domain = "R-leem")), x$sd, "\n"
+      )
+      # Measures of interval
+      cat(crayon::blue$underline$bold(gettext("Measures of interval:\n", domain = "R-leem")),
+          crayon::blue(gettext("   Confidence level:", domain = "R-leem")), x$clevel, "\n",
+          crayon::blue(gettext(" Significance level:", domain = "R-leem")), x$alpha, "\n",
+          crayon::blue(gettext("     Critical point:", domain = "R-leem")), x$cp, "\n"
+      )
+      # Measures of interval
+      cat(crayon::red$underline$bold(gettext("\nClass interval:", domain = "R-leem")),
+          " [", x$confint[1], ", ", x$confint[2], "]", sep = "")
+    }
+  }
+  else{
   cat("\n\n", crayon::bgGreen$bold(x$title), "\n")
   # Descritive statistics
   cat(crayon::blue$underline$bold(gettext("Descritive Statistics:\n", domain = "R-leem")),
@@ -37,6 +77,7 @@ output_confint <- function(x) {
   # Measures of interval
   cat(crayon::red$underline$bold(gettext("\nClass interval:", domain = "R-leem")),
       " [", x$confint[1], ", ", x$confint[2], "]", sep = "")
+  }
 }
 
 output_htest <- function(x) {
