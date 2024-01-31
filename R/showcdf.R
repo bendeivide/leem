@@ -84,6 +84,14 @@ showcdf <- function(variable = "discrete", prop = NULL) {
       col = "black"
     )
 
+    points(x, ppois(x - 1, lambda = lambda), lwd = 2, pch = 19, bg = "white", col = "white")
+    points(x, ppois(x - 1, lambda = lambda), lwd = 2, pch = 1)
+    pointx <- ppois(x, lambda = 2)
+    points(x, pointx, lwd = 2, pch = 19)
+
+    text(5.3, ppois(4, 2), "...", srt = 30)
+    axis(2, at = c(0, 0.5, 1), col.axis = "blue", col = "blue", las = 2)
+
     if (is.null(prop)) {
       for (i in 1:length(w)) {
         # segments(
@@ -101,51 +109,43 @@ showcdf <- function(variable = "discrete", prop = NULL) {
                  lty = 2,
                  col = "black")
       }
-    }
+    } else {
+      if (prop == 1) {
+        # property I
+        text(7, 1.08, bquote(lim(F[X](x), x %->% infinity) == 1), col = "red")
+        text(-1, 0.2, bquote(lim(F[X](x), x %->%~-infinity) == 0), col = "red")
+        segments(
+          c(-1, 6),
+          c(0, 1),
+          c(0, 7),
+          c(0, 1),
+          lty = 1,
+          col = "red"
+        )
+      }
+      if (prop == 2) {
+        # Segments
+        segments(c(1.5, 2.5), c(0,0), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
+        segments(c(1.5, 2.5), c(0,0), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
+        # Points
+        points(1.5, ppois(1.5, 2), lwd = 2, pch = 19, col = "red")
+        text(1.5, 0.46, bquote(x), col = "red")
+        points(2.5, ppois(2.5, 2), lwd = 2, pch = 19, col = "red")
+        text(2.5, 0.74, bquote(y), col = "red")
+        text(0.5, 0.8, bquote(atop(F[X](x) <= F[X](y), x <= y)), col = "red")
+        segments(rep(par("usr")[1], 2), c(ppois(1.5, 2), ppois(2.5, 2)), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
+        axis(2, at = c(ppois(1.5, 2)), labels = bquote(F[X](x)), col.axis = "red", las = 2, col = "red")
+        axis(2, at = c(ppois(2.5, 2)), labels = bquote(F[X](y)), col.axis = "red", las = 2, col = "red")
+      }
+      if (prop == 3) {
+        points(2, ppois(2, 2), lwd = 2, pch = 19, col = "red")
+        text(2, 0.78, bquote(x[3]), col = "red")
+        text(3.5, 0.78, bquote(x[n]), col = "red")
+        arrows(3.2, ppois(2, 2), 2.3, ppois(2, 2), col = "red", length = 0.1, lwd = 2)
+        text(4, 0.53, bquote(lim(F[X](x[n]), x[n]*symbol("\257")*x[3])*symbol("\257")*F[X](x[3])), col = "red")
+      }
 
-    points(x, ppois(x - 1, lambda = lambda), lwd = 2, pch = 19, bg = "white", col = "white")
-    points(x, ppois(x - 1, lambda = lambda), lwd = 2, pch = 1)
-    pointx <- ppois(x, lambda = 2)
-    points(x, pointx, lwd = 2, pch = 19)
-
-    text(5.3, ppois(4, 2), "...", srt = 30)
-    axis(2, at = c(0, 0.5, 1), col.axis = "blue", col = "blue", las = 2)
-
-    if (prop == 1) {
-      # property I
-      text(7, 1.08, bquote(lim(F[X](x), x %->% infinity) == 1), col = "red")
-      text(-1, 0.2, bquote(lim(F[X](x), x %->%~-infinity) == 0), col = "red")
-      segments(
-        c(-1, 6),
-        c(0, 1),
-        c(0, 7),
-        c(0, 1),
-        lty = 1,
-        col = "red"
-      )
     }
-    if (prop == 2) {
-      # Segments
-      segments(c(1.5, 2.5), c(0,0), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
-      segments(c(1.5, 2.5), c(0,0), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
-      # Points
-      points(1.5, ppois(1.5, 2), lwd = 2, pch = 19, col = "red")
-      text(1.5, 0.46, bquote(x), col = "red")
-      points(2.5, ppois(2.5, 2), lwd = 2, pch = 19, col = "red")
-      text(2.5, 0.74, bquote(y), col = "red")
-      text(0.5, 0.8, bquote(atop(F[X](x) <= F[X](y), x <= y)), col = "red")
-      segments(rep(par("usr")[1], 2), c(ppois(1.5, 2), ppois(2.5, 2)), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
-      axis(2, at = c(ppois(1.5, 2)), labels = bquote(F[X](x)), col.axis = "red", las = 2, col = "red")
-      axis(2, at = c(ppois(2.5, 2)), labels = bquote(F[X](y)), col.axis = "red", las = 2, col = "red")
-    }
-    if (prop == 3) {
-      points(2, ppois(2, 2), lwd = 2, pch = 19, col = "red")
-      text(2, 0.78, bquote(x[3]), col = "red")
-      text(3.5, 0.78, bquote(x[n]), col = "red")
-      arrows(3.2, ppois(2, 2), 2.3, ppois(2, 2), col = "red", length = 0.1, lwd = 2)
-      text(4, 0.53, bquote(lim(F[X](x[n]), x[n]*symbol("\257")*x[3])*symbol("\257")*F[X](x[3])), col = "red")
-    }
-
   } else{
     p <- 0.8; mu <- 0; sigma <- 1
     x <- qnorm(p, mu, sigma)
@@ -176,6 +176,7 @@ showcdf <- function(variable = "discrete", prop = NULL) {
     # Axis
     axis(2, at = c(0, 1), col.axis = "blue", col = "blue", las = 2)
 
+    # Precisa inserir a condicao NULL
     if (prop == 1) {
       # property I
       text(2, 1.1, bquote(lim(F[X](x), x %->% infinity) == 1), col = "red")

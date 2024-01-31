@@ -1,4 +1,15 @@
+#' Understanding the Ztable.
+#'
+#' Detailing of the Ztable, showing the main information contained in this type of table.
+#'
+#' @param z Parameter for lacate the z value on the table; default \code{NULL} means error if not insert a number.
+#'
+#' @examples
+#' library(leem)
+#' # Example 1
+#' showtabnormal(zvalue)
 #' @importFrom diagram curvedarrow
+
 #' @export
 showtabnormal <- function(z) {
   # Change decimals

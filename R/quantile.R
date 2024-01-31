@@ -29,7 +29,6 @@
 #  @import shiny
 #' @export
 Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding = 2, gui = "plot", mfrow = c(1, 2), type = "both", ...) {
-  if (p>1) stop("The 'p' argument are very large, please insert a value correct for probabilities!", call. = FALSE)
   argaddit <- list(...)
   argdef <- formals(Q)
   if (dist == "normal") {
@@ -1395,6 +1394,419 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
       }
     }
   }
+  if (dist == "chisq") {
+    if (!any(names(argaddit) == "df")) {
+      df <- readline(gettext("Insert the 'df' argument: ", domain = "R-leem"))
+      argaddit$df <- as.numeric(df)
+    }
+    if (!any(names(argaddit) == "ncp")) {
+      ncp <- 0
+      argaddit$ncp <- as.numeric(ncp)
+    }
+    if(df < 2){
+      argaddit$df <- 2
+      warning("We are using degrees of freedom equals then 2, because dont make sense values lowers then 2.", call. = FALSE, domain = "R-leem")
+    }
+    if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+    df <- argaddit$df
+    ncp <- argaddit$ncp
+    if (two.sided) {
+      if (type == "both") {
+        # Plot size title
+        cex.main <- 0.7
+        if (gui == "plot") {
+
+          plotqchisqtsboth(p, df, ncp, rounding, mfrow, cex.main = cex.main) # aux_quantile.R
+        }
+        if (gui == "rstudio") {
+          # Plot
+          manipulate::manipulate(plotqchisqtsboth(p, df, ncp, rounding, mfrow, cex.main = cex.main), # aux_quantile.R
+                                 p = manipulate::slider(0.00, 0.99, p),
+                                 df = manipulate::slider(1, 100, df),
+                                 ncp = manipulate::slider(0, 100, ncp))
+        }
+      }
+      if (type == "cdf") {
+        if (gui == "plot") {
+          plotqchisqtscdf(p, df, ncp, rounding)
+
+        }
+        if (gui == "rstudio") {
+          # Plot
+          manipulate::manipulate(plotqchisqtscdf(p, df, ncp, rounding),
+                                 p = manipulate::slider(0.00, 0.99, p),
+                                 df = manipulate::slider(1, 100, df),
+                                 ncp = manipulate::slider(0, 100, ncp)
+          )
+        }
+      }
+      if (type == "pdf") {
+        if (gui == "plot") {
+          plotqchisqtspdf(p, df, ncp, rounding)
+        }
+        if (gui == "rstudio") {
+          # Plot
+          manipulate::manipulate(plotqchisqtspdf(p, df, ncp, rounding),
+                                 p = manipulate::slider(0.00, 0.99, p),
+                                 df = manipulate::slider(1, 100, df),
+                                 ncp = manipulate::slider(0, 100, ncp)
+          )
+        }}
+      point <- qchisq(c(p/2, 1 - p/2), df = df, ncp = ncp)
+    } else{
+      if (lower.tail) {
+        if (type == "both") {
+          cex.main <- 0.7
+          if (gui == "plot") {
+            plotqchisqlttboth(p, df, ncp, rounding, mfrow, cex.main = cex.main)
+          }
+          if (gui == "rstudio") {
+            # Plot
+            Q(0.8, mean = 0, sd = 1)
+            manipulate::manipulate(plotqchisqlttboth(p, df, ncp, rounding, mfrow, cex.main = cex.main),
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
+            )
+          }
+        }
+        if (type == "cdf") {
+          if (gui == "plot") {
+            plotqchisqlttcdf(p, df, ncp, rounding)
+
+          }
+          if (gui == "rstudio") {
+            # Plot
+            manipulate::manipulate(plotqchisqlttcdf(p, df, ncp, rounding),
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
+            )
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+
+            plotqchisqlttpdf(p, df, ncp, rounding)
+          }
+          if (gui == "rstudio") {
+            # Plot
+            manipulate::manipulate(plotqchisqlttpdf(p, df, ncp, rounding),
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
+            )
+          }
+        }
+        point <- qchisq(p, df = df, ncp = ncp)
+      }
+      else {
+        if (type == "both") {
+          if (gui == "plot") {
+            cex.main <- 0.8
+            plotqchisqltfboth(p, df, ncp, rounding, mfrow, cex.main = cex.main)
+          }
+          if (gui == "rstudio") {
+            # Plot
+            cex.main <- 0.8
+            manipulate::manipulate(plotqchisqltfboth(p, df, ncp, rounding, mfrow, cex.main = cex.main),
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
+            )
+          }
+        }
+        if (type == "cdf") {
+          warning("The plot shown is based on the survival function", call. = FALSE, domain = "R-leem")
+          if (gui == "plot") {
+            plotqchisqltfsf(p, df, ncp, rounding)
+          }
+          if (gui == "rstudio") {
+            # Plot
+            manipulate::manipulate(plotqchisqltfsf(p, df, ncp, rounding),
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
+            )
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqchisqltfpdf(p, df, ncp, rounding)
+          }
+          if (gui == "rstudio") {
+            # Plot
+            manipulate::manipulate(plotqchisqltfpdf(p, df, ncp, rounding),
+                                   p = manipulate::slider(0.00, 0.99, p),
+                                   df = manipulate::slider(1, 100, df),
+                                   ncp = manipulate::slider(0, 100, ncp)
+            )
+          }
+        }
+        point <- qchisq(p, df = df, ncp = ncp, lower.tail = FALSE)
+      }
+    }
+  }
+  if (dist == "f") {
+    if (!any(names(argaddit) == "df1")) {
+      df1 <- readline(gettext("Insert the value of 'df1' argument: ", domain = "R-leem"))
+      argaddit$df1 <- as.numeric(df1)
+    }
+    if (!any(names(argaddit) == "df2")) {
+      df2 <- readline(gettext("Insert the value of 'df2' argument: ", domain = "R-leem"))
+      argaddit$df2 <- as.numeric(df2)
+    }
+
+    if (argaddit$df1 <= 0) stop("The df1 arguments must be greater then zero!", call. = FALSE, domain = "R-leem")
+    if (argaddit$df2 <= 0) stop("The df2 arguments must be greater then zero!", call. = FALSE, domain = "R-leem")
+
+    df1 <- argaddit$df1
+    df2 <- argaddit$df2
+    # Auxiliar variables
+
+    if (two.sided) {
+      if (type == "both") {
+        if (gui == "plot") {
+          cex.main <- 0.7
+          plotqftsboth(p, df1, df2, rounding, mfrow, cex.main = cex.main) # aux_quantile.R
+        }
+        if (gui == "rstudio") {
+          cex.main <- 0.7
+          manipulate::manipulate(plotqftsboth(p, df1, df2, rounding, mfrow, cex.main = cex.main), # aux_quantile.R
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df1 = manipulate::slider(1, 100, df1),
+                                 df2 = manipulate::slider(1, 100, df2))
+        }
+      }
+      if (type == "cdf") {
+        if (gui == "plot") {
+          plotqftscdf(p, df1, df2, rounding)
+
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotqftscdf(p, df1, df2, rounding),
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df1 = manipulate::slider(1, 100, df1),
+                                 df2 = manipulate::slider(1, 100, df2))
+        }
+      }
+      if (type == "pdf") {
+        if (gui == "plot") {
+          plotqftspdf(p, df1, df2, rounding)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotqftspdf(p, df1, df2, rounding),
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df1 = manipulate::slider(1, 100, df1),
+                                 df2 = manipulate::slider(1, 100, df2))
+        }
+      }
+      point <- qf(c(p/2, 1 - p/2), df1, df2)
+    } else{
+      if (lower.tail) {
+        if (type == "both") {
+          if (gui == "plot") {
+            cex.main <- 0.8
+            plotqflttboth(p, df1, df2, rounding, mfrow, cex.main = cex.main)
+          }
+          if (gui == "rstudio") {
+            Q(0.8, mean = 0, sd = 1)
+            manipulate::manipulate(plotqflttboth(p, df1, df2, rounding, mfrow),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
+          }
+        }
+        if (type == "cdf") {
+          if (gui == "plot") {
+            plotqfltcdf(p, df1, df2, rounding)
+
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqfltcdf(p, df1, df2, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqflttpdf(p, df1, df2, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqflttpdf(p, df1, df2, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
+          }
+        }
+        point <- qf(p, df1, df2)
+      } else {
+        if (type == "both") {
+          if (gui == "plot") {
+            cex.main <- 0.8
+            plotqfltfboth(p, df1, df2, rounding, mfrow, cex.main = cex.main)
+          }
+          if (gui == "rstudio") {
+            cex.main <- 0.8
+            manipulate::manipulate(plotqfltfboth(p, df1, df2, rounding, mfrow, cex.main = cex.main),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
+          }
+        }
+        if (type == "cdf") {
+          warning("The plot shown is based on the survival function", call. = FALSE, domain = "R-leem")
+          if (gui == "plot") {
+            plotqfltfsf(p, df1, df2, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqfltfsf(p, df1, df2, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqfltfpdf(p, df1, df2, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotfltfpdf(p, df1, df2, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df1 = manipulate::slider(1, 100, df1),
+                                   df2 = manipulate::slider(1, 100, df2))
+          }
+        }
+        point <- qf(p, df1, df2, lower.tail = FALSE)
+      }
+    }
+  }
+  if (dist == "t-student") {
+    if (!any(names(argaddit) == "df")) {
+      df <- readline(gettext("Insert the 'df' argument: ", domain = "R-leem"))
+      argaddit$df <- as.numeric(df)
+      df <- argaddit$df
+    }
+    if (argaddit$df <= 0 ) stop("The 'df' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+    if (two.sided) {
+      if (type == "both") {
+        # Plot size title
+        cex.main <- 0.7
+        if (gui == "plot") {
+          plotqtstudenttsboth(p, df, rounding, mfrow, cex.main = cex.main)
+
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotqtstudenttsboth(p, df, rounding, mfrow, cex.main = cex.main),
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df = manipulate::slider(df, df + 4 * df, df)
+          )
+        }
+      }
+      if (type == "cdf") {
+        if (gui == "plot") {
+          plotqtstudenttscdf(p, df, rounding)
+
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotqtstudenttscdf(p, df, rounding),
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df = manipulate::slider(df, df + 4 * df, df)
+          )
+        }
+      }
+      if (type == "pdf") {
+        if (gui == "plot") {
+          plotqtstudenttspdf(p, df, rounding)
+
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotqtstudenttspdf(p, df, rounding),
+                                 p = manipulate::slider(0.01, 0.99, p),
+                                 df = manipulate::slider(df, df + 4 * df, df)
+          )
+        }
+      }
+      point <- qt(c(p/2, 1 - p/2), df = df)
+    } else{
+      if (lower.tail) {
+        if (type == "both") {
+          cex.main <- 0.7
+          if (gui == "plot") {
+            plotqtstudentlttboth(p, df, rounding, mfrow, cex.main = cex.main)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentlttboth(p, df, rounding, mfrow, cex.main = cex.main),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df = manipulate::slider(df, df + 4  * df, df)
+            )
+          }
+        }
+        if (type == "cdf") {
+          if (gui == "plot") {
+            plotqtstudentlttcdf(p, df, rounding)
+
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentlttcdf(p, df, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   mean = manipulate::slider(df, df + 4 * df, df)
+            )
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqtstudentlttpdf(p, df, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentlttpdf(p, df, rounding),
+                                   p = manipulate::slider(0.001, 0.999, p),
+                                   mean = manipulate::slider(df, df + 4* df, df)
+            )
+          }
+        }
+        point <- qt(p, df = df)
+      } else {
+        if (type == "both") {
+          cex.main <- 0.7
+          if (gui == "plot") {
+            plotqtstudentltfboth(p, df, rounding, mfrow, cex.main = cex.main)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentltfboth(p, df, rounding, mfrow, cex.main = cex.main),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   df = manipulate::slider(df, df + 4  * df, df)
+            )
+          }
+        }
+        if (type == "cdf") {
+          if (gui == "plot") {
+            plotqtstudentltfsf(p, df, rounding)
+
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentltfsf(p, df, rounding),
+                                   p = manipulate::slider(0.01, 0.99, p),
+                                   mean = manipulate::slider(df, df + 4 * df, df)
+            )
+          }
+        }
+        if (type == "pdf") {
+          if (gui == "plot") {
+            plotqtstudentltfpdf(p, df, rounding)
+          }
+          if (gui == "rstudio") {
+            manipulate::manipulate(plotqtstudentltfpdf(p, df, rounding),
+                                   p = manipulate::slider(0.001, 0.999, p),
+                                   mean = manipulate::slider(df, df + 4* df, df)
+            )
+          }
+        }
+        point <- qt(p, df = df, lower.tail = FALSE)
+      }
+    }
+  }
   if (dist == "beta") {
     if (!any(names(argaddit) == "alpha")) {
       alpha <- readline(gettext("Insert the 'alpha' argument: ", domain = "R-leem"))
@@ -1877,10 +2289,10 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                      scale = manipulate::slider(0, 100, scale))
             }
             if(is.na(scale)){
-                          manipulate::manipulate(plotqgammaltfboth(p, shape, rate, scale, rounding, mfrow, cex.main = cex.main),
-                                   p = manipulate::slider(0.01, 0.99, p),
-                                   shape = manipulate::slider(0, 100, shape),
-                                   rate = manipulate::slider(0, 100, rate))
+              manipulate::manipulate(plotqgammaltfboth(p, shape, rate, scale, rounding, mfrow, cex.main = cex.main),
+                                     p = manipulate::slider(0.01, 0.99, p),
+                                     shape = manipulate::slider(0, 100, shape),
+                                     rate = manipulate::slider(0, 100, rate))
             }
 
           }

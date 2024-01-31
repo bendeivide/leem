@@ -250,13 +250,13 @@ cv <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
 #' set.seed(10)
 #' rpois(30, 2.5) |>
 #'   new_leem() |>
-#'   mse(rounding = 4)
+#'   mstde(rounding = 4)
 #' # Example 2: Normal data
 #' rnorm(50, 100, 2.5) |>
 #'   new_leem(variable = 2) |>
-#'   mse(grouped = FALSE)
+#'   mstde(grouped = FALSE)
 #' @export
-mse <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
+mstde <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
                 grouped = TRUE) {
   if (!is.logical(details)) stop("The 'details' argument must be logical!",
                                  call. = FALSE, domain = "R-leem")
@@ -271,7 +271,7 @@ mse <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
     if (numchar) {
-      mserror <- round(sdev(x = x, na.rm = na.rm) / sqrt(length(x$statistics$raw_data)), digits = rounding)
+      mserror <- round(sdev(x = x, na.rm = na.rm, rounding = rounding) / sqrt(length(x$statistics$raw_data)), digits = rounding)
       resume <- list(`mean standard error` = mserror, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
@@ -286,7 +286,7 @@ mse <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
   }
   if (attr(x, "variable") == "continuous") {
     if (grouped == TRUE) {
-      mserror <- round(sdev(x = x, na.rm = na.rm, grouped = TRUE) / sqrt(length(x$statistics$raw_data)), digits = rounding)
+      mserror <- round(sdev(x = x, na.rm = na.rm, grouped = TRUE, rounding = rounding) / sqrt(length(x$statistics$raw_data)), digits = rounding)
       resume <- list(`mean standard error` = mserror, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
@@ -295,7 +295,7 @@ mse <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
         return(mserror)
       }
     } else {
-        mserror <- round(sdev(x = x, na.rm = na.rm, grouped = FALSE) / sqrt(length(x$statistics$raw_data)), digits = rounding)
+        mserror <- round(sdev(x = x, na.rm = na.rm, grouped = FALSE, rounding = rounding) / sqrt(length(x$statistics$raw_data)), digits = rounding)
       resume <- list(`mean standard error` = mserror, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
