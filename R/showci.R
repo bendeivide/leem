@@ -1,3 +1,16 @@
+#' Understanding the Confiance Indice
+#'
+#' Detailing the confiance indice plot, showing the main information contained in this type of graph.
+#'
+#' @param dist Parameter to indicate the distribution of the graphic, fixed for now.
+#' @param ci Parameter to indicate the region of the confiance indice.
+#' @param main Parameter to indicate the title of the graphic.
+#'
+#' @examples
+#' library(leem)
+#' # Example 1
+#' showci()
+#'
 #' @export
 showci <- function(dist = "normal", ci = "two.sided", main = NULL) {
   if (dist == "symmetric") {

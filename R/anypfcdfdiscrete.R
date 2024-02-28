@@ -108,7 +108,7 @@ cdfd <- function(x, fda, main = NULL, xlab = NULL, ylab = NULL) {
 #' p <- c(0.23, 0.27,0.30, 0.12, 0.08)
 #' apf(x, p)
 #' @export
-apf <- function(x, p, main = NULL, xlab = NULL, ylab = NULL) {
+apf <- function(x, p, main = NULL, xlab = NULL, ylab = NULL, ...) {
   xlim <- c(min(x), max(x))
   ylim <- c(0, max(p) + 0.05)
   plot.new()
@@ -124,10 +124,10 @@ apf <- function(x, p, main = NULL, xlab = NULL, ylab = NULL) {
 
   # Axis
   axis(1, at = x, col.axis = "blue", col.ticks = "blue", col = "blue")
-  axis(2, at = c(0, p), las = 2, col.axis = "blue", col.ticks = "blue", col = "blue")
+  axis(2, at = c(0, p), labels = labels, las = 2, col.axis = "blue", col.ticks = "blue", col = "blue")
 
-  # lines and points
   points(x, p, type = "h")
   points(x, p, lwd = 2, pch = 19)
+
 
 }

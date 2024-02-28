@@ -177,7 +177,7 @@ stickchart <- function(x,
       if (freq == "a") {
         lines(x$table$Groups, x$table$Fi, type = "h",
               lty = lty, lwd = lwd, col = lcol)
-        points(1:length(x$table$Groups), x$table$Fi, pch  = pty, lwd = pwd,
+        points(x$table$Groups, x$table$Fi, pch  = pty, lwd = pwd,
                col = pcol)
       }
       if (freq == "r") {
@@ -189,7 +189,7 @@ stickchart <- function(x,
       if (freq == "p") {
         lines(x$table$Groups, x$table$Fp, type = "h",
               lty = lty, lwd = lwd, col = lcol)
-        points(1:length(x$table$Groups), x$table$Fp, pch  = pty, lwd = pwd,
+        points(x$table$Groups, x$table$Fp, pch  = pty, lwd = pwd,
                col = pcol)
       }
 
