@@ -23,11 +23,12 @@ seguintes linhas de comando:
 install.packages("leem")
 ```
 
-E a versão em desenvolvimento no [GitHub](https://github.com/) com:
+E a versão em desenvolvimento no [GitHub](https://github.com/)
+(**Preferível**) com:
 
 ``` r
 # Instalar os pacotes dependentes
-pkgs <- c("manipulate", "tkRplotR", "tkrplot", "crayon")
+pkgs <- c("manipulate", "tkRplotR", "tkrplot", "crayon", "diagram")
 install.packages(pkgs)
 # install.packages("devtools")
 devtools::install_github("bendeivide/leem")
@@ -44,7 +45,7 @@ leem()
 
 Temos dentro desse projetos, diversos projetos integrados, sendo:
 
-- Projeto de dissertação PROFMAT/CAP/UFSJ (Concluído), da orientanda
+- Projeto de dissertação PROFMAT/CAP/UFSJ (2020.1), da orientanda
   [Juliane Nassaralla Almeida](http://lattes.cnpq.br/5176118169651142);
 
 - Grupo de Iniciação Científica em Estatística/R
@@ -81,19 +82,11 @@ Temos dentro desse projetos, diversos projetos integrados, sendo:
 
 - Iniciação Científica (2022.2)
 
-<<<<<<< HEAD
   - [Rodrigo Ronchi \| Eng. Química](https://github.com/RodrigoRonchi)
 
 - Iniciação Científica (2023.1)
 
   - [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
-=======
-    -   [Rodrigo Ronchi \| Eng. Química](https://github.com/RodrigoRonchi)
-    
--   Iniciação Científica (2023.1)
-
-    -   [Andre Barboza \| Eng. Mecatrônica](https://andrebzf.github.io/)
->>>>>>> leem-andre
 
 ## Propostas da GUI
 
