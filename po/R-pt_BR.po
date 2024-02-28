@@ -289,20 +289,27 @@ msgstr "de uma população normal"
 msgid "is known"
 msgstr "é conhecida"
 
+msgid "is unknown"
+msgstr "é desconhecida"
+
+
 msgid "Pivotal quantity"
 msgstr "Quantidade pivotal"
 
 msgid "Confidence level"
 msgstr "Coeficiente de confiança"
 
+msgid "and"
+msgstr "e"
+
+msgid "of Chi-Squared population"
+msgstr "de uma população Q-Quadrada"
+
 msgid "of symmetric distribution"
 msgstr "de uma distribuição simétrica"
 
 msgid "Degrees of freedom"
 msgstr "Graus de liberdade"
-
-msgid "is unknown"
-msgstr "é não conhecida"
 
 msgid "Skewness"
 msgstr "Assimetria"
@@ -354,4 +361,3 @@ msgstr "Limite superior"
 
 msgid "Lower whisker limit"
 msgstr "Limite inferior"
-
