@@ -56,7 +56,7 @@ PF <- function(q, dist = "normal", rounding = 5, porcentage = FALSE, gui = "plot
 
 
     axis(side = 1, at = q, labels = FALSE, col = "#880000", lwd.ticks = 2, tick = TRUE)
-    axis(side = 1, at = q, labels = substitute(X(p) == q, list(p = p, q = q)), col = "#880000",col.axis = "#880000", font = 2, lwd = 1, tick = FALSE, pos = auxposh)
+    axis(side = 1, at = q, labels = substitute(x == q, list(p = p, q = q)), col = "#880000",col.axis = "#880000", font = 2, lwd = 1, tick = FALSE, pos = auxposh)
 
     axis(side = 2, at = p, labels = FALSE, col = "red", lwd.ticks = 2, tick = TRUE)
     axis(side = 2, at = p, labels = substitute(f[x](q) == p, list(p = p, q = q)), col = "red", col.axis = "red", font = 2, lwd = 1, tick = FALSE, pos = auxposv)
