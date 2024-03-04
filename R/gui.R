@@ -341,7 +341,7 @@ leem <- function(gui = TRUE) {
     tkadd(stat_menuquant, "command", label = gettext("T-Student", domain = "R-leem"),
           accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
     #Menu tabfreq
-    tkadd(stat_menubasic, "command", label = gettext("Table of frequêncy", domain = "R-leem"),
+    tkadd(stat_menubasic, "command", label = gettext("Table of frequency", domain = "R-leem"),
           accelerator = "Ctrl+V", command = function()  tkdestroy(topwinstat))
 
     #Menu Statistics High

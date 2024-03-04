@@ -1,72 +1,38 @@
+#' Probability function
+#'
+#' \code{PF} This function computes the value of the probability function for the discrete random variables
+#'
+#' @details The standard distribution to be computed will be the Binomial distribution (\code{dist='binomial'}). Once you forget the function arguments, don't worry, they will be requested via the console. This means if the user does not know the parameters of the distribution, the \code{pf()} function takes care of asking the user.
+#' - If \code{dist='binomial'}: \eqn{X \sim Bin(n, p)}
+#'   - additional arguments: \code{size} \eqn{(n)} and \code{prob} \eqn{(p)};
+#'   - Suport of X: \eqn{S_X=\{0,1,..., n\}}; this represents the values for the \code{x} argument;
+#'
+#'
+#' @param x represents the assumed value of the random variable X. The \code{x} argument is a value of support of X. See Details.
+#' @param dist distribution to use. The default is \code{'binomial'}. Options: \code{'binomial'} and \code{'poisson'}. The other discrete distributions are being implemented.
+#' @param rounding numerical; it represents the number of decimals for calculating the probability.
+#' @param porcentage logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.
+#' @param gui default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'none'}, \code{'rstudio'} or \code{'tcltk'}.
+#' @param plot logical; if \code{TRUE} (default), the result will be shown along with its graphical representation; otherwise, only the result will be shown.
+#' @param ... additional arguments according to the chosen distribution.
+#'
+#' @return \code{PF} returns the probability and its graphical representation. The result can be given as a percentage or not.
+#'
+#' @examples
+#' # Loading package
+#' library(leem)
+#' # Example 1 - Binomial distribution
+#' \dontrun{
+#' PF(2, dist = "binomial", size = 10, prob = 0.8)
+#' }
 #' @export
-
-PF <- function(q, dist = "normal", rounding = 5, porcentage = FALSE, gui = "plot", main = NULL, plot = TRUE, ...){
+PF <- function(x, dist = "binomial", rounding = 5, porcentage = FALSE, gui = "plot", main = NULL, plot = TRUE, ...){
+  # x argument
+  q <- x
   # Arguments in '...'
   argaddit <- list(...)
   # Formal arguments
   argdef <- formals(PF)
-  if(dist == "normal"){
-    #Security
-    if (!any(names(argaddit) == "mean")) {
-      mean <- readline(gettext("Insert the value of 'mean' argument: ", domain = "R-leem"))
-      argaddit$mean <- as.numeric(mean)
-    }
-
-    if (!any(names(argaddit) == "sd")) {
-      sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
-      argaddit$sd <- as.numeric(sd)
-    }
-
-    if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
-
-    #Variables
-    mu <- argaddit$mean
-    sigma <- argaddit$sd
-
-    #Graphic
-    minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
-    maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
-
-    x <- seq(minimo, maximo, by = 0.01)
-
-    fx <- dnorm(x, mean = mu, sd = sigma)
-
-    if (!any(names(argaddit) == "main")){
-      main <- substitute(atop(bold("Probability Function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2), list(t1 = q, x = "x"))
-    }
-
-    curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-          ylim = c(0, 1.2*max(fx)), ylab = expression(f[X](x)), xlab="X",
-          panel.first = grid(col = "gray90"),
-          main = main)
-
-    polygon(c(x, rev(x)),
-            c(fx, rep(0, length(fx))),
-            col="#99ccff")
-
-    p <- round(dnorm(q, mean = mu, sd = sigma), digits = 2)
-
-    segments(par("usr")[1], p, q, lty = 2, col = "red", lwd = 2)
-    segments(q, 0, q, p, lty = 2, col = "#880000", lwd = 2)
-
-    points(q, p, pch = 16, col = "red", cex = 1.5)
-
-    auxposh <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
-    auxposv <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 30
-
-
-    axis(side = 1, at = q, labels = FALSE, col = "#880000", lwd.ticks = 2, tick = TRUE)
-    axis(side = 1, at = q, labels = substitute(x == q, list(p = p, q = q)), col = "#880000",col.axis = "#880000", font = 2, lwd = 1, tick = FALSE, pos = auxposh)
-
-    axis(side = 2, at = p, labels = FALSE, col = "red", lwd.ticks = 2, tick = TRUE)
-    axis(side = 2, at = p, labels = substitute(f[x](q) == p, list(p = p, q = q)), col = "red", col.axis = "red", font = 2, lwd = 1, tick = FALSE, pos = auxposv)
-
-    legend("topleft", cex = 0.9, box.col = "black", bg = "#e0e0e0",
-           legend = substitute(bold("Parameters:"~mu ==  mean ~ "," ~ sigma == varen),
-                               list(mean = mu, varen = sigma)))
-    #Result
-    prob <- dnorm(q, mean = mu, sd = sigma)
-  }
   if(dist == "poisson"){
     #Security
     if (!any(names(argaddit) == "lambda")) {
@@ -205,8 +171,6 @@ PF <- function(q, dist = "normal", rounding = 5, porcentage = FALSE, gui = "plot
     #Result
     prob <- dbinom(q, size = size, prob = prob)
   }
-
-
   #Return
   prob <- round(prob, rounding)
   if (porcentage == TRUE) prob <- prob * 100

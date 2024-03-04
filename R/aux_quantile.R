@@ -1371,7 +1371,7 @@ plotqftspdfaux <- function(q, df1, df2, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                          list(df1v = df1, df2v = df2)),
+                        list(df1v = df1, df2v = df2)),
     cex = 0.8
   )
 
@@ -6305,496 +6305,496 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
 # Hypergeometric distribution
 #############################
 
-        # CDF
-        plotqhypertscdf <- function(p, m, n, k, rounding, ...) {
-          paux <- p
-          paux <- c(p / 2, 1 - p / 2)
-          qaux <- qhyper(paux, m, n, k)
-          paux2 <- c(phyper(qaux, m, n, k))
-          rmin <- 0
-          rmax <- ceiling(qaux[2] + sqrt(k))
-          x <- rmin:rmax
-          pointx <- phyper(x, m, n, k)
-          xlim <- c(rmin, rmax)
-          ylim <- c(0, 1.2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1, at = x)
-          axis(2)
+# CDF
+plotqhypertscdf <- function(p, m, n, k, rounding, ...) {
+  paux <- p
+  paux <- c(p / 2, 1 - p / 2)
+  qaux <- qhyper(paux, m, n, k)
+  paux2 <- c(phyper(qaux, m, n, k))
+  rmin <- 0
+  rmax <- ceiling(qaux[2] + sqrt(k))
+  x <- rmin:rmax
+  pointx <- phyper(x, m, n, k)
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = x)
+  axis(2)
 
-          title(
-            ylab = expression(F[X](x)),
-            xlab = "X",
-            panel.first = grid(col = "gray90"),
-            main = bquote(
-              atop(
-                bold("Cumulative distribution plot: Hypergeometric"),
-                Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}") ~ "," ~ Q[S]("p*") ==
-                  inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") * "," ~ "p*" ==
-                  1 - p
-              )
-            ),
-            ...
-          )
-          points(x, phyper(x - 1, m, n, k), lwd = 2, pch = 1)
-          points(x, pointx, lwd = 2, pch = 19)
-          #abline(v = lambda, lty = 2)
-          qq <- round(paux, digits = rounding)
-          qqaux <- round(qhyper(paux, m, n, k), digits = rounding)
-          # X-axis: Q1
-          aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
-          axis(
-            side = 1,
-            at = qaux[1],
-            labels = substitute(q == qtle, list(qtle = qaux[1])),
-            col.axis = "red",
-            font = 2,
-            pos = aux2,
-            tick = FALSE
-          )
-          axis(
-            side = 1,
-            at = as.character(qaux[1]),
-            labels = FALSE,
-            col.axis = "red",
-            col = "red",
-            font = 2,
-            tick = TRUE,
-            lwd.ticks = 1
-          )
-          # X-axis: Q2
-          aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
-          axis(
-            side = 1,
-            at = qaux[2],
-            labels = substitute(q[S] == qtle, list(qtle = qaux[2])),
-            col.axis = "blue",
-            font = 2,
-            pos = aux2,
-            tick = FALSE
-          )
-          axis(
-            side = 1,
-            at = qaux[2],
-            labels = FALSE,
-            col.axis = "blue",
-            col = "blue",
-            font = 2,
-            tick = TRUE
-          )
-          # Y-axis: P1
-          aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
-          axis(
-            side = 2,
-            at = qq[1],
-            labels = substitute(p == prob, list(prob = qq[1])),
-            col.axis = "red",
-            font = 2,
-            pos = aux,
-            tick = FALSE,
-            lwd = 0
-          )
-          axis(
-            side = 2,
-            at = qq[1],
-            labels = FALSE,
-            col.axis = "red",
-            col = "red",
-            font = 2,
-            tick = TRUE,
-            lwd.ticks = 1,
-            lwd = 0
-          )
-          # Y-axis: P2
-          aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
-          axis(
-            side = 2,
-            at = qq[2],
-            labels = substitute(1 - "p*" == prob, list(prob = qq[2])),
-            col.axis = "blue",
-            font = 2,
-            pos = aux,
-            tick = FALSE
-          )
-          axis(
-            side = 2,
-            at = qq[2],
-            labels = FALSE,
-            col.axis = "blue",
-            col = "blue",
-            font = 2,
-            tick = TRUE,
-            lwd.ticks = 1
-          )
-          rect(par("usr")[1],
-               1.03 * max(pointx),
-               par("usr")[2],
-               par("usr")[4],
-               col = "gray")
+  title(
+    ylab = expression(F[X](x)),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = bquote(
+      atop(
+        bold("Cumulative distribution plot: Hypergeometric"),
+        Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}") ~ "," ~ Q[S]("p*") ==
+          inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") * "," ~ "p*" ==
+          1 - p
+      )
+    ),
+    ...
+  )
+  points(x, phyper(x - 1, m, n, k), lwd = 2, pch = 1)
+  points(x, pointx, lwd = 2, pch = 19)
+  #abline(v = lambda, lty = 2)
+  qq <- round(paux, digits = rounding)
+  qqaux <- round(qhyper(paux, m, n, k), digits = rounding)
+  # X-axis: Q1
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qaux[1],
+    labels = substitute(q == qtle, list(qtle = qaux[1])),
+    col.axis = "red",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = as.character(qaux[1]),
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  # X-axis: Q2
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qaux[2],
+    labels = substitute(q[S] == qtle, list(qtle = qaux[2])),
+    col.axis = "blue",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = qaux[2],
+    labels = FALSE,
+    col.axis = "blue",
+    col = "blue",
+    font = 2,
+    tick = TRUE
+  )
+  # Y-axis: P1
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq[1],
+    labels = substitute(p == prob, list(prob = qq[1])),
+    col.axis = "red",
+    font = 2,
+    pos = aux,
+    tick = FALSE,
+    lwd = 0
+  )
+  axis(
+    side = 2,
+    at = qq[1],
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1,
+    lwd = 0
+  )
+  # Y-axis: P2
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq[2],
+    labels = substitute(1 - "p*" == prob, list(prob = qq[2])),
+    col.axis = "blue",
+    font = 2,
+    pos = aux,
+    tick = FALSE
+  )
+  axis(
+    side = 2,
+    at = qq[2],
+    labels = FALSE,
+    col.axis = "blue",
+    col = "blue",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  rect(par("usr")[1],
+       1.03 * max(pointx),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
 
-          w <- c(par("usr")[1], x)
-          for (i in 1:length(w)) {
-            segments(
-              w[i],
-              phyper(w[i], m, n, k),
-              w[i + 1],
-              max(phyper(w[i], m, n, k)),
-              lty = 1,
-              col = "black"
-            )
-            segments(w[i + 1],
-                     min(phyper(w[i + 1], m, n, k)),
-                     w[i + 1],
-                     max(phyper(w[i], m, n, k)),
-                     lty = 2,
-                     col = "black")
-          }
+  w <- c(par("usr")[1], x)
+  for (i in 1:length(w)) {
+    segments(
+      w[i],
+      phyper(w[i], m, n, k),
+      w[i + 1],
+      max(phyper(w[i], m, n, k)),
+      lty = 1,
+      col = "black"
+    )
+    segments(w[i + 1],
+             min(phyper(w[i + 1], m, n, k)),
+             w[i + 1],
+             max(phyper(w[i], m, n, k)),
+             lty = 2,
+             col = "black")
+  }
 
-          # Quantile
-          segments(qqaux,
-                   par("usr")[3],
-                   qqaux,
-                   qq,
-                   lty = 2,
-                   col = c("red", "blue"))
-          segments(par("usr")[1],
-                   qq,
-                   qqaux,
-                   qq,
-                   lty = 2,
-                   col = c("red", "blue"))
-          points(qqaux, qq, pch = 16, col = c("red", "blue"))
+  # Quantile
+  segments(qqaux,
+           par("usr")[3],
+           qqaux,
+           qq,
+           lty = 2,
+           col = c("red", "blue"))
+  segments(par("usr")[1],
+           qq,
+           qqaux,
+           qq,
+           lty = 2,
+           col = c("red", "blue"))
+  points(qqaux, qq, pch = 16, col = c("red", "blue"))
 
-          # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
-          legaux <- legend(
-            "topleft",
-            bty = "n",
-            pch = 19,
-            col = "red",
-            legend = substitute(
-              Q(p == p1 ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv) == Qr,
-              list(
-                Qr = qaux[1],
-                p = "p",
-                p1 = qq[1],
-                mv = m,
-                nv = n,
-                kv = k
-              )
-            ),
-            cex = 0.8
-          )
-          legend(
-            legaux$rect$left,
-            legaux$text$y,
-            bty = "n",
-            pch = 19,
-            col = "blue",
-            legend = substitute(
-              Q[S]("p*" == p2 ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv) == Qr,
-              list(
-                Qr = qaux[2],
-                p = "p",
-                p2 = 1-qq[2],
-                mv = m,
-                nv = n,
-                kv = k
-              )
-            ),
-            cex = 0.8
-          )
-        }
+  # Hint: https://www.statlect.com/fundamentals-of-probability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    pch = 19,
+    col = "red",
+    legend = substitute(
+      Q(p == p1 ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv) == Qr,
+      list(
+        Qr = qaux[1],
+        p = "p",
+        p1 = qq[1],
+        mv = m,
+        nv = n,
+        kv = k
+      )
+    ),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    pch = 19,
+    col = "blue",
+    legend = substitute(
+      Q[S]("p*" == p2 ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv) == Qr,
+      list(
+        Qr = qaux[2],
+        p = "p",
+        p2 = 1-qq[2],
+        mv = m,
+        nv = n,
+        kv = k
+      )
+    ),
+    cex = 0.8
+  )
+}
 
-        # PDF
-        plotqhypertspdfaux <- function(q, m, n, k, rounding, ...) {
-          # readjusting the range
-          ## ab-region
-          if (is.double(q)) {
-            if (attr(q, "region") == "region5") {
-              q[2] <- q[2] + 1
-            }
-            if (attr(q, "region") == "region1") {
-              q[1] <- q[1] - 1
-              q[2] <- q[2] + 1
-            }
-            if (attr(q, "region") == "region6") {
-              q[1] <- q[1] - 1
-            }
-            ## b-region
-            if (attr(q, "region") == "region7") {
-              q[2] <- q[2] - 1
-            }
-            if (attr(q, "region") == "region2") {
-              q[1] <- q[1] + 1
-              q[2] <- q[2] - 1
-            }
-            if (attr(q, "region") == "region8") {
-              q[1] <- q[1] + 1
-            }
-            if (q[1] >= q[2])
-              stop("Lower limit must be less than upper limit",
-                   call. = FALSE,
-                   domain = "R-leem")
-          }
+# PDF
+plotqhypertspdfaux <- function(q, m, n, k, rounding, ...) {
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2])
+      stop("Lower limit must be less than upper limit",
+           call. = FALSE,
+           domain = "R-leem")
+  }
 
-          rmin <-
-            if (q[1] < k) {
-              trunc(q[1] - sqrt(k))
-            } else {
-              trunc(k - sqrt(k))
-            }
-          if (rmin < 0) {
-            rmin <- 0
-          } else {
-            rmin <- round(rmin)
-          }
-          rmax <- ceiling(q[2] + sqrt(k))
+  rmin <-
+    if (q[1] < k) {
+      trunc(q[1] - sqrt(k))
+    } else {
+      trunc(k - sqrt(k))
+    }
+  if (rmin < 0) {
+    rmin <- 0
+  } else {
+    rmin <- round(rmin)
+  }
+  rmax <- ceiling(q[2] + sqrt(k))
 
-          x <- rmin:rmax
-          probx <- dhyper(x, m, n, k)
+  x <- rmin:rmax
+  probx <- dhyper(x, m, n, k)
 
-          xlim <- c(rmin, rmax)
-          ylim <- c(0, max(probx) * 1.2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1, at = 5 * (0:rmax))
-          axis(2)
-          points(
-            x,
-            probx,
-            lwd = 2,
-            pch = 19,
-            panel.first = grid(col = "gray90")
-          )
-          lines(x, probx, type = "h", lwd = 2)
-          qq <- round(q, digits = rounding)
-          aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
-          Pr <-
-            round(
-              phyper(q = q[1], m, n, k) + phyper(
-                q = q[2] - 1,
-                m, n, k,
-                lower.tail = FALSE
-              ),
-              digits = rounding
-            )
-          qqmin <- qq[1]
-          qqmax <- qq[2]
-          # red vertical lines and points
-          x1 <- if (rmin > qqmin) {
-            qqmin
-          } else {
-            rmin:qqmin
-          }
-          x2 <- qqmax:rmax
-          probx1 <- dhyper(x1, m, n, k)
-          probx2 <- dhyper(x2, m, n, k)
-          lines(x1,
-                probx1,
-                type = "h",
-                lwd = 2,
-                col = "red")
-          points(x1,
-                 probx1,
-                 lwd = 2,
-                 pch = 19,
-                 col = "red")
-          lines(x2,
-                probx2,
-                type = "h",
-                lwd = 2,
-                col = "red")
-          points(x2,
-                 probx2,
-                 lwd = 2,
-                 pch = 19,
-                 col = "red")
-          # Mean
-          #abline(v = lambda, lty = 2)
-          # Point of survival function
-          #abline(v = q[2] - 1, lty = 2, col = "blue")
-          # blue x-axis
-          # axis(
-          #   side = 1,
-          #   at = as.character(q[2] - 1),
-          #   col = "blue",
-          #   font = 2,
-          #   tick = FALSE,
-          #   lwd.ticks = 0,
-          #   col.axis = "blue",
-          #   pos = aux2
-          # )
-          # axis(
-          #   side = 1,
-          #   at = as.character(q[2] - 1),
-          #   tick = TRUE,
-          #   lwd = 0,
-          #   col = "blue",
-          #   font = 2,
-          #   lwd.ticks = 1,
-          #   labels = FALSE
-          # )
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(probx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5 * (0:rmax))
+  axis(2)
+  points(
+    x,
+    probx,
+    lwd = 2,
+    pch = 19,
+    panel.first = grid(col = "gray90")
+  )
+  lines(x, probx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  Pr <-
+    round(
+      phyper(q = q[1], m, n, k) + phyper(
+        q = q[2] - 1,
+        m, n, k,
+        lower.tail = FALSE
+      ),
+      digits = rounding
+    )
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- if (rmin > qqmin) {
+    qqmin
+  } else {
+    rmin:qqmin
+  }
+  x2 <- qqmax:rmax
+  probx1 <- dhyper(x1, m, n, k)
+  probx2 <- dhyper(x2, m, n, k)
+  lines(x1,
+        probx1,
+        type = "h",
+        lwd = 2,
+        col = "red")
+  points(x1,
+         probx1,
+         lwd = 2,
+         pch = 19,
+         col = "red")
+  lines(x2,
+        probx2,
+        type = "h",
+        lwd = 2,
+        col = "red")
+  points(x2,
+         probx2,
+         lwd = 2,
+         pch = 19,
+         col = "red")
+  # Mean
+  #abline(v = lambda, lty = 2)
+  # Point of survival function
+  #abline(v = q[2] - 1, lty = 2, col = "blue")
+  # blue x-axis
+  # axis(
+  #   side = 1,
+  #   at = as.character(q[2] - 1),
+  #   col = "blue",
+  #   font = 2,
+  #   tick = FALSE,
+  #   lwd.ticks = 0,
+  #   col.axis = "blue",
+  #   pos = aux2
+  # )
+  # axis(
+  #   side = 1,
+  #   at = as.character(q[2] - 1),
+  #   tick = TRUE,
+  #   lwd = 0,
+  #   col = "blue",
+  #   font = 2,
+  #   lwd.ticks = 1,
+  #   labels = FALSE
+  # )
 
-          # red x-axis
-          axis(
-            side = 1,
-            at = qqmin,
-            labels = substitute(q == q1, list(q1 = qqmin)),
-            lwd = 0,
-            col = "red",
-            font = 2,
-            tick = FALSE,
-            col.axis = "red",
-            pos = aux2
-          )
-          axis(
-            side = 1,
-            at = qqmax,
-            labels = substitute(q[S] == q2, list(q2 = qqmax)),
-            lwd = 0,
-            col = "red",
-            font = 2,
-            tick = FALSE,
-            col.axis = "red",
-            pos = aux2
-          )
-          axis(
-            side = 1,
-            at = as.character(c(qqmax, rmax)),
-            tick = TRUE,
-            lwd = 1,
-            col = "red",
-            font = 2,
-            lwd.ticks = 0,
-            labels = FALSE
-          )
+  # red x-axis
+  axis(
+    side = 1,
+    at = qqmin,
+    labels = substitute(q == q1, list(q1 = qqmin)),
+    lwd = 0,
+    col = "red",
+    font = 2,
+    tick = FALSE,
+    col.axis = "red",
+    pos = aux2
+  )
+  axis(
+    side = 1,
+    at = qqmax,
+    labels = substitute(q[S] == q2, list(q2 = qqmax)),
+    lwd = 0,
+    col = "red",
+    font = 2,
+    tick = FALSE,
+    col.axis = "red",
+    pos = aux2
+  )
+  axis(
+    side = 1,
+    at = as.character(c(qqmax, rmax)),
+    tick = TRUE,
+    lwd = 1,
+    col = "red",
+    font = 2,
+    lwd.ticks = 0,
+    labels = FALSE
+  )
 
-          axis(
-            side = 1,
-            at = as.character(q),
-            tick = TRUE,
-            lwd = 0,
-            col = "red",
-            font = 2,
-            lwd.ticks = 1,
-            labels = FALSE
-          )
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
 
-          # intervals
-          abline(v = c(qqmin, qqmax),
-                 lty = 2,
-                 col = "red")
-          # rectangle
-          rect(par("usr")[1],
-               1.03 * max(probx),
-               par("usr")[2],
-               par("usr")[4],
-               col = "gray")
-          # title and legends
-          if (qqmin < 0) {
-            axis(
-              side = 1,
-              at = as.character(qqmin),
-              tick = TRUE,
-              lwd = 1,
-              col = "red",
-              font = 2,
-              lwd.ticks = 1,
-              labels = FALSE
-            )
-            title(
-              ylab = expression(p[X](x)),
-              xlab = "X",
-              main = substitute(
-                atop(
-                  bold("Probability function plot: Hypergeometric"),
-                  p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
-                    "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
-                ),
-                list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
-              ),
-              ...
-            )
-            # legends
-            legaux <- legend(
-              "topleft",
-              bty = "n",
-              fill = "red",
-              legend = substitute(F[X](t1) + S[X](t2) == Pr,
-                                  list(
-                                    t1 = qqmin, t2 = qqmax - 1, Pr = Pr
-                                  )), cex = 0.8
-            )
-            legend(
-              rmin,
-              legaux$text$y,
-              bty = "n",
-              bg = "white",
-              legend = substitute("Parameters:" ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
-                                  list(mv = m,
-                                       nv = n,
-                                       kv = k)), cex = 0.8
-            )
-          } else{
-            axis(
-              side = 1,
-              at = as.character(c(rmin, qqmin)),
-              tick = TRUE,
-              lwd = 1,
-              col = "red",
-              font = 2,
-              lwd.ticks = 1,
-              labels = FALSE
-            )
-            title(
-              ylab = expression(p[X](x)),
-              xlab = "X",
-              main = substitute(
-                atop(
-                  bold("Probability function plot: Hypergeometric"),
-                  p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
-                    "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
-                ),
-                list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
-              ),
-              ...
-            )
-            # legends
-            legaux <- legend(
-              "topleft",
-              bty = "n",
-              fill = "red",
-              legend = substitute(F[X](t1) + S[X](t2) == Pr,
-                                  list(
-                                    t1 = qqmin, t2 = qqmax - 1, Pr = Pr
-                                  )), cex = 0.8
-            )
-            legend(
-              rmin,
-              legaux$text$y,
-              bty = "n",
-              bg = "white",
-              legend = substitute("Parameters:" ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
-                                  list(mv = m,
-                                       nv = n,
-                                       kv = k)), cex = 0.8
-            )
-          }
-        }
-        plotqhypertspdf <- function(p, m, n, k, rounding, ...) {
-          p <- c(p / 2, 1 - p / 2)
-          q <- qhyper(p, m, n, k)
-          plotqhypertspdfaux(q[1] %<=X<=% q[2], m, n, k, rounding, ...)
-        }
+  # intervals
+  abline(v = c(qqmin, qqmax),
+         lty = 2,
+         col = "red")
+  # rectangle
+  rect(par("usr")[1],
+       1.03 * max(probx),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # title and legends
+  if (qqmin < 0) {
+    axis(
+      side = 1,
+      at = as.character(qqmin),
+      tick = TRUE,
+      lwd = 1,
+      col = "red",
+      font = 2,
+      lwd.ticks = 1,
+      labels = FALSE
+    )
+    title(
+      ylab = expression(p[X](x)),
+      xlab = "X",
+      main = substitute(
+        atop(
+          bold("Probability function plot: Hypergeometric"),
+          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+            "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
+        ),
+        list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
+      ),
+      ...
+    )
+    # legends
+    legaux <- legend(
+      "topleft",
+      bty = "n",
+      fill = "red",
+      legend = substitute(F[X](t1) + S[X](t2) == Pr,
+                          list(
+                            t1 = qqmin, t2 = qqmax - 1, Pr = Pr
+                          )), cex = 0.8
+    )
+    legend(
+      rmin,
+      legaux$text$y,
+      bty = "n",
+      bg = "white",
+      legend = substitute("Parameters:" ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
+                          list(mv = m,
+                               nv = n,
+                               kv = k)), cex = 0.8
+    )
+  } else{
+    axis(
+      side = 1,
+      at = as.character(c(rmin, qqmin)),
+      tick = TRUE,
+      lwd = 1,
+      col = "red",
+      font = 2,
+      lwd.ticks = 1,
+      labels = FALSE
+    )
+    title(
+      ylab = expression(p[X](x)),
+      xlab = "X",
+      main = substitute(
+        atop(
+          bold("Probability function plot: Hypergeometric"),
+          p[X](x) == frac(symbol(lambda) ^ x %*% e ^ -symbol(lambda), x * "!") *
+            "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
+        ),
+        list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
+      ),
+      ...
+    )
+    # legends
+    legaux <- legend(
+      "topleft",
+      bty = "n",
+      fill = "red",
+      legend = substitute(F[X](t1) + S[X](t2) == Pr,
+                          list(
+                            t1 = qqmin, t2 = qqmax - 1, Pr = Pr
+                          )), cex = 0.8
+    )
+    legend(
+      rmin,
+      legaux$text$y,
+      bty = "n",
+      bg = "white",
+      legend = substitute("Parameters:" ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
+                          list(mv = m,
+                               nv = n,
+                               kv = k)), cex = 0.8
+    )
+  }
+}
+plotqhypertspdf <- function(p, m, n, k, rounding, ...) {
+  p <- c(p / 2, 1 - p / 2)
+  q <- qhyper(p, m, n, k)
+  plotqhypertspdfaux(q[1] %<=X<=% q[2], m, n, k, rounding, ...)
+}
 
-        # BOTH
-        plotqhypertsboth <- function(p, m, n, k, rounding, mfrow, ...) {
-          op <- par(mfrow = mfrow)
-          plotqhypertscdf(p, m, n, k, rounding, ...)
-          plotqhypertspdf(p, m, n, k, rounding, ...)
-          # Preserving the global variable
-          par(op)
-        }
+# BOTH
+plotqhypertsboth <- function(p, m, n, k, rounding, mfrow, ...) {
+  op <- par(mfrow = mfrow)
+  plotqhypertscdf(p, m, n, k, rounding, ...)
+  plotqhypertspdf(p, m, n, k, rounding, ...)
+  # Preserving the global variable
+  par(op)
+}
 
 
 
@@ -6804,504 +6804,504 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
 # Uniform distribution
 ######################
 
-        # CDF
-        plotquniftscdf <- function(p, min, max, rounding, ...) {
-          paux <- p
-          paux <- c(p / 2, 1 - p / 2)
-          qaux <- qunif(paux, min, max)
-          paux2 <- c(punif(qaux, min, max))
-          rmin <-
-            if (qaux[1] < min) {
-              trunc(qaux[1] - 4 * sqrt(min))
-            } else {
-              trunc(min - 4 * sqrt(min))
-            }
-          if (rmin < 0) {
-            rmin <- 0
-          } else {
-            rmin <- round(rmin)
-          }
-          rmax <- ceiling(max + 2 * sqrt(max))
-          x <- rmin:rmax
-          pointx <- punif(x, min, max)
-          xlim <- c(rmin, rmax)
-          ylim <- c(0, 1.2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1, at = x)
-          axis(2)
+# CDF
+plotquniftscdf <- function(p, min, max, rounding, ...) {
+  paux <- p
+  paux <- c(p / 2, 1 - p / 2)
+  qaux <- qunif(paux, min, max)
+  paux2 <- c(punif(qaux, min, max))
+  rmin <-
+    if (qaux[1] < min) {
+      trunc(qaux[1] - 4 * sqrt(min))
+    } else {
+      trunc(min - 4 * sqrt(min))
+    }
+  if (rmin < 0) {
+    rmin <- 0
+  } else {
+    rmin <- round(rmin)
+  }
+  rmax <- ceiling(max + 2 * sqrt(max))
+  x <- rmin:rmax
+  pointx <- punif(x, min, max)
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = x)
+  axis(2)
 
-          title(
-            ylab = expression(F[X](x)),
-            xlab = "X",
-            panel.first = grid(col = "gray90"),
-            main = bquote(
-              atop(
-                bold("Cumulative distribution plot: Uniform"),
-                Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}") ~ "," ~ Q[S]("p*") ==
-                  inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") * "," ~ "p*" ==
-                  1 - p
-              )
-            ),
-            ...
-          )
-          points(x, punif(x - 1, min, max), lwd = 2, pch = 1)
-          points(x, pointx, lwd = 2, pch = 19)
-          #abline(v = lambda, lty = 2)
-          qq <- round(paux, digits = rounding)
-          qqaux <- round(qunif(paux, min, max), digits = rounding)
-          # X-axis: Q1
-          aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
-          axis(
-            side = 1,
-            at = qaux[1],
-            labels = substitute(q == qtle, list(qtle = qaux[1])),
-            col.axis = "red",
-            font = 2,
-            pos = aux2,
-            tick = FALSE
-          )
-          axis(
-            side = 1,
-            at = as.character(qaux[1]),
-            labels = FALSE,
-            col.axis = "red",
-            col = "red",
-            font = 2,
-            tick = TRUE,
-            lwd.ticks = 1
-          )
-          # X-axis: Q2
-          aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
-          axis(
-            side = 1,
-            at = qaux[2],
-            labels = substitute(q[S] == qtle, list(qtle = qaux[2])),
-            col.axis = "blue",
-            font = 2,
-            pos = aux2,
-            tick = FALSE
-          )
-          axis(
-            side = 1,
-            at = qaux[2],
-            labels = FALSE,
-            col.axis = "blue",
-            col = "blue",
-            font = 2,
-            tick = TRUE
-          )
-          # Y-axis: P1
-          aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
-          axis(
-            side = 2,
-            at = qq[1],
-            labels = substitute(p == max, list(max = qq[1])),
-            col.axis = "red",
-            font = 2,
-            pos = aux,
-            tick = FALSE,
-            lwd = 0
-          )
-          axis(
-            side = 2,
-            at = qq[1],
-            labels = FALSE,
-            col.axis = "red",
-            col = "red",
-            font = 2,
-            tick = TRUE,
-            lwd.ticks = 1,
-            lwd = 0
-          )
-          # Y-axis: P2
-          aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
-          axis(
-            side = 2,
-            at = qq[2],
-            labels = substitute(1 - "p*" == max, list(max = qq[2])),
-            col.axis = "blue",
-            font = 2,
-            pos = aux,
-            tick = FALSE
-          )
-          axis(
-            side = 2,
-            at = qq[2],
-            labels = FALSE,
-            col.axis = "blue",
-            col = "blue",
-            font = 2,
-            tick = TRUE,
-            lwd.ticks = 1
-          )
-          rect(par("usr")[1],
-               1.03 * max(pointx),
-               par("usr")[2],
-               par("usr")[4],
-               col = "gray")
+  title(
+    ylab = expression(F[X](x)),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = bquote(
+      atop(
+        bold("Cumulative distribution plot: Uniform"),
+        Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}") ~ "," ~ Q[S]("p*") ==
+          inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") * "," ~ "p*" ==
+          1 - p
+      )
+    ),
+    ...
+  )
+  points(x, punif(x - 1, min, max), lwd = 2, pch = 1)
+  points(x, pointx, lwd = 2, pch = 19)
+  #abline(v = lambda, lty = 2)
+  qq <- round(paux, digits = rounding)
+  qqaux <- round(qunif(paux, min, max), digits = rounding)
+  # X-axis: Q1
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qaux[1],
+    labels = substitute(q == qtle, list(qtle = qaux[1])),
+    col.axis = "red",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = as.character(qaux[1]),
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  # X-axis: Q2
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qaux[2],
+    labels = substitute(q[S] == qtle, list(qtle = qaux[2])),
+    col.axis = "blue",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = qaux[2],
+    labels = FALSE,
+    col.axis = "blue",
+    col = "blue",
+    font = 2,
+    tick = TRUE
+  )
+  # Y-axis: P1
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq[1],
+    labels = substitute(p == max, list(max = qq[1])),
+    col.axis = "red",
+    font = 2,
+    pos = aux,
+    tick = FALSE,
+    lwd = 0
+  )
+  axis(
+    side = 2,
+    at = qq[1],
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1,
+    lwd = 0
+  )
+  # Y-axis: P2
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq[2],
+    labels = substitute(1 - "p*" == max, list(max = qq[2])),
+    col.axis = "blue",
+    font = 2,
+    pos = aux,
+    tick = FALSE
+  )
+  axis(
+    side = 2,
+    at = qq[2],
+    labels = FALSE,
+    col.axis = "blue",
+    col = "blue",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  rect(par("usr")[1],
+       1.03 * max(pointx),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
 
-          w <- c(par("usr")[1], x)
-          for (i in 1:length(w)) {
-            segments(
-              w[i],
-              punif(w[i], min, max),
-              w[i + 1],
-              max(punif(w[i], min, max)),
-              lty = 1,
-              col = "black"
-            )
-            segments(w[i + 1],
-                     min(punif(w[i + 1], min, max)),
-                     w[i + 1],
-                     max(punif(w[i], min, max)),
-                     lty = 2,
-                     col = "black")
-          }
+  w <- c(par("usr")[1], x)
+  for (i in 1:length(w)) {
+    segments(
+      w[i],
+      punif(w[i], min, max),
+      w[i + 1],
+      max(punif(w[i], min, max)),
+      lty = 1,
+      col = "black"
+    )
+    segments(w[i + 1],
+             min(punif(w[i + 1], min, max)),
+             w[i + 1],
+             max(punif(w[i], min, max)),
+             lty = 2,
+             col = "black")
+  }
 
-          # Quantile
-          segments(qqaux,
-                   par("usr")[3],
-                   qqaux,
-                   qq,
-                   lty = 2,
-                   col = c("red", "blue"))
-          segments(par("usr")[1],
-                   qq,
-                   qqaux,
-                   qq,
-                   lty = 2,
-                   col = c("red", "blue"))
-          points(qqaux, qq, pch = 16, col = c("red", "blue"))
+  # Quantile
+  segments(qqaux,
+           par("usr")[3],
+           qqaux,
+           qq,
+           lty = 2,
+           col = c("red", "blue"))
+  segments(par("usr")[1],
+           qq,
+           qqaux,
+           qq,
+           lty = 2,
+           col = c("red", "blue"))
+  points(qqaux, qq, pch = 16, col = c("red", "blue"))
 
-          # Hint: https://www.statlect.com/fundamentals-of-maxability/quantile
-          legaux <- legend(
-            "topleft",
-            bty = "n",
-            pch = 19,
-            col = "red",
-            legend = substitute(
-              Q(p == p1 ~ "; " ~ min == minv ~ ";" ~ max == maxv) == Qr,
-              list(
-                Qr = qaux[1],
-                p = "p",
-                p1 = qq[1],
-                minv = min,
-                maxv = max
-              )
-            ),
-            cex = 0.8
-          )
-          legend(
-            legaux$rect$left,
-            legaux$text$y,
-            bty = "n",
-            pch = 19,
-            col = "blue",
-            legend = substitute(
-              Q[S]("p*" == p2 ~ "; " ~ min == minv ~ ";" ~ max == maxv) == Qr,
-              list(
-                Qr = qaux[2],
-                p = "p",
-                p2 = 1-qq[2],
-                minv = min,
-                maxv = max
-              )
-            ),
-            cex = 0.8
-          )
-        }
+  # Hint: https://www.statlect.com/fundamentals-of-maxability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    pch = 19,
+    col = "red",
+    legend = substitute(
+      Q(p == p1 ~ "; " ~ min == minv ~ ";" ~ max == maxv) == Qr,
+      list(
+        Qr = qaux[1],
+        p = "p",
+        p1 = qq[1],
+        minv = min,
+        maxv = max
+      )
+    ),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    pch = 19,
+    col = "blue",
+    legend = substitute(
+      Q[S]("p*" == p2 ~ "; " ~ min == minv ~ ";" ~ max == maxv) == Qr,
+      list(
+        Qr = qaux[2],
+        p = "p",
+        p2 = 1-qq[2],
+        minv = min,
+        maxv = max
+      )
+    ),
+    cex = 0.8
+  )
+}
 
-        # PDF
-        plotquniftspdfaux <- function(q, min, max, rounding, ...) {
-          # readjusting the range
-          ## ab-region
-          if (is.double(q)) {
-            if (attr(q, "region") == "region5") {
-              q[2] <- q[2] + 1
-            }
-            if (attr(q, "region") == "region1") {
-              q[1] <- q[1] - 1
-              q[2] <- q[2] + 1
-            }
-            if (attr(q, "region") == "region6") {
-              q[1] <- q[1] - 1
-            }
-            ## b-region
-            if (attr(q, "region") == "region7") {
-              q[2] <- q[2] - 1
-            }
-            if (attr(q, "region") == "region2") {
-              q[1] <- q[1] + 1
-              q[2] <- q[2] - 1
-            }
-            if (attr(q, "region") == "region8") {
-              q[1] <- q[1] + 1
-            }
-            if (q[1] >= q[2])
-              stop("Lower limit must be less than upper limit",
-                   call. = FALSE,
-                   domain = "R-leem")
-          }
+# PDF
+plotquniftspdfaux <- function(q, min, max, rounding, ...) {
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2])
+      stop("Lower limit must be less than upper limit",
+           call. = FALSE,
+           domain = "R-leem")
+  }
 
-          rmin <-
-            if (q[1] < min) {
-              trunc(q[1] - 4 * sqrt(min))
-            } else {
-              trunc(min - 4 * sqrt(min))
-            }
-          if (rmin < 0) {
-            rmin <- 0
-          } else {
-            rmin <- round(rmin)
-          }
-          rmax <-
-            if (q[2] > min) {
-              ceiling(q[2] + 4 * sqrt(min))
-            } else {
-              ceiling(min + 4 * sqrt(min))
-            }
-          x <- rmin:rmax
-          maxx <- dunif(x, min, max)
+  rmin <-
+    if (q[1] < min) {
+      trunc(q[1] - 4 * sqrt(min))
+    } else {
+      trunc(min - 4 * sqrt(min))
+    }
+  if (rmin < 0) {
+    rmin <- 0
+  } else {
+    rmin <- round(rmin)
+  }
+  rmax <-
+    if (q[2] > min) {
+      ceiling(q[2] + 4 * sqrt(min))
+    } else {
+      ceiling(min + 4 * sqrt(min))
+    }
+  x <- rmin:rmax
+  maxx <- dunif(x, min, max)
 
-          xlim <- c(rmin, rmax)
-          ylim <- c(0, max(maxx) * 1.2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1, at = 5 * (0:rmax))
-          axis(2)
-          points(
-            x,
-            maxx,
-            lwd = 2,
-            pch = 19,
-            panel.first = grid(col = "gray90")
-          )
-          lines(x, maxx, type = "h", lwd = 2)
-          qq <- round(q, digits = rounding)
-          aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
-          Pr <-
-            round(
-              punif(q = q[1], min, max) + punif(
-                q = q[2] - 1,
-                min, max,
-                lower.tail = FALSE
-              ),
-              digits = rounding
-            )
-          qqmin <- qq[1]
-          qqmax <- qq[2]
-          # red vertical lines and points
-          x1 <- if (rmin > qqmin) {
-            qqmin
-          } else {
-            rmin:qqmin
-          }
-          x2 <- qqmax:rmax
-          maxx1 <- dunif(x1, min, max)
-          maxx2 <- dunif(x2, min, max)
-          lines(x1,
-                maxx1,
-                type = "h",
-                lwd = 2,
-                col = "red")
-          points(x1,
-                 maxx1,
-                 lwd = 2,
-                 pch = 19,
-                 col = "red")
-          lines(x2,
-                maxx2,
-                type = "h",
-                lwd = 2,
-                col = "red")
-          points(x2,
-                 maxx2,
-                 lwd = 2,
-                 pch = 19,
-                 col = "red")
-          # Mean
-          #abline(v = lambda, lty = 2)
-          # Point of survival function
-          #abline(v = q[2] - 1, lty = 2, col = "blue")
-          # blue x-axis
-          # axis(
-          #   side = 1,
-          #   at = as.character(q[2] - 1),
-          #   col = "blue",
-          #   font = 2,
-          #   tick = FALSE,
-          #   lwd.ticks = 0,
-          #   col.axis = "blue",
-          #   pos = aux2
-          # )
-          # axis(
-          #   side = 1,
-          #   at = as.character(q[2] - 1),
-          #   tick = TRUE,
-          #   lwd = 0,
-          #   col = "blue",
-          #   font = 2,
-          #   lwd.ticks = 1,
-          #   labels = FALSE
-          # )
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(maxx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5 * (0:rmax))
+  axis(2)
+  points(
+    x,
+    maxx,
+    lwd = 2,
+    pch = 19,
+    panel.first = grid(col = "gray90")
+  )
+  lines(x, maxx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  Pr <-
+    round(
+      punif(q = q[1], min, max) + punif(
+        q = q[2] - 1,
+        min, max,
+        lower.tail = FALSE
+      ),
+      digits = rounding
+    )
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- if (rmin > qqmin) {
+    qqmin
+  } else {
+    rmin:qqmin
+  }
+  x2 <- qqmax:rmax
+  maxx1 <- dunif(x1, min, max)
+  maxx2 <- dunif(x2, min, max)
+  lines(x1,
+        maxx1,
+        type = "h",
+        lwd = 2,
+        col = "red")
+  points(x1,
+         maxx1,
+         lwd = 2,
+         pch = 19,
+         col = "red")
+  lines(x2,
+        maxx2,
+        type = "h",
+        lwd = 2,
+        col = "red")
+  points(x2,
+         maxx2,
+         lwd = 2,
+         pch = 19,
+         col = "red")
+  # Mean
+  #abline(v = lambda, lty = 2)
+  # Point of survival function
+  #abline(v = q[2] - 1, lty = 2, col = "blue")
+  # blue x-axis
+  # axis(
+  #   side = 1,
+  #   at = as.character(q[2] - 1),
+  #   col = "blue",
+  #   font = 2,
+  #   tick = FALSE,
+  #   lwd.ticks = 0,
+  #   col.axis = "blue",
+  #   pos = aux2
+  # )
+  # axis(
+  #   side = 1,
+  #   at = as.character(q[2] - 1),
+  #   tick = TRUE,
+  #   lwd = 0,
+  #   col = "blue",
+  #   font = 2,
+  #   lwd.ticks = 1,
+  #   labels = FALSE
+  # )
 
-          # red x-axis
-          axis(
-            side = 1,
-            at = qqmin,
-            labels = substitute(q == q1, list(q1 = qqmin)),
-            lwd = 0,
-            col = "red",
-            font = 2,
-            tick = FALSE,
-            col.axis = "red",
-            pos = aux2
-          )
-          axis(
-            side = 1,
-            at = qqmax,
-            labels = substitute(q[S] == q2, list(q2 = qqmax)),
-            lwd = 0,
-            col = "red",
-            font = 2,
-            tick = FALSE,
-            col.axis = "red",
-            pos = aux2
-          )
-          axis(
-            side = 1,
-            at = as.character(c(qqmax, rmax)),
-            tick = TRUE,
-            lwd = 1,
-            col = "red",
-            font = 2,
-            lwd.ticks = 0,
-            labels = FALSE
-          )
+  # red x-axis
+  axis(
+    side = 1,
+    at = qqmin,
+    labels = substitute(q == q1, list(q1 = qqmin)),
+    lwd = 0,
+    col = "red",
+    font = 2,
+    tick = FALSE,
+    col.axis = "red",
+    pos = aux2
+  )
+  axis(
+    side = 1,
+    at = qqmax,
+    labels = substitute(q[S] == q2, list(q2 = qqmax)),
+    lwd = 0,
+    col = "red",
+    font = 2,
+    tick = FALSE,
+    col.axis = "red",
+    pos = aux2
+  )
+  axis(
+    side = 1,
+    at = as.character(c(qqmax, rmax)),
+    tick = TRUE,
+    lwd = 1,
+    col = "red",
+    font = 2,
+    lwd.ticks = 0,
+    labels = FALSE
+  )
 
-          axis(
-            side = 1,
-            at = as.character(q),
-            tick = TRUE,
-            lwd = 0,
-            col = "red",
-            font = 2,
-            lwd.ticks = 1,
-            labels = FALSE
-          )
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
 
-          # intervals
-          abline(v = c(qqmin, qqmax),
-                 lty = 2,
-                 col = "red")
-          # rectangle
-          rect(par("usr")[1],
-               1.03 * max(maxx),
-               par("usr")[2],
-               par("usr")[4],
-               col = "gray")
-          # title and legends
-          if (qqmin < 0) {
-            axis(
-              side = 1,
-              at = as.character(qqmin),
-              tick = TRUE,
-              lwd = 1,
-              col = "red",
-              font = 2,
-              lwd.ticks = 1,
-              labels = FALSE
-            )
-            title(
-              ylab = expression(p[X](x)),
-              xlab = "X",
-              main = substitute(
-                atop(
-                  bold("Probability function plot: Uniform"),
-                  p[X](x) == frac(n*"!", x*"!"*(n-x)*"!") *
-                    "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
-                ),
-                list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
-              ),
-              ...
-            )
-            # legends
-            legaux <- legend(
-              "topleft",
-              bty = "n",
-              fill = "red",
-              legend = substitute(F[X](t1) + S[X](t2) == Pr,
-                                  list(
-                                    t1 = qqmin, t2 = qqmax - 1, Pr = Pr
-                                  )), cex = 0.8
-            )
-            legend(
-              rmin,
-              legaux$text$y,
-              bty = "n",
-              bg = "white",
-              legend = substitute("Parameters:" ~ min == minv ~ ";"~ max == maxv,
-                                  list(minv = min, maxv = max)), cex = 0.8
-            )
-          } else{
-            axis(
-              side = 1,
-              at = as.character(c(rmin, qqmin)),
-              tick = TRUE,
-              lwd = 1,
-              col = "red",
-              font = 2,
-              lwd.ticks = 1,
-              labels = FALSE
-            )
-            title(
-              ylab = expression(p[X](x)),
-              xlab = "X",
-              main = substitute(
-                atop(
-                  bold("Probability function plot: Uniform"),
-                  p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
-                    "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
-                ),
-                list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
-              ),
-              ...
-            )
-            # legends
-            legaux <- legend(
-              "topleft",
-              bty = "n",
-              fill = "red",
-              legend = substitute(F[X](t1) + S[X](t2) == Pr,
-                                  list(
-                                    t1 = qqmin, t2 = qqmax - 1, Pr = Pr
-                                  )), cex = 0.8
-            )
-            legend(
-              rmin,
-              legaux$text$y,
-              bty = "n",
-              bg = "white",
-              legend = substitute("Parameters:" ~ min == minv ~ ";"~ max == maxv,
-                                  list(minv = min, maxv = max)), cex = 0.8
-            )
-          }
-        }
-        plotquniftspdf <- function(p, min, max, rounding, ...) {
-          p <- c(p / 2, 1 - p / 2)
-          q <- qunif(p, min, max)
-          plotquniftspdfaux(q[1] %<=X<=% q[2], min, max, rounding, ...)
-        }
+  # intervals
+  abline(v = c(qqmin, qqmax),
+         lty = 2,
+         col = "red")
+  # rectangle
+  rect(par("usr")[1],
+       1.03 * max(maxx),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # title and legends
+  if (qqmin < 0) {
+    axis(
+      side = 1,
+      at = as.character(qqmin),
+      tick = TRUE,
+      lwd = 1,
+      col = "red",
+      font = 2,
+      lwd.ticks = 1,
+      labels = FALSE
+    )
+    title(
+      ylab = expression(p[X](x)),
+      xlab = "X",
+      main = substitute(
+        atop(
+          bold("Probability function plot: Uniform"),
+          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!") *
+            "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
+        ),
+        list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
+      ),
+      ...
+    )
+    # legends
+    legaux <- legend(
+      "topleft",
+      bty = "n",
+      fill = "red",
+      legend = substitute(F[X](t1) + S[X](t2) == Pr,
+                          list(
+                            t1 = qqmin, t2 = qqmax - 1, Pr = Pr
+                          )), cex = 0.8
+    )
+    legend(
+      rmin,
+      legaux$text$y,
+      bty = "n",
+      bg = "white",
+      legend = substitute("Parameters:" ~ min == minv ~ ";"~ max == maxv,
+                          list(minv = min, maxv = max)), cex = 0.8
+    )
+  } else{
+    axis(
+      side = 1,
+      at = as.character(c(rmin, qqmin)),
+      tick = TRUE,
+      lwd = 1,
+      col = "red",
+      font = 2,
+      lwd.ticks = 1,
+      labels = FALSE
+    )
+    title(
+      ylab = expression(p[X](x)),
+      xlab = "X",
+      main = substitute(
+        atop(
+          bold("Probability function plot: Uniform"),
+          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
+            "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
+        ),
+        list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
+      ),
+      ...
+    )
+    # legends
+    legaux <- legend(
+      "topleft",
+      bty = "n",
+      fill = "red",
+      legend = substitute(F[X](t1) + S[X](t2) == Pr,
+                          list(
+                            t1 = qqmin, t2 = qqmax - 1, Pr = Pr
+                          )), cex = 0.8
+    )
+    legend(
+      rmin,
+      legaux$text$y,
+      bty = "n",
+      bg = "white",
+      legend = substitute("Parameters:" ~ min == minv ~ ";"~ max == maxv,
+                          list(minv = min, maxv = max)), cex = 0.8
+    )
+  }
+}
+plotquniftspdf <- function(p, min, max, rounding, ...) {
+  p <- c(p / 2, 1 - p / 2)
+  q <- qunif(p, min, max)
+  plotquniftspdfaux(q[1] %<=X<=% q[2], min, max, rounding, ...)
+}
 
-        # BOTH
-        plotquniftsboth <- function(p, min, max, rounding, mfrow, ...) {
-          op <- par(mfrow = mfrow)
-          plotquniftscdf(p, min, max, rounding, ...)
-          plotquniftspdf(p, min, max, rounding, ...)
-          # Preserving the global variable
-          par(op)
-        }
+# BOTH
+plotquniftsboth <- function(p, min, max, rounding, mfrow, ...) {
+  op <- par(mfrow = mfrow)
+  plotquniftscdf(p, min, max, rounding, ...)
+  plotquniftspdf(p, min, max, rounding, ...)
+  # Preserving the global variable
+  par(op)
+}
 
 
 
@@ -7312,489 +7312,489 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
 # Wilcox distribution
 ######################
 
-        # CDF
-        plotqwilcoxtscdf <- function(p, m, n, rounding, ...) {
-          paux <- p
-          paux <- c(p / 2, 1 - p / 2)
-          qaux <- qwilcox(paux, m, n)
-          paux2 <- c(pwilcox(qaux, m, n))
-          rmin <- 0
-          rmax <- qaux[2]+2*qaux[2]
-          x <- rmin:rmax
-          pointx <- pwilcox(x, m, n)
-          xlim <- c(rmin, rmax)
-          ylim <- c(0, 1.2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1, at = x)
-          axis(2)
+# CDF
+plotqwilcoxtscdf <- function(p, m, n, rounding, ...) {
+  paux <- p
+  paux <- c(p / 2, 1 - p / 2)
+  qaux <- qwilcox(paux, m, n)
+  paux2 <- c(pwilcox(qaux, m, n))
+  rmin <- 0
+  rmax <- qaux[2]+2*qaux[2]
+  x <- rmin:rmax
+  pointx <- pwilcox(x, m, n)
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = x)
+  axis(2)
 
-          title(
-            ylab = expression(F[X](x)),
-            xlab = "X",
-            panel.first = grid(col = "gray90"),
-            main = bquote(
-              atop(
-                bold("Cumulative distribution plot: Wilcox"),
-                Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}") ~ "," ~ Q[S]("p*") ==
-                  inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") * "," ~ "p*" ==
-                  1 - p
-              )
-            ),
-            ...
-          )
-          points(x, pwilcox(x - 1, m, n), lwd = 2, pch = 1)
-          points(x, pointx, lwd = 2, pch = 19)
-          #abline(v = lambda, lty = 2)
-          qq <- round(paux, digits = rounding)
-          qqaux <- round(qwilcox(paux, m, n), digits = rounding)
-          # X-axis: Q1
-          aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
-          axis(
-            side = 1,
-            at = qaux[1],
-            labels = substitute(q == qtle, list(qtle = qaux[1])),
-            col.axis = "red",
-            font = 2,
-            pos = aux2,
-            tick = FALSE
-          )
-          axis(
-            side = 1,
-            at = as.character(qaux[1]),
-            labels = FALSE,
-            col.axis = "red",
-            col = "red",
-            font = 2,
-            tick = TRUE,
-            lwd.ticks = 1
-          )
-          # X-axis: Q2
-          aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
-          axis(
-            side = 1,
-            at = qaux[2],
-            labels = substitute(q[S] == qtle, list(qtle = qaux[2])),
-            col.axis = "blue",
-            font = 2,
-            pos = aux2,
-            tick = FALSE
-          )
-          axis(
-            side = 1,
-            at = qaux[2],
-            labels = FALSE,
-            col.axis = "blue",
-            col = "blue",
-            font = 2,
-            tick = TRUE
-          )
-          # Y-axis: P1
-          aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
-          axis(
-            side = 2,
-            at = qq[1],
-            labels = substitute(p == n, list(n = qq[1])),
-            col.axis = "red",
-            font = 2,
-            pos = aux,
-            tick = FALSE,
-            lwd = 0
-          )
-          axis(
-            side = 2,
-            at = qq[1],
-            labels = FALSE,
-            col.axis = "red",
-            col = "red",
-            font = 2,
-            tick = TRUE,
-            lwd.ticks = 1,
-            lwd = 0
-          )
-          # Y-axis: P2
-          aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
-          axis(
-            side = 2,
-            at = qq[2],
-            labels = substitute(1 - "p*" == n, list(n = qq[2])),
-            col.axis = "blue",
-            font = 2,
-            pos = aux,
-            tick = FALSE
-          )
-          axis(
-            side = 2,
-            at = qq[2],
-            labels = FALSE,
-            col.axis = "blue",
-            col = "blue",
-            font = 2,
-            tick = TRUE,
-            lwd.ticks = 1
-          )
-          rect(par("usr")[1],
-               1.03 * max(pointx),
-               par("usr")[2],
-               par("usr")[4],
-               col = "gray")
+  title(
+    ylab = expression(F[X](x)),
+    xlab = "X",
+    panel.first = grid(col = "gray90"),
+    main = bquote(
+      atop(
+        bold("Cumulative distribution plot: Wilcox"),
+        Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}") ~ "," ~ Q[S]("p*") ==
+          inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") * "," ~ "p*" ==
+          1 - p
+      )
+    ),
+    ...
+  )
+  points(x, pwilcox(x - 1, m, n), lwd = 2, pch = 1)
+  points(x, pointx, lwd = 2, pch = 19)
+  #abline(v = lambda, lty = 2)
+  qq <- round(paux, digits = rounding)
+  qqaux <- round(qwilcox(paux, m, n), digits = rounding)
+  # X-axis: Q1
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qaux[1],
+    labels = substitute(q == qtle, list(qtle = qaux[1])),
+    col.axis = "red",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = as.character(qaux[1]),
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  # X-axis: Q2
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  axis(
+    side = 1,
+    at = qaux[2],
+    labels = substitute(q[S] == qtle, list(qtle = qaux[2])),
+    col.axis = "blue",
+    font = 2,
+    pos = aux2,
+    tick = FALSE
+  )
+  axis(
+    side = 1,
+    at = qaux[2],
+    labels = FALSE,
+    col.axis = "blue",
+    col = "blue",
+    font = 2,
+    tick = TRUE
+  )
+  # Y-axis: P1
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq[1],
+    labels = substitute(p == n, list(n = qq[1])),
+    col.axis = "red",
+    font = 2,
+    pos = aux,
+    tick = FALSE,
+    lwd = 0
+  )
+  axis(
+    side = 2,
+    at = qq[1],
+    labels = FALSE,
+    col.axis = "red",
+    col = "red",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1,
+    lwd = 0
+  )
+  # Y-axis: P2
+  aux <- par("usr")[1] - (par("usr")[2] - par("usr")[1]) / 20
+  axis(
+    side = 2,
+    at = qq[2],
+    labels = substitute(1 - "p*" == n, list(n = qq[2])),
+    col.axis = "blue",
+    font = 2,
+    pos = aux,
+    tick = FALSE
+  )
+  axis(
+    side = 2,
+    at = qq[2],
+    labels = FALSE,
+    col.axis = "blue",
+    col = "blue",
+    font = 2,
+    tick = TRUE,
+    lwd.ticks = 1
+  )
+  rect(par("usr")[1],
+       1.03 * max(pointx),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
 
-          w <- c(par("usr")[1], x)
-          for (i in 1:length(w)) {
-            segments(
-              w[i],
-              pwilcox(w[i], m, n),
-              w[i + 1],
-              max(pwilcox(w[i], m, n)),
-              lty = 1,
-              col = "black"
-            )
-            segments(w[i + 1],
-                     min(pwilcox(w[i + 1], m, n)),
-                     w[i + 1],
-                     max(pwilcox(w[i], m, n)),
-                     lty = 2,
-                     col = "black")
-          }
+  w <- c(par("usr")[1], x)
+  for (i in 1:length(w)) {
+    segments(
+      w[i],
+      pwilcox(w[i], m, n),
+      w[i + 1],
+      max(pwilcox(w[i], m, n)),
+      lty = 1,
+      col = "black"
+    )
+    segments(w[i + 1],
+             min(pwilcox(w[i + 1], m, n)),
+             w[i + 1],
+             max(pwilcox(w[i], m, n)),
+             lty = 2,
+             col = "black")
+  }
 
-          # Quantile
-          segments(qqaux,
-                   par("usr")[3],
-                   qqaux,
-                   qq,
-                   lty = 2,
-                   col = c("red", "blue"))
-          segments(par("usr")[1],
-                   qq,
-                   qqaux,
-                   qq,
-                   lty = 2,
-                   col = c("red", "blue"))
-          points(qqaux, qq, pch = 16, col = c("red", "blue"))
+  # Quantile
+  segments(qqaux,
+           par("usr")[3],
+           qqaux,
+           qq,
+           lty = 2,
+           col = c("red", "blue"))
+  segments(par("usr")[1],
+           qq,
+           qqaux,
+           qq,
+           lty = 2,
+           col = c("red", "blue"))
+  points(qqaux, qq, pch = 16, col = c("red", "blue"))
 
-          # Hint: https://www.statlect.com/fundamentals-of-nability/quantile
-          legaux <- legend(
-            "topleft",
-            bty = "n",
-            pch = 19,
-            col = "red",
-            legend = substitute(
-              Q(p == p1 ~ "; " ~ m == mv ~ ";" ~ n == nv) == Qr,
-              list(
-                Qr = qaux[1],
-                p = "p",
-                p1 = qq[1],
-                mv = m,
-                nv = n
-              )
-            ),
-            cex = 0.8
-          )
-          legend(
-            legaux$rect$left,
-            legaux$text$y,
-            bty = "n",
-            pch = 19,
-            col = "blue",
-            legend = substitute(
-              Q[S]("p*" == p2 ~ "; " ~ m == mv ~ ";" ~ n == nv) == Qr,
-              list(
-                Qr = qaux[2],
-                p = "p",
-                p2 = 1-qq[2],
-                mv = m,
-                nv = n
-              )
-            ),
-            cex = 0.8
-          )
-        }
+  # Hint: https://www.statlect.com/fundamentals-of-nability/quantile
+  legaux <- legend(
+    "topleft",
+    bty = "n",
+    pch = 19,
+    col = "red",
+    legend = substitute(
+      Q(p == p1 ~ "; " ~ m == mv ~ ";" ~ n == nv) == Qr,
+      list(
+        Qr = qaux[1],
+        p = "p",
+        p1 = qq[1],
+        mv = m,
+        nv = n
+      )
+    ),
+    cex = 0.8
+  )
+  legend(
+    legaux$rect$left,
+    legaux$text$y,
+    bty = "n",
+    pch = 19,
+    col = "blue",
+    legend = substitute(
+      Q[S]("p*" == p2 ~ "; " ~ m == mv ~ ";" ~ n == nv) == Qr,
+      list(
+        Qr = qaux[2],
+        p = "p",
+        p2 = 1-qq[2],
+        mv = m,
+        nv = n
+      )
+    ),
+    cex = 0.8
+  )
+}
 
-        # PDF
-        plotqwilcoxtspdfaux <- function(q, m, n, rounding, ...) {
-          # readjusting the range
-          ## ab-region
-          if (is.double(q)) {
-            if (attr(q, "region") == "region5") {
-              q[2] <- q[2] + 1
-            }
-            if (attr(q, "region") == "region1") {
-              q[1] <- q[1] - 1
-              q[2] <- q[2] + 1
-            }
-            if (attr(q, "region") == "region6") {
-              q[1] <- q[1] - 1
-            }
-            ## b-region
-            if (attr(q, "region") == "region7") {
-              q[2] <- q[2] - 1
-            }
-            if (attr(q, "region") == "region2") {
-              q[1] <- q[1] + 1
-              q[2] <- q[2] - 1
-            }
-            if (attr(q, "region") == "region8") {
-              q[1] <- q[1] + 1
-            }
-            if (q[1] >= q[2])
-              stop("Lower limit must be less than upper limit",
-                   call. = FALSE,
-                   domain = "R-leem")
-          }
+# PDF
+plotqwilcoxtspdfaux <- function(q, m, n, rounding, ...) {
+  # readjusting the range
+  ## ab-region
+  if (is.double(q)) {
+    if (attr(q, "region") == "region5") {
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region1") {
+      q[1] <- q[1] - 1
+      q[2] <- q[2] + 1
+    }
+    if (attr(q, "region") == "region6") {
+      q[1] <- q[1] - 1
+    }
+    ## b-region
+    if (attr(q, "region") == "region7") {
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region2") {
+      q[1] <- q[1] + 1
+      q[2] <- q[2] - 1
+    }
+    if (attr(q, "region") == "region8") {
+      q[1] <- q[1] + 1
+    }
+    if (q[1] >= q[2])
+      stop("Lower limit must be less than upper limit",
+           call. = FALSE,
+           domain = "R-leem")
+  }
 
-          rmin <-
-            if (q[1] < m) {
-              trunc(q[1] - 4 * sqrt(m))
-            } else {
-              trunc(m - 4 * sqrt(m))
-            }
-          if (rmin < 0) {
-            rmin <- 0
-          } else {
-            rmin <- round(rmin)
-          }
-          rmax <- ceiling(q[2] + 2 * q[2])
-          x <- rmin:rmax
-          nx <- dwilcox(x, m, n)
+  rmin <-
+    if (q[1] < m) {
+      trunc(q[1] - 4 * sqrt(m))
+    } else {
+      trunc(m - 4 * sqrt(m))
+    }
+  if (rmin < 0) {
+    rmin <- 0
+  } else {
+    rmin <- round(rmin)
+  }
+  rmax <- ceiling(q[2] + 2 * q[2])
+  x <- rmin:rmax
+  nx <- dwilcox(x, m, n)
 
-          xlim <- c(rmin, rmax)
-          ylim <- c(0, max(nx) * 1.2)
-          plot.new()
-          plot.window(xlim, ylim)
-          axis(1, at = 5 * (0:rmax))
-          axis(2)
-          points(
-            x,
-            nx,
-            lwd = 2,
-            pch = 19,
-            panel.first = grid(col = "gray90")
-          )
-          lines(x, nx, type = "h", lwd = 2)
-          qq <- round(q, digits = rounding)
-          aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
-          Pr <-
-            round(
-              pwilcox(q = q[1], m, n) + pwilcox(
-                q = q[2] - 1,
-                m, n,
-                lower.tail = FALSE
-              ),
-              digits = rounding
-            )
-          qqmin <- qq[1]
-          qqmax <- qq[2]
-          # red vertical lines and points
-          x1 <- if (rmin > qqmin) {
-            qqmin
-          } else {
-            rmin:qqmin
-          }
-          x2 <- qqmax:rmax
-          nx1 <- dwilcox(x1, m, n)
-          nx2 <- dwilcox(x2, m, n)
-          lines(x1,
-                nx1,
-                type = "h",
-                lwd = 2,
-                col = "red")
-          points(x1,
-                 nx1,
-                 lwd = 2,
-                 pch = 19,
-                 col = "red")
-          lines(x2,
-                nx2,
-                type = "h",
-                lwd = 2,
-                col = "red")
-          points(x2,
-                 nx2,
-                 lwd = 2,
-                 pch = 19,
-                 col = "red")
-          # Mean
-          #abline(v = lambda, lty = 2)
-          # Point of survival function
-          #abline(v = q[2] - 1, lty = 2, col = "blue")
-          # blue x-axis
-          # axis(
-          #   side = 1,
-          #   at = as.character(q[2] - 1),
-          #   col = "blue",
-          #   font = 2,
-          #   tick = FALSE,
-          #   lwd.ticks = 0,
-          #   col.axis = "blue",
-          #   pos = aux2
-          # )
-          # axis(
-          #   side = 1,
-          #   at = as.character(q[2] - 1),
-          #   tick = TRUE,
-          #   lwd = 0,
-          #   col = "blue",
-          #   font = 2,
-          #   lwd.ticks = 1,
-          #   labels = FALSE
-          # )
+  xlim <- c(rmin, rmax)
+  ylim <- c(0, max(nx) * 1.2)
+  plot.new()
+  plot.window(xlim, ylim)
+  axis(1, at = 5 * (0:rmax))
+  axis(2)
+  points(
+    x,
+    nx,
+    lwd = 2,
+    pch = 19,
+    panel.first = grid(col = "gray90")
+  )
+  lines(x, nx, type = "h", lwd = 2)
+  qq <- round(q, digits = rounding)
+  aux2 <- par("usr")[3] - (par("usr")[4] - par("usr")[3]) / 20
+  Pr <-
+    round(
+      pwilcox(q = q[1], m, n) + pwilcox(
+        q = q[2] - 1,
+        m, n,
+        lower.tail = FALSE
+      ),
+      digits = rounding
+    )
+  qqmin <- qq[1]
+  qqmax <- qq[2]
+  # red vertical lines and points
+  x1 <- if (rmin > qqmin) {
+    qqmin
+  } else {
+    rmin:qqmin
+  }
+  x2 <- qqmax:rmax
+  nx1 <- dwilcox(x1, m, n)
+  nx2 <- dwilcox(x2, m, n)
+  lines(x1,
+        nx1,
+        type = "h",
+        lwd = 2,
+        col = "red")
+  points(x1,
+         nx1,
+         lwd = 2,
+         pch = 19,
+         col = "red")
+  lines(x2,
+        nx2,
+        type = "h",
+        lwd = 2,
+        col = "red")
+  points(x2,
+         nx2,
+         lwd = 2,
+         pch = 19,
+         col = "red")
+  # Mean
+  #abline(v = lambda, lty = 2)
+  # Point of survival function
+  #abline(v = q[2] - 1, lty = 2, col = "blue")
+  # blue x-axis
+  # axis(
+  #   side = 1,
+  #   at = as.character(q[2] - 1),
+  #   col = "blue",
+  #   font = 2,
+  #   tick = FALSE,
+  #   lwd.ticks = 0,
+  #   col.axis = "blue",
+  #   pos = aux2
+  # )
+  # axis(
+  #   side = 1,
+  #   at = as.character(q[2] - 1),
+  #   tick = TRUE,
+  #   lwd = 0,
+  #   col = "blue",
+  #   font = 2,
+  #   lwd.ticks = 1,
+  #   labels = FALSE
+  # )
 
-          # red x-axis
-          axis(
-            side = 1,
-            at = qqmin,
-            labels = substitute(q == q1, list(q1 = qqmin)),
-            lwd = 0,
-            col = "red",
-            font = 2,
-            tick = FALSE,
-            col.axis = "red",
-            pos = aux2
-          )
-          axis(
-            side = 1,
-            at = qqmax,
-            labels = substitute(q[S] == q2, list(q2 = qqmax)),
-            lwd = 0,
-            col = "red",
-            font = 2,
-            tick = FALSE,
-            col.axis = "red",
-            pos = aux2
-          )
-          axis(
-            side = 1,
-            at = as.character(c(qqmax, rmax)),
-            tick = TRUE,
-            lwd = 1,
-            col = "red",
-            font = 2,
-            lwd.ticks = 0,
-            labels = FALSE
-          )
+  # red x-axis
+  axis(
+    side = 1,
+    at = qqmin,
+    labels = substitute(q == q1, list(q1 = qqmin)),
+    lwd = 0,
+    col = "red",
+    font = 2,
+    tick = FALSE,
+    col.axis = "red",
+    pos = aux2
+  )
+  axis(
+    side = 1,
+    at = qqmax,
+    labels = substitute(q[S] == q2, list(q2 = qqmax)),
+    lwd = 0,
+    col = "red",
+    font = 2,
+    tick = FALSE,
+    col.axis = "red",
+    pos = aux2
+  )
+  axis(
+    side = 1,
+    at = as.character(c(qqmax, rmax)),
+    tick = TRUE,
+    lwd = 1,
+    col = "red",
+    font = 2,
+    lwd.ticks = 0,
+    labels = FALSE
+  )
 
-          axis(
-            side = 1,
-            at = as.character(q),
-            tick = TRUE,
-            lwd = 0,
-            col = "red",
-            font = 2,
-            lwd.ticks = 1,
-            labels = FALSE
-          )
+  axis(
+    side = 1,
+    at = as.character(q),
+    tick = TRUE,
+    lwd = 0,
+    col = "red",
+    font = 2,
+    lwd.ticks = 1,
+    labels = FALSE
+  )
 
-          # intervals
-          abline(v = c(qqmin, qqmax),
-                 lty = 2,
-                 col = "red")
-          # rectangle
-          rect(par("usr")[1],
-               1.03 * max(nx),
-               par("usr")[2],
-               par("usr")[4],
-               col = "gray")
-          # title and legends
-          if (qqmin < 0) {
-            axis(
-              side = 1,
-              at = as.character(qqmin),
-              tick = TRUE,
-              lwd = 1,
-              col = "red",
-              font = 2,
-              lwd.ticks = 1,
-              labels = FALSE
-            )
-            title(
-              ylab = expression(p[X](x)),
-              xlab = "X",
-              main = substitute(
-                atop(
-                  bold("Probability function plot: Wilcox"),
-                  p[X](x) == frac(n*"!", x*"!"*(n-x)*"!") *
-                    "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
-                ),
-                list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
-              ),
-              ...
-            )
-            # legends
-            legaux <- legend(
-              "topleft",
-              bty = "n",
-              fill = "red",
-              legend = substitute(F[X](t1) + S[X](t2) == Pr,
-                                  list(
-                                    t1 = qqmin, t2 = qqmax - 1, Pr = Pr
-                                  )), cex = 0.8
-            )
-            legend(
-              rmin,
-              legaux$text$y,
-              bty = "n",
-              bg = "white",
-              legend = substitute("Parameters:" ~ m == mv ~ ";"~ n == nv,
-                                  list(mv = m, nv = n)), cex = 0.8
-            )
-          } else{
-            axis(
-              side = 1,
-              at = as.character(c(rmin, qqmin)),
-              tick = TRUE,
-              lwd = 1,
-              col = "red",
-              font = 2,
-              lwd.ticks = 1,
-              labels = FALSE
-            )
-            title(
-              ylab = expression(p[X](x)),
-              xlab = "X",
-              main = substitute(
-                atop(
-                  bold("Probability function plot: Wilcox"),
-                  p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
-                    "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
-                ),
-                list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
-              ),
-              ...
-            )
-            # legends
-            legaux <- legend(
-              "topleft",
-              bty = "n",
-              fill = "red",
-              legend = substitute(F[X](t1) + S[X](t2) == Pr,
-                                  list(
-                                    t1 = qqmin, t2 = qqmax - 1, Pr = Pr
-                                  )), cex = 0.8
-            )
-            legend(
-              rmin,
-              legaux$text$y,
-              bty = "n",
-              bg = "white",
-              legend = substitute("Parameters:" ~ m == mv ~ ";"~ n == nv,
-                                  list(mv = m, nv = n)), cex = 0.8
-            )
-          }
-        }
-        plotqwilcoxtspdf <- function(p, m, n, rounding, ...) {
-          p <- c(p / 2, 1 - p / 2)
-          q <- qwilcox(p, m, n)
-          plotqwilcoxtspdfaux(q[1] %<=X<=% q[2], m, n, rounding, ...)
-        }
+  # intervals
+  abline(v = c(qqmin, qqmax),
+         lty = 2,
+         col = "red")
+  # rectangle
+  rect(par("usr")[1],
+       1.03 * max(nx),
+       par("usr")[2],
+       par("usr")[4],
+       col = "gray")
+  # title and legends
+  if (qqmin < 0) {
+    axis(
+      side = 1,
+      at = as.character(qqmin),
+      tick = TRUE,
+      lwd = 1,
+      col = "red",
+      font = 2,
+      lwd.ticks = 1,
+      labels = FALSE
+    )
+    title(
+      ylab = expression(p[X](x)),
+      xlab = "X",
+      main = substitute(
+        atop(
+          bold("Probability function plot: Wilcox"),
+          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!") *
+            "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
+        ),
+        list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
+      ),
+      ...
+    )
+    # legends
+    legaux <- legend(
+      "topleft",
+      bty = "n",
+      fill = "red",
+      legend = substitute(F[X](t1) + S[X](t2) == Pr,
+                          list(
+                            t1 = qqmin, t2 = qqmax - 1, Pr = Pr
+                          )), cex = 0.8
+    )
+    legend(
+      rmin,
+      legaux$text$y,
+      bty = "n",
+      bg = "white",
+      legend = substitute("Parameters:" ~ m == mv ~ ";"~ n == nv,
+                          list(mv = m, nv = n)), cex = 0.8
+    )
+  } else{
+    axis(
+      side = 1,
+      at = as.character(c(rmin, qqmin)),
+      tick = TRUE,
+      lwd = 1,
+      col = "red",
+      font = 2,
+      lwd.ticks = 1,
+      labels = FALSE
+    )
+    title(
+      ylab = expression(p[X](x)),
+      xlab = "X",
+      main = substitute(
+        atop(
+          bold("Probability function plot: Wilcox"),
+          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
+            "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
+        ),
+        list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
+      ),
+      ...
+    )
+    # legends
+    legaux <- legend(
+      "topleft",
+      bty = "n",
+      fill = "red",
+      legend = substitute(F[X](t1) + S[X](t2) == Pr,
+                          list(
+                            t1 = qqmin, t2 = qqmax - 1, Pr = Pr
+                          )), cex = 0.8
+    )
+    legend(
+      rmin,
+      legaux$text$y,
+      bty = "n",
+      bg = "white",
+      legend = substitute("Parameters:" ~ m == mv ~ ";"~ n == nv,
+                          list(mv = m, nv = n)), cex = 0.8
+    )
+  }
+}
+plotqwilcoxtspdf <- function(p, m, n, rounding, ...) {
+  p <- c(p / 2, 1 - p / 2)
+  q <- qwilcox(p, m, n)
+  plotqwilcoxtspdfaux(q[1] %<=X<=% q[2], m, n, rounding, ...)
+}
 
-        # BOTH
-        plotqwilcoxtsboth <- function(p, m, n, rounding, mfrow, ...) {
-          op <- par(mfrow = mfrow)
-          plotqwilcoxtscdf(p, m, n, rounding, ...)
-          plotqwilcoxtspdf(p, m, n, rounding, ...)
-          # Preserving the global variable
-          par(op)
-        }
+# BOTH
+plotqwilcoxtsboth <- function(p, m, n, rounding, mfrow, ...) {
+  op <- par(mfrow = mfrow)
+  plotqwilcoxtscdf(p, m, n, rounding, ...)
+  plotqwilcoxtspdf(p, m, n, rounding, ...)
+  # Preserving the global variable
+  par(op)
+}
 
 
 
@@ -9280,7 +9280,7 @@ plotqflttpdfaux <- function(q, df1, df2, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                          list(df1v = df1, df2v = df2)),
+                        list(df1v = df1, df2v = df2)),
     cex = 0.8
   )
 }
@@ -16022,7 +16022,7 @@ plotqgammaltfpdfaux <- function(q, shape, rate, scale = scale, rounding, ...) {
         shape, scale = scale,
         lower.tail = FALSE
       ), digits = rounding)
-    }
+  }
   if(is.na(scale)){
     auxarg <- rate
     scale <- 1/rate

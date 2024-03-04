@@ -683,9 +683,11 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
           df <- ((sd(x)^2/n1)^2 + 2*(sd(x)^2/n1)*(sd(y)^2/n2) + (sd(y)^2/n2)^2)/((((sd(x)^2/n1)^2)/(n1-1))+(((sd(y)^2/n2)^2)/(n2-1)))
           sp <- sqrt(((sd(x)^2)/n1)+((sd(y)^2)/n2))
         }
-        title <- paste(gettext("  Two Sample T-Test (Bilateral Test) \n", domain = "R-leem"))
-        nullhyp <- paste(gettext("  H0: μ1 = μ2", domain = "R-leem"), sep = "")
-        althyp <- paste(gettext("  H1: μ1 != μ2", domain = "R-leem"), sep = "")
+        titleaux <- gettext("  Two Sample T-Test (Bilateral Test) \n", domain = "R-leem")
+        title <- paste0(titleaux)
+        nullhypaux <- gettext("  H0: mu1 = mu2", domain = "R-leem")
+        nullhyp <- paste0(nullhypaux, sep = "")
+        althyp <- paste0(gettext("  H1: mu1 != mu2", domain = "R-leem"), sep = "")
         signlevel <- paste(gettext("  alpha = ", domain = "R-leem"), round(alpha, 2), sep = "")
         ttest <- round((mean(x) - mean(y)) / sqrt(sp*(1/n1+1/n2)), 2)
         ttab <- round(qt(1 - (alpha)/2, df), 2)
@@ -842,10 +844,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         n2 <- length(y)
         df <- n1+n2-2
         sp <- ((n1-1)*var(x) + (n2-1)*var(y))/df
-        title <- paste(gettext("  Two Sample T-Test (Unilateral Test) \n", domain = "R-leem"))
-        nullhyp <- paste(gettext("  H0: μ1 >= μ2", domain = "R-leem"),
+        titleaux <- gettext("  Two Sample T-Test (Unilateral Test) \n", domain = "R-leem")
+        title <- paste(titleaux)
+        nullhypaux <- gettext("  H0: mu1 >= mu2", domain = "R-leem")
+        nullhyp <- paste(nullhypaux,
                          sep = "")
-        althyp <- paste(gettext("  H1: μ1 < μ2", domain = "R-leem"),
+        althyp <- paste(gettext("  H1: mu1 < mu2", domain = "R-leem"),
                         sep = "")
         signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2),
                            sep = "")
@@ -998,9 +1002,9 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         df <- n1+n2-2
         sp <- ((n1-1)*var(x) + (n2-1)*var(y))/df
         title <- paste(gettext("  Two Sample z-test (Unilateral test) \n", domain = "R-leem"))
-        nullhyp <- paste(gettext("  H0: μ1 <= μ2", domain = "R-leem"),
+        nullhyp <- paste(gettext("  H0: mu1 <= mu2", domain = "R-leem"),
                          sep = "")
-        althyp <- paste(gettext("  H1: μ1 > μ2", domain = "R-leem"),
+        althyp <- paste(gettext("  H1: mu1 > mu2", domain = "R-leem"),
                         sep = "")
         signlevel <- paste(gettext("  Alpha = ", domain = "R-leem"), round(alpha, 2),
                            sep = "")
