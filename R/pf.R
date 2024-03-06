@@ -122,19 +122,19 @@ PF <- function(x, dist = "binomial", rounding = 5, porcentage = FALSE, gui = "pl
     #Graphic
     minimo <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
     if (minimo < 0) minimo <- 0 else minimo <- round(minimo)
-    maximo <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
+    maximo <- if (q > size) ceiling(q + 5) else size
 
     x <- minimo:maximo
 
     fx <- dbinom(x, size = size, prob = prob)
 
     xlim <- c(minimo, maximo)
-    ylim <- c(min(x), max(fx) * 1.2)
+    ylim <- c(0, max(fx) * 1.2)
 
     plot.new()
     plot.window(xlim, ylim)
 
-    axis(1, 0:maximo)
+    axis(1, at = seq(0, maximo + 1, by = 5))
     axis(2)
 
     if (!any(names(argaddit) == "main")){
