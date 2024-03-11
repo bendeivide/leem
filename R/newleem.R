@@ -11,7 +11,6 @@
 #'
 #' # Example 2 (Pipe operator)
 #' rnorm(36, 100, 4) |> new_leem(variable = 2)
-#'
 #' @export
 new_leem <- function(x = vector(), variable = "discrete") {
   stopifnot("The x argument should be vector!" = is.vector(x))
