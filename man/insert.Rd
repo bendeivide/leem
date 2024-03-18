@@ -7,7 +7,7 @@
 insert(dados, ...)
 
 ## Leem S3 method:
-insert(x, type = "black", lcol, tcol = lcol, acol = lcol, parrow = 0.5,
+insert(x, type = "mean", lcol, tcol = lcol, acol = lcol, parrow = 0.5,
        larrow = 0.2, ptext = 0.6, side = "right", lwd = 2, lwdarrow = lwd)
 
 ## Default S3 method:

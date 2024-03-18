@@ -25,5 +25,4 @@ new_leem(x, variable = 1)
 
 # Example 2 (Pipe operator)
 rnorm(36, 100, 4) |> new_leem(variable = 2)
-
 }

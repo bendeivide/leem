@@ -18,7 +18,7 @@ PDF <- function(q, dist = "normal", rounding = 5, porcentage = FALSE, gui = "plo
 
     if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
 
-    #Variables
+    # Variables
     mu <- argaddit$mean
     sigma <- argaddit$sd
 
