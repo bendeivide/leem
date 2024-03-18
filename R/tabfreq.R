@@ -39,7 +39,7 @@
 #' ## Default S3 method:
 #' tabfreq(data)
 #' @export
-tabfreq <- function(dados, ...) {
+tabfreq <- function(data, ...) {
   UseMethod("tabfreq")
 }
 

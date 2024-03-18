@@ -1,9 +1,9 @@
 #' @export
-pdf <- function(q, dist = "normal", rounding = 5, porcentage = FALSE, gui = "plot", main = NULL, plot = TRUE, ...){
+PDF <- function(q, dist = "normal", rounding = 5, porcentage = FALSE, gui = "plot", main = NULL, plot = TRUE, ...){
   # Arguments in '...'
   argaddit <- list(...)
   # Formal arguments
-  argdef <- formals(pdf)
+  argdef <- formals(PDF)
   if(dist == "normal"){
     #Security
     if (!any(names(argaddit) == "mean")) {

@@ -16,9 +16,9 @@ P(
 )
 }
 \arguments{
-\item{q}{quantile. The \code{q} argument can have length 1 or 2. See Details.}
+\item{q}{numerical. The \code{q} argument can have length 1 or 2. See Details.}
 
-\item{dist}{distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....}
+\item{dist}{distribution to use. The default is \code{'normal'}. Options: \code{'normal'} (Normal distribution), \code{'t-student'} (Student's distribution), \code{chisq} (Chi-squared distribution), \code{'f'} (F distribution), \code{'gumbel'} (Gumbel distribution), \code{'beta'} (Beta distribution), \code{'exp'} (Exponential distribution), \code{'gamma'} (Gamma distribution), \code{'cauchy'} (Cauchy distribution), \code{'logis'} (Logistic distribution), \code{'lnormal'} (Log-normal distriburion), \code{'tukey'} (Tukey distribution), \code{'weibull'} (Weibull distribution), \code{'poisson'} (Poisson distribution), \code{'binomial'} (Binomial distribution), \code{'nbinom'} (Negative binomial distribution), \code{'hyper'} (Hypergeometric distribution), \code{'geom'} (Geometric distribution), \code{'unif'} (Uniform distribution), \code{'wilcox'} (Wilcoxon distribution), and \code{'signrank'} (Sign Rank distribution).}
 
 \item{lower.tail}{logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.}
 
@@ -37,14 +37,26 @@ P(
 \code{P} Compute the cumulative distribution function for multiple distributions
 }
 \details{
-The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
+The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%} (\eqn{(P[a < X < b])}), \code{\%<=X<\%} \eqn{(P[a \leq X < b])}, \code{\%<X<=\%} \eqn{(P[a < X \leq b])}, \code{\%<=X<=\%} \eqn{(P[a \leq X \leq b])}, \code{\%>X>\%} \eqn{(P[X < a] + P[X > b])}, \code{\%>X=>\%} \eqn{(P[X < a] + P[X \geq b])}, \code{\%>X=>\%} \eqn{(P[X < a] + P[X \geq b])} and \code{\%>=X=>\%} \eqn{(P[X < a] + P[X \geq b])}, considering \eqn{a,~b \in \mathbb{R}} and \eqn{b > a}.
 The additional arguments represent the parameters of the distributions, that is:
 \itemize{
+\item \code{dist = "normal"}: \code{mu} argument (\eqn{\mu}) represents the averages and \code{sd} argument (\eqn{\sigma}) represents the standard deviation parameters. The PDF is
+}
+
+\deqn{\displaystyle f(x)={\frac {1}{\sigma {\sqrt {2\pi }}}}e^{-{\frac {1}{2}}\left({\frac {x-\mu }{\sigma }}\right)^{2}}, \quad -\infty \geq x \geq \infty, \quad -\infty \geq \mu \geq \infty, \quad \sigma > 0;}
+\itemize{
 \item \code{dist = "t-student"}: \code{nu} argument (\eqn{\nu}) represents the degrees of freedom parameter. The PDF is
-\deqn{
-\frac{\Gamma\left\( \frac{\nu + 1}{2} \right\)}{\sqrt{\nu \pi}}\left\(1 + \frac{x^2}{\nu}\right\)
 }
+
+\deqn{\displaystyle f(t)={\frac {\ \Gamma \left({\frac {\ \nu +1\ }{2}}\right)\ }{\ {\sqrt {\pi \ \nu \ }}\ \Gamma \left({\frac {\nu }{2}}\right)}}\left(\ 1+{\frac {~t^{2}\ }{\nu }}\ \right)^{-(\nu +1)/2}
+\quad -\infty < t < \infty,~ \nu > 0,}
+where \eqn{\G0amma()} is gamma function;
+\itemize{
+\item \code{dist = "chisq"}: \code{nu} argument (\eqn{\nu}) represents the degrees of freedom parameter. The PDF is
 }
+
+\deqn{\displaystyle f(x)=\dfrac {x^{\nu/2-1}e^{-x/2}}{2^{\nu/2}\Gamma \left({\frac {\nu}{2}}\right)}, \quad x > 0, \quad \nu > 0,}
+where \eqn{\Gamma()} is gamma function;
 }
 \examples{
 # Loading package

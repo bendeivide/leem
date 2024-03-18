@@ -13,3 +13,4 @@ logo\.png
 ^pkgdown$
 R/transp_cores\.R
 diagram
+_criando_site.R
