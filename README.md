@@ -28,7 +28,7 @@ E a versão em desenvolvimento no [GitHub](https://github.com/)
 
 ``` r
 # Instalar os pacotes dependentes
-pkgs <- c("manipulate", "tkRplotR", "tkrplot", "crayon", "diagram")
+pkgs <- c("manipulate", "tkRplotR", "tkrplot", "crayon", "diagram", "writexl", "xtable")
 install.packages(pkgs)
 # install.packages("devtools")
 devtools::install_github("bendeivide/leem")

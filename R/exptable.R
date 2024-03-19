@@ -1,6 +1,10 @@
-#' @import utils write.table
-#' @import writexl write_xlsx
-#' @import xtable xtable
+#' @examples
+#' x <- rnorm(36, 100, 4) |> new_leem(variable = "continuous") |> tabfreq()
+#' exptable(x, name = "tabela.txt", type = "txt", dir = getwd())
+#'
+#' @importFrom utils write.table
+#' @importFrom writexl write_xlsx
+#' @importFrom xtable xtable
 #' @export
 exptable <- function(x, name = NULL, type = "latex", dir = getwd()){
   if (type != "latex" & is.null(name)) stop("Enter the file name using the 'name' argument!", domain = "R-leem")
