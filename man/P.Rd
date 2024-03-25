@@ -45,18 +45,24 @@ The additional arguments represent the parameters of the distributions, that is:
 
 \deqn{\displaystyle f(x)={\frac {1}{\sigma {\sqrt {2\pi }}}}e^{-{\frac {1}{2}}\left({\frac {x-\mu }{\sigma }}\right)^{2}}, \quad -\infty \geq x \geq \infty, \quad -\infty \geq \mu \geq \infty, \quad \sigma > 0;}
 \itemize{
-\item \code{dist = "t-student"}: \code{nu} argument (\eqn{\nu}) represents the degrees of freedom parameter. The PDF is
+\item \code{dist = "t-student"}: \code{df} argument (\eqn{\nu}) represents the degrees of freedom parameter. The PDF is
 }
 
 \deqn{\displaystyle f(t)={\frac {\ \Gamma \left({\frac {\ \nu +1\ }{2}}\right)\ }{\ {\sqrt {\pi \ \nu \ }}\ \Gamma \left({\frac {\nu }{2}}\right)}}\left(\ 1+{\frac {~t^{2}\ }{\nu }}\ \right)^{-(\nu +1)/2}
 \quad -\infty < t < \infty,~ \nu > 0,}
-where \eqn{\G0amma()} is gamma function;
+where \eqn{\Gamma} is gamma function;
 \itemize{
-\item \code{dist = "chisq"}: \code{nu} argument (\eqn{\nu}) represents the degrees of freedom parameter. The PDF is
+\item \code{dist = "chisq"}: \code{df} argument (\eqn{\nu}) represents the degrees of freedom parameter. The PDF is
 }
 
 \deqn{\displaystyle f(x)=\dfrac {x^{\nu/2-1}e^{-x/2}}{2^{\nu/2}\Gamma \left({\frac {\nu}{2}}\right)}, \quad x > 0, \quad \nu > 0,}
-where \eqn{\Gamma()} is gamma function;
+where \eqn{\Gamma} is gamma function;
+\itemize{
+\item \code{dist = "f"}: \code{df1} and \code{df2} arguments (\eqn{\nu_1} and \eqn{\nu_2}) represents the degrees of freedom parameters. The PDF is
+}
+
+\deqn{f(x) = \frac{\Gamma((\nu_1 + \nu_2) / 2)}{\Gamma(\nu_1 / 2)\Gamma(\nu_2 / 2)}\left(\frac{\nu_1}{\nu_2}\right)^{\nu_1 / 2} \times \frac{x^{(\nu_1 - 2) / 2}}{[1 + (\nu_1 / \nu_2)x]^{(\nu_1 + \nu_2)/2}}, \quad x > 0,\quad \nu_1,~\nu_2 > 0,}
+where \eqn{\Gamma} is gamma function;
 }
 \examples{
 # Loading package

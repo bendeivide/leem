@@ -223,7 +223,7 @@ leem <- function(gui = TRUE) {
     # File menu
     file_menu <- tkmenu(menu_bar, tearoff = FALSE)
     chosdir <- function(...) {
-      dir_name <- tkchooseDirectory()
+      dir_name <- tclvalue(tkchooseDirectory())
       if (nchar(dir_name <- tclvalue(dir_name))) {
         dir_name <- setwd(dir_name)
         on.exit(setwd(dir_name)) # Return initial directory
