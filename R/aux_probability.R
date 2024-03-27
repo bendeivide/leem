@@ -4526,9 +4526,8 @@ plotpexplttplot <- function(q, rate, rounding, main = NULL) {
   polygon(c(x1, rev(x1)),
           c(probx1, rep(0,length(probx1))),
           col = "red")
-  abline(v = 1 / rate, lty = 2)
-  qq <- round(q, digits = 2)
-  qqaux <- round(q, digits = 2)
+  qq <- round(q, digits = rounding)
+  qqaux <- round(q, digits = rounding)
   Pr <- round(pexp(qq, rate = rate, lower.tail = T), rounding)
 #Pr <- gsub("\\.", ",", Pr)
   #qq <- gsub("\\.", ",", qq)
@@ -4536,7 +4535,7 @@ plotpexplttplot <- function(q, rate, rounding, main = NULL) {
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
   axis(side=1, at=qq, lwd = 0,
        col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
-  axis(side=1, at=qqaux, labels=FALSE,
+  axis(side=1, at=c(0, qqaux), labels=FALSE,
        col="red", font = 2, col.axis = "red")
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
