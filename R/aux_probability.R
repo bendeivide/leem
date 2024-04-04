@@ -5793,8 +5793,8 @@ plotpcauchyltfplot <- function(q, location, scale, rounding, main = NULL){
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
           col="red")
-  qq <- round(q, digits=2)
-  qqaux <-round(q, digits=2)
+  qq <- round(q, digits=rounding)
+  qqaux <-round(q, digits=rounding)
   Pr <- round(pcauchy(qq,  location, scale, lower.tail = FALSE), digits=rounding)
   # Pr <- gsub("\\.", ",", Pr)
   # #qq <- gsub("\\.", ",", qq)
