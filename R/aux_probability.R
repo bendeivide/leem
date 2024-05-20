@@ -4526,9 +4526,8 @@ plotpexplttplot <- function(q, rate, rounding, main = NULL) {
   polygon(c(x1, rev(x1)),
           c(probx1, rep(0,length(probx1))),
           col = "red")
-  abline(v = 1 / rate, lty = 2)
-  qq <- round(q, digits = 2)
-  qqaux <- round(q, digits = 2)
+  qq <- round(q, digits = rounding)
+  qqaux <- round(q, digits = rounding)
   Pr <- round(pexp(qq, rate = rate, lower.tail = T), rounding)
 #Pr <- gsub("\\.", ",", Pr)
   #qq <- gsub("\\.", ",", qq)
@@ -4536,7 +4535,7 @@ plotpexplttplot <- function(q, rate, rounding, main = NULL) {
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
   axis(side=1, at=qq, lwd = 0,
        col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
-  axis(side=1, at=qqaux, labels=FALSE,
+  axis(side=1, at=c(0, qqaux), labels=FALSE,
        col="red", font = 2, col.axis = "red")
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
@@ -5659,35 +5658,26 @@ plotpexpltfplot <- function(q, rate, rounding, main = NULL) {
         ylab = expression(p[x](q)),
         xlab = "x", ylim = auxmain,
         panel.first = grid(col = "gray90"),
-        main = main)
+        main = main, cex.main = 0.8)
   polygon(c(x2, rev(x2)),
           c(probx2, rep(0,length(probx2))),
           col = "red")
   polygon(c(x1, rev(x1)),
           c(probx1, rep(0,length(probx1))),
           col = "gray90")
-  abline(v = rate, lty = 2)
-  qq <- round(q, digits = 2)
-  qqaux <- round(q, digits = 2)
+  qq <- round(q, digits = rounding)
+  qqaux <- round(q, digits = rounding)
   Pr <- round(pexp(qq, rate = rate, lower.tail = F), rounding)
-#Pr <- gsub("\\.", ",", Pr)
-  #qq <- gsub("\\.", ",", qq)
   axis(
-    side = 1, at = qqaux, labels = qqaux,
-    col = "red", font = 2, col.axis = "red"
+    side = 1, at = qqaux, labels = FALSE, lwd.ticks = 1,
+    col = "red", font = 2, col.axis = "red", col.ticks = "red"
   )
-  abline(v = qqaux, lty = 2, col = "red")
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
   axis(side=1, at=q, lwd = 0,
-       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
-  axis(side=1, at=as.character(c(q, 1)), labels=FALSE,
-       col="red", font = 2, col.axis = "red", tick = TRUE,lwd.ticks = 1)
-  # Insert red horizontal and vertical line (X-axis)
-  axis(side=1, at=as.character(c(q, 1)), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+  axis(side=1, at=as.character(c(q, rmax)), labels=FALSE,
+       col="red", font = 2, col.axis = "red", tick = TRUE,lwd.ticks = 0)
   abline(v = q, lty=2, col = "red")
-  abline(v = qqaux, lty = 2, col = "red")
-  abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
@@ -5803,8 +5793,8 @@ plotpcauchyltfplot <- function(q, location, scale, rounding, main = NULL){
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
           col="red")
-  qq <- round(q, digits=2)
-  qqaux <-round(q, digits=2)
+  qq <- round(q, digits=rounding)
+  qqaux <-round(q, digits=rounding)
   Pr <- round(pcauchy(qq,  location, scale, lower.tail = FALSE), digits=rounding)
   # Pr <- gsub("\\.", ",", Pr)
   # #qq <- gsub("\\.", ",", qq)
