@@ -114,6 +114,11 @@ where \eqn{\Gamma} is the gamma function;
 \itemize{
 \item \code{dist = "tukey"}: \code{mean} and \code{sd} arguments represents \eqn{\mu} and \eqn{\sigma} parameters. The PDF is
 }
+
+\deqn{f_Q(q;n,\nu)=\int\limits_{0}^{\infty} \int\limits_{-\infty}^{\infty}n(n-1)x\phi(y)\phi(xq+y)[\Phi(xq+y)-\Phi(y)]^{n-2}\times f_X(x;\nu)dydx}
+where \eqn{\Phi} is ..., \eqn{\phi} is ..., \eqn{n} is ..., \eqn{\nu} is ..., and \eqn{f_X} is given by:
+
+\deqn{f_X(x)=\frac{\nu^{\nu/2}}{\Gamma(\nu/2)2^{\nu/2-1}} x^{\nu-1}e^{-\nu x^2/2}\textrm{, } \quad x\geq 0, \quad \nu > 1.}
 }
 \examples{
 # Loading package
