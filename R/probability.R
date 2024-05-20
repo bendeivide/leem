@@ -2,7 +2,12 @@
 #'
 #' \code{P} Compute the cumulative distribution function for multiple distributions
 #'
-#' @details The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%} (\eqn{(P[a < X < b])}), \code{\%<=X<\%} \eqn{(P[a \leq X < b])}, \code{\%<X<=\%} \eqn{(P[a < X \leq b])}, \code{\%<=X<=\%} \eqn{(P[a \leq X \leq b])}, \code{\%>X>\%} \eqn{(P[X < a] + P[X > b])}, \code{\%>X=>\%} \eqn{(P[X < a] + P[X \geq b])}, \code{\%>X=>\%} \eqn{(P[X < a] + P[X \geq b])} and \code{\%>=X=>\%} \eqn{(P[X < a] + P[X \geq b])}, considering \eqn{a,~b \in \mathbb{R}} and \eqn{b > a}.
+#' @details The argument that can have length 2, when we use the functions that give us
+#' the probability regions, given by: \code{\%<X<\%} (\eqn{(P[a < X < b])}), \code{\%<=X<\%}
+#' \eqn{(P[a \leq X < b])}, \code{\%<X<=\%} \eqn{(P[a < X \leq b])}, \code{\%<=X<=\%}
+#' \eqn{(P[a \leq X \leq b])}, \code{\%>X>\%} \eqn{(P[X < a] + P[X > b])}, \code{\%>X=>\%}
+#' \eqn{(P[X < a] + P[X \geq b])}, \code{\%>X=>\%} \eqn{(P[X < a] + P[X \geq b])} and
+#' \code{\%>=X=>\%} \eqn{(P[X < a] + P[X \geq b])}, considering \eqn{a,~b \in \mathbb{R}} and \eqn{b > a}.
 #' The additional arguments represent the parameters of the distributions, that is:
 #'
 #' - \code{dist = "normal"}: \code{mu} argument (\eqn{\mu}) represents the averages and \code{sd} argument (\eqn{\sigma}) represents the standard deviation parameters. The PDF is
@@ -13,22 +18,59 @@
 #'
 #' \deqn{\displaystyle f(t)={\frac {\ \Gamma \left({\frac {\ \nu +1\ }{2}}\right)\ }{\ {\sqrt {\pi \ \nu \ }}\ \Gamma \left({\frac {\nu }{2}}\right)}}\left(\ 1+{\frac {~t^{2}\ }{\nu }}\ \right)^{-(\nu +1)/2}
 #' \quad -\infty < t < \infty,~ \nu > 0,}
-#' where \eqn{\Gamma} is gamma function;
+#' where \eqn{\Gamma} is the gamma function;
 #'
 #' - \code{dist = "chisq"}: \code{df} argument (\eqn{\nu}) represents the degrees of freedom parameter. The PDF is
 #'
 #' \deqn{\displaystyle f(x)=\dfrac {x^{\nu/2-1}e^{-x/2}}{2^{\nu/2}\Gamma \left({\frac {\nu}{2}}\right)}, \quad x > 0, \quad \nu > 0,}
-#' where \eqn{\Gamma} is gamma function;
+#' where \eqn{\Gamma} is the gamma function;
 #'
 #' - \code{dist = "f"}: \code{df1} and \code{df2} arguments (\eqn{\nu_1} and \eqn{\nu_2}) represents the degrees of freedom parameters. The PDF is
 #'
 #' \deqn{f(x) = \frac{\Gamma((\nu_1 + \nu_2) / 2)}{\Gamma(\nu_1 / 2)\Gamma(\nu_2 / 2)}\left(\frac{\nu_1}{\nu_2}\right)^{\nu_1 / 2} \times \frac{x^{(\nu_1 - 2) / 2}}{[1 + (\nu_1 / \nu_2)x]^{(\nu_1 + \nu_2)/2}}, \quad x > 0,\quad \nu_1,~\nu_2 > 0,}
-#'where \eqn{\Gamma} is gamma function;
+#'where \eqn{\Gamma} is the gamma function;
 #'
-#' -
+#' - \code{dist = "gumbel"}: \code{scale} and \code{location} arguments (\eqn{\beta} and \eqn{\mu}) represents the scale and location parameters. The PDF is
+#'
+#' \deqn{f(x) = \frac{1}{\beta}e^{-(z + e^{-z}) / \beta}, \quad z = \frac{x - \mu}{\beta}, \quad x \in \mathbb{R}, \quad \mu \in \mathbb{R}, \quad \beta > 0;}
+#'
+#' - \code{dist = "beta"}: \code{alpha} and \code{beta} arguments represents the \eqn{alpha} and \eqn{\beta} parameters. The PDF is
+#'
+#' \deqn{f(x) = \frac{1}{B(\alpha,\beta)}x^{\alpha - 1}(1 - x)^{\beta - 1}, \quad x \in [0, 1], \quad \alpha, \beta > 0,}
+#' where \eqn{\displaystyle \mathrm {B} (\alpha ,\beta )={\frac {\Gamma (\alpha )\Gamma (\beta )}{\Gamma (\alpha +\beta )}}} and \eqn{\Gamma} is the gamma function;
+#'
+#' - \code{dist = "exp"}: \code{rate} argument represents the \eqn{\lambda} parameter. The PDF is
+#'
+#' \deqn{f(x) = \lambda e^{\lambda x}, \quad x > 0, \quad \lambda > 0;}
+#'
+#' - code{dist = "gamma"}: \code{shape} and \code{rate} arguments represents the \eqn{\alpha} and \eqn{\beta} parameters. The PDF is
+#'
+#' \deqn{f(x) = \frac{\beta^{\alpha}}{\Gamma(\alpha)}x^{\alpha - 1}e^{-\beta x},\quad x > 0, \quad \alpha, \beta > 0,}
+#' where \eqn{\Gamma} is the gamma function;
+#'
+#' - \code{dist = "cauchy"}: \code{location} and \code{scale} arguments represents \eqn{\alpha} and \eqn{\beta} parameters. The PDF is
+#'
+#' \deqn{f(x) = \displaystyle \frac{1}{\pi \beta \left[ 1 + \left( \frac{x - \alpha}{\beta}\right)^2\right]},\quad x \in \mathbb{R}, \quad \alpha \in \mathbb{R}, \quad \beta > 0;}
+#'
+#' - \code{dist = "logis"}: \code{location} and \code{scale} arguments represents \eqn{\mu} and \eqn{\sigma} parameters. The PDF is
+#'
+#' \deqn{f(x)= \displaystyle \frac {e^{-(x-\mu )/\sigma}}{\sigma\left(1+e^{-(x-\mu )/\sigma}\right)^{2}}, \quad x \in \mathbb{R}, \quad \mu \in \mathbb{R}, \quad \sigma > 0;}
+#'
+#' - \code{dist = "lnormal"}: \code{mean} and \code{sd} arguments represents \eqn{\mu} and \eqn{\sigma} parameters. The PDF is
+#'
+#' \deqn{f(x)= \displaystyle {\frac {1}{\ x\ \sigma {\sqrt {2\ \pi \ }}\ }}\exp \left(-{\frac {\ (\ln x-\mu )^{2}\ }{2\ \sigma ^{2}}}\right), \quad x \in \mathbb{R}, \quad \mu \in \mathbb{R}, \quad \sigma > 0;}
+#'
+#' - \code{dist = "tukey"}: \code{mean} and \code{sd} arguments represents \eqn{\mu} and \eqn{\sigma} parameters. The PDF is
+#'
 #'
 #' @param q numerical. The \code{q} argument can have length 1 or 2. See Details.
-#' @param dist distribution to use. The default is \code{'normal'}. Options: \code{'normal'} (Normal distribution), \code{'t-student'} (Student's distribution), \code{chisq} (Chi-squared distribution), \code{'f'} (F distribution), \code{'gumbel'} (Gumbel distribution), \code{'beta'} (Beta distribution), \code{'exp'} (Exponential distribution), \code{'gamma'} (Gamma distribution), \code{'cauchy'} (Cauchy distribution), \code{'logis'} (Logistic distribution), \code{'lnormal'} (Log-normal distriburion), \code{'tukey'} (Tukey distribution), \code{'weibull'} (Weibull distribution), \code{'poisson'} (Poisson distribution), \code{'binomial'} (Binomial distribution), \code{'nbinom'} (Negative binomial distribution), \code{'hyper'} (Hypergeometric distribution), \code{'geom'} (Geometric distribution), \code{'unif'} (Uniform distribution), \code{'wilcox'} (Wilcoxon distribution), and \code{'signrank'} (Sign Rank distribution).
+#' @param dist distribution to use. The default is \code{'normal'}. Options: \code{'normal'} (Normal distribution), \code{'t-student'} (Student's distribution),
+#' \code{'chisq'} (Chi-squared distribution), \code{'f'} (F distribution), \code{'gumbel'} (Gumbel distribution), \code{'beta'} (Beta distribution),
+#' \code{'exp'} (Exponential distribution), \code{'gamma'} (Gamma distribution), \code{'cauchy'} (Cauchy distribution), \code{'logis'}
+#' (Logistic distribution), \code{'lnormal'} (Log-normal distriburion), \code{'tukey'} (Tukey distribution), \code{'weibull'} (Weibull distribution),
+#' \code{'poisson'} (Poisson distribution), \code{'binomial'} (Binomial distribution), \code{'nbinom'} (Negative binomial distribution), \code{'hyper'}
+#' (Hypergeometric distribution), \code{'geom'} (Geometric distribution), \code{'unif'} (Uniform distribution), \code{'wilcox'} (Wilcoxon distribution),
+#' and \code{'signrank'} (Sign Rank distribution).
 #' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.
 #' @param rounding numerical; it represents the number of decimals for calculating the probability.
 #' @param porcentage logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.
