@@ -7,6 +7,7 @@
 #' @param na.rm a logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.
 #' @param ordered Ordered vector of the same length and elements of data object. Default is \code{NULL}.
 #' @param namereduction Logical argument. If \code{TRUE} (default), the group names are reduzed the 10 characters. If \code{FALSE}, otherwise.
+#' @param rounding Numerical argument. The default is \code{rounding = 2}. This represents the rounding of values in the frequency distribution.
 #' @return The result of \code{tabfreq()} is a list. This list has two elements: \code{table} and \code{statistics}. The first is the data frequency table, and the second represents some useful statistics for methods of leem class.
 #' @examples
 #' # Example 1
@@ -45,7 +46,7 @@ tabfreq <- function(data, ...) {
 
 
 #' @export
-tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, namereduction = TRUE, ...){
+tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, namereduction = TRUE, rounding = 2, ...){
   if (class(data) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE,
                                    domain = "R-leem")
   # Output object
@@ -97,7 +98,7 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
     # Frequencia absoluta
     fi <- as.numeric(aux)
     # Frequencia relativa
-    fr <- round(fi/n, 2)
+    fr <- round(fi/n, rounding)
     # Frequencia acumulada (abaixo de)
     fac1 <- cumsum(fi)
     # Frequencia acumulada (acima de)
@@ -117,11 +118,11 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
     }
     fac22 <- fac2(fi)
     # Frequencia percentual
-    fp <- round(fr*100, 2)
+    fp <- round(fr*100, rounding)
     # Fac (abaixo de) percentual
-    fac1p <- round((fac1/n)*100, 2)
+    fac1p <- round((fac1/n)*100, rounding)
     # Fac (acima de) percentual
-    fac22p <- round((fac22/n)*100, 2)
+    fac22p <- round((fac22/n)*100, rounding)
     # Estatisticas
     data2 <- data
     attributes(data2) <- NULL
@@ -168,7 +169,7 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
         #       sqrt(n). Esse eh um valor base
       }
       if (n > 100) {
-        k <- 5 * log10(n)
+        k <- round(5 * log10(n))
       }
     } else {
       if(!is.numeric(k)) stop("The argument should be numerical!", call. = FALSE,
@@ -177,15 +178,15 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
     if (k < 1) stop("The k argument should be greater than 1!", call. = FALSE,
                     domain = "R-leem")
     # Number of classes
-    k <- round(k)
+    #k <- round(k)
     # Amplitude
     At <- diff(range(data))
     # Minimum value
     x1 <- min(data)
     # Amplitude of class
-    c <- round(At/(k - 1), 2)
+    c <- At/(k - 1)
     # Lower limit of the first class
-    LI1 <- x1 - c/2
+    LI1 <- round(x1 - c/2, rounding)
     vi <- c(LI1, rep(0, k - 1))
     vs <- c(LI1 + c, rep(0, k - 1))
     #  Lower and upper limits
@@ -193,8 +194,8 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
       vi[i] <- vi[i - 1] + c
       vs[i] <- vs[i - 1] + c
     }
-    vi <- round(vi, 2)
-    vs <- round(vs, 2)
+    vi <- round(vi, rounding)
+    vs <- round(vs, rounding)
     # Frequency
     freq <- function(x, vi, vs, k) {
       freq <- rep(0, k)
@@ -207,14 +208,14 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
     # Frequencia absoluta
     fi <- freq(data, vi, vs, k)
     # Construindo as classes
-    classe <- paste(round(vi, 2), "|--- ", round(vs, 2))
-    classe[k] <- paste(round(vi[k], 2), "|--- ", round(vs[k], 2))
+    classe <- paste(vi, "|--- ", vs)
+    classe[k] <- paste(vi[k], "|--- ", vs[k])
     # Ponto medio
-    pm <- (vi + vs)/2
+    pm <- round((vi + vs)/2, rounding)
     # Frequencia relativa
-    fr <- round(fi/n, 2)
+    fr <- round(fi/n, rounding)
     # Frequencia acumulada (abaixo de)
-    fac1 <- cumsum(fi)
+    fac1 <- round(cumsum(fi), rounding)
     # Frequencia acumulada (acima de)
     # x: representa as frequencias absolutas
     fac2 <- function(x) {
@@ -226,13 +227,13 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
       }
       return(vet)
     }
-    fac22 <- fac2(fi)
+    fac22 <- round(fac2(fi), rounding)
     # Frequencia percentual
-    fp <- round(fr*100, 2)
+    fp <- round(fr*100, rounding)
     # Fac (abaixo de) percentual
-    fac1p <- round((fac1/n)*100, 2)
+    fac1p <- round((fac1/n)*100, rounding)
     # Fac (acima de) percentual
-    fac22p <- round((fac22/n)*100, 2)
+    fac22p <- round((fac22/n)*100, rounding)
     # Estatisticas
     data2 <- data
     attributes(data2) <- NULL
@@ -245,7 +246,7 @@ tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, nameredu
       "lower_lim_1_class" = LI1,
       "lower_lim" = vi,
       "upper_lim" = vs,
-      "raw_data" = data2
+      "raw_data" = sort(data2)
     )
     # Tabela de frequencias
     tabela <- data.frame(Classes = classe, Fi = fi,

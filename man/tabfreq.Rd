@@ -22,6 +22,8 @@ tabfreq(data)
 \item{ordered}{Ordered vector of the same length and elements of data object. Default is \code{NULL}.}
 
 \item{namereduction}{Logical argument. If \code{TRUE} (default), the group names are reduzed the 10 characters. If \code{FALSE}, otherwise.}
+
+\item{rounding}{Numerical argument. The default is \code{rounding = 2}. This represents the rounding of values in the frequency distribution.}
 }
 \value{
 The result of \code{tabfreq()} is a list. This list has two elements: \code{table} and \code{statistics}. The first is the data frequency table, and the second represents some useful statistics for methods of leem class.
