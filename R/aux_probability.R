@@ -1313,16 +1313,16 @@ plotpweibullarplot <- function(q, shape, scale, rounding, main = NULL) {
   fy <- dweibull(y, shape, scale)
   if (is.null(main)) {
     if (attr(q, "region") == "region1") {
-      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(k,lambda)*(frac(x,lambda))^{k-1}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(alpha,sigma)*(frac(x,sigma))^{alpha-1}*exp(-(x/sigma)^{alpha})*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region3") {
-      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(k,lambda)*(frac(x,lambda))^{k-1}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(alpha,sigma)*(frac(x,sigma))^{alpha-1}*exp(-(x/sigma)^{alpha})*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region5") {
-      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(k,lambda)*(frac(x,lambda))^{k-1}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(alpha,sigma)*(frac(x,sigma))^{alpha-1}*exp(-(x/sigma)^{alpha})*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region6") {
-      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(k,lambda)*(frac(x,lambda))^{k-1}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(alpha,sigma)*(frac(x,sigma))^{alpha-1}*exp(-(x/sigma)^{alpha})*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
   }
   curve(dweibull(x, shape, scale), minimo, maximo,
@@ -1362,7 +1362,7 @@ plotpweibullarplot <- function(q, shape, scale, rounding, main = NULL) {
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~lambda == shapev ~ "," ~ k == scalev,
+           legend = substitute("Parameters:"~alpha == shapev ~ "," ~ sigma == scalev,
                                list(shapev = shape, scalev = scale)))
   }
   if (attr(q, "region") == "region3") {
@@ -1370,7 +1370,7 @@ plotpweibullarplot <- function(q, shape, scale, rounding, main = NULL) {
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~lambda == shapev ~ "," ~ k == scalev,
+           legend = substitute("Parameters:"~alpha == shapev ~ "," ~ sigma == scalev,
                                list(shapev = shape, scalev = scale)))
   }
   if (attr(q, "region") == "region5") {
@@ -1378,7 +1378,7 @@ plotpweibullarplot <- function(q, shape, scale, rounding, main = NULL) {
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute("Parameters:"~lambda == shapev ~ "," ~ k == scalev,
+           legend = substitute("Parameters:"~alpha == shapev ~ "," ~ sigma == scalev,
                                list(shapev = shape, scalev = scale)))
   }
   if ( attr(q, "region") == "region6") {
@@ -1386,7 +1386,7 @@ plotpweibullarplot <- function(q, shape, scale, rounding, main = NULL) {
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute("Parameters:"~lambda == shapev ~ "," ~ k == scalev,
+           legend = substitute("Parameters:"~alpha == shapev ~ "," ~ sigma == scalev,
                                list(shapev = shape, scalev = scale)))
   }
 }
@@ -3356,16 +3356,16 @@ plotpweibullbrplot <- function(q, shape, scale, rounding, main = NULL) {
   fy <- dweibull(y, shape, scale)
   if (is.null(main)) {
     if (attr(q, "region") == "region2") {
-      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(k,lambda)*(frac(x,lambda))^{k-1}*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(alpha,sigma)*(frac(x,sigma))^{alpha-1}*exp(-(x/sigma)^{alpha})*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region4") {
-      main <- substitute(atop(bold("Probability function plot: Weibul"), f[X](x) == frac(k,lambda)*(frac(x,lambda))^{k-1}*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: Weibul"), f[X](x) == frac(alpha,sigma)*(frac(x,sigma))^{alpha-1}*exp(-(x/sigma)^{alpha})*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region7") {
-      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(k,lambda)*(frac(x,lambda))^{k-1}*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(alpha,sigma)*(frac(x,sigma))^{alpha-1}*exp(-(x/sigma)^{alpha})*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
     if (attr(q, "region") == "region8") {
-      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(k,lambda)*(frac(x,lambda))^{k-1}*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(alpha,sigma)*(frac(x,sigma))^{alpha-1}*exp(-(x/sigma)^{alpha})*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
     }
   }
   curve(dweibull(x, shape, scale), minimo, maximo,
@@ -3397,7 +3397,7 @@ plotpweibullbrplot <- function(q, shape, scale, rounding, main = NULL) {
                      legend = substitute(P(t1<~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~lambda == shapev ~ "," ~ k == scalev,
+           legend = substitute("Parameters:"~alpha == shapev ~ "," ~ sigma == scalev,
                                list(shapev = shape, scalev = scale)))
   }
   if (attr(q, "region") == "region4") {
@@ -3405,7 +3405,7 @@ plotpweibullbrplot <- function(q, shape, scale, rounding, main = NULL) {
                      legend = substitute(P(t1<=~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~lambda == shapev ~ "," ~ k == scalev,
+           legend = substitute("Parameters:"~alpha == shapev ~ "," ~ sigma == scalev,
                                list(shapev = shape, scalev = scale)))
   }
   if (attr(q, "region") == "region7") {
@@ -3413,7 +3413,7 @@ plotpweibullbrplot <- function(q, shape, scale, rounding, main = NULL) {
                      legend = substitute(P(t1<=~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~lambda == shapev ~ "," ~ k == scalev,
+           legend = substitute("Parameters:"~alpha == shapev ~ "," ~ sigma == scalev,
                                list(shapev = shape, scalev = scale)))
   }
   if ( attr(q, "region") == "region8") {
@@ -3421,7 +3421,7 @@ plotpweibullbrplot <- function(q, shape, scale, rounding, main = NULL) {
                      legend = substitute(P(t1<~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~lambda == shapev ~ "," ~ k == scalev,
+           legend = substitute("Parameters:"~alpha == shapev ~ "," ~ sigma == scalev,
                                list(shapev = shape, scalev = scale)))
   }
 }
@@ -4796,7 +4796,7 @@ plotpweibulllttplot <- function(q, shape, scale, rounding, main = NULL) {
   fx <- dweibull(x, shape, scale)
   fy <- dweibull(y, shape, scale)
   if (is.null(main)) {
-    main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(k,lambda)*(frac(x,lambda))^{k-1}*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
+    main <- substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(alpha,sigma)*(frac(x,sigma))^{alpha-1}*exp(-(x/sigma)^{alpha})*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
   }
   curve(dweibull(x, shape, scale), minimo, maximo,
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
@@ -4830,7 +4830,7 @@ plotpweibulllttplot <- function(q, shape, scale, rounding, main = NULL) {
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
   legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-         legend = substitute("Parameters:"~lambda == shapev ~ "," ~ k == scalev,
+         legend = substitute("Parameters:"~alpha == shapev ~ "," ~ sigma == scalev,
                              list(shapev = shape, scalev = scale)))
 } # plotcurve (older)
 
@@ -5940,7 +5940,7 @@ plotpweibullltfplot <- function(q, shape, scale, rounding, main = NULL) {
   fx <- dweibull(x, shape, scale)
   fy <- dweibull(y, shape, scale)
   if (is.null(main)) {
-    main = substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(k,lambda)*(frac(x,lambda))^{k-1}*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)), list(t = q))
+    main = substitute(atop(bold("Probability function plot: Weibull"), f[X](x) == frac(alpha,sigma)*(frac(x,sigma))^{alpha-1}*exp(-(x/sigma)^{alpha})*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)), list(t = q))
   }
   curve(dweibull(x, shape, scale), minimo, maximo,
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
@@ -5976,7 +5976,7 @@ plotpweibullltfplot <- function(q, shape, scale, rounding, main = NULL) {
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
                                        list(q = qq, Pr = Pr)))
   legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
-         legend = substitute("Parameters:"~lambda == shapev ~ "," ~ k == scalev,
+         legend = substitute("Parameters:"~alpha == shapev ~ "," ~ sigma == scalev,
                              list(shapev = shape, scalev = scale)))
 }
 

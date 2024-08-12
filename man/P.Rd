@@ -119,6 +119,11 @@ where \eqn{\Gamma} is the gamma function;
 where \eqn{\Phi} is ..., \eqn{\phi} is ..., \eqn{n} is ..., \eqn{\nu} is ..., and \eqn{f_X} is given by:
 
 \deqn{f_X(x)=\frac{\nu^{\nu/2}}{\Gamma(\nu/2)2^{\nu/2-1}} x^{\nu-1}e^{-\nu x^2/2}\textrm{, } \quad x\geq 0, \quad \nu > 1.}
+\itemize{
+\item \code{dist = "weibull"}: \code{shape} and \code{scale} arguments represents \eqn{\alpha} and \eqn{\sigma} parameters, respectively. The PDF is
+}
+
+\deqn{f_X(x)=(\alpha/\sigma)(x/\sigma)^{\alpha - 1}\exp(-(x/\sigma)^{\alpha}),\quad x \geq 0, \quad \alpha > 0, \quad \sigma > 0.}
 }
 \examples{
 # Loading package

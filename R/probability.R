@@ -67,6 +67,11 @@
 #'
 #' \deqn{f_X(x)=\frac{\nu^{\nu/2}}{\Gamma(\nu/2)2^{\nu/2-1}} x^{\nu-1}e^{-\nu x^2/2}\textrm{, } \quad x\geq 0, \quad \nu > 1.}
 #'
+#' - \code{dist = "weibull"}: \code{shape} and \code{scale} arguments represents \eqn{\alpha} and \eqn{\sigma} parameters, respectively. The PDF is
+#'
+#' \deqn{f_X(x)=(\alpha/\sigma)(x/\sigma)^{\alpha - 1}\exp(-(x/\sigma)^{\alpha}),\quad x \geq 0, \quad \alpha > 0, \quad \sigma > 0.}
+#'
+#'
 #' @param q numerical. The \code{q} argument can have length 1 or 2. See Details.
 #' @param dist distribution to use. The default is \code{'normal'}. Options: \code{'normal'} (Normal distribution), \code{'t-student'} (Student's distribution),
 #' \code{'chisq'} (Chi-squared distribution), \code{'f'} (F distribution), \code{'gumbel'} (Gumbel distribution), \code{'beta'} (Beta distribution),
