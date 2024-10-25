@@ -186,9 +186,11 @@ mean.leem <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, 
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
+#' library(leem)
+#' library(stats)
 #' # Examples
 #' rnorm(36, 100, 50) |> new_leem(variable = 2) |> tabfreq() |> median()
-#'
+#' @importFrom stats median
 #' @export
 median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FALSE, ...) {
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")

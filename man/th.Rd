@@ -10,6 +10,7 @@ th(
   test = "ztest",
   h0,
   prop = FALSE,
+  delta = 0,
   p,
   pa,
   alternative = c("two.sided", "L", "less", "greater", "G"),

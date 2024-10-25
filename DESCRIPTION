@@ -25,10 +25,11 @@ Imports:
         crayon,
         grDevices,
         graphics,
-        utils
+        utils,
+        diagram
 License: GPL (>= 2)
 URL: https://bendeivide.github.io/project/leem/, https://github.com/bendeivide/leem
 BugReports: https://github.com/bendeivide/leem/issues
 LazyData: TRUE
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Roxygen: list(markdown = TRUE)

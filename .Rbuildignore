@@ -10,3 +10,8 @@ _Suporte
 ^pkgdown$
 R/transp_cores\.R
 diagram
+LEEM
+README.Rmd
+\_criando\_site.R
+logo.png
+images

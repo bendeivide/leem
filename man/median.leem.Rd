@@ -23,7 +23,8 @@
 Class method leem for the generic median function
 }
 \examples{
+library(leem)
+library(stats)
 # Examples
 rnorm(36, 100, 50) |> new_leem(variable = 2) |> tabfreq() |> median()
-
 }

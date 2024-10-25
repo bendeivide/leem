@@ -14,6 +14,7 @@
 #' @param ... further arguments passed to or from other methods.
 #' @examples
 #' library(leem)
+#' library(boxplot)
 #' # Example 1
 #' x <- rnorm(30, 100, 2) |>
 #'   new_leem(variable = 2) |>
@@ -22,6 +23,7 @@
 #' # Example 2
 #' boxplot(x, type = "classes")
 #'
+#' @importFrom graphics boxplot
 #' @export
 boxplot.leem <- function(x,
                          type = "rawdata",

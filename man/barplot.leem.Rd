@@ -47,6 +47,7 @@ barplot.leem(x, freq = "a", bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
 Class method leem for generic barplot
 }
 \examples{
+library(graphics)
 # Example 1 - Simple example
 library(leem)
 rep(1:5, 5:1) |>

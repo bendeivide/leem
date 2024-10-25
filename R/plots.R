@@ -1295,6 +1295,7 @@ hist.leem <- function(x,
 #'   xang = 0, labels = NULL, ...)
 #'
 #' @examples
+#' library(graphics)
 #' # Example 1 - Simple example
 #' library(leem)
 #' rep(1:5, 5:1) |>
@@ -1315,6 +1316,7 @@ hist.leem <- function(x,
 #' rnorm(100, 10, 2) |>
 #'   new_leem(variable = 2) |>
 #'   barplot(barcol = heat.colors(10))
+#' @importFrom graphics barplot
 #' @export
 barplot.leem <- function(x,
                          freq = "a",
