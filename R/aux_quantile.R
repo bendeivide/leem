@@ -366,10 +366,6 @@ plotqnormaltsboth <- function(p, mu, sigma, rounding, mfrow, ...) {
 }
 
 
-
-
-
-
 #####################
 # T-Student distribution
 #####################
@@ -708,11 +704,6 @@ plotqtstudenttsboth <- function(p, df, rounding, mfrow, ...) {
   # Preserving the global variable
   par(op)
 }
-
-
-
-
-
 
 
 ##########################
@@ -1392,10 +1383,6 @@ plotqftsboth <- function(p, df1, df2, rounding, mfrow, ...) {
 }
 
 
-
-
-
-
 #####################
 # Gumbel distribution
 #####################
@@ -1749,11 +1736,6 @@ plotqgumbeltsboth <- function(p, location, scale, rounding, mfrow, ...) {
   par(op)
 }
 
-
-
-
-
-
 ###################
 # Beta distribution
 ###################
@@ -2097,10 +2079,6 @@ plotqbetatsboth <- function(p, alpha, beta, rounding, mfrow, ...) {
 }
 
 
-
-
-
-
 ##########################
 # Exponential distribution
 ##########################
@@ -2438,11 +2416,6 @@ plotqexptsboth <- function(p, rate, rounding, mfrow, ...) {
   # Preserving the global variable
   par(op)
 }
-
-
-
-
-
 
 
 #####################
@@ -2907,14 +2880,6 @@ plotqgammatsboth <- function(p, shape, rate, scale, rounding, mfrow, ...) {
   par(op)
 }
 
-
-
-
-
-
-
-
-
 #####################
 # Cauchy distribution
 #####################
@@ -3259,13 +3224,6 @@ plotqcauchytsboth <- function(p, location, scale, rounding, mfrow, ...) {
   # Preserving the global variable
   par(op)
 }
-
-
-
-
-
-
-
 
 
 #######################
@@ -3614,13 +3572,6 @@ plotqlogistsboth <- function(p, location, scale, rounding, mfrow, ...) {
 }
 
 
-
-
-
-
-
-
-
 #################################
 # Logarithmic Normal distribution
 #################################
@@ -3965,10 +3916,6 @@ plotqlnormaltsboth <- function(p, mu, sigma, rounding, mfrow, ...) {
   # Preserving the global variable
   par(op)
 }
-
-
-
-
 
 
 #####################
@@ -4345,11 +4292,11 @@ plotqpoissontscdf <- function(p, lambda, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(
       atop(
         bold("Cumulative distribution plot: Poisson"),
@@ -4583,12 +4530,13 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
     pch = 19,
-    panel.first = grid(col = "gray90")
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -4822,6 +4770,7 @@ plotqpoissontsboth <- function(p, lambda, rounding, mfrow, ...) {
 # Binomial distribution
 ######################
 
+
 # CDF
 plotqbinomialtscdf <- function(p, size, prob, rounding, ...) {
   paux <- p
@@ -4838,11 +4787,11 @@ plotqbinomialtscdf <- function(p, size, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(
       atop(
         bold("Cumulative distribution plot: Binomial"),
@@ -5078,12 +5027,13 @@ plotqbinomialtspdfaux <- function(q, size, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
     pch = 19,
-    panel.first = grid(col = "gray90")
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -5227,7 +5177,7 @@ plotqbinomialtspdfaux <- function(q, size, prob, rounding, ...) {
       main = substitute(
         atop(
           bold("Probability function plot: Binomial"),
-          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!") *
+          p[X](x) == bgroup("(",atop(n,x),")") *
             "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
         ),
         list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
@@ -5269,7 +5219,7 @@ plotqbinomialtspdfaux <- function(q, size, prob, rounding, ...) {
       main = substitute(
         atop(
           bold("Probability function plot: Binomial"),
-          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
+          p[X](x) == bgroup("(",atop(n,x),")") *
             "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
         ),
         list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
@@ -5296,6 +5246,7 @@ plotqbinomialtspdfaux <- function(q, size, prob, rounding, ...) {
     )
   }
 }
+
 plotqbinomialtspdf <- function(p, size, prob, rounding, ...) {
   p <- c(p / 2, 1 - p / 2)
   q <- qbinom(p, size, prob)
@@ -5336,11 +5287,11 @@ plotqnbinomtscdf <- function(p, size, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(
       atop(
         bold("Cumulative distribution plot: Negative Binomial"),
@@ -5576,12 +5527,13 @@ plotqnbinomtspdfaux <- function(q, size, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -5832,11 +5784,11 @@ plotqgeomtscdf <- function(p, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(
       atop(
         bold("Cumulative distribution plot: Geometric"),
@@ -6065,12 +6017,13 @@ plotqgeomtspdfaux <- function(q, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -6321,11 +6274,11 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
           plot.window(xlim, ylim)
           axis(1, at = x)
           axis(2)
-
+          panel.first = grid(col = "gray90")
           title(
             ylab = expression(F[X](x)),
             xlab = "X",
-            panel.first = grid(col = "gray90"),
+            #panel.first = grid(col = "gray90"),
             main = bquote(
               atop(
                 bold("Cumulative distribution plot: Hypergeometric"),
@@ -6559,12 +6512,13 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
           plot.window(xlim, ylim)
           axis(1, at = 5 * (0:rmax))
           axis(2)
+          panel.first = grid(col = "gray90")
           points(
             x,
             probx,
             lwd = 2,
-            pch = 19,
-            panel.first = grid(col = "gray90")
+            pch = 19
+            #panel.first = grid(col = "gray90")
           )
           lines(x, probx, type = "h", lwd = 2)
           qq <- round(q, digits = rounding)
@@ -6830,11 +6784,11 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
           plot.window(xlim, ylim)
           axis(1, at = x)
           axis(2)
-
+          panel.first = grid(col = "gray90")
           title(
             ylab = expression(F[X](x)),
             xlab = "X",
-            panel.first = grid(col = "gray90"),
+            #panel.first = grid(col = "gray90"),
             main = bquote(
               atop(
                 bold("Cumulative distribution plot: Uniform"),
@@ -7070,12 +7024,13 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
           plot.window(xlim, ylim)
           axis(1, at = 5 * (0:rmax))
           axis(2)
+          panel.first = grid(col = "gray90")
           points(
             x,
             maxx,
             lwd = 2,
-            pch = 19,
-            panel.first = grid(col = "gray90")
+            pch = 19
+            #panel.first = grid(col = "gray90")
           )
           lines(x, maxx, type = "h", lwd = 2)
           qq <- round(q, digits = rounding)
@@ -7328,11 +7283,11 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
           plot.window(xlim, ylim)
           axis(1, at = x)
           axis(2)
-
+          panel.first = grid(col = "gray90")
           title(
             ylab = expression(F[X](x)),
             xlab = "X",
-            panel.first = grid(col = "gray90"),
+            #panel.first = grid(col = "gray90"),
             main = bquote(
               atop(
                 bold("Cumulative distribution plot: Wilcox"),
@@ -7563,12 +7518,13 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
           plot.window(xlim, ylim)
           axis(1, at = 5 * (0:rmax))
           axis(2)
+          panel.first = grid(col = "gray90")
           points(
             x,
             nx,
             lwd = 2,
-            pch = 19,
-            panel.first = grid(col = "gray90")
+            pch = 19
+            #panel.first = grid(col = "gray90")
           )
           lines(x, nx, type = "h", lwd = 2)
           qq <- round(q, digits = rounding)
@@ -7821,11 +7777,11 @@ plotqsignranktscdf <- function(p, n, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(
       atop(
         bold("Cumulative distribution plot: Signed-Rank Wilcox"),
@@ -8059,12 +8015,13 @@ plotqsignranktspdfaux <- function(q, n, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
     pch = 19,
-    panel.first = grid(col = "gray90")
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -11303,11 +11260,11 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Cumulative distribution plot: Poisson"),
       Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
@@ -11451,12 +11408,13 @@ plotqpoissonlttpdfaux <- function(q, lambda, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -11651,11 +11609,11 @@ plotqbinomiallttcdf <- function(p, size, prob, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Cumulative distribution plot: Binomial"),
       Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
@@ -11799,12 +11757,13 @@ plotqbinomiallttpdfaux <- function(q, size, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -11896,7 +11855,7 @@ plotqbinomiallttpdfaux <- function(q, size, prob, rounding, ...) {
       main = substitute(
         atop(
           bold("Probability function plot: Binomial"),
-          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
+          p[X](x) == bgroup("(",atop(n,x),")")*theta^x*(1 - )*
             "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t1) == sum(p[X](x), x >= t1, infinity)
         ),
         list(t1 = qq, x = "x", t3 = qq -1)
@@ -11997,11 +11956,11 @@ plotqnbinomlttcdf <- function(p, size, prob, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Cumulative distribution plot: Negative Binomial"),
       Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
@@ -12145,12 +12104,13 @@ plotqnbinomlttpdfaux <- function(q, size, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
     pch = 19,
-    panel.first = grid(col = "gray90")
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -12344,11 +12304,11 @@ plotqgeomlttcdf <- function(p, prob, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Cumulative distribution plot: Geometric"),
       Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
@@ -12488,12 +12448,13 @@ plotqgeomlttpdfaux <- function(q, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -12688,11 +12649,11 @@ plotqhyperlttcdf <- function(p, m, n, k, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Cumulative distribution plot: Hypergeometric"),
       Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
@@ -12831,12 +12792,13 @@ plotqhyperlttpdfaux <- function(q, m, n, k, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
     pch = 19,
-    panel.first = grid(col = "gray90")
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -13031,11 +12993,11 @@ plotquniflttcdf <- function(p, min, max, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Cumulative distribution plot: Uniform"),
       Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
@@ -13174,12 +13136,13 @@ plotquniflttpdfaux <- function(q, min, max, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     maxx,
     lwd = 2,
     pch = 19,
-    panel.first = grid(col = "gray90")
+    #panel.first = grid(col = "gray90")
   )
   lines(x, maxx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -13372,11 +13335,11 @@ plotqwilcoxlttcdf <- function(p, m, n, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Cumulative distribution plot: Wilcox"),
       Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
@@ -13515,12 +13478,13 @@ plotqwilcoxlttpdfaux <- function(q, m, n, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     nx,
     lwd = 2,
     pch = 19,
-    panel.first = grid(col = "gray90")
+    #panel.first = grid(col = "gray90")
   )
   lines(x, nx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -13711,11 +13675,11 @@ plotqsignranklttcdf <- function(p, n, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
-
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Cumulative distribution plot: Signed-Rank WIlcox"),
       Q(p) == inf ~ bgroup("{", x %in% R ~ ":" ~ p <= F(x), "}")
@@ -13859,12 +13823,13 @@ plotqsignranklttpdfaux <- function(q, n, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -17169,10 +17134,11 @@ plotqpoissonlttsf <- function(p, lambda, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(1 - F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Survival function plot: Poisson"),
       Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
@@ -17319,12 +17285,13 @@ plotqpoissonltfpdfaux <- function(q, lambda, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -17517,10 +17484,11 @@ plotqbinomiallttsf <- function(p, size, prob, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(1 - F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Survival function plot: Binomial"),
       Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
@@ -17667,12 +17635,13 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -17866,10 +17835,11 @@ plotqnbinomlttsf <- function(p, size, prob, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(1 - F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Survival function plot: Negative Binomial"),
       Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
@@ -18016,12 +17986,13 @@ plotqnbinomltfpdfaux <- function(q, size, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
     pch = 19,
-    panel.first = grid(col = "gray90")
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -18215,10 +18186,11 @@ plotqgeomlttsf <- function(p, prob, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(1 - F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Survival function plot: Geometric"),
       Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
@@ -18360,12 +18332,13 @@ plotqgeomltfpdfaux <- function(q, prob, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -18556,10 +18529,11 @@ plotqhyperlttsf <- function(p, m, n, k, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(1 - F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Survival function plot: Hypergeometric"),
       Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
@@ -18702,12 +18676,13 @@ plotqhyperltfpdfaux <- function(q, m, n, k, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -18900,10 +18875,11 @@ plotquniflttsf <- function(p, min, max, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(1 - F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Survival function plot: Uniform"),
       Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
@@ -19050,12 +19026,13 @@ plotqunifltfpdfaux <- function(q, min, max, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     maxx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, maxx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -19249,10 +19226,11 @@ plotqwilcoxlttsf <- function(p, m, n, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(1 - F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Survival function plot: Wilcox"),
       Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
@@ -19394,12 +19372,13 @@ plotqwilcoxltfpdfaux <- function(q, m, n, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     nx,
     lwd = 2,
-    pch = 19,
-    panel.first = grid(col = "gray90")
+    pch = 19
+    #panel.first = grid(col = "gray90")
   )
   lines(x, nx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
@@ -19595,10 +19574,11 @@ plotqsignranklttsf <- function(p, n, rounding) {
   plot.window(xlim, ylim)
   axis(1, at = x)
   axis(2)
+  panel.first = grid(col = "gray90")
   title(
     ylab = expression(1 - F[X](x)),
     xlab = "X",
-    panel.first = grid(col = "gray90"),
+    #panel.first = grid(col = "gray90"),
     main = bquote(atop(
       bold("Survival function plot: Signed-Rank Wilcox"),
       Q[S]("p*") == inf ~ bgroup("{", x %in% R ~ ":" ~ "p*" >= 1 - F(x), "}") *
@@ -19745,12 +19725,13 @@ plotqsignrankltfpdfaux <- function(q, n, rounding, ...) {
   plot.window(xlim, ylim)
   axis(1, at = 5 * (0:rmax))
   axis(2)
+  panel.first = grid(col = "gray90")
   points(
     x,
     probx,
     lwd = 2,
     pch = 19,
-    panel.first = grid(col = "gray90")
+    #panel.first = grid(col = "gray90")
   )
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
