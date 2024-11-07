@@ -5171,13 +5171,14 @@ plotqbinomialtspdfaux <- function(q, size, prob, rounding, ...) {
       lwd.ticks = 1,
       labels = FALSE
     )
+    titbinomial <- gettext("Probability function plot: Binomial", domain = "R-leem")
     title(
       ylab = expression(p[X](x)),
       xlab = "X",
       main = substitute(
         atop(
-          bold("Probability function plot: Binomial"),
-          p[X](x) == bgroup("(",atop(n,x),")") *
+          bold(titbinomial),
+          p[X](x) == bgroup("(",atop(n,x),")")*theta^x*(1 - theta)^{n-x}~
             "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
         ),
         list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
@@ -5213,13 +5214,14 @@ plotqbinomialtspdfaux <- function(q, size, prob, rounding, ...) {
       lwd.ticks = 1,
       labels = FALSE
     )
+    titbinomial <- gettext("Probability function plot: Binomial", domain = "R-leem")
     title(
       ylab = expression(p[X](x)),
       xlab = "X",
       main = substitute(
         atop(
-          bold("Probability function plot: Binomial"),
-          p[X](x) == bgroup("(",atop(n,x),")") *
+          bold(titbinomial),
+          p[X](x) == bgroup("(",atop(n,x),")")*theta^x*(1 - theta)^{n-x}~
             "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "") * "," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)
         ),
         list(t1 = qqmin, t2 = qqmax, x = "x", t3 = qqmax -1)
@@ -11849,13 +11851,14 @@ plotqbinomiallttpdfaux <- function(q, size, prob, rounding, ...) {
       lwd.ticks = 1,
       labels = FALSE
     )
+    titbinomial <- gettext("Probability function plot: Binomial", domain = "R-leem")
     title(
       ylab = expression(p[X](x)),
       xlab = "X",
       main = substitute(
         atop(
-          bold("Probability function plot: Binomial"),
-          p[X](x) == bgroup("(",atop(n,x),")")*theta^x*(1 - )*
+          bold(titbinomial),
+          p[X](x) == bgroup("(",atop(n,x),")")*theta^x*(1 - theta)^{n-x}~
             "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t1) == sum(p[X](x), x >= t1, infinity)
         ),
         list(t1 = qq, x = "x", t3 = qq -1)
@@ -11891,13 +11894,14 @@ plotqbinomiallttpdfaux <- function(q, size, prob, rounding, ...) {
       lwd.ticks = 0,
       labels = FALSE
     )
+    titbinomial <- gettext("Probability function plot: Binomial", domain = "R-leem")
     title(
       ylab = expression(p[X](x)),
       xlab = "X",
       main = substitute(
         atop(
-          bold("Probability function plot: Binomial"),
-          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
+          bold(titbinomial),
+          p[X](x) == bgroup("(",atop(n,x),")")*theta^x*(1 - theta)^{n-x}~
             "," ~  ~ F[X](q*"*") == sum(p[X](x), x <= q*"*", "")
         ),
         list(t1 = qq, x = "x", t3 = qq -1)
@@ -17727,13 +17731,14 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
       lwd.ticks = 1,
       labels = FALSE
     )
+    titbinomial <- gettext("Probability function plot: Binomial", domain = "R-leem")
     title(
       ylab = expression(p[X](x)),
       xlab = "X",
       main = substitute(
         atop(
-          bold("Probability function plot: Binomial"),
-          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
+          bold(titbinomial),
+          p[X](x) == bgroup("(",atop(n,x),")")*theta^x*(1 - theta)^{n-x}~
             "," ~  ~ F[X](t1) == 0*"," ~  ~ S[X](t3)*"="*1 - F[X](t3)*"="*P(X >= t1) == sum(p[X](x), x >= t1, infinity)
         ),
         list(t1 = qq, x = "x", t3 = qq -1)
@@ -17769,16 +17774,17 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
       lwd.ticks = 0,
       labels = FALSE
     )
+    titbinomial <- gettext("Probability function plot: Binomial", domain = "R-leem")
     title(
       ylab = expression(p[X](x)),
       xlab = "X",
       main = substitute(
         atop(
-          bold("Probability function plot: Binomial"),
-          p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*
+          bold(titbinomial),
+          p[X](x) == bgroup("(",atop(n,x),")")*theta^x*(1 - theta)^{n-x}~
             "," ~  ~ F[X](t1) == sum(p[X](x), x <= t1, "")
         ),
-        list(t1 = qq, x = "x", t3 = qq -1)
+        list(t1 = qq, x = "x", t3 = qq -1, titbinomial = titbinomial)
       ),
       ...
     )

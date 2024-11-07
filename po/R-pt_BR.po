@@ -355,3 +355,5 @@ msgstr "Limite superior"
 msgid "Lower whisker limit"
 msgstr "Limite inferior"
 
+msgid "Probability function plot: Binomial"
+msgstr "Gráfico da função de probabilidade: Binomial"
