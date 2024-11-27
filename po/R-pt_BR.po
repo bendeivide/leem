@@ -357,3 +357,21 @@ msgstr "Limite inferior"
 
 msgid "Probability function plot: Binomial"
 msgstr "Gráfico da função de probabilidade: Binomial"
+
+msgid "Parameters:"
+msgstr "Parâmetro(s):"
+
+msgid "Distribution Function"
+msgstr "Função de distribuição"
+
+msgid "Discrete variable"
+msgstr "Variável discreta"
+
+msgid "Distribution Function Properties"
+msgstr "Propriedades da função de distribuição"
+
+msgid "Continuous variable"
+msgstr "Variável contínua"
+
+
+

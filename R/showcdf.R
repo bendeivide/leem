@@ -29,12 +29,14 @@ showcdf <- function(variable = "discrete", prop = NULL) {
     ylim <- c(0, 1.2)
     plot.new()
     plot.window(xlim, ylim)
-
+    titdist <- gettext("Distribution Function", domain = "R-leem")
+    titvar <- gettext("Discrete variable", domain = "R-leem")
+    titprp <- gettext("Distribution Function Properties", domain = "R-leem")
     if (is.null(prop)) {
-      title(bquote(atop(bold("Distribution Function"), "Discrete variable")),
+      title(substitute(atop(bold(titdist), titvar), list(titdist = titdist, titvar = titvar)),
             xlab = bquote(X), ylab = bquote(F[X](x)), col.lab = "blue")
     } else {
-      title(bquote(atop(bold("Distribution Function Properties"), "Discrete variable")),
+      title(substitute(atop(bold(titprp), titvar), list(titprp = titprp, titvar = titvar)),
             xlab = bquote(X), ylab = bquote(F[X](x)), col.lab = "blue")
     }
 
@@ -146,7 +148,8 @@ showcdf <- function(variable = "discrete", prop = NULL) {
       }
 
     }
-  } else{
+  }
+  if (variable == "continuous") {
     p <- 0.8; mu <- 0; sigma <- 1
     x <- qnorm(p, mu, sigma)
     curve(
@@ -167,45 +170,61 @@ showcdf <- function(variable = "discrete", prop = NULL) {
             c(fy, rep(0, length(fy))),
             col = "gray90")
 
-    title(bquote(atop(bold("Distribution Function Properties"), "Continuous variable")),
-          ylab = bquote(F[X](x)), col.lab = "blue")
-    op <- par(mgp=c(1,3,0))
-    title(xlab = bquote(X), col.lab = "blue")
-    par(op)
+    titdist <- gettext("Distribution Function", domain = "R-leem")
+    titvar <- gettext("Continuous variable", domain = "R-leem")
+    titprp <- gettext("Distribution Function Properties", domain = "R-leem")
 
-    # Axis
+       # Axis
     axis(2, at = c(0, 1), col.axis = "blue", col = "blue", las = 2)
 
+    if (is.null(prop)) {
+      title(substitute(atop(bold(titprp), titvar),
+                       list(titprp = titprp, titvar = titvar)),
+            ylab = bquote(F[X](x)), col.lab = "blue")
+      op <- par(mgp=c(1,3,0))
+      title(xlab = bquote(X), col.lab = "blue")
+      par(op)
+    } else {
+      title(substitute(atop(bold(titdis), titvar),
+                       list(titdis = titdis, titvar = titvar)),
+            ylab = bquote(F[X](x)), col.lab = "blue")
+      op <- par(mgp=c(1,3,0))
+      title(xlab = bquote(X), col.lab = "blue")
+      par(op)
+
+      if (prop == 1) {
+        # property I
+        text(2, 1.1, bquote(lim(F[X](x), x %->% infinity) == 1), col = "red")
+        arrows(3, 1.03, 4, 1.03, col = "red", length = 0.1, lwd = 2)
+        text(-3, 0.2, bquote(lim(F[X](x), x %->%~-infinity) == 0), col = "red")
+        arrows(-3, 0.05, -4, 0.05, col = "red", length = 0.1, lwd = 2)
+      }
+      if (prop == 2) {
+        # Segments
+        segments(c(0, 1), c(0,0), c(0, 1), c(pnorm(0), pnorm(1)), col = "red", lty = 2)
+        # Points
+        points(0, pnorm(0), lwd = 2, pch = 19, col = "red")
+        text(-0.08, 0.55, bquote(x), col = "red")
+        points(1, pnorm(1), lwd = 2, pch = 19, col = "red")
+        text(0.9, 0.9, bquote(y), col = "red")
+        ##
+        text(-1, 1, bquote(atop(F[X](x) <= F[X](y), x <= y)), col = "red")
+        segments(rep(par("usr")[1], 2), c(pnorm(0), pnorm(1)), c(0, 1), c(pnorm(0), pnorm(1)), col = "red", lty = 2)
+        axis(2, at = c(pnorm(0)), labels = bquote(F[X](x)), col.axis = "red", las = 2, col = "red")
+        axis(2, at = c(pnorm(1)), labels = bquote(F[X](y)), col.axis = "red", las = 2, col = "red")
+      }
+      if (prop == 3) {
+        points(0, pnorm(0), lwd = 2, pch = 19, col = "red")
+        text(-0.08, 0.55, bquote(x), col = "red")
+        points(1, pnorm(1), lwd = 2, pch = 19, col = "red")
+        text(0.9, 0.9, bquote(x[n]), col = "red")
+        arrows(1, pnorm(0.9), 0.2, pnorm(0.1), col = "red", length = 0.1, lwd = 3)
+        text(-1, 0.8, bquote(lim(F[X](x[n]), x[n]*symbol("\257")*x)*symbol("\257")*F[X](x)), col = "red")
+      }
+
+    }
     # Precisa inserir a condicao NULL
-    if (prop == 1) {
-      # property I
-      text(2, 1.1, bquote(lim(F[X](x), x %->% infinity) == 1), col = "red")
-      arrows(3, 1.03, 4, 1.03, col = "red", length = 0.1, lwd = 2)
-      text(-3, 0.2, bquote(lim(F[X](x), x %->%~-infinity) == 0), col = "red")
-      arrows(-3, 0.05, -4, 0.05, col = "red", length = 0.1, lwd = 2)
-    }
-    if (prop == 2) {
-      # Segments
-      segments(c(0, 1), c(0,0), c(0, 1), c(pnorm(0), pnorm(1)), col = "red", lty = 2)
-      # Points
-      points(0, pnorm(0), lwd = 2, pch = 19, col = "red")
-      text(-0.08, 0.55, bquote(x), col = "red")
-      points(1, pnorm(1), lwd = 2, pch = 19, col = "red")
-      text(0.9, 0.9, bquote(y), col = "red")
-      ##
-      text(-1, 1, bquote(atop(F[X](x) <= F[X](y), x <= y)), col = "red")
-      segments(rep(par("usr")[1], 2), c(pnorm(0), pnorm(1)), c(0, 1), c(pnorm(0), pnorm(1)), col = "red", lty = 2)
-      axis(2, at = c(pnorm(0)), labels = bquote(F[X](x)), col.axis = "red", las = 2, col = "red")
-      axis(2, at = c(pnorm(1)), labels = bquote(F[X](y)), col.axis = "red", las = 2, col = "red")
-    }
-    if (prop == 3) {
-      points(0, pnorm(0), lwd = 2, pch = 19, col = "red")
-      text(-0.08, 0.55, bquote(x), col = "red")
-      points(1, pnorm(1), lwd = 2, pch = 19, col = "red")
-      text(0.9, 0.9, bquote(x[n]), col = "red")
-      arrows(1, pnorm(0.9), 0.2, pnorm(0.1), col = "red", length = 0.1, lwd = 3)
-      text(-1, 0.8, bquote(lim(F[X](x[n]), x[n]*symbol("\257")*x)*symbol("\257")*F[X](x)), col = "red")
-    }
+
   }
 }
 

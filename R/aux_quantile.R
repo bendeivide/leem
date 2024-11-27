@@ -1,10 +1,13 @@
+# internal variables
+.parametro <- gettext("Parameters:", domain = "R-leem")
+
+
 ###########################
 # Auxiliar functions of Q()
 ###########################
 # Observations:
 #    - `%>X<=%`() internal function
 ################################################################################
-
 ################################################################################
 ## two.sided == TRUE (name: plot+q+name_distribution+ts+type_distribution)
 ################################################################################
@@ -337,14 +340,15 @@ plotqnormaltspdfaux <- function(q, mu, sigma, rounding, ...) {
     ),
     cex = 0.8
   )
+
   legend(
     minimo,
     legaux$text$y,
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == media ~ "," ~ sigma == varen,
-      list(media = mu, varen = sigma)
+      parametro ~ mu == media ~ "," ~ sigma == varen,
+      list(media = mu, varen = sigma, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -683,8 +687,8 @@ plotqtstudenttspdfaux <- function(q,df, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ df == dfv,
-      list(dfv = df)
+      parametro ~ df == dfv,
+      list(dfv = df, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -1008,8 +1012,8 @@ plotqchisqtspdfaux <- function(q, df, ncp, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ df == dfv ~ "," ~ ncp == ncpv,
-      list(dfv = df, ncpv = ncp)
+      parametro ~ df == dfv ~ "," ~ ncp == ncpv,
+      list(dfv = df, ncpv = ncp, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -1361,8 +1365,8 @@ plotqftspdfaux <- function(q, df1, df2, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                          list(df1v = df1, df2v = df2)),
+    legend = substitute(parametro~df1 == df1v ~ "," ~ df2 == df2v,
+                          list(df1v = df1, df2v = df2, parametro = .parametro)),
     cex = 0.8
   )
 
@@ -1714,8 +1718,8 @@ plotqgumbeltspdfaux <- function(q, location, scale, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == locv ~ "," ~ beta == scalev,
-      list(mu = location, scalev = scale)
+      parametro ~ mu == locv ~ "," ~ beta == scalev,
+      list(mu = location, scalev = scale, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -2056,8 +2060,8 @@ plotqbetatspdfaux <- function(q, alpha, beta, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ alpha == alphav ~ "," ~ beta == betav,
-      list(alphav = alpha, betav = beta)
+      parametro ~ alpha == alphav ~ "," ~ beta == betav,
+      list(alphav = alpha, betav = beta, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -2395,8 +2399,8 @@ plotqexptsprateaux <- function(q,rate, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ rate == ratev,
-      list(ratev = rate)
+      parametro ~ rate == ratev,
+      list(ratev = rate, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -2852,8 +2856,8 @@ plotqgammatspdfaux <- function(q, shape, rate, scale, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ "; " ~ shape == shapev ~ "," ~ rate == ratev ~";"~ scale == scalev,
-      list(shapev = shape, ratev = rate, scalev = scale)
+      parametro ~ "; " ~ shape == shapev ~ "," ~ rate == ratev ~";"~ scale == scalev,
+      list(shapev = shape, ratev = rate, scalev = scale, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -3203,8 +3207,8 @@ plotqcauchytspdfaux <- function(q, location, scale, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == locv ~ "," ~ beta == scalev,
-      list(mu = location, scalev = scale)
+      parametro ~ mu == locv ~ "," ~ beta == scalev,
+      list(mu = location, scalev = scale, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -3549,8 +3553,8 @@ plotqlogistspdfaux <- function(q, location, scale, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == locv ~ "," ~ beta == scalev,
-      list(mu = location, scalev = scale)
+      parametro ~ mu == locv ~ "," ~ beta == scalev,
+      list(mu = location, scalev = scale, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -3895,8 +3899,8 @@ plotqlnormaltspdfaux <- function(q, mu, sigma, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == media ~ "," ~ sigma == varen,
-      list(media = mu, varen = sigma)
+      parametro ~ mu == media ~ "," ~ sigma == varen,
+      list(media = mu, varen = sigma, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -4241,8 +4245,8 @@ plotqweibulltspdfaux <- function(q, shape, scale, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ lambda == locv ~ "," ~ k == scalev,
-      list(locv = shape, scalev = scale)
+      parametro ~ lambda == locv ~ "," ~ k == scalev,
+      list(locv = shape, scalev = scale, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -4702,8 +4706,8 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ lambda == lambd,
-                          list(lambd = lambda)), cex = 0.8
+      legend = substitute(parametro ~ lambda == lambd,
+                          list(lambd = lambda, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -4744,8 +4748,8 @@ plotqpoissontspdfaux <- function(q, lambda, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ lambda == lambd,
-                          list(lambd = lambda)), cex = 0.8
+      legend = substitute(parametro ~ lambda == lambd,
+                          list(lambd = lambda, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -5195,13 +5199,15 @@ plotqbinomialtspdfaux <- function(q, size, prob, rounding, ...) {
                             t1 = qqmin, t2 = qqmax - 1, Pr = Pr
                           )), cex = 0.8
     )
+
     legend(
       rmin,
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev ~ ";"~ prob == probv,
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev ~ ";"~ prob == probv,
+                          list(sizev = size, probv = prob, parametro = .parametro)),
+      cex = 0.8
     )
   } else{
     axis(
@@ -5243,8 +5249,8 @@ plotqbinomialtspdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev ~ ";"~ prob == probv,
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev ~ ";"~ prob == probv,
+                          list(sizev = size, probv = prob, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -5702,8 +5708,8 @@ plotqnbinomtspdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev ~";"~ prob == probv,
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev ~";"~ prob == probv,
+                          list(sizev = size, probv = prob, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -5744,8 +5750,8 @@ plotqnbinomtspdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev ~";"~ prob == probv,
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev ~";"~ prob == probv,
+                          list(sizev = size, probv = prob, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -6191,8 +6197,8 @@ plotqgeomtspdfaux <- function(q, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ prob == lambd,
-                          list(lambd = prob)), cex = 0.8
+      legend = substitute(parametro ~ prob == lambd,
+                          list(lambd = prob, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -6233,8 +6239,8 @@ plotqgeomtspdfaux <- function(q, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ prob == lambd,
-                          list(lambd = prob)), cex = 0.8
+      legend = substitute(parametro ~ prob == lambd,
+                          list(lambd = prob, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -6686,10 +6692,11 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
               legaux$text$y,
               bty = "n",
               bg = "white",
-              legend = substitute("Parameters:" ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
+              legend = substitute(parametro ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
                                   list(mv = m,
                                        nv = n,
-                                       kv = k)), cex = 0.8
+                                       kv = k,
+                                       parametro = .parametro)), cex = 0.8
             )
           } else{
             axis(
@@ -6730,10 +6737,11 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
               legaux$text$y,
               bty = "n",
               bg = "white",
-              legend = substitute("Parameters:" ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
+              legend = substitute(parametro ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
                                   list(mv = m,
                                        nv = n,
-                                       kv = k)), cex = 0.8
+                                       kv = k,
+                                       parametro = .parametro)), cex = 0.8
             )
           }
         }
@@ -7198,8 +7206,8 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
               legaux$text$y,
               bty = "n",
               bg = "white",
-              legend = substitute("Parameters:" ~ min == minv ~ ";"~ max == maxv,
-                                  list(minv = min, maxv = max)), cex = 0.8
+              legend = substitute(parametro ~ min == minv ~ ";"~ max == maxv,
+                                  list(minv = min, maxv = max, parametro = .parametro)), cex = 0.8
             )
           } else{
             axis(
@@ -7240,8 +7248,8 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
               legaux$text$y,
               bty = "n",
               bg = "white",
-              legend = substitute("Parameters:" ~ min == minv ~ ";"~ max == maxv,
-                                  list(minv = min, maxv = max)), cex = 0.8
+              legend = substitute(parametro ~ min == minv ~ ";"~ max == maxv,
+                                  list(minv = min, maxv = max, parametro = .parametro)), cex = 0.8
             )
           }
         }
@@ -7692,8 +7700,8 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
               legaux$text$y,
               bty = "n",
               bg = "white",
-              legend = substitute("Parameters:" ~ m == mv ~ ";"~ n == nv,
-                                  list(mv = m, nv = n)), cex = 0.8
+              legend = substitute(parametro ~ m == mv ~ ";"~ n == nv,
+                                  list(mv = m, nv = n, parametro = .parametro)), cex = 0.8
             )
           } else{
             axis(
@@ -7734,8 +7742,8 @@ plotqgeomtsboth <- function(p, prob, rounding, mfrow, ...) {
               legaux$text$y,
               bty = "n",
               bg = "white",
-              legend = substitute("Parameters:" ~ m == mv ~ ";"~ n == nv,
-                                  list(mv = m, nv = n)), cex = 0.8
+              legend = substitute(parametro ~ m == mv ~ ";"~ n == nv,
+                                  list(mv = m, nv = n, parametro = .parametro)), cex = 0.8
             )
           }
         }
@@ -8189,8 +8197,8 @@ plotqsignranktspdfaux <- function(q, n, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ n == lambd,
-                          list(lambd = n)), cex = 0.8
+      legend = substitute(parametro ~ n == lambd,
+                          list(lambd = n, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -8231,8 +8239,8 @@ plotqsignranktspdfaux <- function(q, n, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ n == lambd,
-                          list(lambd = n)), cex = 0.8
+      legend = substitute(parametro ~ n == lambd,
+                          list(lambd = n, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -8373,8 +8381,8 @@ plotqnormalltcdf <- function(p, mu, sigma, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == media ~ "," ~ sigma == varen,
-      list(media = mu, varen = sigma)
+      parametro ~ mu == media ~ "," ~ sigma == varen,
+      list(media = mu, varen = sigma, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -8491,8 +8499,8 @@ plotqnormallttpdfaux <- function(q, mu, sigma, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == media ~ "," ~ sigma == varen,
-      list(media = mu, varen = sigma)
+      parametro ~ mu == media ~ "," ~ sigma == varen,
+      list(media = mu, varen = sigma, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -8626,8 +8634,8 @@ plotqtstudentlttcdf <- function(p, df, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ df == dfv,
-      list(dfv =df)
+      parametro ~ df == dfv,
+      list(dfv =df, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -8735,8 +8743,8 @@ plotqtstudentlttpdfaux <- function(q, df, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ df == dfv,
-      list(dfv = df)
+      parametro ~ df == dfv,
+      list(dfv = df, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -8871,8 +8879,8 @@ plotqchisqlttcdf <- function(p, df, ncp, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ df == dfv ~ "," ~ ncp == ncpv,
-      list(dfv = df, ncpv = ncp)
+      parametro ~ df == dfv ~ "," ~ ncp == ncpv,
+      list(dfv = df, ncpv = ncp, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -8988,8 +8996,8 @@ plotqchisqlttpdfaux <- function(q, df, ncp, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ df == dfv ~ "," ~ ncp == ncpv,
-      list(dfv = df, ncpv = ncp)
+      parametro ~ df == dfv ~ "," ~ ncp == ncpv,
+      list(dfv = df, ncpv = ncp, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -9122,8 +9130,8 @@ plotqflttcdf <- function(p, df1, df2, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                        list(df1v = df1, df2v = df2)),
+    legend = substitute(parametro~df1 == df1v ~ "," ~ df2 == df2v,
+                        list(df1v = df1, df2v = df2, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -9238,8 +9246,8 @@ plotqflttpdfaux <- function(q, df1, df2, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                          list(df1v = df1, df2v = df2)),
+    legend = substitute(parametro~df1 == df1v ~ "," ~ df2 == df2v,
+                          list(df1v = df1, df2v = df2, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -9371,8 +9379,8 @@ plotqgumbellttcdf <- function(p, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -9472,8 +9480,8 @@ plotqgumbellttpdfaux <- function(q, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -9606,8 +9614,8 @@ plotqbetalttcdf <- function(p, alpha, beta, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ alpha == alphav ~ "," ~ beta == betav,
-      list(alphav = alpha, betav = beta)
+      parametro ~ alpha == alphav ~ "," ~ beta == betav,
+      list(alphav = alpha, betav = beta, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -9716,8 +9724,8 @@ plotqbetalttpdfaux <- function(q, alpha, beta, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ alpha == alphav ~ "," ~ beta == betav,
-      list(alphav = alpha, betav = beta)
+      parametro ~ alpha == alphav ~ "," ~ beta == betav,
+      list(alphav = alpha, betav = beta, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -9850,8 +9858,8 @@ plotqexplttcrate <- function(p, rate, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ rate == ratev,
-      list(ratev =rate)
+      parametro ~ rate == ratev,
+      list(ratev =rate, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -9958,8 +9966,8 @@ plotqexplttprateaux <- function(q, rate, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ rate == ratev,
-      list(ratev = rate)
+      parametro ~ rate == ratev,
+      list(ratev = rate, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -10129,8 +10137,8 @@ plotqgammalttcdf <- function(p, shape, rate, scale = scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~ "; " ~ shape == shapev ~ "," ~ rate == ratev ~";"~ scale == scalev,
-                        list(shapev = shape, ratev = rate, scalev = scale)),
+    legend = substitute(parametro~ "; " ~ shape == shapev ~ "," ~ rate == ratev ~";"~ scale == scalev,
+                        list(shapev = shape, ratev = rate, scalev = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -10272,8 +10280,8 @@ plotqgammalttpdfaux <- function(q, shape, rate, scale = scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~ "; " ~ shape == shapev ~ "," ~ rate == ratev ~";"~ scale == scalev,
-                        list(shapev = shape, ratev = rate, scalev = scale)),
+    legend = substitute(parametro~ "; " ~ shape == shapev ~ "," ~ rate == ratev ~";"~ scale == scalev,
+                        list(shapev = shape, ratev = rate, scalev = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -10409,8 +10417,8 @@ plotqcauchylttcdf <- function(p, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -10510,8 +10518,8 @@ plotqcauchylttpdfaux <- function(q, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -10643,8 +10651,8 @@ plotqlogislttcdf <- function(p, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -10744,8 +10752,8 @@ plotqlogislttpdfaux <- function(q, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -10877,8 +10885,8 @@ plotqlnormalltcdf <- function(p, mu, sigma, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == media ~ "," ~ sigma == varen,
-      list(media = mu, varen = sigma)
+      parametro ~ mu == media ~ "," ~ sigma == varen,
+      list(media = mu, varen = sigma, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -10987,8 +10995,8 @@ plotqlnormallttpdfaux <- function(q, mu, sigma, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == media ~ "," ~ sigma == varen,
-      list(media = mu, varen = sigma)
+      parametro ~ mu == media ~ "," ~ sigma == varen,
+      list(media = mu, varen = sigma, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -11121,8 +11129,8 @@ plotqweibulllttcdf <- function(p, shape, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~lambda == locv ~ "," ~ k == scav,
-                        list(locv = shape, scav = scale)),
+    legend = substitute(parametro~lambda == locv ~ "," ~ k == scav,
+                        list(locv = shape, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -11222,8 +11230,8 @@ plotqweibulllttpdfaux <- function(q, shape, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~lambda == locv ~ "," ~ k == scav,
-                        list(locv = shape, scav = scale)),
+    legend = substitute(parametro~lambda == locv ~ "," ~ k == scav,
+                        list(locv = shape, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -11375,8 +11383,8 @@ plotqpoissonlttcdf <- function(p, lambda, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ lambda == lambd,
-                        list(lambd = lambda)), cex = 0.8
+    legend = substitute(parametro ~ lambda == lambd,
+                        list(lambd = lambda, parametro = .parametro)), cex = 0.8
   )
 
 }
@@ -11530,8 +11538,8 @@ plotqpoissonlttpdfaux <- function(q, lambda, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ lambda == lambd,
-                          list(lambd = lambda)), cex = 0.8
+      legend = substitute(parametro ~ lambda == lambd,
+                          list(lambd = lambda, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -11572,8 +11580,8 @@ plotqpoissonlttpdfaux <- function(q, lambda, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ lambda == lambd,
-                          list(lambd = lambda)), cex = 0.8
+      legend = substitute(parametro ~ lambda == lambd,
+                          list(lambd = lambda, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -11724,8 +11732,8 @@ plotqbinomiallttcdf <- function(p, size, prob, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ size == sizev ~ ";" ~ prob == probv,
-                        list(sizev = size, probv = prob)),  cex = 0.8
+    legend = substitute(parametro ~ size == sizev ~ ";" ~ prob == probv,
+                        list(sizev = size, probv = prob, parametro = .parametro)),  cex = 0.8
   )
 
 }
@@ -11880,8 +11888,8 @@ plotqbinomiallttpdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev~";" ~ prob == probv,
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev~";" ~ prob == probv,
+                          list(sizev = size, probv = prob, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -11923,8 +11931,8 @@ plotqbinomiallttpdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev~";" ~ prob == probv,
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev~";" ~ prob == probv,
+                          list(sizev = size, probv = prob, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -12073,8 +12081,8 @@ plotqnbinomlttcdf <- function(p, size, prob, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ size == sizev ~ ";" ~ prob == prob,
-                        list(sizev = size, probv = prob)), cex = 0.8
+    legend = substitute(parametro ~ size == sizev ~ ";" ~ prob == prob,
+                        list(sizev = size, probv = prob, parametro = .parametro)), cex = 0.8
   )
 
 }
@@ -12228,8 +12236,8 @@ plotqnbinomlttpdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev ~ ";" ~ prob == prob,
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev ~ ";" ~ prob == prob,
+                          list(sizev = size, probv = prob, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -12270,8 +12278,8 @@ plotqnbinomlttpdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev ~ ";" ~ prob == prob,
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev ~ ";" ~ prob == prob,
+                          list(sizev = size, probv = prob, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -12421,8 +12429,8 @@ plotqgeomlttcdf <- function(p, prob, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ prob == lambd,
-                        list(lambd = prob)), cex = 0.8
+    legend = substitute(parametro ~ prob == lambd,
+                        list(lambd = prob, parametro = .parametro)), cex = 0.8
   )
 
 }
@@ -12572,8 +12580,8 @@ plotqgeomlttpdfaux <- function(q, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ prob == lambd,
-                          list(lambd = prob)), cex = 0.8
+      legend = substitute(parametro ~ prob == lambd,
+                          list(lambd = prob, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -12614,8 +12622,8 @@ plotqgeomlttpdfaux <- function(q, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ prob == lambd,
-                          list(lambd = prob)), cex = 0.8
+      legend = substitute(parametro ~ prob == lambd,
+                          list(lambd = prob, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -12766,8 +12774,8 @@ plotqhyperlttcdf <- function(p, m, n, k, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
-                        list(mv = m, nv = n, kv = k)), cex = 0.8
+    legend = substitute(parametro ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
+                        list(mv = m, nv = n, kv = k, parametro = .parametro)), cex = 0.8
   )
 
 }
@@ -12916,8 +12924,8 @@ plotqhyperlttpdfaux <- function(q, m, n, k, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
-                          list(mv = m, nv = n, kv = k)), cex = 0.8
+      legend = substitute(parametro ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
+                          list(mv = m, nv = n, kv = k, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -12958,8 +12966,8 @@ plotqhyperlttpdfaux <- function(q, m, n, k, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
-                          list(mv = m, nv = n, kv = k)), cex = 0.8
+      legend = substitute(parametro ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
+                          list(mv = m, nv = n, kv = k, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -13110,8 +13118,8 @@ plotquniflttcdf <- function(p, min, max, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ min == minv ~ ";" ~ max == maxv,
-                        list(minv = min, maxv = max)),  cex = 0.8
+    legend = substitute(parametro ~ min == minv ~ ";" ~ max == maxv,
+                        list(minv = min, maxv = max, parametro = .parametro)),  cex = 0.8
   )
 
 }
@@ -13260,8 +13268,8 @@ plotquniflttpdfaux <- function(q, min, max, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ min == minv~";" ~ max == maxv,
-                          list(minv = min, maxv = max)), cex = 0.8
+      legend = substitute(parametro ~ min == minv~";" ~ max == maxv,
+                          list(minv = min, maxv = max, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -13302,8 +13310,8 @@ plotquniflttpdfaux <- function(q, min, max, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ min == minv~";" ~ max == maxv,
-                          list(minv = min, maxv = max)), cex = 0.8
+      legend = substitute(parametro ~ min == minv~";" ~ max == maxv,
+                          list(minv = min, maxv = max), parametro = .parametro), cex = 0.8
     )
   }
 }
@@ -13452,8 +13460,8 @@ plotqwilcoxlttcdf <- function(p, m, n, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ m == mv ~ ";" ~ n == nv,
-                        list(mv = m, nv = n)),  cex = 0.8
+    legend = substitute(parametro ~ m == mv ~ ";" ~ n == nv,
+                        list(mv = m, nv = n), parametro = .parametro),  cex = 0.8
   )
 
 }
@@ -13602,8 +13610,8 @@ plotqwilcoxlttpdfaux <- function(q, m, n, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ m == mv~";" ~ n == nv,
-                          list(mv = m, nv = n)), cex = 0.8
+      legend = substitute(parametro ~ m == mv~";" ~ n == nv,
+                          list(mv = m, nv = n), parametro = .parametro), cex = 0.8
     )
   } else{
     axis(
@@ -13644,8 +13652,8 @@ plotqwilcoxlttpdfaux <- function(q, m, n, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ m == mv~";" ~ n == nv,
-                          list(mv = m, nv = n)), cex = 0.8
+      legend = substitute(parametro ~ m == mv~";" ~ n == nv,
+                          list(mv = m, nv = n, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -13792,8 +13800,8 @@ plotqsignranklttcdf <- function(p, n, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ n == lambd,
-                        list(lambd = n)), cex = 0.8
+    legend = substitute(parametro ~ n == lambd,
+                        list(lambd = n, parametro = .parametro)), cex = 0.8
   )
 
 }
@@ -13947,8 +13955,8 @@ plotqsignranklttpdfaux <- function(q, n, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ n == lambd,
-                          list(lambd = n)), cex = 0.8
+      legend = substitute(parametro ~ n == lambd,
+                          list(lambd = n, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -13989,8 +13997,8 @@ plotqsignranklttpdfaux <- function(q, n, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ n == lambd,
-                          list(lambd = n)), cex = 0.8
+      legend = substitute(parametro ~ n == lambd,
+                          list(lambd = n, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -14136,8 +14144,8 @@ plotqnormalltfsf <- function(p, mu, sigma, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == media ~ "," ~ sigma == varen,
-      list(media = mu, varen = sigma)
+      parametro ~ mu == media ~ "," ~ sigma == varen,
+      list(media = mu, varen = sigma, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -14255,8 +14263,8 @@ plotqnormalltfpdfaux <- function(q, mu, sigma, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == media ~ "," ~ sigma == varen,
-      list(media = mu, varen = sigma)
+      parametro ~ mu == media ~ "," ~ sigma == varen,
+      list(media = mu, varen = sigma, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -14395,8 +14403,8 @@ plotqtstudentltfsf <- function(p, df, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ df == dfv,
-      list(dfv = df)
+      parametro ~ df == dfv,
+      list(dfv = df, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -14505,8 +14513,8 @@ plotqtstudentltfpdfaux <- function(q, df, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ df == dfv,
-      list(dfv = df)
+      parametro ~ df == dfv,
+      list(dfv = df, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -14643,8 +14651,8 @@ plotqchisqltfsf <- function(p, df, ncp, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ df == dfv ~ "," ~ ncp == ncpv,
-      list(dfv = df, ncpv = ncp)
+      parametro ~ df == dfv ~ "," ~ ncp == ncpv,
+      list(dfv = df, ncpv = ncp, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -14757,8 +14765,8 @@ plotqchisqltfpdfaux <- function(q, df, ncp, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ df == dfv ~ "," ~ ncp == ncpv,
-      list(dfv = df, ncpv = ncp)
+      parametro ~ df == dfv ~ "," ~ ncp == ncpv,
+      list(dfv = df, ncpv = ncp, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -14893,8 +14901,8 @@ plotqfltfsf <- function(p, df1, df2, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                        list(df1v = df1, df2v = df2)),
+    legend = substitute(parametro~df1 == df1v ~ "," ~ df2 == df2v,
+                        list(df1v = df1, df2v = df2, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -15010,8 +15018,8 @@ plotqfltfpdfaux <- function(q, df1, df2, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                        list(df1v = df1, df2v = df2)),
+    legend = substitute(parametro~df1 == df1v ~ "," ~ df2 == df2v,
+                        list(df1v = df1, df2v = df2, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -15149,8 +15157,8 @@ plotqgumbelltfsf <- function(p, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -15266,8 +15274,8 @@ plotqgumbelltfpdfaux <- function(q, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -15406,8 +15414,8 @@ plotqbetaltfsf <- function(p, alpha, beta, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ alpha == alphav ~ "," ~ beta == betav,
-      list(alphav = alpha, betav = beta)
+      parametro ~ alpha == alphav ~ "," ~ beta == betav,
+      list(alphav = alpha, betav = beta, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -15517,8 +15525,8 @@ plotqbetaltfpdfaux <- function(q, alpha, beta, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ alpha == alphav ~ "," ~ beta == betav,
-      list(alphav = alpha, betav = beta)
+      parametro ~ alpha == alphav ~ "," ~ beta == betav,
+      list(alphav = alpha, betav = beta, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -15653,8 +15661,8 @@ plotqexpltfsf <- function(p, rate, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ rate == ratev,
-      list(ratev = rate)
+      parametro ~ rate == ratev,
+      list(ratev = rate, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -15762,8 +15770,8 @@ plotqexpltfprateaux <- function(q, rate, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ rate == ratev,
-      list(ratev = rate)
+      parametro ~ rate == ratev,
+      list(ratev = rate, parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -15946,8 +15954,8 @@ plotqgammaltfsf <- function(p, shape, rate, scale = scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~ "; " ~ shape == shapev ~ "," ~ rate == ratev ~";"~ scale == scalev,
-                        list(shapev = shape, ratev = rate, scalev = scale)),
+    legend = substitute(parametro ~ shape == shapev ~ "," ~ rate == ratev ~";"~ scale == scalev,
+                        list(shapev = shape, ratev = rate, scalev = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -16097,8 +16105,9 @@ plotqgammaltfpdfaux <- function(q, shape, rate, scale = scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~ "; " ~ shape == shapev ~ "," ~ rate == ratev ~";"~ scale == scalev,
-                        list(shapev = shape, ratev = rate, scalev = scale)),
+    legend = substitute(parametro~ "; " ~ shape == shapev ~ "," ~ rate == ratev ~";"~ scale == scalev,
+                        list(shapev = shape, ratev = rate, scalev = scale,
+                             parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -16243,8 +16252,8 @@ plotqcauchyltfsf <- function(p, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -16352,8 +16361,8 @@ plotqcauchyltfpdfaux <- function(q, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale, parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -16491,8 +16500,9 @@ plotqlogisltfsf <- function(p, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale,
+                             parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -16600,8 +16610,9 @@ plotqlogisltfpdfaux <- function(q, location, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~mu == locv ~ "," ~ beta == scav,
-                        list(locv = location, scav = scale)),
+    legend = substitute(parametro~mu == locv ~ "," ~ beta == scav,
+                        list(locv = location, scav = scale,
+                             parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -16740,8 +16751,9 @@ plotqlnormalltfsf <- function(p, mu, sigma, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == media ~ "," ~ sigma == varen,
-      list(media = mu, varen = sigma)
+      parametro ~ mu == media ~ "," ~ sigma == varen,
+      list(media = mu, varen = sigma,
+           parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -16850,8 +16862,9 @@ plotqlnormalltfpdfaux <- function(q, mu, sigma, rounding, ...) {
     bty = "n",
     bg = "white",
     legend = substitute(
-      "Parameters:" ~ mu == media ~ "," ~ sigma == varen,
-      list(media = mu, varen = sigma)
+      parametro ~ mu == media ~ "," ~ sigma == varen,
+      list(media = mu, varen = sigma,
+           parametro = .parametro)
     ),
     cex = 0.8
   )
@@ -16990,8 +17003,9 @@ plotqweibullltfsf <- function(p, shape, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~lambda == locv ~ "," ~ k == scav,
-                        list(locv = shape, scav = scale)),
+    legend = substitute(parametro~lambda == locv ~ "," ~ k == scav,
+                        list(locv = shape, scav = scale,
+                             parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -17099,8 +17113,9 @@ plotqweibullltfpdfaux <- function(q, shape, scale, rounding, ...) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:"~lambda == locv ~ "," ~ k == scav,
-                        list(locv = shape, scav = scale)),
+    legend = substitute(parametro~lambda == locv ~ "," ~ k == scav,
+                        list(locv = shape, scav = scale,
+                             parametro = .parametro)),
     cex = 0.8
   )
 }
@@ -17409,8 +17424,9 @@ plotqpoissonltfpdfaux <- function(q, lambda, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ lambda == lambd,
-                          list(lambd = lambda)), cex = 0.8
+      legend = substitute(parametro ~ lambda == lambd,
+                          list(lambd = lambda,
+                               parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -17451,8 +17467,9 @@ plotqpoissonltfpdfaux <- function(q, lambda, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ lambda == lambd,
-                          list(lambd = lambda)), cex = 0.8
+      legend = substitute(parametro ~ lambda == lambd,
+                          list(lambd = lambda,
+                               parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -17760,8 +17777,9 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev ~";"~prob == probv~".",
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev ~";"~prob == probv~".",
+                          list(sizev = size, probv = prob,
+                               parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -17803,8 +17821,9 @@ plotqbinomialltfpdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev ~";"~prob == probv~".",
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev ~";"~prob == probv~".",
+                          list(sizev = size, probv = prob,
+                               parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -17957,8 +17976,9 @@ plotqnbinomlttsf <- function(p, size, prob, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ size == sizev ~ ";" ~ prob == prob,
-                        list(sizev = size, probv = prob)), cex = 0.8
+    legend = substitute(parametro ~ size == sizev ~ ";" ~ prob == prob,
+                        list(sizev = size, probv = prob,
+                             parametro = .parametro)), cex = 0.8
   )
 
 }
@@ -18112,8 +18132,9 @@ plotqnbinomltfpdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev ~ ";" ~ prob == prob,
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev ~ ";" ~ prob == prob,
+                          list(sizev = size, probv = prob,
+                               parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -18154,8 +18175,9 @@ plotqnbinomltfpdfaux <- function(q, size, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ size == sizev ~ ";" ~ prob == prob,
-                          list(sizev = size, probv = prob)), cex = 0.8
+      legend = substitute(parametro ~ size == sizev ~ ";" ~ prob == prob,
+                          list(sizev = size, probv = prob,
+                               parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -18458,8 +18480,8 @@ plotqgeomltfpdfaux <- function(q, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ prob == lambd,
-                          list(lambd = prob)), cex = 0.8
+      legend = substitute(parametro ~ prob == lambd,
+                          list(lambd = prob, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -18500,8 +18522,9 @@ plotqgeomltfpdfaux <- function(q, prob, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ prob == lambd,
-                          list(lambd = prob)), cex = 0.8
+      legend = substitute(parametro ~ prob == lambd,
+                          list(lambd = prob,
+                               parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -18651,8 +18674,9 @@ plotqhyperlttsf <- function(p, m, n, k, rounding) {
     legaux$text$y,
     bty = "n",
     bg = "white",
-    legend = substitute("Parameters:" ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
-                        list(mv = m, nv = n, kv = k)), cex = 0.8
+    legend = substitute(parametro ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
+                        list(mv = m, nv = n, kv = k,
+                             parametro = .parametro)), cex = 0.8
   )
 
 }
@@ -18802,8 +18826,9 @@ plotqhyperltfpdfaux <- function(q, m, n, k, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
-                          list(mv = m, nv = n, kv = k)), cex = 0.8
+      legend = substitute(parametro ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
+                          list(mv = m, nv = n, kv = k,
+                               parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -18844,8 +18869,9 @@ plotqhyperltfpdfaux <- function(q, m, n, k, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
-                          list(mv = m, nv = n, kv = k)), cex = 0.8
+      legend = substitute(parametro ~ "; " ~ m == mv ~ "; " ~ n == nv ~ "; " ~ k == kv,
+                          list(mv = m, nv = n, kv = k,
+                               parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -19152,8 +19178,9 @@ plotqunifltfpdfaux <- function(q, min, max, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ min == minv ~";"~max == maxv~".",
-                          list(minv = min, maxv = max)), cex = 0.8
+      legend = substitute(parametro ~ min == minv ~";"~max == maxv~".",
+                          list(minv = min, maxv = max,
+                               parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -19194,8 +19221,9 @@ plotqunifltfpdfaux <- function(q, min, max, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ min == minv ~";"~max == maxv~".",
-                          list(minv = min, maxv = max)), cex = 0.8
+      legend = substitute(parametro ~ min == minv ~";"~max == maxv~".",
+                          list(minv = min, maxv = max,
+                               parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -19498,8 +19526,9 @@ plotqwilcoxltfpdfaux <- function(q, m, n, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ m == mv ~";"~n == nv~".",
-                          list(mv = m, nv = n)), cex = 0.8
+      legend = substitute(parametro ~ m == mv ~";"~n == nv~".",
+                          list(mv = m, nv = n,
+                               parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -19540,8 +19569,9 @@ plotqwilcoxltfpdfaux <- function(q, m, n, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ m == mv ~";"~n == nv~".",
-                          list(mv = m, nv = n)), cex = 0.8
+      legend = substitute(parametro ~ m == mv ~";"~n == nv~".",
+                          list(mv = m, nv = n,
+                               parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -19851,8 +19881,8 @@ plotqsignrankltfpdfaux <- function(q, n, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ n == lambd,
-                          list(lambd = n)), cex = 0.8
+      legend = substitute(parametro ~ n == lambd,
+                          list(lambd = n, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(
@@ -19893,8 +19923,8 @@ plotqsignrankltfpdfaux <- function(q, n, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute("Parameters:" ~ n == lambd,
-                          list(lambd = n)), cex = 0.8
+      legend = substitute(parametro ~ n == lambd,
+                          list(lambd = n, parametro = .parametro)), cex = 0.8
     )
   }
 }
