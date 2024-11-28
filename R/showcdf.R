@@ -185,8 +185,9 @@ showcdf <- function(variable = "discrete", prop = NULL) {
       title(xlab = bquote(X), col.lab = "blue")
       par(op)
     } else {
+
       title(substitute(atop(bold(titdis), titvar),
-                       list(titdis = titdis, titvar = titvar)),
+                       list(titdis = titdist, titvar = titvar)),
             ylab = bquote(F[X](x)), col.lab = "blue")
       op <- par(mgp=c(1,3,0))
       title(xlab = bquote(X), col.lab = "blue")
@@ -223,7 +224,7 @@ showcdf <- function(variable = "discrete", prop = NULL) {
       }
 
     }
-    # Precisa inserir a condicao NULL
+
 
   }
 }
