@@ -26,6 +26,7 @@
 #' }
 #' @import manipulate
 #' @import tkRplotR
+#' @importFrom "graphics" "arrows" "axis" "hist" "legend" "locator" "mtext" "plot.new" "plot.window" "polygon" "segments" "title"
 #  @import shiny
 #' @export
 Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding = 2, gui = "plot", mfrow = c(1, 2), type = "both", ...) {
@@ -3027,7 +3028,7 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
           })
         }
       }
-      point <- qlnorm(c(p/2, 1 - p/2), mean = mu, sd = sigma)
+      point <- qlnorm(c(p/2, 1 - p/2), meanlog = mu, sdlog = sigma)
     } else{
       if (lower.tail) {
         if (type == "both") {
