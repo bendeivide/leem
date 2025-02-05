@@ -1318,7 +1318,7 @@ hist.leem <- function(x,
 #'   barplot(barcol = heat.colors(10))
 #' @importFrom graphics barplot
 #' @export
-barplot.leem <- function(x,
+barplot.leem <- function(height,
                          freq = "a",
                          bg = TRUE,
                          main = NULL,
@@ -1334,6 +1334,7 @@ barplot.leem <- function(x,
                          xang = 0,
                          labels = NULL,
                          ...) {
+  x <- height
   if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
   if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x)
   if (attr(x, "variable") == "continuous") {

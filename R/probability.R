@@ -35,6 +35,7 @@
 #' @import manipulate
 #' @import tkRplotR
 #  @import shiny
+#' @importFrom stats "dbeta" "dbinom" "dcauchy" "dchisq" "dexp" "df" "dgamma" "dgeom" "dhyper" "dlnorm" "dlogis" "dnbinom" "dnorm" "dpois" "dsignrank" "dt" "dunif" "dweibull" "dwilcox" "pbeta" "pbinom" "pcauchy" "pchisq" "pexp" "pf" "pgamma" "pgeom" "phyper" "plnorm" "plogis" "pnbinom" "pnorm" "ppois" "psignrank" "pt" "ptukey" "punif" "pweibull" "pwilcox" "qbeta" "qbinom" "qcauchy" "qchisq" "qexp" "qf" "qgamma" "qgeom" "qhyper" "qlnorm" "qlogis" "qnbinom" "qnorm" "qpois" "qsignrank" "qt" "qunif" "qweibull" "qwilcox" "rnorm" "sd" "sigma" "var"
 #' @export
 P <- function(q, dist = "normal", lower.tail = TRUE,
               rounding = 5, porcentage = FALSE, gui = "plot", main = NULL, ...) {
