@@ -57,5 +57,7 @@ P(q = 2, dist = "t-student", df = 10, gui = 'tcltk')
 P(-1 \%<X<\% 1, dist = "t-student", df = 10)
 }
 # Example 2 - Normal distribution
-P(-2,  dist = "normal", mean = 3, sd = 2, main = expression(f(x) == (1 / sqrt(n * sigma^2)) * exp(-1/2 * (x - mu)^2/sigma^2)))
+P(-2,  dist = "normal", mean = 3, sd = 2,
+  main = expression(f(x) == (1 / sqrt(n * sigma^2)) *
+  exp(-1/2 * (x - mu)^2/sigma^2)))
 }

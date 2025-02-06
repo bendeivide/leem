@@ -4265,8 +4265,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             plotqbinomiallttsf(p, size, prob, rounding)
           }
           if (gui == "rstudio") {
-            manipulate::manipulate(plotqbinomiallttsf(`1-p`, size, prob, rounding),
-                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+            manipulate::manipulate(plotqbinomiallttsf(cp, size, prob, rounding),
+                                   cp = manipulate::slider(0.01, 0.99, p),
                                    p = manipulate::slider(0.01, 0.99, p),
                                    size = manipulate::slider(size, size + sqrt(size), size),
                                    prob = manipulate::slider(0, 1, prob)
@@ -4283,8 +4283,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             plotqbinomiallttpdf(p, size, prob, rounding)
           }
           if (gui == "rstudio") {
-            manipulate::manipulate(plotqbinomialltfpdf(`1-p`, size, prob, rounding),
-                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+            manipulate::manipulate(plotqbinomialltfpdf(cp, size, prob, rounding),
+                                   cp = manipulate::slider(0.01, 0.99, p),
                                    p = manipulate::slider(0.01, 0.99, p),
                                    size = manipulate::slider(size, size + sqrt(size), size),
                                    prob = manipulate::slider(0, 1, prob)
@@ -4296,8 +4296,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             plotqbinomialltfboth(p, size, prob, rounding,mfrow, cex.main)
           }
           if (gui == "rstudio") {
-            manipulate::manipulate(plotqbinomialltfboth(`1-p`, size, prob, rounding, mfrow, cex.main),
-                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+            manipulate::manipulate(plotqbinomialltfboth(cp, size, prob, rounding, mfrow, cex.main),
+                                   cp = manipulate::slider(0.01, 0.99, p),
                                    p = manipulate::slider(0.01, 0.99, p),
                                    size = manipulate::slider(size, size + sqrt(size), size),
                                    prob = manipulate::slider(0, 1, prob)
@@ -4936,8 +4936,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             plotquniflttsf(p, min, max, rounding)
           }
           if (gui == "rstudio") {
-            manipulate::manipulate(plotquniflttsf(`1-p`, min, max, rounding),
-                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+            manipulate::manipulate(plotquniflttsf(cp, min, max, rounding),
+                                   cp = manipulate::slider(0.01, 0.99, p),
                                    p = manipulate::slider(0.01, 0.99, p),
                                    min = manipulate::slider(min, min + sqrt(min), min),
                                    max = manipulate::slider(max, max + sqrt(max), max)
@@ -4954,8 +4954,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             plotquniflttpdf(p, min, max, rounding)
           }
           if (gui == "rstudio") {
-            manipulate::manipulate(plotqunifltfpdf(`1-p`, min, max, rounding),
-                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+            manipulate::manipulate(plotqunifltfpdf(cp, min, max, rounding),
+                                   cp = manipulate::slider(0.01, 0.99, p),
                                    p = manipulate::slider(0.01, 0.99, p),
                                    min = manipulate::slider(min, max + max, min),
                                    max = manipulate::slider(max, max + max, max)
@@ -4967,8 +4967,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             plotqunifltfboth(p, min, max, rounding,mfrow, cex.main)
           }
           if (gui == "rstudio") {
-            manipulate::manipulate(plotqunifltfboth(`1-p`, min, max, rounding, mfrow, cex.main),
-                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+            manipulate::manipulate(plotqunifltfboth(cp, min, max, rounding, mfrow, cex.main),
+                                   cp = manipulate::slider(0.01, 0.99, p),
                                    p = manipulate::slider(0.01, 0.99, p),
                                    min = manipulate::slider(min, max + max, min),
                                    max = manipulate::slider(max, max + max, max)
@@ -5089,8 +5089,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             plotqwilcoxlttsf(p, m, n, rounding)
           }
           if (gui == "rstudio") {
-            manipulate::manipulate(plotqwilcoxlttsf(`1-p`, m, n, rounding),
-                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+            manipulate::manipulate(plotqwilcoxlttsf(cp, m, n, rounding),
+                                   cp = manipulate::slider(0.01, 0.99, p),
                                    p = manipulate::slider(0.01, 0.99, p),
                                    m = manipulate::slider(m, m + sqrt(m), m),
                                    n = manipulate::slider(n, n + sqrt(n), n)
@@ -5107,8 +5107,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             plotqwilcoxlttpdf(p, m, n, rounding)
           }
           if (gui == "rstudio") {
-            manipulate::manipulate(plotqwilcoxltfpdf(`1-p`, m, n, rounding),
-                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+            manipulate::manipulate(plotqwilcoxltfpdf(cp, m, n, rounding),
+                                   cp = manipulate::slider(0.01, 0.99, p),
                                    p = manipulate::slider(0.01, 0.99, p),
                                    m = manipulate::slider(m, m + sqrt(m), m),
                                    n = manipulate::slider(n, n + sqrt(n), n)
@@ -5120,8 +5120,8 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
             plotqwilcoxltfboth(p, m, n, rounding,mfrow, cex.main)
           }
           if (gui == "rstudio") {
-            manipulate::manipulate(plotqwilcoxltfboth(`1-p`, m, n, rounding, mfrow, cex.main),
-                                   `1-p` = manipulate::slider(0.01, 0.99, p),
+            manipulate::manipulate(plotqwilcoxltfboth(cp, m, n, rounding, mfrow, cex.main),
+                                   cp = manipulate::slider(0.01, 0.99, p),
                                    p = manipulate::slider(0.01, 0.99, p),
                                    m = manipulate::slider(m, m + sqrt(m), m),
                                    n = manipulate::slider(n, n + sqrt(n), n)

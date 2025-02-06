@@ -26,7 +26,7 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
 
   if (missing(x)) {
     xfile <- file.choose(new = TRUE)
-    x <- read.table(xfile, h = TRUE)
+    x <- read.table(xfile, header = TRUE)
   }
   if (any(test ==  c("ztest", "z", "Z", "normal"))) {
     if(prop == TRUE){
@@ -223,12 +223,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         text(ztab[2] + 1 ,0.1,"RRH0", font = 2)
         mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
-        mtext(t = nullhyp  , side = 1, line = 4, adj = 0)
-        mtext(t = althyp , side = 1, line = 5, adj = 0)
+        mtext(text = nullhyp  , side = 1, line = 4, adj = 0)
+        mtext(text = althyp , side = 1, line = 5, adj = 0)
 
         mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
         mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
-        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+        mtext(text = signlevel  , side = 1, line = 7, adj = 0)
 
         mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
         mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
@@ -397,12 +397,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         text(-1.3, 0.39, expression(bold("ztest")))
         mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
-        mtext(t = nullhyp  , side = 1, line = 4, adj = 0)
-        mtext(t = althyp , side = 1, line = 5, adj = 0)
+        mtext(text = nullhyp  , side = 1, line = 4, adj = 0)
+        mtext(text = althyp , side = 1, line = 5, adj = 0)
 
         mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
         mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
-        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+        mtext(text = signlevel  , side = 1, line = 7, adj = 0)
 
         mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
         mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
@@ -569,12 +569,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         text(-2, 0.4, expression(bold("ztest")))
         mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
-        mtext(t = nullhyp  , side = 1, line = 4, adj = 0)
-        mtext(t = althyp , side = 1, line = 5, adj = 0)
+        mtext(text = nullhyp  , side = 1, line = 4, adj = 0)
+        mtext(text = althyp , side = 1, line = 5, adj = 0)
 
         mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
         mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
-        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+        mtext(text = signlevel  , side = 1, line = 7, adj = 0)
 
         mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
         mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
@@ -743,12 +743,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         text(-1.7, 0.35, expression(bold("ttest")))
         mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
-        mtext(t = nullhyp  , side = 1, line = 4, adj = 0)
-        mtext(t = althyp , side = 1, line = 5, adj = 0)
+        mtext(text = nullhyp  , side = 1, line = 4, adj = 0)
+        mtext(text = althyp , side = 1, line = 5, adj = 0)
 
         mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
         mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
-        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+        mtext(text = signlevel  , side = 1, line = 7, adj = 0)
 
         mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
         mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
@@ -897,12 +897,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         text(-2.3, 0.4, expression(bold("ttest")))
         mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
-        mtext(t = nullhyp  , side = 1, line = 4, adj = 0)
-        mtext(t = althyp , side = 1, line = 5, adj = 0)
+        mtext(text = nullhyp  , side = 1, line = 4, adj = 0)
+        mtext(text = althyp , side = 1, line = 5, adj = 0)
 
         mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
         mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
-        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+        mtext(text = signlevel  , side = 1, line = 7, adj = 0)
 
         mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
         mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
@@ -1057,12 +1057,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
         text(-2, 0.4, expression(bold("ttest")))
         mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
-        mtext(t = nullhyp  , side = 1, line = 4, adj = 0)
-        mtext(t = althyp , side = 1, line = 5, adj = 0)
+        mtext(text = nullhyp  , side = 1, line = 4, adj = 0)
+        mtext(text = althyp , side = 1, line = 5, adj = 0)
 
         mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
         mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
-        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+        mtext(text = signlevel  , side = 1, line = 7, adj = 0)
 
         mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
         mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
@@ -1187,11 +1187,11 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
 
         mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
-        mtext(t = substitute(~~H[0]:~sigma^2 >= h0, list(h0 = h0))  , side = 1, line = 4.3, adj = 0)
-        mtext(t =substitute(~~H[1]:~sigma^2 < h0, list(h0 = h0)), side = 1, line = 5.3, adj = 0)
+        mtext(text = substitute(~~H[0]:~sigma^2 >= h0, list(h0 = h0))  , side = 1, line = 4.3, adj = 0)
+        mtext(text =substitute(~~H[1]:~sigma^2 < h0, list(h0 = h0)), side = 1, line = 5.3, adj = 0)
         mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
         mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
-        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+        mtext(text = signlevel  , side = 1, line = 7, adj = 0)
 
         mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
         mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")
@@ -1310,12 +1310,12 @@ th <- function(x, y = NULL, test = "ztest", h0, prop = FALSE, delta = 0, p, pa, 
 
         mtext("Step 1: Hypothesis", side = 1, line = 3, adj = 0, col = "#0099ff", font = 2)
         mtext("________________", side = 1, line = 3, adj = 0, col = "#0099ff")
-        mtext(t = substitute(~~H[0]:~sigma^2 <= h0, list(h0 = h0))  , side = 1, line = 4.3, adj = 0)
-        mtext(t =substitute(~~H[1]:~sigma^2 > h0, list(h0 = h0)), side = 1, line = 5.3, adj = 0)
+        mtext(text = substitute(~~H[0]:~sigma^2 <= h0, list(h0 = h0))  , side = 1, line = 4.3, adj = 0)
+        mtext(text =substitute(~~H[1]:~sigma^2 > h0, list(h0 = h0)), side = 1, line = 5.3, adj = 0)
 
         mtext("Step 2: Significante level", side = 1, line = 6, adj = 0, col = "#0099ff", font = 2)
         mtext("_____________________", side = 1, line = 6, adj = 0, col = "#0099ff")
-        mtext(t = signlevel  , side = 1, line = 7, adj = 0)
+        mtext(text = signlevel  , side = 1, line = 7, adj = 0)
 
         mtext("Step 3: Rule of decision", side = 1, line = 3, adj = 1, col = "#0099ff", font = 2)
         mtext("____________________", side = 1, line = 3, adj = 1, col = "#0099ff")

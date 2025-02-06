@@ -272,7 +272,7 @@ plotqnormaltspdfaux <- function(q, mu, sigma, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -284,7 +284,7 @@ plotqnormaltspdfaux <- function(q, mu, sigma, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -615,7 +615,7 @@ plotqtstudenttspdfaux <- function(q,df, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -627,7 +627,7 @@ plotqtstudenttspdfaux <- function(q,df, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -940,7 +940,7 @@ plotqchisqtspdfaux <- function(q, df, ncp, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -952,7 +952,7 @@ plotqchisqtspdfaux <- function(q, df, ncp, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -1294,7 +1294,7 @@ plotqftspdfaux <- function(q, df1, df2, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -1306,7 +1306,7 @@ plotqftspdfaux <- function(q, df1, df2, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -1644,7 +1644,7 @@ plotqgumbeltspdfaux <- function(q, location, scale, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -1656,7 +1656,7 @@ plotqgumbeltspdfaux <- function(q, location, scale, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -1988,7 +1988,7 @@ plotqbetatspdfaux <- function(q, alpha, beta, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -2000,7 +2000,7 @@ plotqbetatspdfaux <- function(q, alpha, beta, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -2327,7 +2327,7 @@ plotqexptsprateaux <- function(q,rate, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -2339,7 +2339,7 @@ plotqexptsprateaux <- function(q,rate, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -2784,7 +2784,7 @@ plotqgammatspdfaux <- function(q, shape, rate, scale, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -2796,7 +2796,7 @@ plotqgammatspdfaux <- function(q, shape, rate, scale, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -3133,7 +3133,7 @@ plotqcauchytspdfaux <- function(q, location, scale, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -3145,7 +3145,7 @@ plotqcauchytspdfaux <- function(q, location, scale, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -3479,7 +3479,7 @@ plotqlogistspdfaux <- function(q, location, scale, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -3491,7 +3491,7 @@ plotqlogistspdfaux <- function(q, location, scale, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -3825,7 +3825,7 @@ plotqlnormaltspdfaux <- function(q, mu, sigma, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -3837,7 +3837,7 @@ plotqlnormaltspdfaux <- function(q, mu, sigma, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -4171,7 +4171,7 @@ plotqweibulltspdfaux <- function(q, shape, scale, rounding, ...) {
   axis(
     side = 1,
     at = qq[1],
-    label = substitute(q == qtle, list(qtle = qq[1])),
+    labels = substitute(q == qtle, list(qtle = qq[1])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -4183,7 +4183,7 @@ plotqweibulltspdfaux <- function(q, shape, scale, rounding, ...) {
   axis(
     side = 1,
     at = qq[2],
-    label = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
+    labels = substitute(q[S] == qtle2, list(qtle2 = qq[2])),
     tick = TRUE,
     lwd = 0,
     col = "red",
@@ -13268,7 +13268,7 @@ plotquniflttpdfaux <- function(q, min, max, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute(parametro ~ min == minv~";" ~ max == maxv,
+      legend = substitute(parametro ~ min == minv~";"~ max == maxv,
                           list(minv = min, maxv = max, parametro = .parametro)), cex = 0.8
     )
   } else{

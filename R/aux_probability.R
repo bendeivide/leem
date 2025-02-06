@@ -1206,97 +1206,97 @@ plotplnormalarrstudio <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
 ################################
 # Plot
 plotptukeyarplot <- function(q, nmeans, df, nranges, rounding, main = NULL) {
-  minimo <- if (q[1] <= nranges - 4 * nranges) q[1] - 4 * nranges else nranges - 4 * nranges
-  maximo <- if (q[2] > nranges + 4 * nranges) q[2] + 4 * nranges else nranges + 4 * nranges
-  x <- seq(minimo, q[1], by = 0.01)
-  z <- seq(q[2], maximo, by = 0.01)
-  y <-seq(minimo, maximo, by = 0.01)
-  fx <- ptukey(x, nmeans, df, nranges)
-  fz <- ptukey(z, nmeans, df, nranges)
-  fy <- ptukey(y, nmeans, df, nranges)
-  if (is.null(main)) {
-    if (attr(q, "region") == "region1") {
-      main <- substitute(atop(bold("Probability function plot: Studentized Range"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
-    }
-    if (attr(q, "region") == "region3") {
-      main <- substitute(atop(bold("Probability function plot: Studentized Range"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
-    }
-    if (attr(q, "region") == "region5") {
-      main <- substitute(atop(bold("Probability function plot: Studentized Range"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
-    }
-    if (attr(q, "region") == "region6") {
-      main <- substitute(atop(bold("Probability function plot: Studentized Range"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
-    }
-  }
-  plot(ptukey(x, nmeans, df, nranges), minimo, maximo,
-        ylim = c(0, 1.2 * max(fx,fy,fz)),xlab="X",
-        ylab = expression(f[X](X)),
-        panel.first = grid(col="gray90"),
-        main = main,
-        cex=0.8)
-  polygon(c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
-          col="gray90")
-  polygon(c(x, rev(x)),
-          c(fx, rep(0, length(fx))),
-          col="red")
-  polygon(c(z,rev(z)), c(fz,rep(0,length(fz))),
-          col="red" )
-  qq <- round(q, digits=2)
-  qqaux <- qq
-  Pr <- round(ptukey(q[1], nmeans, df, nranges, lower.tail = T) + ptukey(q[2], nmeans, df, nranges, lower.tail = F), digits=rounding)
-  #Pr <- gsub("\\.", ",", Pr)
-  ##qq <- gsub("\\.", ",", qq)
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  axis(side=1, at=qq, lwd = 0,
-       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
-  axis(side=1, at=as.character(c(minimo, qq[1])), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-  axis(side=1, at=as.character(qq[1]), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-  axis(side=1, at=as.character(c(qq[2], maximo)), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-  axis(side=1, at=as.character(qq[2]), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
-  abline(v = qqaux, lty=2, col = "red")
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-  if (attr(q, "region") == "region1") {
-    legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
-                     legend = substitute(P(X<t1)+P(X>t2)==Pr,
-                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
-  }
-  if (attr(q, "region") == "region3") {
-    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
-                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
-  }
-  if (attr(q, "region") == "region5") {
-    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
-                     legend = substitute(P(X<=t1)+P(X>t2)==Pr,
-                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
-  }
-  if ( attr(q, "region") == "region6") {
-    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
-                     legend = substitute(P(X<t1)+P(X>=t2)==Pr,
-                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
-  }
-}
-plotptukeyarrstudio <- function(q1, q2, nmeans, df, nranges, rounding, main = NULL, q) {
-  q[1] <- q1
-  q[2] <- q2
-  plotptukeyarplot(q, nmeans, df, nranges, rounding, main)
+#   minimo <- if (q[1] <= nranges - 4 * nranges) q[1] - 4 * nranges else nranges - 4 * nranges
+#   maximo <- if (q[2] > nranges + 4 * nranges) q[2] + 4 * nranges else nranges + 4 * nranges
+#   x <- seq(minimo, q[1], by = 0.01)
+#   z <- seq(q[2], maximo, by = 0.01)
+#   y <-seq(minimo, maximo, by = 0.01)
+#   fx <- ptukey(x, nmeans, df, nranges)
+#   fz <- ptukey(z, nmeans, df, nranges)
+#   fy <- ptukey(y, nmeans, df, nranges)
+#   if (is.null(main)) {
+#     if (attr(q, "region") == "region1") {
+#       main <- substitute(atop(bold("Probability function plot: Studentized Range"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(nu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+#     }
+#     if (attr(q, "region") == "region3") {
+#       main <- substitute(atop(bold("Probability function plot: Studentized Range"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(nu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+#     }
+#     if (attr(q, "region") == "region5") {
+#       main <- substitute(atop(bold("Probability function plot: Studentized Range"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(nu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+#     }
+#     if (attr(q, "region") == "region6") {
+#       main <- substitute(atop(bold("Probability function plot: Studentized Range"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(nu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+#     }
+#   }
+#   plot(ptukey(x, nmeans, df, nranges), minimo, maximo,
+#         ylim = c(0, 1.2 * max(fx,fy,fz)),xlab="X",
+#         ylab = expression(f[X](X)),
+#         panel.first = grid(col="gray90"),
+#         main = main,
+#         cex=0.8)
+#   polygon(c(y, rev(y)),
+#           c(fy, rep(0, length(fy))),
+#           col="gray90")
+#   polygon(c(x, rev(x)),
+#           c(fx, rep(0, length(fx))),
+#           col="red")
+#   polygon(c(z,rev(z)), c(fz,rep(0,length(fz))),
+#           col="red" )
+#   qq <- round(q, digits=2)
+#   qqaux <- qq
+#   Pr <- round(ptukey(q[1], nmeans, df, nranges, lower.tail = T) + ptukey(q[2], nmeans, df, nranges, lower.tail = F), digits=rounding)
+#   #Pr <- gsub("\\.", ",", Pr)
+#   ##qq <- gsub("\\.", ",", qq)
+#   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+#   axis(side=1, at=qq, lwd = 0,
+#        col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+#   axis(side=1, at=as.character(c(minimo, qq[1])), tick = TRUE, lwd = 1,
+#        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+#   axis(side=1, at=as.character(qq[1]), tick = TRUE, lwd = 1,
+#        col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+#   axis(side=1, at=as.character(c(qq[2], maximo)), tick = TRUE, lwd = 1,
+#        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+#   axis(side=1, at=as.character(qq[2]), tick = TRUE, lwd = 1,
+#        col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+#   abline(v = qqaux, lty=2, col = "red")
+#   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+#   if (attr(q, "region") == "region1") {
+#     legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
+#                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
+#                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+#     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+#            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
+#                                list(media = mu, varen = sigma)))
+#   }
+#   if (attr(q, "region") == "region3") {
+#     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+#                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+#                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+#     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+#            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
+#                                list(media = mu, varen = sigma)))
+#   }
+#   if (attr(q, "region") == "region5") {
+#     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+#                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
+#                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+#     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+#            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
+#                                list(media = mu, varen = sigma)))
+#   }
+#   if ( attr(q, "region") == "region6") {
+#     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+#                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
+#                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+#     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+#            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
+#                                list(media = mu, varen = sigma)))
+#   }
+# }
+# plotptukeyarrstudio <- function(q1, q2, nmeans, df, nranges, rounding, main = NULL, q) {
+#   q[1] <- q1
+#   q[2] <- q2
+#   plotptukeyarplot(q, nmeans, df, nranges, rounding, main)
 }
 ######################
 # Weibull distribution

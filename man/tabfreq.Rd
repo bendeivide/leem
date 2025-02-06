@@ -4,7 +4,7 @@
 \alias{tabfreq}
 \title{Frequency distribution table}
 \usage{
-tabfreq(dados, ...)
+tabfreq(data, ...)
 
 ## Leem S3 method:
 tabfreq(data, k = NULL, na.rm = FALSE, ordered = NULL, namereduction = TRUE, ...)

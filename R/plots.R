@@ -1269,7 +1269,7 @@ hist.leem <- function(x,
 #'
 #' Class method leem for generic barplot
 #'
-#' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param height R object (list) of class leem. Use \code{new_leem()} function.
 #' @param freq Character argument. Type of frequency with options: \code{"a"} (absolute and default), \code{"r"} relative and \code{"p"} percentage.
 #' @param bg Logical argument. Default is \code{TRUE}, it displays the background, and \code{bg = FALSE} otherwise.
 #' @param main Character argument. Insert the plot title.  The default is \code{NULL}.
@@ -1286,10 +1286,10 @@ hist.leem <- function(x,
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @usage
-#' barplot(x, ...)
+#' barplot(height, ...)
 #'
 #' ## Leem S3 method:
-#' barplot.leem(x, freq = "a", bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
+#' barplot.leem(height, freq = "a", bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
 #'   grids = grid(col = "white"), bgcol = "gray", bgborder = NA,
 #'   barcol = "yellow", barborder = "gray", posx1 = 0, posx2 = 0,
 #'   xang = 0, labels = NULL, ...)

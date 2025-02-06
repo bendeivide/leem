@@ -31,7 +31,7 @@
 #' w <- rep(letters[1:4], 1:4)
 #' w |> new_leem(variable = "discrete") |> tabfreq(ordered = c("d","a", "b", "c"))
 #' @usage
-#' tabfreq(dados, ...)
+#' tabfreq(data, ...)
 #'
 #' ## Leem S3 method:
 #' tabfreq(data, k = NULL, na.rm = FALSE, ordered = NULL, namereduction = TRUE, ...)
