@@ -2,7 +2,7 @@
 % Please edit documentation in R/showtabnormal.R
 \name{showtabnormal}
 \alias{showtabnormal}
-\title{Understanding the Ztable.}
+\title{showtabnormal}
 \usage{
 showtabnormal(z)
 }
@@ -15,5 +15,5 @@ Detailing of the Ztable, showing the main information contained in this type of 
 \examples{
 library(leem)
 # Example 1
-showtabnormal(zvalue)
+showtabnormal(1)
 }

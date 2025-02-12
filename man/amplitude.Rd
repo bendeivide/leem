@@ -2,7 +2,7 @@
 % Please edit documentation in R/measures_of_dispersion.R
 \name{amplitude}
 \alias{amplitude}
-\title{Range}
+\title{Amplitude}
 \usage{
 amplitude(x, rounding = 2, na.rm = FALSE, details = FALSE, grouped = TRUE)
 }

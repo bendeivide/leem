@@ -40,14 +40,14 @@
 #' tabfreq(data)
 #' @export
 tabfreq <- function(data, ...) {
+  if (!is(data, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE,
+                                      domain = "R-leem")
   UseMethod("tabfreq")
 }
 
 
 #' @export
 tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, namereduction = TRUE, ...){
-  if (class(data) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE,
-                                   domain = "R-leem")
   # Output object
   listres <- list(table = NULL, statistics = NULL)
   # defensive programming

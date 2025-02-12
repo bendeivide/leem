@@ -4,7 +4,7 @@
 \alias{insert}
 \title{Insert measures of position in plot}
 \usage{
-insert(dados, ...)
+insert(x, ...)
 
 ## Leem S3 method:
 insert(x, type = "black", lcol, tcol = lcol, acol = lcol, parrow = 0.5,

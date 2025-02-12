@@ -32,9 +32,9 @@ variance <- function (x, rounding = 2, na.rm = FALSE, details = FALSE, grouped =
                                  call. = FALSE, domain = "R-leem")
   if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
+  if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
   if (!is.null(attr(x, "NA"))) return(NA)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
@@ -112,9 +112,9 @@ sdev <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
                                  call. = FALSE, domain = "R-leem")
   if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
                                  call. = FALSE, domain = "R-leem")
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
+  if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
   if (!is.null(attr(x, "NA"))) return(NA)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
@@ -188,9 +188,9 @@ cv <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
                                  call. = FALSE, domain = "R-leem")
   if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
+  if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
   if (!is.null(attr(x, "NA"))) return(NA)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
@@ -264,9 +264,9 @@ mstde <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
                                  call. = FALSE, domain = "R-leem")
   if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
+  if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
   if (!is.null(attr(x, "NA"))) return(NA)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
@@ -336,9 +336,9 @@ madev <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
                                  call. = FALSE, domain = "R-leem")
   if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
+  if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
   if (!is.null(attr(x, "NA"))) return(NA)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
@@ -413,9 +413,9 @@ medev <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
                                  call. = FALSE, domain = "R-leem")
   if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
+  if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
   if (!is.null(attr(x, "NA"))) return(NA)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)
@@ -457,7 +457,7 @@ medev <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
   }
 }
 
-#' Range
+#' Amplitude
 #'
 #' Compute the sample range
 #'
@@ -486,9 +486,9 @@ amplitude <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
                                  call. = FALSE, domain = "R-leem")
   if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!",
+  if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!",
                                call. = FALSE, domain = "R-leem")
-  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
   if (!is.null(attr(x, "NA"))) return(NA)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$statistics$raw_data)

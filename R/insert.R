@@ -34,7 +34,7 @@
 #'   lwdarrow = 4
 #'  )
 #' @usage
-#' insert(dados, ...)
+#' insert(x, ...)
 #'
 #' ## Leem S3 method:
 #' insert(x, type = "black", lcol, tcol = lcol, acol = lcol, parrow = 0.5,

@@ -1,4 +1,4 @@
-#' Understanding the Ztable.
+#' showtabnormal
 #'
 #' Detailing of the Ztable, showing the main information contained in this type of table.
 #'
@@ -7,7 +7,7 @@
 #' @examples
 #' library(leem)
 #' # Example 1
-#' showtabnormal(zvalue)
+#' showtabnormal(1)
 #' @importFrom diagram curvedarrow
 
 #' @export

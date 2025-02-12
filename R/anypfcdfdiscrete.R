@@ -124,7 +124,7 @@ apf <- function(x, p, main = NULL, xlab = NULL, ylab = NULL, ...) {
 
   # Axis
   axis(1, at = x, col.axis = "blue", col.ticks = "blue", col = "blue")
-  axis(2, at = c(0, p), labels = labels, las = 2, col.axis = "blue", col.ticks = "blue", col = "blue")
+  axis(2, at = c(0, p), las = 2, col.axis = "blue", col.ticks = "blue", col = "blue")
 
   points(x, p, type = "h")
   points(x, p, lwd = 2, pch = 19)

@@ -36,8 +36,8 @@ boxplot.leem <- function(x,
                          col = rgb(0, 175, 239, maxColorValue = 255),
                          ...) {
   # defensive programming
-  if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
-  if (class(x) == "leem" & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
+  #if (class(x) != "leem") stop("Use the 'new_leem()' function to create an object of class leem!")
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
   if(is.null(main)) main <- gettext("Box Plots", domain = "R-leem")
 
   if (attr(x, "variable") == "discrete") {

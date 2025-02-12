@@ -10,7 +10,6 @@ if (getRversion() >= "2.15.1") {
                            "plotcauchyltfpdf", "plotlogisltfpdf",
                            "plotqlnormalltfcdf", "plotweibullltfpdf",
                            "plotqgeomttboth", "plotqgeomltfsf"
-
                            ))
 }
 

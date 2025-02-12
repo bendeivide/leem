@@ -26,7 +26,8 @@ Imports:
         grDevices,
         graphics,
         utils,
-        diagram
+        diagram,
+        methods
 License: GPL (>= 2)
 URL: https://bendeivide.github.io/project/leem/, https://github.com/bendeivide/leem
 BugReports: https://github.com/bendeivide/leem/issues

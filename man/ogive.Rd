@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{ogive}
 \alias{ogive}
-\title{Ogives Graph}
+\title{ogive}
 \usage{
 ogive(x, ...)
 
@@ -72,5 +72,5 @@ rnorm(36, 100, 50) |> new_leem(variable = 2) |> tabfreq() |> ogive(both = TRUE)
 # Example 2 - Insert barplot
 rnorm(36, 100, 50) |> new_leem(variable = 2) |> tabfreq() |> ogive(both = TRUE, bars = TRUE)
 # Example 3 - Insert histogram
-rnorm(36, 100, 50) |> new_leem(variable = 2) |> tabfreq() |> ogive(both = TRUE, hist = TRUE)
+rnorm(36, 100, 50) |> new_leem(variable = 2) |> tabfreq() |> ogive(both = TRUE, histogram = TRUE)
 }

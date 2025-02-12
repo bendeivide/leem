@@ -36,5 +36,4 @@ rpois(30, 2.5) |>
 rnorm(50, 100, 2.5) |>
   new_leem(variable = 2) |>
   skewness(grouped = TRUE)
-
 }
