@@ -69,23 +69,23 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
 
           # Environment of package
           envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
+          # leemget <- function(x) {
+          #   get(x, envir= envleem, inherits=FALSE )
+          # }
           leemset <- function(x, value) {
             assign(x, value, envir= envleem)
           }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
+          # globalvariables <- function(x, value) {
+          #   assign(x, value, envir= .GlobalEnv)
+          # }
 
           mu <- argaddit$mean
           sigma <- argaddit$sd
           tk_p <- leemset("tk_p", tclVar(p))
           tk_mu <- leemset("tk_mu", tclVar(mu))
           tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                 function(x) globalvariables(x, leemget(x)))
+          # sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #        function(x) globalvariables(x, leemget(x)))
 
           # q1 <- NULL
           # q2 <- NULL

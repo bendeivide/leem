@@ -373,5 +373,24 @@ msgstr "Propriedades da função de distribuição"
 msgid "Continuous variable"
 msgstr "Variável contínua"
 
+msgid "Standard Deviation"
+msgstr "Desvio padrão"
+
+msgid "Quantile"
+msgstr "Quantil"
+
+msgid "leem package: Normal Distribution"
+msgstr "Pacote leem: Distribuição Normal"
+
+msgid "Probability function plot: Normal"
+msgstr "Gráfico da FDP: Normal"
+
+msgid "Do you want to close?"
+msgstr "Deseja fechar?"
+
+msgid "Tell me something:"
+msgstr "Diga-me algo:"
+
+
 
 

@@ -1,1 +1,1 @@
-msgfmt -c --statistics -o .\inst\po\pt_BR\LC_MESSAGES\R-leem.mo .\po\R-pt_BR.po
+msgfmt -c --statistics -o ./inst/po/pt_BR/LC_MESSAGES/R-leem.mo ./po/R-pt_BR.po

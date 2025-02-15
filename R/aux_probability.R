@@ -4172,8 +4172,10 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
   y <- seq(q, maximo, by = 0.01)
   fx <- dnorm(x, mean = mu, sd = sigma)
   fy <- dnorm(y, mean = mu, sd = sigma)
+
   if (is.null(main)) {
-    main <- substitute(atop(bold("Probability function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
+    titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+    main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x", titulo = titulo))
   }
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
@@ -4206,9 +4208,10 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
+  paramet <- gettext("Parameters:", domain = "R-leem")
   legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-         legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                             list(media = mu, varen = sigma)))
+         legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
+                             list(media = mu, varen = sigma, paramet = paramet)))
 } # plotcurve (older)
 
 

@@ -91,9 +91,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           leemset <- function(x, value) {
             assign(x, value, envir= envleem)
           }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
+          # globalvariables <- function(x, value) {
+          #   assign(x, value, envir= .GlobalEnv)
+          # }
           # Desabilitar warnings global
           #options(warn = - 1)
           war <- options(warn = - 1)
@@ -102,8 +102,11 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           tk_q2 <- leemset("tk_q2", tclVar(q[2]))
           tk_mean <- leemset("tk_mean", tclVar(mu))
           tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          # Solution: Inserted in gobalvariables file
+          # sapply(c("tk_q1", "tk_q2", "tk_mean", "tk_sigma"),
+          #        function(x) globalvariables(x, leemget(x)))
           sapply(c("tk_q1", "tk_q2", "tk_mean", "tk_sigma"),
-                 function(x) globalvariables(x, leemget(x)))
+                 function(x) leemget(x))
           # q1 <- NULL
           # q2 <- NULL
           # nu <- NULL
@@ -234,13 +237,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         # if (gui == "tcltk") {
         #   # Environment of package
-        #   envleem <- new.env(parent = base::emptyenv())
-        #   leemget <- function(x) {
-        #     get(x, envir= envleem, inherits=FALSE )
-        #   }
-        #   leemset <- function(x, value) {
-        #     assign(x, value, envir= envleem)
-        #   }
+        envleem <- new.env(parent = base::emptyenv())
+          leemget <- function(x) {
+            get(x, envir= envleem, inherits=FALSE )
+          }
+          leemset <- function(x, value) {
+            assign(x, value, envir= envleem)
+          }
         #   globalvariables <- function(x, value) {
         #     assign(x, value, envir= .GlobalEnv)
         #   }
@@ -254,11 +257,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         #     q[2] <- q2
         #     plotcurve(q, nu)
         #   }
-        #   tk_q1 <- leemset("tk_q1", tclVar(q[1]))
-        #   tk_q2 <- leemset("tk_q2", tclVar(q[2]))
-        #   tk_df <- leemset("tk_df", tclVar(nu))
+          tk_q1 <- leemset("tk_q1", tclVar(q[1]))
+          tk_q2 <- leemset("tk_q2", tclVar(q[2]))
+          tk_df <- leemset("tk_df", tclVar(nu))
         #   sapply(c("tk_q1", "tk_q2", "tk_df"),
         #          function(x) globalvariables(x, leemget(x)))
+            sapply(c("tk_q1", "tk_q2", "tk_df"),
+                   function(x) leemget(x))
         #   # q1 <- NULL
         #   # q2 <- NULL
         #   # nu <- NULL
@@ -1193,13 +1198,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         # if (gui == "tcltk") {
         #   # Environment of package
-        #   envleem <- new.env(parent = base::emptyenv())
+           # envleem <- new.env(parent = base::emptyenv())
         #   leemget <- function(x) {
         #     get(x, envir= envleem, inherits=FALSE )
         #   }
-        #   leemset <- function(x, value) {
-        #     assign(x, value, envir= envleem)
-        #   }
+          # leemset <- function(x, value) {
+          #   assign(x, value, envir= envleem)
+          # }
         #   globalvariables <- function(x, value) {
         #     assign(x, value, envir= .GlobalEnv)
         #   }
@@ -2323,110 +2328,14 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           war <- options(warn = - 1)
           #on.exit(options(war))
 
-          # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
-          tk_q <- leemset("tk_q", tclVar(q))
-          tk_mu <- leemset("tk_mu", tclVar(mu))
-          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          sapply(c("tk_q", "tk_mu", "tk_sigma"),
-                 function(x) globalvariables(x, leemget(x)))
+          # Plot tk da dist normal com q de comp 1
+          .tkplotleemnormal(q, mu, sigma, rounding, main, minimo, maximo)
 
 
-          ##
-          # Disabled GUI (Type I)
-          oldmode <- tclServiceMode(FALSE)
-          # Logo
-          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-          # Plot
-          tkplot <- tktoplevel()
-
-          #Icon main toplevel window
-          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-          # Title
-          tkwm.title(tkplot,
-                     gettext("leem package: Normal Distribution", domain = "R-leem"))
-
-          tkpack(tklabel(tkplot, text = "Parameters"))
-
-          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                      height = 500, fun = function(...) {
-                                        q <- as.numeric(tclvalue(tk_q))
-                                        mu <- as.numeric(tclvalue(tk_mu))
-                                        sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotpnormallttplot(q = q, mu = mu, sigma = sigma, rounding, main)
-                                      })
-          s01 <- tcltk::tkscale(
-            tkplot,
-            from = minimo,
-            to = maximo,
-            label = 'q',
-            variable = tk_q,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s02 <- tcltk::tkscale(
-            tkplot,
-            from = mu,
-            to = mu + 2 * sigma,
-            label = 'mean',
-            variable = tk_mu,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s03 <- tcltk::tkscale(
-            tkplot,
-            from = sigma,
-            to = sigma * 1.8,
-            label = 'standard deviation',
-            variable = tk_sigma,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          tkpack(s01, s02, s03,
-                 side = "top",
-                 expand = TRUE,
-                 before = tkplot$env$canvas,
-                 fill = "both")
-          # Activate GUI
-          finish <- tclServiceMode(oldmode)
-          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-            response <- tk_messageBox(
-              title = gettext("Tell me something:", domain = "R-leem"),
-              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-              icon = "question",
-              type = "yesno"
-            )
-            if (response == "yes") {
-              if (exists("tk_q1", envir = .GlobalEnv)) {
-                rm("tk_q1", "tk_df", envir = .GlobalEnv)
-              }
-              tkdestroy(tkplot)
-            }
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            #war <- options(warn = - 1)
-            on.exit(options(war))
-          })
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
         # Compute the desired probability
         prob <- pnorm(q = q, mean = mu, sd = sigma)
@@ -2457,22 +2366,22 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #on.exit(options(war))
 
           # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
+          #envleem <- new.env(parent = base::emptyenv())
+          # leemget <- function(x) {
+          #   get(x, envir= envleem, inherits=FALSE )
+          # }
+          # leemset <- function(x, value) {
+          #   assign(x, value, envir= envleem)
+          # }
+          # globalvariables <- function(x, value) {
+          #   assign(x, value, envir= .GlobalEnv)
+          # }
 
-          tk_q <- leemset("tk_q", tclVar(q))
-          tk_mu <- leemset("tk_mu", tclVar(mu))
-          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          sapply(c("tk_q", "tk_mu", "tk_sigma"),
-                 function(x) globalvariables(x, leemget(x)))
+          # tk_q <- leemset("tk_q", tclVar(q))
+          # tk_mu <- leemset("tk_mu", tclVar(mu))
+          # tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          # sapply(c("tk_q", "tk_mu", "tk_sigma"),
+          #        function(x) globalvariables(x, leemget(x)))
 
           # Disabled GUI (Type I)
           oldmode <- tclServiceMode(FALSE)
@@ -2587,20 +2496,20 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "tcltk") {
           # Environment of package
           envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
+          # leemget <- function(x) {
+          #   get(x, envir= envleem, inherits=FALSE )
+          # }
           leemset <- function(x, value) {
             assign(x, value, envir= envleem)
           }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
+          # globalvariables <- function(x, value) {
+          #   assign(x, value, envir= .GlobalEnv)
+          # }
 
           tk_q1 <- leemset("tk_q1", tclVar(q[1]))
           tk_df <- leemset("tk_df", tclVar(nu))
-          sapply(c("tk_q1", "tk_df"),
-                 function(x) globalvariables(x, leemget(x)))
+          # sapply(c("tk_q1", "tk_df"),
+          #        function(x) globalvariables(x, leemget(x)))
 
           # Disabled GUI (Type I)
           oldmode <- tclServiceMode(FALSE)
@@ -2689,23 +2598,23 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "tcltk") {
           # Environment of package
           envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
+          # leemget <- function(x) {
+          #   get(x, envir= envleem, inherits=FALSE )
+          # }
           leemset <- function(x, value) {
             assign(x, value, envir= envleem)
           }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
+          # globalvariables <- function(x, value) {
+          #   assign(x, value, envir= .GlobalEnv)
+          # }
           # Desabilitar warnings global
           #options(warn = - 1)
           war <- options(warn = - 1)
           on.exit(options(war))
           tk_q1 <- leemset("tk_q1", tclVar(q[1]))
           tk_df <- leemset("tk_df", tclVar(nu))
-          sapply(c("tk_q1", "tk_df"),
-                 function(x) globalvariables(x, leemget(x)))
+          # sapply(c("tk_q1", "tk_df"),
+          #        function(x) globalvariables(x, leemget(x)))
 
           # Disabled GUI (Type I)
           oldmode <- tclServiceMode(FALSE)
