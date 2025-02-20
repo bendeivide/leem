@@ -16,6 +16,7 @@
 #' @param rounding numerical; it represents the number of decimals for calculating the probability.
 #' @param porcentage logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.
 #' @param gui default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'none'}, \code{'rstudio'} or \code{'tcltk'}.
+#' @param main defalt is \code{NULL}; it represents title of plot.
 #' @param ... additional arguments according to the chosen distribution.
 #'
 #' @return \code{P} returns the probability and its graphical representation. The result can be given as a percentage or not.

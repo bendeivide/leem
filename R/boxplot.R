@@ -14,7 +14,6 @@
 #' @param ... further arguments passed to or from other methods.
 #' @examples
 #' library(leem)
-#' library(boxplot)
 #' # Example 1
 #' x <- rnorm(30, 100, 2) |>
 #'   new_leem(variable = 2) |>

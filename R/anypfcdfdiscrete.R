@@ -108,7 +108,7 @@ cdfd <- function(x, fda, main = NULL, xlab = NULL, ylab = NULL) {
 #' p <- c(0.23, 0.27,0.30, 0.12, 0.08)
 #' apf(x, p)
 #' @export
-apf <- function(x, p, main = NULL, xlab = NULL, ylab = NULL, ...) {
+apf <- function(x, p, main = NULL, xlab = NULL, ylab = NULL) {
   xlim <- c(min(x), max(x))
   ylim <- c(0, max(p) + 0.05)
   plot.new()

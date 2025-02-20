@@ -3,10 +3,7 @@
 #' Generic function that allows you to tabulate continuous and categorical data (quantitative or qualitative) in frequency distribution. Depending on the nature of the data, they can be grouped into class ranges or not.
 #'
 #' @param data R object (data structure vector) of class leem. Use \code{new_leem()} function.
-#' @param k Number of classes. Default is \code{NULL}.
-#' @param na.rm a logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.
-#' @param ordered Ordered vector of the same length and elements of data object. Default is \code{NULL}.
-#' @param namereduction Logical argument. If \code{TRUE} (default), the group names are reduzed the 10 characters. If \code{FALSE}, otherwise.
+#' @param ... further arguments passed to or from other methods.
 #' @return The result of \code{tabfreq()} is a list. This list has two elements: \code{table} and \code{statistics}. The first is the data frequency table, and the second represents some useful statistics for methods of leem class.
 #' @examples
 #' # Example 1
@@ -16,7 +13,8 @@
 #' tabfreq(x)
 #'
 #' # Example 2 (Pipe operator)
-#' rnorm(36, 100, 4) |> new_leem(variable = "continuous") |> tabfreq()
+#' rnorm(36, 100, 4) |>
+#'   new_leem(variable = "continuous") |> tabfreq()
 #'
 #' # Example 3
 #' x <- rbinom(36, 10, 0.6)
@@ -30,14 +28,7 @@
 #' # Example 3 - ordered categories ("d","a", "b", "c")
 #' w <- rep(letters[1:4], 1:4)
 #' w |> new_leem(variable = "discrete") |> tabfreq(ordered = c("d","a", "b", "c"))
-#' @usage
-#' tabfreq(data, ...)
 #'
-#' ## Leem S3 method:
-#' tabfreq(data, k = NULL, na.rm = FALSE, ordered = NULL, namereduction = TRUE, ...)
-#'
-#' ## Default S3 method:
-#' tabfreq(data)
 #' @export
 tabfreq <- function(data, ...) {
   if (!is(data, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE,
@@ -45,7 +36,41 @@ tabfreq <- function(data, ...) {
   UseMethod("tabfreq")
 }
 
-
+#' Frequency distribution table
+#'
+#' Allows you to tabulate continuous and categorical data (quantitative or qualitative) in frequency distribution. Depending on the nature of the data, they can be grouped into class ranges or not.
+#'
+#' @param data R object (data structure vector) of class leem. Use \code{new_leem()} function.
+#' @param k Number of classes. Default is \code{NULL}.
+#' @param na.rm a logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.
+#' @param ordered Ordered vector of the same length and elements of data object. Default is \code{NULL}.
+#' @param namereduction Logical argument. If \code{TRUE} (default), the group names are reduzed the 10 characters. If \code{FALSE}, otherwise.
+#' @param ... further arguments passed to or from other methods.
+#' @return The result of \code{tabfreq()} is a list. This list has two elements: \code{table} and \code{statistics}. The first is the data frequency table, and the second represents some useful statistics for methods of leem class.
+#' @examples
+#' # Example 1
+#' library(leem)
+#' x <- rbinom(36, 10, 0.6)
+#' x <- new_leem(x, variable = "discrete")
+#' tabfreq(x)
+#'
+#' # Example 2 (Pipe operator)
+#' rnorm(36, 100, 4) |>
+#'   new_leem(variable = "continuous") |> tabfreq()
+#'
+#' # Example 3
+#' x <- rbinom(36, 10, 0.6)
+#' # Constructor (object of leem class)
+#' x <- new_leem(x, variable = "discrete")
+#' tab <- tabfreq(x)
+#' # Details
+#' tab$table
+#' tab$statistics
+#'
+#' # Example 3 - ordered categories ("d","a", "b", "c")
+#' w <- rep(letters[1:4], 1:4)
+#' w |> new_leem(variable = "discrete") |> tabfreq(ordered = c("d","a", "b", "c"))
+#'
 #' @export
 tabfreq.leem <- function(data, k = NULL, na.rm = FALSE, ordered = NULL, namereduction = TRUE, ...){
   # Output object

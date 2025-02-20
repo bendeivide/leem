@@ -3,17 +3,8 @@
 #' Generic function that allows inserting measures of position in plots
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
-#' @param type Type of measure of position. The default is \code{type = "mean"}. Other options: \code{"median"}, \code{"mode"} or \code{"all"}.
-#' @param lcol Vertical line color type. The default is \code{lpcol = "black"}. This argument must be the same length as the \code{type} argument.
-#' @param tcol Text color type. The default is \code{tcol = lcol}.
-#' @param acol Arrow color type. The default is \code{acol = lcol}.
-#' @param parrow Text and arrow height. The default is \code{parrow = 0.5}. This argument must be the same length as the \code{type} argument.
-#' @param larrow Text and arrow length. The default is \code{larrow = 0.6}.
-#' @param ptext Distance between lines of text. The default is \code{ptext = 0.06}.
-#' @param side Side to insert the text. The default is \code{side = "right"}. This argument must be the same length as the \code{type} argument.
-#' @param lwd numeric argument. The vertical line width. The default is  \code{lwd = 2}.
-#' @param lwdarrow numeric argument. The arrow width. The default is  \code{lwdarrow = lwd}.
-#' @return The result of \code{tabfreq()} is a list. This list has two elements: \code{table} and \code{statistics}. The first is the data frequency table, and the second represents some useful statistics for methods of leem class.
+#' @param ... further arguments passed to or from other methods.
+#' @export
 #' @examples
 #' # Example 1
 #' library(leem)
@@ -33,22 +24,52 @@
 #'   lwd = 2,
 #'   lwdarrow = 4
 #'  )
-#' @usage
-#' insert(x, ...)
-#'
-#' ## Leem S3 method:
-#' insert(x, type = "black", lcol, tcol = lcol, acol = lcol, parrow = 0.5,
-#'        larrow = 0.2, ptext = 0.6, side = "right", lwd = 2, lwdarrow = lwd)
-#'
-#' ## Default S3 method:
-#' insert(x)
-#' @export
 insert <- function(x, ...) {
   UseMethod("insert")
 }
 
+
+#' Insert measures of position in plot
+#'
+#' Method of insert function
+#'
+#' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param type Type of measure of position. The default is \code{type = "mean"}. Other options: \code{"median"}, \code{"mode"} or \code{"all"}.
+#' @param lty Line type. The default is  \code{lty = 1}.
+#' @param lcol Vertical line color type. The default is \code{lpcol = "black"}. This argument must be the same length as the \code{type} argument.
+#' @param tcol Text color type. The default is \code{tcol = lcol}.
+#' @param acol Arrow color type. The default is \code{acol = lcol}.
+#' @param parrow Text and arrow height. The default is \code{parrow = 0.5}. This argument must be the same length as the \code{type} argument.
+#' @param larrow Text and arrow length. The default is \code{larrow = 0.6}.
+#' @param ptext Distance between lines of text. The default is \code{ptext = 0.06}.
+#' @param side Side to insert the text. The default is \code{side = "right"}. This argument must be the same length as the \code{type} argument.
+#' @param lwd numeric argument. The vertical line width. The default is  \code{lwd = 2}.
+#' @param lwdarrow numeric argument. The arrow width. The default is  \code{lwdarrow = lwd}.
+#' @param ... further arguments passed to or from other methods.
+#' @return No return value. This function adds elements to an existing plot.
+
+#' @examples
+#' # Example 1
+#' library(leem)
+#' set.seed(10)
+#' rnorm(36, 100, 50) |>
+#'  new_leem(variable = "continuous") |>
+#'  tabfreq() |>
+#'  hist() |>
+#'  insert(
+#'   lcol = "black",
+#'   tcol = "purple",
+#'   acol = "brown",
+#'   parrow = 0.6,
+#'   larrow = 0.6,
+#'   ptext = 0.4,
+#'   side = "left",
+#'   lwd = 2,
+#'   lwdarrow = 4
+#'  )
 #' @export
-insert.leem <- function(x, type = "mean",
+insert.leem <- function(x,
+                        type = "mean",
                         lty = 1,
                         lcol = "black",
                         tcol = lcol,

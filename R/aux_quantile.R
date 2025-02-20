@@ -13268,7 +13268,7 @@ plotquniflttpdfaux <- function(q, min, max, rounding, ...) {
       legaux$text$y,
       bty = "n",
       bg = "white",
-      legend = substitute(parametro ~ min == minv~";"~ max == maxv,
+      legend = substitute(parametro ~ min == minv~";"~max == maxv,
                           list(minv = min, maxv = max, parametro = .parametro)), cex = 0.8
     )
   } else{
@@ -13311,7 +13311,7 @@ plotquniflttpdfaux <- function(q, min, max, rounding, ...) {
       bty = "n",
       bg = "white",
       legend = substitute(parametro ~ min == minv~";" ~ max == maxv,
-                          list(minv = min, maxv = max), parametro = .parametro), cex = 0.8
+                          list(minv = min, maxv = max, parametro = .parametro)), cex = 0.8
     )
   }
 }
@@ -13461,7 +13461,7 @@ plotqwilcoxlttcdf <- function(p, m, n, rounding) {
     bty = "n",
     bg = "white",
     legend = substitute(parametro ~ m == mv ~ ";" ~ n == nv,
-                        list(mv = m, nv = n), parametro = .parametro),  cex = 0.8
+                        list(mv = m, nv = n, parametro = .parametro)),  cex = 0.8
   )
 
 }
@@ -13611,7 +13611,7 @@ plotqwilcoxlttpdfaux <- function(q, m, n, rounding, ...) {
       bty = "n",
       bg = "white",
       legend = substitute(parametro ~ m == mv~";" ~ n == nv,
-                          list(mv = m, nv = n), parametro = .parametro), cex = 0.8
+                          list(mv = m, nv = n, parametro = .parametro)), cex = 0.8
     )
   } else{
     axis(

@@ -60,7 +60,6 @@
 }
 
 #' @rdname Regions_of_probability
-#' @aliases
 #' @export
 `%>X>%` <- function(a, b) {
   if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")

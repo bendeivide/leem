@@ -4,7 +4,7 @@
 \alias{new_leem}
 \title{Constructor of object of leem class}
 \usage{
-new_leem(x = vector(), variable = "discrete")
+new_leem(x, variable = "discrete")
 }
 \arguments{
 \item{x}{R object (vector as data structure).}
@@ -15,7 +15,7 @@ new_leem(x = vector(), variable = "discrete")
 The \code{variable} argument also allows using \code{variable = 1} for categorical variable and \code{variable = 2} for continuous variable.
 }
 \description{
-Constructor of object of leem class
+Function that assists other functions of leem package
 }
 \examples{
 # Example 1
@@ -25,5 +25,4 @@ new_leem(x, variable = 1)
 
 # Example 2 (Pipe operator)
 rnorm(36, 100, 4) |> new_leem(variable = 2)
-
 }

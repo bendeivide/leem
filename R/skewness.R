@@ -3,6 +3,7 @@
 #' Compute the skewness
 #'
 #' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param type character. methodology addressed. For now, we only have the \code{"pearson"} option (default).
 #' @param rounding Numerical object. Rounds the values in its first argument to the specified number of decimal places (default \code{2}).
 #' @param na.rm a logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
 #' @param details Logical object. Details of data (default \code{FALSE}).

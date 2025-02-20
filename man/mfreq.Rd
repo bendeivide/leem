@@ -16,8 +16,6 @@ mfreq(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details = FALSE)
 \item{grouped}{Logical object. Determines whether the measure of position result will be based on grouped data or not (default \code{TRUE}).}
 
 \item{details}{Logical object. Details of data (default \code{FALSE}).}
-
-\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 Compute the sample mode.

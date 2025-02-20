@@ -4,13 +4,24 @@
 \alias{barplot.leem}
 \title{Barplot graph}
 \usage{
-barplot(height, ...)
-
-## Leem S3 method:
-barplot.leem(height, freq = "a", bg = TRUE, main = NULL, xlab = NULL, ylab = NULL,
-  grids = grid(col = "white"), bgcol = "gray", bgborder = NA,
-  barcol = "yellow", barborder = "gray", posx1 = 0, posx2 = 0,
-  xang = 0, labels = NULL, ...)
+\method{barplot}{leem}(
+  height,
+  freq = "a",
+  bg = TRUE,
+  main = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  grids = grid(col = "white"),
+  bgcol = "gray",
+  bgborder = NA,
+  barcol = "yellow",
+  barborder = "gray",
+  posx1 = 0,
+  posx2 = 0,
+  xang = 0,
+  labels = NULL,
+  ...
+)
 }
 \arguments{
 \item{height}{R object (list) of class leem. Use \code{new_leem()} function.}
@@ -26,6 +37,8 @@ barplot.leem(height, freq = "a", bg = TRUE, main = NULL, xlab = NULL, ylab = NUL
 \item{ylab}{Character argument. Insert the title of the y-axis graphic label. The default is \code{NULL}.}
 
 \item{grids}{Insert grids to plot. The default is \code{grid(col = "white")}.}
+
+\item{bgcol}{Insert the background color. This argument is only valid when \code{bg = TRUE}. The default is \code{bgcol="gray"}.}
 
 \item{bgborder}{Character argument. Insert the background border color. This argument is only valid when \code{bg = TRUE}. The default is bgborder = NA.}
 

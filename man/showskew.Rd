@@ -7,10 +7,7 @@
 showskew(mpos = FALSE)
 }
 \arguments{
-\item{measures}{shows the measures of position or not (default \code{FALSE}).}
-}
-\value{
-\code{showskew} returns a plot with the skewsness characteristics.
+\item{mpos}{Logical. It shows the measures of position or not (default \code{FALSE}).}
 }
 \description{
 \code{showskew} Interpretation of asymmetry based on frequency distributions

@@ -4,7 +4,28 @@
 \alias{stickchart}
 \title{Stick chart}
 \usage{
-stickchartunction(x, ...)
+stickchart(
+  x,
+  freq = "a",
+  bg = TRUE,
+  main = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  grids = grid(col = "white"),
+  bgcol = "gray",
+  bgborder = NA,
+  posx1 = 0,
+  posx2 = 0,
+  xang = 0,
+  labels = NULL,
+  lcol = "black",
+  pcol = lcol,
+  pty = 19,
+  pwd = 3,
+  lty = 1,
+  lwd = 2,
+  ...
+)
 }
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}

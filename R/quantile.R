@@ -61,122 +61,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma)
           )
         }
-        if (gui == "tcltk") {
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          war <- options(warn = - 1)
-          #on.exit(options(war))
-
-          # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          # leemget <- function(x) {
-          #   get(x, envir= envleem, inherits=FALSE )
-          # }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          # globalvariables <- function(x, value) {
-          #   assign(x, value, envir= .GlobalEnv)
-          # }
-
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
-          tk_p <- leemset("tk_p", tclVar(p))
-          tk_mu <- leemset("tk_mu", tclVar(mu))
-          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          # sapply(c("tk_p", "tk_mu", "tk_sigma"),
-          #        function(x) globalvariables(x, leemget(x)))
-
-          # q1 <- NULL
-          # q2 <- NULL
-          # nu <- NULL
-          ##
-          # Disabled GUI (Type I)
-          oldmode <- tclServiceMode(FALSE)
-          # Logo
-          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-          # Plot
-          tkplot <- tktoplevel()
-
-          #Icon main toplevel window
-          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-          # Title
-          tkwm.title(tkplot,
-                     gettext("leem package: Quantile function", domain = "R-leem"))
-
-          tkpack(tklabel(tkplot, text = "Parameters"))
-
-          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
-                                      height = 500, fun = function(...) {
-                                        p <- as.numeric(tclvalue(tk_p))
-                                        mu <- as.numeric(tclvalue(tk_mu))
-                                        sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotqnormaltsboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
-                                      })
-          s01 <- tcltk::tkscale(
-            tkplot,
-            from = 0.01,
-            to = 0.99,
-            label = 'p',
-            variable = tk_p,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s02 <- tcltk::tkscale(
-            tkplot,
-            from = mu,
-            to = mu + 2 * sigma,
-            label = 'mean',
-            variable = tk_mu,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s03 <- tcltk::tkscale(
-            tkplot,
-            from = sigma,
-            to = sigma * 1.8,
-            label = 'standard deviation',
-            variable = tk_sigma,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          tkpack(s01, s02, s03,
-                 side = "top",
-                 expand = TRUE,
-                 before = tkplot$env$canvas,
-                 fill = "both")
-          # Activate GUI
-          finish <- tclServiceMode(oldmode)
-          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-            response <- tk_messageBox(
-              title = gettext("Tell me something:", domain = "R-leem"),
-              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-              icon = "question",
-              type = "yesno"
-            )
-            if (response == "yes") {
-              if (exists("tk_q1", envir = .GlobalEnv)) {
-                rm("tk_q1", "tk_df", envir = .GlobalEnv)
-              }
-              tkdestroy(tkplot)
-            }
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            #war <- options(warn = - 1)
-            on.exit(options(war))
-          })
-        }
+        # if (gui == "tcltk") {
+        #   # Desabilitar warnings global
+        #   #options(warn = - 1)
+        #   war <- options(warn = - 1)
+        #   #on.exit(options(war))
+        #
+        #   # Environment of package
+        #   envleem <- new.env(parent = base::emptyenv())
+        #   # leemget <- function(x) {
+        #   #   get(x, envir= envleem, inherits=FALSE )
+        #   # }
+        #   leemset <- function(x, value) {
+        #     assign(x, value, envir= envleem)
+        #   }
+        #   # globalvariables <- function(x, value) {
+        #   #   assign(x, value, envir= .GlobalEnv)
+        #   # }
+        #
+        #   mu <- argaddit$mean
+        #   sigma <- argaddit$sd
+        #   tk_p <- leemset("tk_p", tclVar(p))
+        #   tk_mu <- leemset("tk_mu", tclVar(mu))
+        #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+        #   # sapply(c("tk_p", "tk_mu", "tk_sigma"),
+        #   #        function(x) globalvariables(x, leemget(x)))
+        #
+        #   # q1 <- NULL
+        #   # q2 <- NULL
+        #   # nu <- NULL
+        #   ##
+        #   # Disabled GUI (Type I)
+        #   oldmode <- tclServiceMode(FALSE)
+        #   # Logo
+        #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+        #
+        #   # Plot
+        #   tkplot <- tktoplevel()
+        #
+        #   #Icon main toplevel window
+        #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+        #
+        #   # Title
+        #   tkwm.title(tkplot,
+        #              gettext("leem package: Quantile function", domain = "R-leem"))
+        #
+        #   tkpack(tklabel(tkplot, text = "Parameters"))
+        #
+        #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
+        #                               height = 500, fun = function(...) {
+        #                                 p <- as.numeric(tclvalue(tk_p))
+        #                                 mu <- as.numeric(tclvalue(tk_mu))
+        #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+        #                                 plotqnormaltsboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
+        #                               })
+        #   s01 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = 0.01,
+        #     to = 0.99,
+        #     label = 'p',
+        #     variable = tk_p,
+        #     showvalue = TRUE,
+        #     resolution = 0.01,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s02 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = mu,
+        #     to = mu + 2 * sigma,
+        #     label = 'mean',
+        #     variable = tk_mu,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s03 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = sigma,
+        #     to = sigma * 1.8,
+        #     label = 'standard deviation',
+        #     variable = tk_sigma,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   tkpack(s01, s02, s03,
+        #          side = "top",
+        #          expand = TRUE,
+        #          before = tkplot$env$canvas,
+        #          fill = "both")
+        #   # Activate GUI
+        #   finish <- tclServiceMode(oldmode)
+        #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+        #     response <- tk_messageBox(
+        #       title = gettext("Tell me something:", domain = "R-leem"),
+        #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+        #       icon = "question",
+        #       type = "yesno"
+        #     )
+        #     if (response == "yes") {
+        #       if (exists("tk_q1", envir = .GlobalEnv)) {
+        #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+        #       }
+        #       tkdestroy(tkplot)
+        #     }
+        #     # Desabilitar warnings global
+        #     #options(warn = - 1)
+        #     #war <- options(warn = - 1)
+        #     on.exit(options(war))
+        #   })
+        # }
       }
       if (type == "cdf") {
         if (gui == "plot") {
@@ -195,122 +195,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma)
           )
         }
-        if (gui == "tcltk") {
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          war <- options(warn = - 1)
-          #on.exit(options(war))
-
-          # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
-
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
-          tk_p <- leemset("tk_p", tclVar(p))
-          tk_mu <- leemset("tk_mu", tclVar(mu))
-          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                 function(x) globalvariables(x, leemget(x)))
-
-          # q1 <- NULL
-          # q2 <- NULL
-          # nu <- NULL
-          ##
-          # Disabled GUI (Type I)
-          oldmode <- tclServiceMode(FALSE)
-          # Logo
-          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-          # Plot
-          tkplot <- tktoplevel()
-
-          #Icon main toplevel window
-          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-          # Title
-          tkwm.title(tkplot,
-                     gettext("leem package: Quantile function", domain = "R-leem"))
-
-          tkpack(tklabel(tkplot, text = "Parameters"))
-
-          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                      height = 500, fun = function(...) {
-                                        p <- as.numeric(tclvalue(tk_p))
-                                        mu <- as.numeric(tclvalue(tk_mu))
-                                        sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotqnormaltscdf(p = p, mu = mu, sigma = sigma, rounding)
-                                      })
-          s01 <- tcltk::tkscale(
-            tkplot,
-            from = 0.01,
-            to = 0.99,
-            label = 'p',
-            variable = tk_p,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s02 <- tcltk::tkscale(
-            tkplot,
-            from = mu,
-            to = mu + 2 * sigma,
-            label = 'mean',
-            variable = tk_mu,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s03 <- tcltk::tkscale(
-            tkplot,
-            from = sigma,
-            to = sigma * 1.8,
-            label = 'standard deviation',
-            variable = tk_sigma,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          tkpack(s01, s02, s03,
-                 side = "top",
-                 expand = TRUE,
-                 before = tkplot$env$canvas,
-                 fill = "both")
-          # Activate GUI
-          finish <- tclServiceMode(oldmode)
-          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-            response <- tk_messageBox(
-              title = gettext("Tell me something:", domain = "R-leem"),
-              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-              icon = "question",
-              type = "yesno"
-            )
-            if (response == "yes") {
-              if (exists("tk_q1", envir = .GlobalEnv)) {
-                rm("tk_q1", "tk_df", envir = .GlobalEnv)
-              }
-              tkdestroy(tkplot)
-            }
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            #war <- options(warn = - 1)
-            on.exit(options(war))
-          })
-        }
+        # if (gui == "tcltk") {
+        #   # Desabilitar warnings global
+        #   #options(warn = - 1)
+        #   war <- options(warn = - 1)
+        #   #on.exit(options(war))
+        #
+        #   # Environment of package
+        #   envleem <- new.env(parent = base::emptyenv())
+        #   leemget <- function(x) {
+        #     get(x, envir= envleem, inherits=FALSE )
+        #   }
+        #   leemset <- function(x, value) {
+        #     assign(x, value, envir= envleem)
+        #   }
+        #   globalvariables <- function(x, value) {
+        #     assign(x, value, envir= .GlobalEnv)
+        #   }
+        #
+        #   mu <- argaddit$mean
+        #   sigma <- argaddit$sd
+        #   tk_p <- leemset("tk_p", tclVar(p))
+        #   tk_mu <- leemset("tk_mu", tclVar(mu))
+        #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+        #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+        #          function(x) globalvariables(x, leemget(x)))
+        #
+        #   # q1 <- NULL
+        #   # q2 <- NULL
+        #   # nu <- NULL
+        #   ##
+        #   # Disabled GUI (Type I)
+        #   oldmode <- tclServiceMode(FALSE)
+        #   # Logo
+        #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+        #
+        #   # Plot
+        #   tkplot <- tktoplevel()
+        #
+        #   #Icon main toplevel window
+        #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+        #
+        #   # Title
+        #   tkwm.title(tkplot,
+        #              gettext("leem package: Quantile function", domain = "R-leem"))
+        #
+        #   tkpack(tklabel(tkplot, text = "Parameters"))
+        #
+        #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+        #                               height = 500, fun = function(...) {
+        #                                 p <- as.numeric(tclvalue(tk_p))
+        #                                 mu <- as.numeric(tclvalue(tk_mu))
+        #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+        #                                 plotqnormaltscdf(p = p, mu = mu, sigma = sigma, rounding)
+        #                               })
+        #   s01 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = 0.01,
+        #     to = 0.99,
+        #     label = 'p',
+        #     variable = tk_p,
+        #     showvalue = TRUE,
+        #     resolution = 0.01,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s02 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = mu,
+        #     to = mu + 2 * sigma,
+        #     label = 'mean',
+        #     variable = tk_mu,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s03 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = sigma,
+        #     to = sigma * 1.8,
+        #     label = 'standard deviation',
+        #     variable = tk_sigma,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   tkpack(s01, s02, s03,
+        #          side = "top",
+        #          expand = TRUE,
+        #          before = tkplot$env$canvas,
+        #          fill = "both")
+        #   # Activate GUI
+        #   finish <- tclServiceMode(oldmode)
+        #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+        #     response <- tk_messageBox(
+        #       title = gettext("Tell me something:", domain = "R-leem"),
+        #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+        #       icon = "question",
+        #       type = "yesno"
+        #     )
+        #     if (response == "yes") {
+        #       if (exists("tk_q1", envir = .GlobalEnv)) {
+        #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+        #       }
+        #       tkdestroy(tkplot)
+        #     }
+        #     # Desabilitar warnings global
+        #     #options(warn = - 1)
+        #     #war <- options(warn = - 1)
+        #     on.exit(options(war))
+        #   })
+        # }
       }
       if (type == "pdf") {
         if (gui == "plot") {
@@ -328,122 +328,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma)
           )
         }
-        if (gui == "tcltk") {
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          war <- options(warn = - 1)
-          #on.exit(options(war))
-
-          # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
-
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
-          tk_p <- leemset("tk_p", tclVar(p))
-          tk_mu <- leemset("tk_mu", tclVar(mu))
-          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                 function(x) globalvariables(x, leemget(x)))
-
-          # q1 <- NULL
-          # q2 <- NULL
-          # nu <- NULL
-          ##
-          # Disabled GUI (Type I)
-          oldmode <- tclServiceMode(FALSE)
-          # Logo
-          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-          # Plot
-          tkplot <- tktoplevel()
-
-          #Icon main toplevel window
-          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-          # Title
-          tkwm.title(tkplot,
-                     gettext("leem package: Quantile function", domain = "R-leem"))
-
-          tkpack(tklabel(tkplot, text = "Parameters"))
-
-          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                      height = 500, fun = function(...) {
-                                        p <- as.numeric(tclvalue(tk_p))
-                                        mu <- as.numeric(tclvalue(tk_mu))
-                                        sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotqnormaltspdf(p = p, mu = mu, sigma = sigma, rounding)
-                                      })
-          s01 <- tcltk::tkscale(
-            tkplot,
-            from = 0.01,
-            to = 0.99,
-            label = 'p',
-            variable = tk_p,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s02 <- tcltk::tkscale(
-            tkplot,
-            from = mu,
-            to = mu + 2 * sigma,
-            label = 'mean',
-            variable = tk_mu,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s03 <- tcltk::tkscale(
-            tkplot,
-            from = sigma,
-            to = sigma * 1.8,
-            label = 'standard deviation',
-            variable = tk_sigma,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          tkpack(s01, s02, s03,
-                 side = "top",
-                 expand = TRUE,
-                 before = tkplot$env$canvas,
-                 fill = "both")
-          # Activate GUI
-          finish <- tclServiceMode(oldmode)
-          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-            response <- tk_messageBox(
-              title = gettext("Tell me something:", domain = "R-leem"),
-              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-              icon = "question",
-              type = "yesno"
-            )
-            if (response == "yes") {
-              if (exists("tk_q1", envir = .GlobalEnv)) {
-                rm("tk_q1", "tk_df", envir = .GlobalEnv)
-              }
-              tkdestroy(tkplot)
-            }
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            #war <- options(warn = - 1)
-            on.exit(options(war))
-          })
-        }
+        # if (gui == "tcltk") {
+        #   # Desabilitar warnings global
+        #   #options(warn = - 1)
+        #   war <- options(warn = - 1)
+        #   #on.exit(options(war))
+        #
+        #   # Environment of package
+        #   envleem <- new.env(parent = base::emptyenv())
+        #   leemget <- function(x) {
+        #     get(x, envir= envleem, inherits=FALSE )
+        #   }
+        #   leemset <- function(x, value) {
+        #     assign(x, value, envir= envleem)
+        #   }
+        #   globalvariables <- function(x, value) {
+        #     assign(x, value, envir= .GlobalEnv)
+        #   }
+        #
+        #   mu <- argaddit$mean
+        #   sigma <- argaddit$sd
+        #   tk_p <- leemset("tk_p", tclVar(p))
+        #   tk_mu <- leemset("tk_mu", tclVar(mu))
+        #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+        #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+        #          function(x) globalvariables(x, leemget(x)))
+        #
+        #   # q1 <- NULL
+        #   # q2 <- NULL
+        #   # nu <- NULL
+        #   ##
+        #   # Disabled GUI (Type I)
+        #   oldmode <- tclServiceMode(FALSE)
+        #   # Logo
+        #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+        #
+        #   # Plot
+        #   tkplot <- tktoplevel()
+        #
+        #   #Icon main toplevel window
+        #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+        #
+        #   # Title
+        #   tkwm.title(tkplot,
+        #              gettext("leem package: Quantile function", domain = "R-leem"))
+        #
+        #   tkpack(tklabel(tkplot, text = "Parameters"))
+        #
+        #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+        #                               height = 500, fun = function(...) {
+        #                                 p <- as.numeric(tclvalue(tk_p))
+        #                                 mu <- as.numeric(tclvalue(tk_mu))
+        #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+        #                                 plotqnormaltspdf(p = p, mu = mu, sigma = sigma, rounding)
+        #                               })
+        #   s01 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = 0.01,
+        #     to = 0.99,
+        #     label = 'p',
+        #     variable = tk_p,
+        #     showvalue = TRUE,
+        #     resolution = 0.01,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s02 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = mu,
+        #     to = mu + 2 * sigma,
+        #     label = 'mean',
+        #     variable = tk_mu,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s03 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = sigma,
+        #     to = sigma * 1.8,
+        #     label = 'standard deviation',
+        #     variable = tk_sigma,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   tkpack(s01, s02, s03,
+        #          side = "top",
+        #          expand = TRUE,
+        #          before = tkplot$env$canvas,
+        #          fill = "both")
+        #   # Activate GUI
+        #   finish <- tclServiceMode(oldmode)
+        #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+        #     response <- tk_messageBox(
+        #       title = gettext("Tell me something:", domain = "R-leem"),
+        #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+        #       icon = "question",
+        #       type = "yesno"
+        #     )
+        #     if (response == "yes") {
+        #       if (exists("tk_q1", envir = .GlobalEnv)) {
+        #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+        #       }
+        #       tkdestroy(tkplot)
+        #     }
+        #     # Desabilitar warnings global
+        #     #options(warn = - 1)
+        #     #war <- options(warn = - 1)
+        #     on.exit(options(war))
+        #   })
+        # }
       }
       point <- qnorm(c(p/2, 1 - p/2), mean = mu, sd = sigma)
     } else{
@@ -466,122 +466,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqnormalttboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqnormalttboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         if (type == "cdf") {
           if (gui == "plot") {
@@ -600,122 +600,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqnormalltcdf(p = p, mu = mu, sigma = sigma, rounding)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqnormalltcdf(p = p, mu = mu, sigma = sigma, rounding)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         if (type == "pdf") {
           if (gui == "plot") {
@@ -734,122 +734,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqnormallttpdf(p = p, mu = mu, sigma = sigma, rounding)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqnormallttpdf(p = p, mu = mu, sigma = sigma, rounding)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         point <- qnorm(p, mean = mu, sd = sigma)
       } else {
@@ -871,123 +871,123 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            cex.main <- 0.8
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqnormaltfboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   cex.main <- 0.8
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqnormaltfboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         if (type == "cdf") {
           warning("The plot shown is based on the survival function", call. = FALSE, domain = "R-leem")
@@ -1006,122 +1006,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqnormalltfcdf(p = p, mu = mu, sigma = sigma, rounding)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqnormalltfcdf(p = p, mu = mu, sigma = sigma, rounding)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         if (type == "pdf") {
           if (gui == "plot") {
@@ -1139,122 +1139,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqnormalltfpdf(p = p, mu = mu, sigma = sigma, rounding)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqnormalltfpdf(p = p, mu = mu, sigma = sigma, rounding)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         point <- qnorm(p, mean = mu, sd = sigma, lower.tail = FALSE)
       }
@@ -2644,122 +2644,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma)
           )
         }
-        if (gui == "tcltk") {
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          war <- options(warn = - 1)
-          #on.exit(options(war))
-
-          # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
-
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
-          tk_p <- leemset("tk_p", tclVar(p))
-          tk_mu <- leemset("tk_mu", tclVar(mu))
-          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                 function(x) globalvariables(x, leemget(x)))
-
-          # q1 <- NULL
-          # q2 <- NULL
-          # nu <- NULL
-          ##
-          # Disabled GUI (Type I)
-          oldmode <- tclServiceMode(FALSE)
-          # Logo
-          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-          # Plot
-          tkplot <- tktoplevel()
-
-          #Icon main toplevel window
-          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-          # Title
-          tkwm.title(tkplot,
-                     gettext("leem package: Quantile function", domain = "R-leem"))
-
-          tkpack(tklabel(tkplot, text = "Parameters"))
-
-          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
-                                      height = 500, fun = function(...) {
-                                        p <- as.numeric(tclvalue(tk_p))
-                                        mu <- as.numeric(tclvalue(tk_mu))
-                                        sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotqlnormaltsboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
-                                      })
-          s01 <- tcltk::tkscale(
-            tkplot,
-            from = 0.01,
-            to = 0.99,
-            label = 'p',
-            variable = tk_p,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s02 <- tcltk::tkscale(
-            tkplot,
-            from = mu,
-            to = mu + 2 * sigma,
-            label = 'mean',
-            variable = tk_mu,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s03 <- tcltk::tkscale(
-            tkplot,
-            from = sigma,
-            to = sigma * 1.8,
-            label = 'standard deviation',
-            variable = tk_sigma,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          tkpack(s01, s02, s03,
-                 side = "top",
-                 expand = TRUE,
-                 before = tkplot$env$canvas,
-                 fill = "both")
-          # Activate GUI
-          finish <- tclServiceMode(oldmode)
-          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-            response <- tk_messageBox(
-              title = gettext("Tell me something:", domain = "R-leem"),
-              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-              icon = "question",
-              type = "yesno"
-            )
-            if (response == "yes") {
-              if (exists("tk_q1", envir = .GlobalEnv)) {
-                rm("tk_q1", "tk_df", envir = .GlobalEnv)
-              }
-              tkdestroy(tkplot)
-            }
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            #war <- options(warn = - 1)
-            on.exit(options(war))
-          })
-        }
+        # if (gui == "tcltk") {
+        #   # Desabilitar warnings global
+        #   #options(warn = - 1)
+        #   war <- options(warn = - 1)
+        #   #on.exit(options(war))
+        #
+        #   # Environment of package
+        #   envleem <- new.env(parent = base::emptyenv())
+        #   leemget <- function(x) {
+        #     get(x, envir= envleem, inherits=FALSE )
+        #   }
+        #   leemset <- function(x, value) {
+        #     assign(x, value, envir= envleem)
+        #   }
+        #   globalvariables <- function(x, value) {
+        #     assign(x, value, envir= .GlobalEnv)
+        #   }
+        #
+        #   mu <- argaddit$mean
+        #   sigma <- argaddit$sd
+        #   tk_p <- leemset("tk_p", tclVar(p))
+        #   tk_mu <- leemset("tk_mu", tclVar(mu))
+        #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+        #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+        #          function(x) globalvariables(x, leemget(x)))
+        #
+        #   # q1 <- NULL
+        #   # q2 <- NULL
+        #   # nu <- NULL
+        #   ##
+        #   # Disabled GUI (Type I)
+        #   oldmode <- tclServiceMode(FALSE)
+        #   # Logo
+        #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+        #
+        #   # Plot
+        #   tkplot <- tktoplevel()
+        #
+        #   #Icon main toplevel window
+        #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+        #
+        #   # Title
+        #   tkwm.title(tkplot,
+        #              gettext("leem package: Quantile function", domain = "R-leem"))
+        #
+        #   tkpack(tklabel(tkplot, text = "Parameters"))
+        #
+        #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
+        #                               height = 500, fun = function(...) {
+        #                                 p <- as.numeric(tclvalue(tk_p))
+        #                                 mu <- as.numeric(tclvalue(tk_mu))
+        #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+        #                                 plotqlnormaltsboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
+        #                               })
+        #   s01 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = 0.01,
+        #     to = 0.99,
+        #     label = 'p',
+        #     variable = tk_p,
+        #     showvalue = TRUE,
+        #     resolution = 0.01,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s02 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = mu,
+        #     to = mu + 2 * sigma,
+        #     label = 'mean',
+        #     variable = tk_mu,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s03 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = sigma,
+        #     to = sigma * 1.8,
+        #     label = 'standard deviation',
+        #     variable = tk_sigma,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   tkpack(s01, s02, s03,
+        #          side = "top",
+        #          expand = TRUE,
+        #          before = tkplot$env$canvas,
+        #          fill = "both")
+        #   # Activate GUI
+        #   finish <- tclServiceMode(oldmode)
+        #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+        #     response <- tk_messageBox(
+        #       title = gettext("Tell me something:", domain = "R-leem"),
+        #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+        #       icon = "question",
+        #       type = "yesno"
+        #     )
+        #     if (response == "yes") {
+        #       if (exists("tk_q1", envir = .GlobalEnv)) {
+        #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+        #       }
+        #       tkdestroy(tkplot)
+        #     }
+        #     # Desabilitar warnings global
+        #     #options(warn = - 1)
+        #     #war <- options(warn = - 1)
+        #     on.exit(options(war))
+        #   })
+        # }
       }
       if (type == "cdf") {
         if (gui == "plot") {
@@ -2778,122 +2778,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma)
           )
         }
-        if (gui == "tcltk") {
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          war <- options(warn = - 1)
-          #on.exit(options(war))
-
-          # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
-
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
-          tk_p <- leemset("tk_p", tclVar(p))
-          tk_mu <- leemset("tk_mu", tclVar(mu))
-          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                 function(x) globalvariables(x, leemget(x)))
-
-          # q1 <- NULL
-          # q2 <- NULL
-          # nu <- NULL
-          ##
-          # Disabled GUI (Type I)
-          oldmode <- tclServiceMode(FALSE)
-          # Logo
-          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-          # Plot
-          tkplot <- tktoplevel()
-
-          #Icon main toplevel window
-          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-          # Title
-          tkwm.title(tkplot,
-                     gettext("leem package: Quantile function", domain = "R-leem"))
-
-          tkpack(tklabel(tkplot, text = "Parameters"))
-
-          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                      height = 500, fun = function(...) {
-                                        p <- as.numeric(tclvalue(tk_p))
-                                        mu <- as.numeric(tclvalue(tk_mu))
-                                        sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotqlnormaltscdf(p = p, mu = mu, sigma = sigma, rounding)
-                                      })
-          s01 <- tcltk::tkscale(
-            tkplot,
-            from = 0.01,
-            to = 0.99,
-            label = 'p',
-            variable = tk_p,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s02 <- tcltk::tkscale(
-            tkplot,
-            from = mu,
-            to = mu + 2 * sigma,
-            label = 'mean',
-            variable = tk_mu,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s03 <- tcltk::tkscale(
-            tkplot,
-            from = sigma,
-            to = sigma * 1.8,
-            label = 'standard deviation',
-            variable = tk_sigma,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          tkpack(s01, s02, s03,
-                 side = "top",
-                 expand = TRUE,
-                 before = tkplot$env$canvas,
-                 fill = "both")
-          # Activate GUI
-          finish <- tclServiceMode(oldmode)
-          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-            response <- tk_messageBox(
-              title = gettext("Tell me something:", domain = "R-leem"),
-              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-              icon = "question",
-              type = "yesno"
-            )
-            if (response == "yes") {
-              if (exists("tk_q1", envir = .GlobalEnv)) {
-                rm("tk_q1", "tk_df", envir = .GlobalEnv)
-              }
-              tkdestroy(tkplot)
-            }
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            #war <- options(warn = - 1)
-            on.exit(options(war))
-          })
-        }
+        # if (gui == "tcltk") {
+        #   # Desabilitar warnings global
+        #   #options(warn = - 1)
+        #   war <- options(warn = - 1)
+        #   #on.exit(options(war))
+        #
+        #   # Environment of package
+        #   envleem <- new.env(parent = base::emptyenv())
+        #   leemget <- function(x) {
+        #     get(x, envir= envleem, inherits=FALSE )
+        #   }
+        #   leemset <- function(x, value) {
+        #     assign(x, value, envir= envleem)
+        #   }
+        #   globalvariables <- function(x, value) {
+        #     assign(x, value, envir= .GlobalEnv)
+        #   }
+        #
+        #   mu <- argaddit$mean
+        #   sigma <- argaddit$sd
+        #   tk_p <- leemset("tk_p", tclVar(p))
+        #   tk_mu <- leemset("tk_mu", tclVar(mu))
+        #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+        #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+        #          function(x) globalvariables(x, leemget(x)))
+        #
+        #   # q1 <- NULL
+        #   # q2 <- NULL
+        #   # nu <- NULL
+        #   ##
+        #   # Disabled GUI (Type I)
+        #   oldmode <- tclServiceMode(FALSE)
+        #   # Logo
+        #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+        #
+        #   # Plot
+        #   tkplot <- tktoplevel()
+        #
+        #   #Icon main toplevel window
+        #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+        #
+        #   # Title
+        #   tkwm.title(tkplot,
+        #              gettext("leem package: Quantile function", domain = "R-leem"))
+        #
+        #   tkpack(tklabel(tkplot, text = "Parameters"))
+        #
+        #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+        #                               height = 500, fun = function(...) {
+        #                                 p <- as.numeric(tclvalue(tk_p))
+        #                                 mu <- as.numeric(tclvalue(tk_mu))
+        #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+        #                                 plotqlnormaltscdf(p = p, mu = mu, sigma = sigma, rounding)
+        #                               })
+        #   s01 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = 0.01,
+        #     to = 0.99,
+        #     label = 'p',
+        #     variable = tk_p,
+        #     showvalue = TRUE,
+        #     resolution = 0.01,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s02 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = mu,
+        #     to = mu + 2 * sigma,
+        #     label = 'mean',
+        #     variable = tk_mu,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s03 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = sigma,
+        #     to = sigma * 1.8,
+        #     label = 'standard deviation',
+        #     variable = tk_sigma,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   tkpack(s01, s02, s03,
+        #          side = "top",
+        #          expand = TRUE,
+        #          before = tkplot$env$canvas,
+        #          fill = "both")
+        #   # Activate GUI
+        #   finish <- tclServiceMode(oldmode)
+        #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+        #     response <- tk_messageBox(
+        #       title = gettext("Tell me something:", domain = "R-leem"),
+        #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+        #       icon = "question",
+        #       type = "yesno"
+        #     )
+        #     if (response == "yes") {
+        #       if (exists("tk_q1", envir = .GlobalEnv)) {
+        #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+        #       }
+        #       tkdestroy(tkplot)
+        #     }
+        #     # Desabilitar warnings global
+        #     #options(warn = - 1)
+        #     #war <- options(warn = - 1)
+        #     on.exit(options(war))
+        #   })
+        # }
       }
       if (type == "pdf") {
         if (gui == "plot") {
@@ -2911,122 +2911,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma)
           )
         }
-        if (gui == "tcltk") {
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          war <- options(warn = - 1)
-          #on.exit(options(war))
-
-          # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          globalvariables <- function(x, value) {
-            assign(x, value, envir= .GlobalEnv)
-          }
-
-          mu <- argaddit$mean
-          sigma <- argaddit$sd
-          tk_p <- leemset("tk_p", tclVar(p))
-          tk_mu <- leemset("tk_mu", tclVar(mu))
-          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                 function(x) globalvariables(x, leemget(x)))
-
-          # q1 <- NULL
-          # q2 <- NULL
-          # nu <- NULL
-          ##
-          # Disabled GUI (Type I)
-          oldmode <- tclServiceMode(FALSE)
-          # Logo
-          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-          # Plot
-          tkplot <- tktoplevel()
-
-          #Icon main toplevel window
-          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-          # Title
-          tkwm.title(tkplot,
-                     gettext("leem package: Quantile function", domain = "R-leem"))
-
-          tkpack(tklabel(tkplot, text = "Parameters"))
-
-          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                      height = 500, fun = function(...) {
-                                        p <- as.numeric(tclvalue(tk_p))
-                                        mu <- as.numeric(tclvalue(tk_mu))
-                                        sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotqlnormaltspdf(p = p, mu = mu, sigma = sigma, rounding)
-                                      })
-          s01 <- tcltk::tkscale(
-            tkplot,
-            from = 0.01,
-            to = 0.99,
-            label = 'p',
-            variable = tk_p,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s02 <- tcltk::tkscale(
-            tkplot,
-            from = mu,
-            to = mu + 2 * sigma,
-            label = 'mean',
-            variable = tk_mu,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s03 <- tcltk::tkscale(
-            tkplot,
-            from = sigma,
-            to = sigma * 1.8,
-            label = 'standard deviation',
-            variable = tk_sigma,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          tkpack(s01, s02, s03,
-                 side = "top",
-                 expand = TRUE,
-                 before = tkplot$env$canvas,
-                 fill = "both")
-          # Activate GUI
-          finish <- tclServiceMode(oldmode)
-          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-            response <- tk_messageBox(
-              title = gettext("Tell me something:", domain = "R-leem"),
-              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-              icon = "question",
-              type = "yesno"
-            )
-            if (response == "yes") {
-              if (exists("tk_q1", envir = .GlobalEnv)) {
-                rm("tk_q1", "tk_df", envir = .GlobalEnv)
-              }
-              tkdestroy(tkplot)
-            }
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            #war <- options(warn = - 1)
-            on.exit(options(war))
-          })
-        }
+        # if (gui == "tcltk") {
+        #   # Desabilitar warnings global
+        #   #options(warn = - 1)
+        #   war <- options(warn = - 1)
+        #   #on.exit(options(war))
+        #
+        #   # Environment of package
+        #   envleem <- new.env(parent = base::emptyenv())
+        #   leemget <- function(x) {
+        #     get(x, envir= envleem, inherits=FALSE )
+        #   }
+        #   leemset <- function(x, value) {
+        #     assign(x, value, envir= envleem)
+        #   }
+        #   globalvariables <- function(x, value) {
+        #     assign(x, value, envir= .GlobalEnv)
+        #   }
+        #
+        #   mu <- argaddit$mean
+        #   sigma <- argaddit$sd
+        #   tk_p <- leemset("tk_p", tclVar(p))
+        #   tk_mu <- leemset("tk_mu", tclVar(mu))
+        #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+        #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+        #          function(x) globalvariables(x, leemget(x)))
+        #
+        #   # q1 <- NULL
+        #   # q2 <- NULL
+        #   # nu <- NULL
+        #   ##
+        #   # Disabled GUI (Type I)
+        #   oldmode <- tclServiceMode(FALSE)
+        #   # Logo
+        #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+        #
+        #   # Plot
+        #   tkplot <- tktoplevel()
+        #
+        #   #Icon main toplevel window
+        #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+        #
+        #   # Title
+        #   tkwm.title(tkplot,
+        #              gettext("leem package: Quantile function", domain = "R-leem"))
+        #
+        #   tkpack(tklabel(tkplot, text = "Parameters"))
+        #
+        #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+        #                               height = 500, fun = function(...) {
+        #                                 p <- as.numeric(tclvalue(tk_p))
+        #                                 mu <- as.numeric(tclvalue(tk_mu))
+        #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+        #                                 plotqlnormaltspdf(p = p, mu = mu, sigma = sigma, rounding)
+        #                               })
+        #   s01 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = 0.01,
+        #     to = 0.99,
+        #     label = 'p',
+        #     variable = tk_p,
+        #     showvalue = TRUE,
+        #     resolution = 0.01,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s02 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = mu,
+        #     to = mu + 2 * sigma,
+        #     label = 'mean',
+        #     variable = tk_mu,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   s03 <- tcltk::tkscale(
+        #     tkplot,
+        #     from = sigma,
+        #     to = sigma * 1.8,
+        #     label = 'standard deviation',
+        #     variable = tk_sigma,
+        #     showvalue = TRUE,
+        #     resolution = 1,
+        #     repeatdelay = 200,
+        #     repeatinterval = 100,
+        #     orient = "hor"
+        #   )
+        #   tkpack(s01, s02, s03,
+        #          side = "top",
+        #          expand = TRUE,
+        #          before = tkplot$env$canvas,
+        #          fill = "both")
+        #   # Activate GUI
+        #   finish <- tclServiceMode(oldmode)
+        #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+        #     response <- tk_messageBox(
+        #       title = gettext("Tell me something:", domain = "R-leem"),
+        #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+        #       icon = "question",
+        #       type = "yesno"
+        #     )
+        #     if (response == "yes") {
+        #       if (exists("tk_q1", envir = .GlobalEnv)) {
+        #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+        #       }
+        #       tkdestroy(tkplot)
+        #     }
+        #     # Desabilitar warnings global
+        #     #options(warn = - 1)
+        #     #war <- options(warn = - 1)
+        #     on.exit(options(war))
+        #   })
+        # }
       }
       point <- qlnorm(c(p/2, 1 - p/2), meanlog = mu, sdlog = sigma)
     } else{
@@ -3049,122 +3049,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqlnormalttboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqlnormalttboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         if (type == "cdf") {
           if (gui == "plot") {
@@ -3183,122 +3183,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqlnormalltcdf(p = p, mu = mu, sigma = sigma, rounding)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqlnormalltcdf(p = p, mu = mu, sigma = sigma, rounding)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         if (type == "pdf") {
           if (gui == "plot") {
@@ -3317,122 +3317,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqlnormallttpdf(p = p, mu = mu, sigma = sigma, rounding)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqlnormallttpdf(p = p, mu = mu, sigma = sigma, rounding)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         point <- qlnorm(p, meanlog = mu, sdlog = sigma)
       } else {
@@ -3454,123 +3454,123 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            cex.main <- 0.8
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqlnormaltfboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   cex.main <- 0.8
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 700,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqlnormaltfboth(p = p, mu = mu, sigma = sigma, rounding, mfrow, cex.main = cex.main)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         if (type == "cdf") {
           warning("The plot shown is based on the survival function", call. = FALSE, domain = "R-leem")
@@ -3589,122 +3589,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqlnormalltfcdf(p = p, mu = mu, sigma = sigma, rounding)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqlnormalltfcdf(p = p, mu = mu, sigma = sigma, rounding)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         if (type == "pdf") {
           if (gui == "plot") {
@@ -3722,122 +3722,122 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    sd = manipulate::slider(sigma, sigma * 1.8, sigma)
             )
           }
-          if (gui == "tcltk") {
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            #on.exit(options(war))
-
-            # Environment of package
-            envleem <- new.env(parent = base::emptyenv())
-            leemget <- function(x) {
-              get(x, envir= envleem, inherits=FALSE )
-            }
-            leemset <- function(x, value) {
-              assign(x, value, envir= envleem)
-            }
-            globalvariables <- function(x, value) {
-              assign(x, value, envir= .GlobalEnv)
-            }
-
-            mu <- argaddit$mean
-            sigma <- argaddit$sd
-            tk_p <- leemset("tk_p", tclVar(p))
-            tk_mu <- leemset("tk_mu", tclVar(mu))
-            tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-            sapply(c("tk_p", "tk_mu", "tk_sigma"),
-                   function(x) globalvariables(x, leemget(x)))
-
-            # q1 <- NULL
-            # q2 <- NULL
-            # nu <- NULL
-            ##
-            # Disabled GUI (Type I)
-            oldmode <- tclServiceMode(FALSE)
-            # Logo
-            tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-
-            # Plot
-            tkplot <- tktoplevel()
-
-            #Icon main toplevel window
-            tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-            # Title
-            tkwm.title(tkplot,
-                       gettext("leem package: Quantile function", domain = "R-leem"))
-
-            tkpack(tklabel(tkplot, text = "Parameters"))
-
-            tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                        height = 500, fun = function(...) {
-                                          p <- as.numeric(tclvalue(tk_p))
-                                          mu <- as.numeric(tclvalue(tk_mu))
-                                          sigma <- as.numeric(tclvalue(tk_sigma))
-                                          plotqnormalltfpdf(p = p, mu = mu, sigma = sigma, rounding)
-                                        })
-            s01 <- tcltk::tkscale(
-              tkplot,
-              from = 0.01,
-              to = 0.99,
-              label = 'p',
-              variable = tk_p,
-              showvalue = TRUE,
-              resolution = 0.01,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s02 <- tcltk::tkscale(
-              tkplot,
-              from = mu,
-              to = mu + 2 * sigma,
-              label = 'mean',
-              variable = tk_mu,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            s03 <- tcltk::tkscale(
-              tkplot,
-              from = sigma,
-              to = sigma * 1.8,
-              label = 'standard deviation',
-              variable = tk_sigma,
-              showvalue = TRUE,
-              resolution = 1,
-              repeatdelay = 200,
-              repeatinterval = 100,
-              orient = "hor"
-            )
-            tkpack(s01, s02, s03,
-                   side = "top",
-                   expand = TRUE,
-                   before = tkplot$env$canvas,
-                   fill = "both")
-            # Activate GUI
-            finish <- tclServiceMode(oldmode)
-            tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-              response <- tk_messageBox(
-                title = gettext("Tell me something:", domain = "R-leem"),
-                message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-                icon = "question",
-                type = "yesno"
-              )
-              if (response == "yes") {
-                if (exists("tk_q1", envir = .GlobalEnv)) {
-                  rm("tk_q1", "tk_df", envir = .GlobalEnv)
-                }
-                tkdestroy(tkplot)
-              }
-              # Desabilitar warnings global
-              #options(warn = - 1)
-              #war <- options(warn = - 1)
-              on.exit(options(war))
-            })
-          }
+          # if (gui == "tcltk") {
+          #   # Desabilitar warnings global
+          #   #options(warn = - 1)
+          #   war <- options(warn = - 1)
+          #   #on.exit(options(war))
+          #
+          #   # Environment of package
+          #   envleem <- new.env(parent = base::emptyenv())
+          #   leemget <- function(x) {
+          #     get(x, envir= envleem, inherits=FALSE )
+          #   }
+          #   leemset <- function(x, value) {
+          #     assign(x, value, envir= envleem)
+          #   }
+          #   globalvariables <- function(x, value) {
+          #     assign(x, value, envir= .GlobalEnv)
+          #   }
+          #
+          #   mu <- argaddit$mean
+          #   sigma <- argaddit$sd
+          #   tk_p <- leemset("tk_p", tclVar(p))
+          #   tk_mu <- leemset("tk_mu", tclVar(mu))
+          #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
+          #   sapply(c("tk_p", "tk_mu", "tk_sigma"),
+          #          function(x) globalvariables(x, leemget(x)))
+          #
+          #   # q1 <- NULL
+          #   # q2 <- NULL
+          #   # nu <- NULL
+          #   ##
+          #   # Disabled GUI (Type I)
+          #   oldmode <- tclServiceMode(FALSE)
+          #   # Logo
+          #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          #
+          #   # Plot
+          #   tkplot <- tktoplevel()
+          #
+          #   #Icon main toplevel window
+          #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
+          #
+          #   # Title
+          #   tkwm.title(tkplot,
+          #              gettext("leem package: Quantile function", domain = "R-leem"))
+          #
+          #   tkpack(tklabel(tkplot, text = "Parameters"))
+          #
+          #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
+          #                               height = 500, fun = function(...) {
+          #                                 p <- as.numeric(tclvalue(tk_p))
+          #                                 mu <- as.numeric(tclvalue(tk_mu))
+          #                                 sigma <- as.numeric(tclvalue(tk_sigma))
+          #                                 plotqnormalltfpdf(p = p, mu = mu, sigma = sigma, rounding)
+          #                               })
+          #   s01 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = 0.01,
+          #     to = 0.99,
+          #     label = 'p',
+          #     variable = tk_p,
+          #     showvalue = TRUE,
+          #     resolution = 0.01,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s02 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = mu,
+          #     to = mu + 2 * sigma,
+          #     label = 'mean',
+          #     variable = tk_mu,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   s03 <- tcltk::tkscale(
+          #     tkplot,
+          #     from = sigma,
+          #     to = sigma * 1.8,
+          #     label = 'standard deviation',
+          #     variable = tk_sigma,
+          #     showvalue = TRUE,
+          #     resolution = 1,
+          #     repeatdelay = 200,
+          #     repeatinterval = 100,
+          #     orient = "hor"
+          #   )
+          #   tkpack(s01, s02, s03,
+          #          side = "top",
+          #          expand = TRUE,
+          #          before = tkplot$env$canvas,
+          #          fill = "both")
+          #   # Activate GUI
+          #   finish <- tclServiceMode(oldmode)
+          #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
+          #     response <- tk_messageBox(
+          #       title = gettext("Tell me something:", domain = "R-leem"),
+          #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
+          #       icon = "question",
+          #       type = "yesno"
+          #     )
+          #     if (response == "yes") {
+          #       if (exists("tk_q1", envir = .GlobalEnv)) {
+          #         rm("tk_q1", "tk_df", envir = .GlobalEnv)
+          #       }
+          #       tkdestroy(tkplot)
+          #     }
+          #     # Desabilitar warnings global
+          #     #options(warn = - 1)
+          #     #war <- options(warn = - 1)
+          #     on.exit(options(war))
+          #   })
+          # }
         }
         point <- qlnorm(p, meanlog = mu, sdlog = sigma, lower.tail = FALSE)
       }
@@ -4000,9 +4000,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  lambda = manipulate::slider(lambda, lambda + 4 * lambda, lambda)
           )
         }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento!")
-        }
+        # if (gui == "tcltk") {
+        #   stop("Em desenvolvimento!")
+        # }
       }
       if (type == "cdf") {
         if (gui == "plot") {
@@ -4016,9 +4016,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  lambda = manipulate::slider(lambda, lambda + 4 * lambda, lambda)
           )
         }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento!")
-        }
+        # if (gui == "tcltk") {
+        #   stop("Em desenvolvimento!")
+        # }
       }
       if (type == "pdf" || type  == "pf") {
         if(type == "pdf"){
@@ -4035,9 +4035,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  lambda = manipulate::slider(lambda, lambda + 4 * lambda, lambda)
           )
         }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento!")
-        }
+        # if (gui == "tcltk") {
+        #   stop("Em desenvolvimento!")
+        # }
       }
 
       point <- qpois(c(p/2, 1 - p/2), lambda)
@@ -4054,9 +4054,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    lambda = manipulate::slider(lambda, lambda + 4 * lambda, lambda)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
 
@@ -4072,9 +4072,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    lambda = manipulate::slider(lambda, lambda + 200, lambda)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
         if (type == "pdf" || type  == "pf") {
@@ -4092,9 +4092,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    lambda = manipulate::slider(lambda, lambda + 4 * lambda, lambda)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
 
@@ -4112,9 +4112,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    lambda = manipulate::slider(lambda, lambda + 4 * lambda, lambda)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
 
@@ -4128,9 +4128,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    lambda = manipulate::slider(lambda, lambda + 200, lambda)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
         if (type == "pdf" || type  == "pf") {
@@ -4148,9 +4148,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    lambda = manipulate::slider(lambda, lambda + 4 * lambda, lambda)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
         point <- qpois(p = p, lambda = argaddit$lambda, lower.tail=FALSE)
       }
@@ -4335,9 +4335,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  prob = manipulate::slider(0, 1, prob)
           )
         }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento!")
-        }
+        # if (gui == "tcltk") {
+        #   stop("Em desenvolvimento!")
+        # }
       }
       if (type == "cdf") {
         if (gui == "plot") {
@@ -4352,9 +4352,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  prob = manipulate::slider(0, 1, prob)
           )
         }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento!")
-        }
+        # if (gui == "tcltk") {
+        #   stop("Em desenvolvimento!")
+        # }
       }
       if (type == "pdf" || type  == "pf") {
         if(type == "pdf"){
@@ -4372,9 +4372,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  prob = manipulate::slider(0, 1, prob)
           )
         }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento!")
-        }
+        # if (gui == "tcltk") {
+        #   stop("Em desenvolvimento!")
+        # }
       }
 
       point <- qnbinom(c(p/2, 1 - p/2), size, prob)
@@ -4392,9 +4392,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    prob = manipulate::slider(0, 1, prob)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
 
@@ -4411,9 +4411,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    prob = manipulate::slider(0, 1, prob)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
         if (type == "pdf" || type  == "pf") {
@@ -4432,9 +4432,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    prob = manipulate::slider(0, 1, prob)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
 
@@ -4453,9 +4453,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    prob = manipulate::slider(0, 1, prob)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
 
@@ -4470,9 +4470,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    prob = manipulate::slider(0, 1, prob)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
         if (type == "pdf" || type  == "pf") {
@@ -4491,9 +4491,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    prob = manipulate::slider(0, 1, prob)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
         point <- qnbinom(p = p, size, prob, lower.tail=FALSE)
       }
@@ -4530,9 +4530,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  k = manipulate::slider(1, k+100, k)
           )
         }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento!")
-        }
+        # if (gui == "tcltk") {
+        #   stop("Em desenvolvimento!")
+        # }
       }
       if (type == "cdf") {
         if (gui == "plot") {
@@ -4548,9 +4548,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  k = manipulate::slider(1, k+100, k)
           )
         }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento!")
-        }
+        # if (gui == "tcltk") {
+        #   stop("Em desenvolvimento!")
+        # }
       }
       if (type == "pdf" || type  == "pf") {
         if(type == "pdf"){
@@ -4569,9 +4569,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                  k = manipulate::slider(1, k+100, k)
           )
         }
-        if (gui == "tcltk") {
-          stop("Em desenvolvimento!")
-        }
+        # if (gui == "tcltk") {
+        #   stop("Em desenvolvimento!")
+        # }
       }
 
       point <- qhyper(c(p/2, 1 - p/2), m, n, k,)
@@ -4590,9 +4590,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    k = manipulate::slider(1, k+100, k)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
 
@@ -4608,9 +4608,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    k = manipulate::slider(1, k+100, k)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
         if (type == "pdf" || type  == "pf") {
@@ -4630,9 +4630,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    k = manipulate::slider(1, k+100, k)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
 
@@ -4652,9 +4652,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    k = manipulate::slider(1, k+100, k)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
 
@@ -4670,9 +4670,9 @@ Q <- function(p, dist = "normal", lower.tail = TRUE, two.sided = FALSE, rounding
                                    k = manipulate::slider(1, k+100, k)
             )
           }
-          if (gui == "tcltk") {
-            stop("Em desenvolvimento!")
-          }
+          # if (gui == "tcltk") {
+          #   stop("Em desenvolvimento!")
+          # }
         }
 
         if (type == "pdf" || type  == "pf") {

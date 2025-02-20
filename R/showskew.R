@@ -2,9 +2,7 @@
 #'
 #' \code{showskew} Interpretation of asymmetry based on frequency distributions
 #'
-#' @param measures shows the measures of position or not (default \code{FALSE}).
-
-#' @return \code{showskew} returns a plot with the skewsness characteristics.
+#' @param mpos Logical. It shows the measures of position or not (default \code{FALSE}).
 #'
 #' @examples
 #' # Loading package

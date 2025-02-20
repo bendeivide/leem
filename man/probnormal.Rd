@@ -2,7 +2,7 @@
 % Please edit documentation in R/probnormal.R
 \name{probnormal}
 \alias{probnormal}
-\title{Draw a pie chart.}
+\title{Undertanding the probability of the normal distribution}
 \usage{
 probnormal(
   a = 1,
@@ -17,31 +17,45 @@ probnormal(
 )
 }
 \arguments{
-\item{col}{Character vector. Default \code{col = heat.colors(5)}.}
+\item{a}{lower limit. The default is \code{1}.}
 
-\item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
+\item{b}{upper limit. The default is \code{2}, and \code{b} must be greater than \code{a}.}
 
-\item{labels}{One or more expressions or character strings giving names for the slices}
+\item{col}{plot color. The default is \code{col = "lightblue"}.}
 
-\item{border}{Logical argument (default \code{FALSE}).}
+\item{mean}{parameter. The default is \code{0}.}
 
-\item{main}{Title name.}
+\item{sd}{parameter. The default is \code{1}.}
 
-\item{...}{further arguments passed to or from other methods.}
+\item{type}{type of visualization of the probability region plot. Default is \code{1}, others: \code{2, 3, 4, 5, 6}. See Details.}
+
+\item{rounding}{Numerical object. Rounds the values in its first argument to the specified number of decimal places (default \code{4}).}
+
+\item{zang}{Angle of the values on the Z-axis. Default is \code{zang = 0}.}
+
+\item{xang}{Angle of the values on the X-axis. Default is \code{xang = 0}.}
 }
 \description{
-Draw a pie chart.
+Using a graphical visualization, it is possible to understand the probabilities
+involved in a normal distribution.
+}
+\details{
+\itemize{
+\item \verb{type = 1,2}: \code{a} and \code{b} must be greater than \code{mean};
+\item \verb{type = 3,4}: \code{a} and \code{b} must be less than \code{mean};
+\item \verb{type = 5,6}: \code{a} and \code{b} can be any real value.
+}
 }
 \examples{
-library(leem)
-# Example 1
-school <- rep(c("high", "university", "basic"), 3:5)
-x <- sample(school, 30, TRUE) |>
-  new_leem() |>
-  tabfreq(ordered = c("basic", "high", "university"))
-# Example 2
-x <- rbinom(36, 10, 0.6)
-x <- new_leem(x, variable = "discrete")
-x <- tabfreq(x)
-piechart(x)
+\dontrun{
+probnormal(type = 2)
+probnormal(-1, 0, type = 3)
+probnormal(-1, 0, type = 4)
+probnormal(-1, 0, type = 5)
+probnormal(-1, 2, type = 5)
+probnormal(1, 2, type = 5)
+probnormal(1, 2, type = 6)
+}
+
+
 }

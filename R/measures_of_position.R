@@ -121,7 +121,6 @@ mpos <- function(x, trim = 0, na.rm = FALSE, rounding = 2, grouped = TRUE, detai
 #' set.seed(10)
 #' x <- rnorm(36, 100, 50)
 #' y <- rbinom(36, 10, 0.8)
-#' y <- rep(letters[1:4], 1:4)
 #' y |> new_leem(variable = "discrete") |> tabfreq() |> mean()
 #' x |> new_leem(variable = "continuous") |> tabfreq() |> mean()
 
@@ -250,7 +249,6 @@ median.leem <- function(x, na.rm = FALSE, rounding = 2, grouped = TRUE, details 
 #' @param rounding Numerical object. Rounds the values in its first argument to the specified number of decimal places (default \code{2}).
 #' @param grouped Logical object. Determines whether the measure of position result will be based on grouped data or not (default \code{TRUE}).
 #' @param details Logical object. Details of data (default \code{FALSE}).
-#' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
 #' library(leem)

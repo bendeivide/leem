@@ -39,7 +39,6 @@ Class method leem for the generic mean function
 set.seed(10)
 x <- rnorm(36, 100, 50)
 y <- rbinom(36, 10, 0.8)
-y <- rep(letters[1:4], 1:4)
 y |> new_leem(variable = "discrete") |> tabfreq() |> mean()
 x |> new_leem(variable = "continuous") |> tabfreq() |> mean()
 }

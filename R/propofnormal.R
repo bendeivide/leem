@@ -1,3 +1,10 @@
+#' Properties of the normal distribution
+#'
+#' Graphically it is possible to observe some properties of the normal distribution
+#'
+#' @param col color type.
+#' @param type numerical. Type of properties. Options: \code{1}, \code{2}, \code{3}, \code{4} and \code{5}. Default \code{code = 1}.
+
 #' @export
 propofnormal <- function(col = "lightblue2", type = 1){
   if (type == 1) {

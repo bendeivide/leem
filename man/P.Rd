@@ -28,6 +28,8 @@ P(
 
 \item{gui}{default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'none'}, \code{'rstudio'} or \code{'tcltk'}.}
 
+\item{main}{defalt is \code{NULL}; it represents title of plot.}
+
 \item{...}{additional arguments according to the chosen distribution.}
 }
 \value{

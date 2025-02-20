@@ -16,6 +16,8 @@ skewness(
 \arguments{
 \item{x}{R object (list) of class leem. Use \code{new_leem()} function.}
 
+\item{type}{character. methodology addressed. For now, we only have the \code{"pearson"} option (default).}
+
 \item{rounding}{Numerical object. Rounds the values in its first argument to the specified number of decimal places (default \code{2}).}
 
 \item{na.rm}{a logical value indicating whether \code{NA} values should be stripped before the computation proceeds.}

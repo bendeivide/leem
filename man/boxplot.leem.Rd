@@ -43,7 +43,6 @@ Produce box-and-whisker plot(s) of leem class object and computes the necessary 
 }
 \examples{
 library(leem)
-library(boxplot)
 # Example 1
 x <- rnorm(30, 100, 2) |>
   new_leem(variable = 2) |>

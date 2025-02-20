@@ -1,27 +1,39 @@
+#' Undertanding the probability of the normal distribution
 #'
+#' Using a graphical visualization, it is possible to understand the probabilities
+#' involved in a normal distribution.
 #'
-#' Draw a pie chart.
+#' @param a lower limit. The default is \code{1}.
+#' @param b upper limit. The default is \code{2}, and `b` must be greater than `a`.
+#' @param col plot color. The default is \code{col = "lightblue"}.
+#' @param mean parameter. The default is \code{0}.
+#' @param sd parameter. The default is \code{1}.
+#' @param type type of visualization of the probability region plot. Default is \code{1}, others: \code{2, 3, 4, 5, 6}. See Details.
+#' @param rounding Numerical object. Rounds the values in its first argument to the specified number of decimal places (default \code{4}).
+#' @param zang Angle of the values on the Z-axis. Default is \code{zang = 0}.
+#' @param xang Angle of the values on the X-axis. Default is \code{xang = 0}.
 #'
-#' @param x R object (list) of class leem. Use \code{new_leem()} function.
-#' @param labels One or more expressions or character strings giving names for the slices
-#' @param col Character vector. Default \code{col = heat.colors(5)}.
-#' @param border Logical argument (default \code{FALSE}).
-#' @param main Title name.
-#' @param ... further arguments passed to or from other methods.
+#' @details
+#' - `type = 1,2`: `a` and `b` must be greater than `mean`;
+#' - `type = 3,4`: `a` and `b` must be less than `mean`;
+#' - `type = 5,6`: `a` and `b` can be any real value.
+#'
 #' @examples
-#' library(leem)
-#' # Example 1
-#' school <- rep(c("high", "university", "basic"), 3:5)
-#' x <- sample(school, 30, TRUE) |>
-#'   new_leem() |>
-#'   tabfreq(ordered = c("basic", "high", "university"))
-#' # Example 2
-#' x <- rbinom(36, 10, 0.6)
-#' x <- new_leem(x, variable = "discrete")
-#' x <- tabfreq(x)
-#' piechart(x)
+#' \dontrun{
+#' probnormal(type = 2)
+#' probnormal(-1, 0, type = 3)
+#' probnormal(-1, 0, type = 4)
+#' probnormal(-1, 0, type = 5)
+#' probnormal(-1, 2, type = 5)
+#' probnormal(1, 2, type = 5)
+#' probnormal(1, 2, type = 6)
+#' }
+#'
+#'
 #' @export
-probnormal <- function(a = 1, b = 2, col = "lightblue", mean = 0, sd = 1, type = 1, rounding = 4, zang = 0, xang = 0) {
+probnormal <- function(a = 1, b = 2,
+                       col = "lightblue", mean = 0, sd = 1,
+                       type = 1, rounding = 4, zang = 0, xang = 0) {
   # Change decimals
   # op <- options(OutDec = ",")
   # Restart decimals
