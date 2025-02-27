@@ -391,6 +391,91 @@ msgstr "Deseja fechar?"
 msgid "Tell me something:"
 msgstr "Diga-me algo:"
 
+msgid "Critical point"
+msgstr "Ponto crítico"
+
+msgid "test \nstatistic"
+msgstr "Estatística \ndo teste"
+
+msgid "Test of proportion: Z-Test"
+msgstr "Teste de proporção: Teste Z"
+
+msgid "Test of hypothesis: Z-Test"
+msgstr "Teste de hipóteses: Teste Z"
+
+msgid "Step 1: Hypothesis"
+msgstr "Passo 1: Hipóteses"
+
+msgid  "ACCEPT"
+msgstr "ACEITA"
+
+msgid "Step 2: Significante level"
+msgstr "Passo 2: Nível de significância"
+
+msgid "Step 3: Rule of decision"
+msgstr "Passo 3: Regra de decisão"
+
+msgid "Step 4: Conclusion"
+msgstr "Passo 4: Conclusão"
+
+msgid "No evidence to reject"
+msgstr "Sem evidências para rejeitar"
+
+msgid "% probability"
+msgstr "% de probabilidade"
+
+msgid "We observed by the Z Test that there is no evidence to reject the H0 hypothesis, at the significance level of"
+msgstr "Observamos pelo teste Z que não há evidências para rejeitar a hipótese H0, ao nível significância de"
+
+msgid "As |ztest ="
+msgstr "Como |ztest ="
+
+msgid "As p-value ="
+msgstr "Como o valor-p ="
+
+msgid "then H0 is not rejected!"
+msgstr "então H0 não é rejeitado!"
+
+msgid "One Sample z-test (Two-sided test)"
+msgstr "Teste Z para uma amostra (Teste bilateral)"
+
+msgid "Step 1:"
+msgstr "Passo 1:"
+
+msgid "Hypothesis"
+msgstr "Hipóteses"
+
+msgid "Step 2:"
+msgstr "Passo 2:"
+
+msgid "Step 3:"
+msgstr "Passo 3:"
+
+msgid "Step 4:"
+msgstr "Passo 4:"
+
+msgid "Significance level"
+msgstr "Nível de significância"
+
+msgid "If |ztest| > |ztab| => Reject H0!"
+msgstr "Se |ztest| > |ztab| => Rejeita-se H0!"
+
+msgid "ztest - test statistic; ztab - critical point"
+msgstr "ztest - estatística do teste; ztab - ponto crítico"
+
+msgid "So..."
+msgstr "Então..."
+
+msgid "Otherwise..."
+msgstr "De outra forma..."
+
+msgid "Conclusion"
+msgstr "Conclusão"
+
+msgid "Rule of decision"
+msgstr "Regra de decisão"
+
+
 
 
 
