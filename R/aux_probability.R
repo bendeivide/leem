@@ -26,16 +26,20 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
   fy <- dnorm(y, mean = mu, sd = sigma)
   if (is.null(main)) {
     if (attr(q, "region") == "region1") {
-      main <- substitute(atop(bold("Probability function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+      main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region3") {
-      main <- substitute(atop(bold("Probability function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+      main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region5") {
-      main <- substitute(atop(bold("Probability function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+      main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region6") {
-      main <- substitute(atop(bold("Probability function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+      main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
   }
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
@@ -74,9 +78,10 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
     legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu, varen = sigma, parametros = parametros)))
   }
   if (attr(q, "region") == "region3") {
     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
@@ -90,17 +95,20 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu, varen = sigma, parametros = parametros)))
   }
   if ( attr(q, "region") == "region6") {
     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu, varen = sigma,
+                                    parametros = parametros)))
   }
 } # plotcurve (older)
 # RStudio
@@ -2282,16 +2290,26 @@ plotpnormalbrplot <- function(q, mu, sigma, rounding, main = NULL) {
   fy <- dnorm(y, mean = mu, sd = sigma)
   if (is.null(main)) {
     if (attr(q, "region") == "region2") {
-      main <- substitute(atop(bold("Probability function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+      main <- substitute(atop(bold(titulo),
+                              f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region4") {
-      main <- substitute(atop(bold("Probability function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+      main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region7") {
-      main <- substitute(atop(bold("Probability function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+      main <- substitute(atop(bold(titulo),
+                              f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region8") {
-      main <- substitute(atop(bold("Probability function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+      main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
   }
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
@@ -2322,33 +2340,41 @@ plotpnormalbrplot <- function(q, mu, sigma, rounding, main = NULL) {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu, varen = sigma,
+                                    parametros = parametros)))
   }
   if (attr(q, "region") == "region4") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<=~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu, varen = sigma,
+                                    parametros = parametros)))
   }
   if (attr(q, "region") == "region7") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<=~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu, varen = sigma,
+                                    parametros = parametros)))
   }
   if ( attr(q, "region") == "region8") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu, varen = sigma,
+                                    parametros = parametros)))
   }
 } # plotcurve (older)
 # RStudio and tcltk
@@ -2416,17 +2442,19 @@ plotptstudentbrplot <- function(q, df, rounding, main = NULL){
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X>t1)+P(X<t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
     legend(-llower, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~nu == df,
-                               list(df = nu)))
+           legend = substitute(parametros~nu == df,
+                               list(df = nu, parametros = parametros)))
   }
   if (attr(q, "region") == "region4") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X>=t1)+P(X<=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
     legend(-llower, legaux$text$y, bty="n", bg = "white",cex=0.8,
-           legend = substitute("Parameters:"~nu == df,
-                               list(df = nu)))
+           legend = substitute(parametros~nu == df,
+                               list(df = nu, parametros)))
   }
   if (attr(q, "region") == "region7") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
@@ -5312,7 +5340,10 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
   fx <- dnorm(x, mean = mu, sd = sigma)
   fy <- dnorm(y, mean = mu, sd = sigma)
   if (is.null(main)) {
-    main = substitute(atop(bold("Probability function plot: Normal"), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)), list(t = q))
+    titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+    main = substitute(atop(bold(titulo),
+                           f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
+                      list(t = q, titulo = titulo))
   }
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
@@ -5347,9 +5378,11 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
                                        list(q = qq, Pr = Pr)))
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
-         legend = substitute("Parameters:"~mu ==  mean ~ "," ~ sigma == varen,
-                             list(mean = mu, varen = sigma)))
+         legend = substitute(parametro~mu ==  mean ~ "," ~ sigma == varen,
+                             list(mean = mu, varen = sigma,
+                                  parametro = parametro)))
 }
 
 

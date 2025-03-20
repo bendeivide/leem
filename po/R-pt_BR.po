@@ -430,11 +430,14 @@ msgstr "Observamos pelo teste Z que não há evidências para rejeitar a hipóte
 msgid "As |ztest ="
 msgstr "Como |ztest ="
 
+msgid "As ztest ="
+msgstr "Como ztest ="
+
 msgid "As p-value ="
 msgstr "Como o valor-p ="
 
 msgid "then H0 is not rejected!"
-msgstr "então H0 não é rejeitado!"
+msgstr "então H0 não é rejeitada!"
 
 msgid "One Sample z-test (Two-sided test)"
 msgstr "Teste Z para uma amostra (Teste bilateral)"
@@ -460,6 +463,10 @@ msgstr "Nível de significância"
 msgid "If |ztest| > |ztab| => Reject H0!"
 msgstr "Se |ztest| > |ztab| => Rejeita-se H0!"
 
+msgid "If ztest > ztab => Reject H0!"
+msgstr "Se ztest > ztab => Rejeita-se H0!"
+
+
 msgid "ztest - test statistic; ztab - critical point"
 msgstr "ztest - estatística do teste; ztab - ponto crítico"
 
@@ -475,7 +482,29 @@ msgstr "Conclusão"
 msgid "Rule of decision"
 msgstr "Regra de decisão"
 
+msgid "Enter the value of population standard deviation:"
+msgstr "Insira o valor do desvio padrão populacional:"
 
+msgid "Enter the value of null hypothesis:"
+msgstr "Insira o valor da hipótese nula:"
 
+msgid "Enter the standard deviation value of population 1:"
+msgstr "Insira o desvio padrão da população 1:"
 
+msgid "Enter the standard deviation value of population 2:"
+msgstr "Insira o desvio padrão da população 2:"
 
+msgid "We observed by the Z Test that the null hypothesis was rejected, at the significance level of"
+msgstr "Observamos pelo teste Z que a hipótese nula foi rejeitada, ao nivel de significância de"
+
+msgid "then reject H0!"
+msgstr "então, rejeita-se H0!"
+
+msgid "was rejected"
+msgstr "foi rejeitada"
+
+msgid "One Sample z-test (Less test)"
+msgstr "Teste Z para uma amostra (Teste unilateral à esquerda)"
+
+msgid "One Sample z-test (Greater test)"
+msgstr "Teste Z para um amostra (Teste unilateral à direita)"

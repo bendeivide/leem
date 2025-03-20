@@ -125,7 +125,7 @@ stickchart <- function(x,
                       ...) {
   if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!", call. = FALSE, domain = "R-leem")
   if (attr(x, "variable") == "continuous") stop("The function only applies to discrete variables.", call. = FALSE, domain = "R-leem")
-  if (!is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
   if (attr(x, "variable") == "discrete") {
     numchar <- is.numeric(x$table$Groups)
     if (numchar) {
@@ -332,7 +332,7 @@ polyfreq.leem <- function(x,
                           lty = 2, # Type of line
                           ...) {
   if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!")
-  if (!is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
   if (attr(x, "variable") == "continuous") {
     xvar1 <- c(min(x$statistics$lower_lim) - x$statistics$len_class_interval, x$statistics$lower_lim,
                max(x$statistics$lower_lim) + x$statistics$len_class_interval)
@@ -513,7 +513,7 @@ hist.leem <- function(x,
                       barborder = "gray",
                       ...) {
   if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!")
-  if (!is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, ...)
   if (attr(x, "variable") == "discrete") {
     warning("Coerced to barplot!", call. = FALSE, domain = "R-leem")
     barplot(x, freq, bg, main, xlab, xlab, grids, bgcol, bgborder,

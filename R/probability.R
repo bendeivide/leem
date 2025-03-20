@@ -5,11 +5,6 @@
 #' @details The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
 #' The additional arguments represent the parameters of the distributions, that is:
 #'
-#' - \code{dist = "t-student"}: \code{nu} argument (\eqn{\nu}) represents the degrees of freedom parameter. The PDF is
-#' \deqn{
-#' \frac{\Gamma\left\( \frac{\nu + 1}{2} \right\)}{\sqrt{\nu \pi}}\left\(1 + \frac{x^2}{\nu}\right\)
-#' }
-#'
 #' @param q quantile. The \code{q} argument can have length 1 or 2. See Details.
 #' @param dist distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....
 #' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.
@@ -84,125 +79,12 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
         }
         if (gui == "tcltk") {
-          # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          # globalvariables <- function(x, value) {
-          #   assign(x, value, envir= .GlobalEnv)
-          # }
           # Desabilitar warnings global
           #options(warn = - 1)
           war <- options(warn = - 1)
 
-          tk_q1 <- leemset("tk_q1", tclVar(q[1]))
-          tk_q2 <- leemset("tk_q2", tclVar(q[2]))
-          tk_mean <- leemset("tk_mean", tclVar(mu))
-          tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-          # Solution: Inserted in gobalvariables file
-          # sapply(c("tk_q1", "tk_q2", "tk_mean", "tk_sigma"),
-          #        function(x) globalvariables(x, leemget(x)))
-          sapply(c("tk_q1", "tk_q2", "tk_mean", "tk_sigma"),
-                 function(x) leemget(x))
-          # q1 <- NULL
-          # q2 <- NULL
-          # nu <- NULL
-          ##
-          # Disabled GUI (Type I)
-          oldmode <- tclServiceMode(FALSE)
-          # Logo
-          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-          # Plot
-          tkplot <- tktoplevel()
-          #Icon main toplevel window
-          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-          # Title
-          tkwm.title(tkplot,
-                     gettext("leem package: Normal Distribution", domain = "R-leem"))
+          .tkplotleemnormal3(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
 
-          tkpack(tklabel(tkplot, text = "Parameters"))
-          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                      height = 500, fun = function(...) {
-                                        q1 <- as.numeric(tclvalue(tk_q1))
-                                        q2 <- as.numeric(tclvalue(tk_q2))
-                                        mu <- as.numeric(tclvalue(tk_mean))
-                                        sigma <- as.numeric(tclvalue(tk_sigma))
-                                        plotpnormalartcltk(q1 = q1, q2 = q2, mu = mu, sigma = sigma, rounding, main, q)
-                                      })
-          s02 <- tcltk::tkscale(
-            tkplot,
-            from = q[2],
-            to = maximo,
-            label = 'q2',
-            variable = tk_q2,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s01 <- tcltk::tkscale(
-            tkplot,
-            from = minimo,
-            to = q[2],
-            label = 'q1',
-            variable = tk_q1,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s03 <- tkscale(
-            tkplot,
-            from = mu,
-            to = mu + 2 * sigma,
-            label = 'mean',
-            variable = tk_mean,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s04 <- tkscale(
-            tkplot,
-            from = sigma,
-            to = 1.8 * sigma,
-            label = 'standard deviation',
-            variable = tk_sigma,
-            showvalue = TRUE,
-            resolution = 0.01,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          tkpack(s01, s02, s03, s04,
-                 side = "top",
-                 expand = TRUE,
-                 before = tkplot$env$canvas,
-                 fill = "both")
-          # Activate GUI
-          finish <- tclServiceMode(oldmode)
-          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-            response <- tk_messageBox(
-              title = gettext("Tell me something:", domain = "R-leem"),
-              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-              icon = "question",
-              type = "yesno"
-            )
-            if (response == "yes") {
-              if (exists("tk_q1", envir = .GlobalEnv)) {
-                rm("tk_q1", "tk_q2", "tk_df", envir = .GlobalEnv)
-              }
-              tkdestroy(tkplot)
-            }
-
-          })
           # Desabilitar warnings global
           #options(warn = - 1)
           #war <- options(warn = - 1)
@@ -1197,137 +1079,18 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
         }
-        # if (gui == "tcltk") {
-        #   # Environment of package
-           # envleem <- new.env(parent = base::emptyenv())
-        #   leemget <- function(x) {
-        #     get(x, envir= envleem, inherits=FALSE )
-        #   }
-          # leemset <- function(x, value) {
-          #   assign(x, value, envir= envleem)
-          # }
-        #   globalvariables <- function(x, value) {
-        #     assign(x, value, envir= .GlobalEnv)
-        #   }
-        #   # Desabilitar warnings global
-        #   #options(warn = - 1)
-        #   war <- options(warn = - 1)
-        #   # on.exit(options(war))
-        #   plotcurveaux <- function(q1 = q[1], q2 = q[2], mu = mu,  sigma = sigma, ...) {
-        #     q[1] <- q1
-        #     q[2] <- q2
-        #     plotcurve(q, mu, sigma)
-        #   }
-        #   tk_q1 <- leemset("tk_q1", tclVar(q[1]))
-        #   tk_q2 <- leemset("tk_q2", tclVar(q[2]))
-        #   tk_mean <- leemset("tk_mean", tclVar(mu))
-        #   tk_sigma <- leemset("tk_sigma", tclVar(sigma))
-        #   sapply(c("tk_q1", "tk_q2", "tk_mean", "tk_sigma"),
-        #          function(x) globalvariables(x, leemget(x)))
-        #   # q1 <- NULL
-        #   # q2 <- NULL
-        #   # nu <- NULL
-        #   ##
-        #   # Disabled GUI (Type I)
-        #   oldmode <- tclServiceMode(FALSE)
-        #   # Logo
-        #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-        #   # Plot
-        #   tkplot <- tktoplevel()
-        #   #Icon main toplevel window
-        #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-        #   # Title
-        #   tkwm.title(tkplot,
-        #              gettext("leem package: Normal Distribution", domain = "R-leem"))
-        #
-        #   tkpack(tklabel(tkplot, text = "Parameters"))
-        #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-        #                               height = 500, fun = function(...) {
-        #                                 q1 <- as.numeric(tclvalue(tk_q1))
-        #                                 q2 <- as.numeric(tclvalue(tk_q2))
-        #                                 mu <- as.numeric(tclvalue(tk_mean))
-        #                                 sigma <- as.numeric(tclvalue(tk_sigma))
-        #                                 plotpnormalbrtcltk(q1 = q1, q2 = q2, mu = mu, sigma = sigma, rounding, main, q)
-        #                               })
-        #   s02 <- tcltk::tkscale(
-        #     tkplot,
-        #     from = q[2],
-        #     to = maximo,
-        #     label = 'q2',
-        #     variable = tk_q2,
-        #     showvalue = TRUE,
-        #     resolution = 0.01,
-        #     repeatdelay = 200,
-        #     repeatinterval = 100,
-        #     orient = "hor"
-        #   )
-        #   s01 <- tcltk::tkscale(
-        #     tkplot,
-        #     from = minimo,
-        #     to = q[2],
-        #     label = 'q1',
-        #     variable = tk_q1,
-        #     showvalue = TRUE,
-        #     resolution = 0.01,
-        #     repeatdelay = 200,
-        #     repeatinterval = 100,
-        #     orient = "hor"
-        #   )
-        #   s03 <- tkscale(
-        #     tkplot,
-        #     from = mu,
-        #     to = mu + 2 * sigma,
-        #     label = 'mean',
-        #     variable = tk_mean,
-        #     showvalue = TRUE,
-        #     resolution = 1,
-        #     repeatdelay = 200,
-        #     repeatinterval = 100,
-        #     orient = "hor"
-        #   )
-        #   s04 <- tkscale(
-        #     tkplot,
-        #     from = sigma,
-        #     to = 1.8 * sigma,
-        #     label = 'standard deviation',
-        #     variable = tk_sigma,
-        #     showvalue = TRUE,
-        #     resolution = 0.01,
-        #     repeatdelay = 200,
-        #     repeatinterval = 100,
-        #     orient = "hor"
-        #   )
-        #   tkpack(s01, s02, s03, s04,
-        #          side = "top",
-        #          expand = TRUE,
-        #          before = tkplot$env$canvas,
-        #          fill = "both")
-        #   # Activate GUI
-        #   finish <- tclServiceMode(oldmode)
-        #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-        #     response <- tk_messageBox(
-        #       title = gettext("Tell me something:", domain = "R-leem"),
-        #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-        #       icon = "question",
-        #       type = "yesno"
-        #     )
-        #     if (response == "yes") {
-        #       if (exists("tk_q1", envir = .GlobalEnv)) {
-        #         rm("tk_q1", "tk_q2", "tk_df", envir = .GlobalEnv)
-        #       }
-        #       tkdestroy(tkplot)
-        #     }
-        #
-        #   })
-        #   # Desabilitar warnings global
-        #   #options(warn = - 1)
-        #   #war <- options(warn = - 1)
-        #   on.exit(options(war))
-        #   # prob <- round(pt(q[2], df = nu,
-        #   #                  lower.tail = T) + pt(q[1], df = nu, lower.tail = F), digits=rounding)
-        # }
-        # # Compute the desired probability
-        # prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
+        if (gui == "tcltk") {
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+
+          .tkplotleemnormal4(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
+
+          # Desabilitar warnings global
+          on.exit(options(war))
+        }
+        # Compute the desired probability
+        prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
       }
       if (dist == "t-student") {
         if (!any(names(argaddit) == "df")) {
@@ -2329,7 +2092,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           war <- options(warn = - 1)
           #on.exit(options(war))
 
-          # Plot tk da dist normal com q de comp 1
+          # Plot tk da dist normal com q de comp 1 (~/tkplotleem.R)
           .tkplotleemnormal(q, mu, sigma, rounding, main, minimo, maximo)
 
 

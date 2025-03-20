@@ -139,6 +139,8 @@
           - [ ] lower.tail = T/F
       - [X] Geometric
           - [X] lower.tail = T/F
+# leem 0.3.0
+  - [X] Bugs fixed in plots, no longer needing to use the tabfreq() function directly;
   - [X] *Test of Hypothesis*: `th()`
     - Distributions:
       - [X] Test of Normal: `ztest`
@@ -160,7 +162,7 @@
           - [X] less
           - [X] greater
 
-# leem 0.3.0
+# leem 1.0.0
 
 - [ ] Gradient colors of graphics take into account the weight of frequencies
 - [ ] Create 3d plots 
