@@ -1,20 +1,12 @@
-###########################
-## Auxiliar functions of P()
-###########################
+# Auxiliar functions of P()
 # Observations:
 #    - `%<=X<=%`() internal function
-################################################################################
-
-################################################################################
+# Continuous Distributions
 ## A-region (name: plot+p+name_distribution+ar+gui)
-################################################################################
 # OBS.: ar - A-region; gui: "plot", "rstudio", "tcltk"
-#-------------------------------------------------------------------------------
-#---------------------------- Continuous Distributions -------------------------
-#####################
+
 # Normal distribution
-#####################
-# Plot
+## Plot
 plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
   minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
   maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
@@ -111,13 +103,13 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
                                     parametros = parametros)))
   }
 } # plotcurve (older)
-# RStudio
+## RStudio
 plotpnormalarrstudio <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpnormalarplot(q, mu, sigma, rounding, main)
 }
-# Tcl/tk
+## Tcl/tk
 plotpnormalartcltk <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
@@ -125,10 +117,9 @@ plotpnormalartcltk <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
 }
 
 
-########################
+
 # T-Student distribution
-########################
-# Plot
+## Plot
 plotptstudentarplot <- function(q, df, rounding, main = NULL){
   nu <- df
   # Auxiliar function
@@ -142,16 +133,28 @@ plotptstudentarplot <- function(q, df, rounding, main = NULL){
   fy <- dt(y, df = nu)
   if (is.null(main)) {
     if (attr(q, "region") == "region1") {
-      main <- substitute(atop(bold("Probability function plot: T-student"), f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: T-student", domain = "R-leem")
+      main <- substitute(atop(bold(titulo),
+                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region3") {
-      main <- substitute(atop(bold("Probability function plot: T-student"), f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: T-student", domain = "R-leem")
+      main <- substitute(atop(bold(titulo),
+                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region5") {
-      main <- substitute(atop(bold("Probability function plot: T-student"), f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: T-student", domain = "R-leem")
+      main <- substitute(atop(bold(titulo),
+                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region6") {
-      main <- substitute(atop(bold("Probability function plot: T-student"), f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: T-student", domain = "R-leem")
+      main <- substitute(atop(bold(titulo),
+                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
   }
 
@@ -217,21 +220,23 @@ plotptstudentarplot <- function(q, df, rounding, main = NULL){
                                list(df = nu)))
   }
 }
-# RStudio
-plotptstudentarrstudio <- function(q1,q2, df, rounding, main = NULL, q){
+## RStudio
+plotptstudentarrstudio <- function(q1,q2, df, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotptstudentarplot(q, df, rounding, main)
 }
-# Tcl/tk
-## Soon...
+## Tcl/tk
+plotptstudentartcltk <- function(q1,q2, df, rounding, main = NULL, q) {
+  q[1] <- q1
+  q[2] <- q2
+  plotptstudentarplot(q, df, rounding, main)
+}
 
 
 
-##########################
 # Chi-Squared distribution
-##########################
-# Plot
+## Plot
 plotpchisqarplot <- function(q, df, ncp, rounding, main = NULL) {
   minimo <- if (q[1] <= ncp - 4 * df) ncp - 4 * df else 0
   maximo <- if (q[2] > ncp + 4 * df) q[2] + 4 * df else ncp + 4 * df
@@ -328,22 +333,17 @@ plotpchisqarplot <- function(q, df, ncp, rounding, main = NULL) {
                                list(ncpv = ncp, dfv = df)))
   }
 } # plotcurve (older)
-# RStudio
+## RStudio
 plotpchisqarrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpchisqarplot(q, df, ncp, rounding, main)
 }
-# Tcl/tk
+## Tcl/tk
 ## Soon...
 
-
-
-
-#####################
 # F distribution
-#####################
-# Plot
+## Plot
 plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
   minimo <- 0
   maximo <- 10
@@ -446,17 +446,17 @@ plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
                                list(df1v = df1, df2v = df2)))
   }
 } # plotcurve (older)
-# RStudio
+## RStudio
 plotpfarrstudio <- function(q1, q2, df1, df2, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpfarplot(q, df1, df2, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-#####################
 # Gumbel distribution
-#####################
-# Plot
+## Plot
 plotpgumbelarplot <- function(q, location, scale, rounding, main = NULL) {
   minimo <- if (q[1] <=  scale - 10 * scale) q[1] - 10 * scale else scale - 10 * scale
   maximo <- if (q[2] > scale + 10 * scale) q[2] + 10 * scale else scale + 10 * scale
@@ -545,17 +545,18 @@ plotpgumbelarplot <- function(q, location, scale, rounding, main = NULL) {
                                list(scalev = scale, locationv = location)))
   }
 } # plotcurve (older)
-# RStudio
+## RStudio
 plotpgumbelarrstudio <- function(q1, q2, location, scale, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpgumbelarplot(q, location, scale, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
 
-####################
 # Beta distribution
-####################
+## Plot
 plotpbetaarplot <- function(q, shape1, shape2, rounding, main = NULL) {
 
   x <- seq(0, q[1], by = 0.01)
@@ -652,14 +653,18 @@ plotpbetaarplot <- function(q, shape1, shape2, rounding, main = NULL) {
                                list(alphav = shape1, betav = shape2)))
   }
 }
+## RStudio
 plotpbetaarrstudio <- function(q1, q2, shape1, shape2, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpbetaarplot(q, shape1, shape2, rounding, main)
 }
-##########################
+## Tcl/tk
+## Soon...
+
+
 # Exponential distribution
-##########################
+## Plot
 plotpexparplot <- function(q, rate, rounding, main) {
   rmax <- q[2] + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
   x1 <- seq(0, q[1], by = 0.01)
@@ -761,15 +766,18 @@ plotpexparplot <- function(q, rate, rounding, main) {
                                list(rat = rate)))
   }
 }
+## RStudio
 plotpexparrstudio <- function(q1, q2, rate, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpexparplot(q, rate, rounding, main)
 }
-#####################
+## Tcl/tk
+## Soon...
+
+
 # Gamma distribution
-#####################
-# Plot
+## Plot
 plotpgammaarplot <- function(q, shape, rate, scale, rounding, main = NULL) {
   if (is.na(rate)){
     rate <- 1/scale
@@ -904,14 +912,17 @@ plotpgammaarplot <- function(q, shape, rate, scale, rounding, main = NULL) {
                                list(shapev = shape, ratev = rate, scalev = scale)))
   }
 }
+## RStudio
 plotpgammaarrstudio <- function(q1, q2, shape, rate, scale, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpgammaarplot(q, shape, rate, scale, rounding, main)
 }
-#####################
+## Tcl/tk
+## Soon...
+
+
 # Cauchy distribution
-#####################
 # Plot
 plotpcauchyarplot <- function(q, location, scale, rounding, main = NULL) {
   minimo <- if (q[1] <=  scale - 10 * scale) q[1] - 10 * scale else scale - 10 * scale
@@ -1007,12 +1018,12 @@ plotpcauchyarrstudio <- function(q1, q2, location, scale, rounding, main = NULL,
   q[2] <- q2
   plotpcauchyarplot(q, location, scale, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
 
-#######################
 # Logistic distribution
-#######################
-# Plot
+## Plot
 plotplogisarplot <- function(q, location, scale, rounding, main = NULL) {
   minimo <- if (q[1] <=  scale - 10 * scale) q[1] - 10 * scale else scale - 10 * scale
   maximo <- if (q[2] > scale + 10 * scale) q[2] + 10 * scale else scale + 10 * scale
@@ -1101,18 +1112,17 @@ plotplogisarplot <- function(q, location, scale, rounding, main = NULL) {
                                list(scalev = scale, locationv = location)))
   }
 } # plotcurve (older)
-# RStudio
+## RStudio
 plotplogisarrstudio <- function(q1, q2, location, scale, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotplogisarplot(q, location, scale, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-
-#################################
 # Logarithmic Normal distribution
-#################################
-# Plot
+## Plot
 plotplnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
   minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
   maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
@@ -1201,18 +1211,17 @@ plotplnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
                                list(media = mu, varen = sigma)))
   }
 } # plotcurve (older)
-# RStudio
+## RStudio
 plotplnormalarrstudio <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotplnormalarplot(q, mu, sigma, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-
-################################
 # Studentized Range distribution
-################################
-# Plot
+## Plot
 plotptukeyarplot <- function(q, nmeans, df, nranges, rounding, main = NULL) {
 #   minimo <- if (q[1] <= nranges - 4 * nranges) q[1] - 4 * nranges else nranges - 4 * nranges
 #   maximo <- if (q[2] > nranges + 4 * nranges) q[2] + 4 * nranges else nranges + 4 * nranges
@@ -1306,10 +1315,14 @@ plotptukeyarplot <- function(q, nmeans, df, nranges, rounding, main = NULL) {
 #   q[2] <- q2
 #   plotptukeyarplot(q, nmeans, df, nranges, rounding, main)
 }
-######################
+## RStudio
+## Soon...
+## Tcl/tk
+## Soon...
+
+
 # Weibull distribution
-######################
-# Plot
+## Plot
 plotpweibullarplot <- function(q, shape, scale, rounding, main = NULL) {
   minimo <- if (q[1] <= shape - 4 * shape) q[1] - 4 * shape else 0
   maximo <- if (q[2] > shape + 4 * shape) q[2] + 4 * shape else shape + 4 * shape
@@ -1398,17 +1411,21 @@ plotpweibullarplot <- function(q, shape, scale, rounding, main = NULL) {
                                list(shapev = shape, scalev = scale)))
   }
 }
+## RStudio
 plotpweibullarrstudio <- function(q1, q2, shape, scale, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpweibullarplot(q, shape, scale, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-#----------------------------- Discrete Distributions --------------------------
-######################
+
+# Discrete Distributions
+
+
 # Poisson distribution
-######################
-# Plot
+## Plot
 plotppoissonarplot <- function(q, lambda, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -1507,21 +1524,18 @@ plotppoissonarplot <- function(q, lambda, rounding, main = NULL){
                                list(lambd = lambda)))
   }
 }
-
-# RStudio
+## RStudio
 plotppoissonarrstudio <- function(q1, q2, lambda, rounding, main = NULL, q){
   q[1] <- q1
   q[2] <- q2
   plotppoissonarplot(q,lambda, rounding, main)
 }
-# Tcl/tk
+## Tcl/tk
 ## Soon...
 
 
-######################
 # Binomial distribution
-######################
-# Plot
+## Plot
 plotpbinomialarplot <- function(q, size, prob, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -1620,20 +1634,18 @@ plotpbinomialarplot <- function(q, size, prob, rounding, main = NULL){
                                list( N = size, P = prob)))
   }
 }
-#Rstudio
+## Rstudio
 plotpbinomialarrstudio <- function(q1, q2, size, prob, rounding, main = NULL, q){
   q[1] <- q1
   q[2] <- q2
   plotpbinomialarplot(q, size, prob, rounding, main)
 }
-# Tcl/tk
+## Tcl/tk
 ## Soon...
 
 
-
-################################
 # Negative Binomial distribution
-################################
+## Plot
 plotpnbinomarplot <- function(q, size, prob, rounding, main = NULL){
   if (is.double(q)) {
     if (attr(q, "region") == "region5") {
@@ -1730,15 +1742,18 @@ plotpnbinomarplot <- function(q, size, prob, rounding, main = NULL){
                                list(sizev = size, probv = prob)))
   }
 }
+## Rstudio
 plotpnbinomarrstudio <- function(q1, q2, size, prob, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpnbinomarplot(q, size, prob, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-#############################
+
 # Hypergeometric distribution
-#############################
+## Plot
 plotphyperarplot <- function(q, m, n, k, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -1837,15 +1852,18 @@ plotphyperarplot <- function(q, m, n, k, rounding, main = NULL){
                                list(mv = m, nv = n, kv = k)))
   }
 }
+## Rstudio
 plotphyperarrstudio <- function(q1, q2, m, n, k, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotphyperarplot(q, m, n, k, rounding, main)
 }
-########################
+## Tcl/tk
+## Soon...
+
+
 # Geometric distribution
-########################
-# Plot
+## Plot
 plotpgeomarplot <- function(q, prob, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -1944,16 +1962,18 @@ plotpgeomarplot <- function(q, prob, rounding, main = NULL){
                                list(probv = prob)))
   }
 }
+## Rstudio
 plotpgeomarrstudio <- function(q1, q2, prob, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpgeomarplot(q, prob, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-######################
+
 # Uniform distribution
-######################
-# Plot
+## Plot
 plotpunifarplot <- function(q, min, max, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -2052,16 +2072,18 @@ plotpunifarplot <- function(q, min, max, rounding, main = NULL){
                                list( A = min, B = max)))
   }
 }
+## Rstudio
 plotpunifarrstudio <- function(q1, q2, min, max, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpunifarplot(q, min, max, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
 
-#####################
 # Wilcoxon distribution
-#####################
+## Plot
 plotpwilcoxarplot <- function(q, m, n, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -2160,14 +2182,19 @@ plotpwilcoxarplot <- function(q, m, n, rounding, main = NULL){
                                list(mv = m, nv = n)))
   }
 }
+## Rstudio
 plotpwilcoxarrstudio <- function(q1, q2, m, n, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpwilcoxarplot(q, m, n, rounding, main)
 }
-##############################
+## Tcl/tk
+## Soon...
+
+
+
 # Signed Wilcoxon distribution
-##############################
+## Plot
 plotpswilcoxarplot <- function(q, n, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -2266,21 +2293,22 @@ plotpswilcoxarplot <- function(q, n, rounding, main = NULL){
                                list(nv = n)))
   }
 }
+## Rstudio
 plotpswilcoxarrstudio <- function(q1, q2, n, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpswilcoxarplot(q, n, rounding, main)
 }
-################################################################################
-## B-region (name: plot+p+name_distribution+br+gui)
-################################################################################
+
+
+
+# B-region (name: plot+p+name_distribution+br+gui)
 # OBS.: br - B-region; gui: "plot", "rstudio", "tcltk"
-#-------------------------------------------------------------------------------
-#---------------------------- Continuous Distributions -------------------------
-#####################
+
+# Continuous Distributions
+
 # Normal distribution
-#####################
-# Plot
+## Plot
 plotpnormalbrplot <- function(q, mu, sigma, rounding, main = NULL) {
   minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
   maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
@@ -2377,7 +2405,7 @@ plotpnormalbrplot <- function(q, mu, sigma, rounding, main = NULL) {
                                     parametros = parametros)))
   }
 } # plotcurve (older)
-# RStudio and tcltk
+# RStudio
 plotpnormalbrrstudio <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
@@ -2390,11 +2418,9 @@ plotpnormalbrtcltk <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
   plotpnormalbrplot(q, mu, sigma, rounding, main)
 }
 
-########################
 # T-Student distribution
-########################
-# Plot
-plotptstudentbrplot <- function(q, df, rounding, main = NULL){
+## Plot
+plotptstudentbrplot <- function(q, df, rounding, main = NULL) {
   nu <- df
   llower <- if(abs(q[1]) > 6) abs(q[1] + 2) else 6
   lupper <- if(abs(q[2]) > 6) abs(q[2] + 2) else 6
@@ -2404,16 +2430,28 @@ plotptstudentbrplot <- function(q, df, rounding, main = NULL){
   fy <- dt(y, df = nu)
   if (is.null(main)) {
     if (attr(q, "region") == "region2") {
-      main <- substitute(atop(bold("Probability function plot: T-student"), f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: t-Student")
+      main <- substitute(atop(bold(titulo),
+                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region4") {
-      main <- substitute(atop(bold("Probability function plot: T-student"), f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: t-Student")
+      main <- substitute(atop(bold(titulo),
+                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region7") {
-      main <- substitute(atop(bold("Probability function plot: T-student"), f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: t-Student")
+      main <- substitute(atop(bold(titulo),
+                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region8") {
-      main <- substitute(atop(bold("Probability function plot: T-student"), f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      titulo <- gettext("Probability function plot: t-Student")
+      main <- substitute(atop(bold(titulo),
+                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
 
     }
   }
@@ -2473,18 +2511,21 @@ plotptstudentbrplot <- function(q, df, rounding, main = NULL){
                                list(df = nu)))
   }
 }
-# RStudio
-plotptstudentbrrstudio <- function(q1, q2, df, rounding, main = NULL, q){
+## RStudio
+plotptstudentbrrstudio <- function(q1, q2, df, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotptstudentbrplot(q, df, rounding, main)
 }
-# Tcl/tk
-## Soon...
-##########################
+## Tcl/tk
+plotptstudentbrtcltk <- function(q1, q2, df, rounding, main = NULL, q) {
+  q[1] <- q1
+  q[2] <- q2
+  plotptstudentbrplot(q, df, rounding, main)
+}
+
 # Chi-Squared distribution
-##########################
-# Plot
+## Plot
 plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
   minimo <- if (q[1] <= ncp - 4 * df) ncp - 4 * df else 0
   maximo <- if (q[2] > ncp + 4 * df) q[2] + 4 * df else ncp + 4 * df
@@ -2570,21 +2611,17 @@ plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
                                list(ncpv = ncp, dfv = df)))
   }
 } # plotcurve (older)
-# RStudio and tcltk
+## RStudio
 plotpchisqbrrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpchisqbrplot(q, df, ncp, rounding, main)
 }
-# Tcl/tk
+## Tcl/tk
 ## Soon...
 
-
-
-#####################
 # F distribution
-#####################
-# Plot
+## Plot
 plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
   minimo <- 0
   maximo <- 10
@@ -2673,17 +2710,17 @@ plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
                                list(df1v = df1, df2v = df2)))
   }
 } # plotcurve (older)
-# RStudio and tcltk
+## RStudio
 plotpfbrrstudio <- function(q1, q2, df1, df2, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpfbrplot(q, df1, df2, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-#####################
 # Gumbel distribution
-#####################
-# Plot
+## Plot
 plotpgumbelbrplot <- function(q, location, scale, rounding, main = NULL) {
   minimo <- if (q[1] <=  scale - 10 * scale) q[1] - 10 * scale else scale - 10 * scale
   maximo <- if (q[2] > scale + 10 * scale) q[2] + 10 * scale else scale + 10 * scale
@@ -2762,17 +2799,17 @@ plotpgumbelbrplot <- function(q, location, scale, rounding, main = NULL) {
                                list(scalev = scale, locationv = location)))
   }
 }
-
-# RStudio and tcltk
+## RStudio
 plotpgumbelbrrstudio <- function(q1, q2, location, scale, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpgumbelbrplot(q, location, scale, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-####################
 # Beta distribution
-####################
+## Plot
 plotpbetabrplot <- function(q, shape1, shape2, rounding, main = NULL) {
 
   x <- seq(q[1],q[2], by = 0.01)
@@ -2860,14 +2897,17 @@ if ( attr(q, "region") == "region8") {
                              list(alphav = shape1, betav = shape2)))
 }
 }
+## RStudio
 plotpbetabrrstudio <- function(q1, q2, shape1, shape2, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpbetabrplot(q, shape1, shape2, rounding, main)
 }
-##########################
+## Tcl/tk
+## Soon...
+
 # Exponential distribution
-##########################
+## Plot
 plotpexpbrplot <- function(q, rate, rounding, main = NULL){
   rmax <- q[2] + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
   x <- seq(q[1], q[2], by = 0.01)
@@ -2962,15 +3002,17 @@ plotpexpbrplot <- function(q, rate, rounding, main = NULL){
                                list(rat = rate)))
   }
 }
+## RStudio
 plotpexpbrrstudio <- function(q1, q2, rate, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpexpbrplot(q, rate, rounding, main)
 }
-#####################
+## Tcl/tk
+## Soon...
+
 # Gamma distribution
-#####################
-# Plot
+## Plot
 plotpgammabrplot <- function(q, shape, rate, scale, rounding, main = NULL) {
   if (is.na(rate)){
     rate <- 1/scale
@@ -3092,16 +3134,18 @@ plotpgammabrplot <- function(q, shape, rate, scale, rounding, main = NULL) {
                                list(shapev = shape, ratev = rate, scalev = scale)))
   }
 }
+## RStudio
 plotpgammabrrstudio <- function(q1, q2, shape, rate, scale, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpgammabrplot(q, shape, rate, scale, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-#####################
+
 # Cauchy distribution
-#####################
-# Plot
+## Plot
 plotpcauchybrplot <- function(q, location, scale, rounding, main = NULL) {
   minimo <- if (q[1] <=  scale - 10 * scale) q[1] - 10 * scale else scale - 10 * scale
   maximo <- if (q[2] > scale + 10 * scale) q[2] + 10 * scale else scale + 10 * scale
@@ -3180,18 +3224,19 @@ plotpcauchybrplot <- function(q, location, scale, rounding, main = NULL) {
                                list(scalev = scale, locationv = location)))
   }
 }
-
-# RStudio and tcltk
+## RStudio
 plotpcauchybrrstudio <- function(q1, q2, location, scale, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpcauchybrplot(q, location, scale, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-#######################
+
+
 # Logistic distribution
-#######################
-# Plot
+## Plot
 plotplogisbrplot <- function(q, location, scale, rounding, main = NULL) {
   minimo <- if (q[1] <=  scale - 10 * scale) q[1] - 10 * scale else scale - 10 * scale
   maximo <- if (q[2] > scale + 10 * scale) q[2] + 10 * scale else scale + 10 * scale
@@ -3270,18 +3315,18 @@ plotplogisbrplot <- function(q, location, scale, rounding, main = NULL) {
                                list(scalev = scale, locationv = location)))
   }
 }
-
-# RStudio and tcltk
+## RStudio
 plotplogisbrrstudio <- function(q1, q2, location, scale, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotplogisbrplot(q, location, scale, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-#################################
+
 # Logarithmic Normal distribution
-#################################
-# Plot
+## Plot
 plotplnormalbrplot <- function(q, mu, sigma, rounding, main = NULL) {
   minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
   maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
@@ -3360,21 +3405,27 @@ plotplnormalbrplot <- function(q, mu, sigma, rounding, main = NULL) {
                                list(media = mu, varen = sigma)))
   }
 } # plotcurve (older)
-# RStudio and tcltk
+## RStudio
 plotplnormalbrrstudio <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotplnormalbrplot(q, mu, sigma, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-
-################################
 # Studentized Range distribution
-################################
-#####################
+## Plot
+## Soon...
+
+## RStudio
+## Soon...
+
+## Tcl/tk
+## Soon...
+
 # Weibull distribution
-#####################
-# Plot
+## Plot
 plotpweibullbrplot <- function(q, shape, scale, rounding, main = NULL) {
   minimo <- if (q[1] <= shape - 4 * shape) q[1] - 4 * shape else 0
   maximo <- if (q[2] > shape + 4 * shape) q[2] + 4 * shape else shape + 4 * shape
@@ -3453,17 +3504,20 @@ plotpweibullbrplot <- function(q, shape, scale, rounding, main = NULL) {
                                list(shapev = shape, scalev = scale)))
   }
 }
+## RStudio
 plotpweibullbrrstudio <- function(q1, q2, shape, scale, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpweibullbrplot(q, shape, scale, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-#----------------------------- Discrete Distributions --------------------------
-######################
+# Discrete Distributions
+
+
 # Poisson distribution
-######################
-# Plot
+## Plot
 plotppoissonbrplot <- function(q, lambda, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -3545,20 +3599,19 @@ plotppoissonbrplot <- function(q, lambda, rounding, main = NULL){
          legend = substitute("Parameters:"~lambda == lambd,
                              list(lambd = lambda)))
 }
-# RStudio
+## RStudio
 plotppoissonbrrstudio <- function(q1, q2, lambda, rounding, main = NULL, q){
   q[1] <- q1
   q[2] <- q2
   plotppoissonbrplot(q, lambda, rounding, main)
 }
-# Tcl/tk
+## Tcl/tk
 ## Soon...
 
 
-######################
+
 # Binomial distribution
-######################
-# Plot
+## Plot
 plotpbinomialbrplot <- function(q, size, prob, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -3635,7 +3688,7 @@ plotpbinomialbrplot <- function(q, size, prob, rounding, main = NULL){
          legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
                              list( N = size, P = prob)))
 }
-# RStudio
+## RStudio
 plotpbinomialbrrstudio <- function(q1, q2, size, prob, rouding, main = NULL, q){
   q[1] <- q1
   q[2] <- q2
@@ -3644,9 +3697,9 @@ plotpbinomialbrrstudio <- function(q1, q2, size, prob, rouding, main = NULL, q){
 # Tcl/tk
 ## Soon...
 
-################################
+
 # Negative Binomial distribution
-################################
+## Plot
 plotpnbinombrplot <- function(q, size, prob, rounding, main = NULL){
 
   if (is.double(q)) {
@@ -3727,17 +3780,18 @@ plotpnbinombrplot <- function(q, size, prob, rounding, main = NULL){
          legend = substitute("Parameters:"~n == sizev ~ "," ~ p == probv,
                              list(sizev = size, probv = prob)))
 }
+## RStudio
 plotpnbinombrrstudio <- function(q1, q2, size, prob, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpnbinombrplot(q, size, prob, rounding, main)
 }
+# Tcl/tk
+## Soon...
 
 
-#############################
 # Hypergeometric distribution
-#############################
-# Plot
+## Plot
 plotphyperbrplot <- function(q, m, n, k, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -3817,16 +3871,18 @@ plotphyperbrplot <- function(q, m, n, k, rounding, main = NULL){
          legend = substitute("Parameters:"~m == mv~";"~ n == nv ~";"~ k == kv,
                              list(mv = m, nv = n, kv = k)))
 }
+## RStudio
 plotphyperbrrstudio <- function(q1, q2, m, n, k, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotphyperbrplot(q, m, n, k, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-########################
+
 # Geometric distribution
-########################
-# Plot
+## Plot
 plotpgeombrplot <- function(q, prob, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -3908,16 +3964,17 @@ plotpgeombrplot <- function(q, prob, rounding, main = NULL){
          legend = substitute("Parameters:"~prob == probv,
                              list(probv = prob)))
 }
+## RStudio
 plotpgeombrrstudio <- function(q1, q2, prob, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpgeombrplot(q, prob, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-######################
 # Uniform distribution
-######################
-# Plot
+## Plot
 plotpunifbrplot <- function(q, min, max, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -3994,17 +4051,18 @@ plotpunifbrplot <- function(q, min, max, rounding, main = NULL){
          legend = substitute("Parameters:"~ a == A ~ "," ~ b == B,
                              list( A = min, B = max)))
 }
+## RStudio
 plotpunifbrrstudio <- function(q1, q2, min, max, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpunifbrplot(q, min, max, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
 
-#####################
 # Wilcoxon distribution
-#####################
-# Plot
+## Plot
 plotpwilcoxbrplot <- function(q, m, n, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -4084,17 +4142,18 @@ plotpwilcoxbrplot <- function(q, m, n, rounding, main = NULL){
          legend = substitute("Parameters:"~m == mv~";"~ n == nv,
                              list(mv = m, nv = n)))
 }
+## RStudio
 plotpwilcoxbrrstudio <- function(q1, q2, m, n, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpwilcoxbrplot(q, m, n, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
 
-##############################
 # Signed Wilcoxon distribution
-##############################
-# Plot
+## Plot
 plotpswilcoxbrplot <- function(q, n, rounding, main = NULL){
   # readjusting the range
   ## ab-region
@@ -4174,25 +4233,24 @@ plotpswilcoxbrplot <- function(q, n, rounding, main = NULL){
          legend = substitute("Parameters:"~n == nv,
                              list(nv = n)))
 }
+## RStudio
 plotpswilcoxbrrstudio <- function(q1, q2, n, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpswilcoxbrplot(q, n, rounding, main)
 }
+## Tcl/tk
+## Soon...
 
-################################################################################
-## lower.tail = TRUE (name: plot+q+name_distribution+ltt+type_distribution)
-################################################################################
+# lower.tail = TRUE (name: plot+q+name_distribution+ltt+type_distribution)
 # OBS.: lt - lower.tail; ltt - lower.tail == TRUE;
 #       type_distribution: cdf - cumulative distribution function;
-#       pdf - probability density function
-#-------------------------------------------------------------------------------
-#---------------------------- Continuous Distributions -------------------------
-#####################
-# Normal distribution
-#####################
+#                          pdf - probability density function
 
-# Plot
+# Continuous Distributions
+
+# Normal distribution
+## Plot
 plotpnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
   minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
@@ -4240,22 +4298,22 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
   legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
          legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
                              list(media = mu, varen = sigma, paramet = paramet)))
-} # plotcurve (older)
+}
 
-
-########################
 # T-Student distribution
-########################
-# Plot
+## Plot
 plotptstudentlttplot <- function(q, df, rounding, main = NULL){
   nu <- df
-  lim <- if(abs(q) > 6) abs(q + 2) else 6
+  lim <- if (abs(q) > 6) abs(q + 2) else 6
   x <- seq(-lim, q, by=0.01)
   y <- seq(q, lim, by=0.01)
   fx <- dt(x, df = nu)
   fy <- dt(y, df = nu)
-  if(is.null(main)){
-    main <- substitute(atop(bold("Probability function plot: T-student"), f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
+  if (is.null(main)) {
+    titulo <- gettext("Probability function plot: t-Student", domain = "R-leem")
+    main <- substitute(atop(bold(titulo),
+                            f[X](x) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)),
+                       list(t1 = q, x = "x", titulo = titulo))
   }
   curve(dt(x, df = nu), -lim, lim, ylab = expression(f[X](X)),
         xlab="X", ylim = c(0, 1.2 * max(c(fx, fy))), panel.first = grid(col = "gray90"),
@@ -4285,18 +4343,14 @@ plotptstudentlttplot <- function(q, df, rounding, main = NULL){
   legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                    legend = substitute(Fx(q)==P(X<=~q)*"="~Pr,
                                        list(q = qq, Pr = Pr)))
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(-lim, legaux$text$y, bty="n", bg = "white",cex=0.8,
-         legend = substitute("Parameters:"~nu == df,
-                             list(df = nu)))
+         legend = substitute(parametro~nu == df,
+                             list(df = nu, parametro = parametro)))
 }
 
-
-
-##########################
 # Chi-Squared distribution
-##########################
-
-# Plot
+## Plot
 plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
   minimo <- if (q <=  ncp - 4 * df) q - 4 * df else 0
   maximo <- if (q > ncp + 4 * df) q + 4 * df else ncp + 4 * df
@@ -4351,13 +4405,8 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
                              list(ncpv = ncp, dfv = df)))
 }
 
-
-
-#####################
 # F distribution
-#####################
-
-# Plot
+## Plot
 plotpflttplot <- function(q, df1, df2, rounding, main = NULL) {
   minimo <- 0
   maximo <- 10
@@ -4414,12 +4463,8 @@ plotpflttplot <- function(q, df1, df2, rounding, main = NULL) {
                              list(df1v = df1, df2v = df2)))
 } # plotcurve (older)
 
-
-#####################
 # Gumbel distribution
-#####################
-
-# Plot
+## Plot
 plotpgumbellttplot <- function(q, location, scale, rounding, main = NULL){
     minimo <- if (q <=  scale - 10 * location) q - 10 * location else scale - 10 * location
     maximo <- if (q > scale + 10 * location) q + 10 * location else scale + 10 * location
@@ -4467,9 +4512,8 @@ plotpgumbellttplot <- function(q, location, scale, rounding, main = NULL){
 
 }
 
-#####################
 # Beta distribution
-#####################
+## Plot
 plotpbetalttplot <- function(q, shape1, shape2, rounding, main) {
   x <- seq(0, q, by = 0.01)
   y <- seq(0, 1, by = 0.01)
@@ -4522,9 +4566,7 @@ plotpbetalttplot <- function(q, shape1, shape2, rounding, main) {
                              list(q = qq, Pr = Pr, alphav = shape1, betav= shape2)))
 }
 
-##########################
 # Exponential distribution
-##########################
 plotpexplttplot <- function(q, rate, rounding, main = NULL) {
   rmin <- 0
   rmax <- q + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
@@ -4579,11 +4621,8 @@ plotpexplttplot <- function(q, rate, rounding, main = NULL) {
                              list(rat = rate)))
 }
 
-#####################
 # Gamma distribution
-#####################
-
-# Plot
+## Plot
 plotpgammalttplot <- function(q, shape, rate, scale, rounding, main = NULL) {
   if(is.na(rate)){
     rate <- 1/scale
@@ -4655,12 +4694,8 @@ plotpgammalttplot <- function(q, shape, rate, scale, rounding, main = NULL) {
                              list(shapev = shape, ratev = rate, scalev = scale)))
 } # plotcurve (older)
 
-
-#####################
 # Cauchy distribution
-#####################
-
-# Plot
+## Plot
 plotpcauchylttplot <- function(q, location, scale, rounding, main = NULL){
   minimo <- if (q <=  scale - 10 * scale) q - 10 * scale else scale - 10 * scale
   maximo <- if (q > scale + 10 * scale) q + 10 * scale else scale + 10 * scale
@@ -4708,11 +4743,8 @@ plotpcauchylttplot <- function(q, location, scale, rounding, main = NULL){
 
 }
 
-#######################
 # Logistic distribution
-#######################
-
-# Plot
+## Plot
 plotplogislttplot <- function(q, location, scale, rounding, main = NULL){
   minimo <- if (q <=  scale - 10 * location) q - 10 * location else scale - 10 * location
   maximo <- if (q > scale + 10 * location) q + 10 * location else scale + 10 * location
@@ -4760,11 +4792,8 @@ plotplogislttplot <- function(q, location, scale, rounding, main = NULL){
 
 }
 
-#################################
 # Logarithmic Normal distribution
-#################################
-
-# Plot
+## Plot
 plotplnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
   minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
@@ -4811,13 +4840,11 @@ plotplnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
                              list(media = mu, varen = sigma)))
 } # plotcurve (older)
 
-
-################################
 # Studentized Range distribution
-################################
-######################
+## plot
+## Soon...
+
 # Weibull distribution
-######################
 ##
 # Plot
 plotpweibulllttplot <- function(q, shape, scale, rounding, main = NULL) {
@@ -4867,11 +4894,10 @@ plotpweibulllttplot <- function(q, shape, scale, rounding, main = NULL) {
 } # plotcurve (older)
 
 
-#----------------------------- Discrete Distributions --------------------------
-######################
+# Discrete Distributions
+
 # Poisson distribution
-######################
-# Plot
+## Plot
 plotppoissonlttplot <- function(q, lambda, rounding, main = NULL){
   rmin <- if (q < lambda) trunc(q - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -4925,11 +4951,8 @@ plotppoissonlttplot <- function(q, lambda, rounding, main = NULL){
 }
 
 
-
-#######################
 # Binomial distribution
-#######################
-# Plot
+## Plot
 plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
   rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -4979,11 +5002,8 @@ plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
                              list( N = size, P = prob)))
 }
 
-
-
-################################
 # Negative Binomial distribution
-################################
+## Plot
 plotpnbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
   rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -5033,10 +5053,8 @@ plotpnbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
                              list( N = size, P = prob)))
 }
 
-#############################
 # Hypergeometric distribution
-#############################
-# Plot
+## Plot
 plotphyperlttplot <- function(q, m, n, k, rounding, main = NULL){
   rmin <- if (q < k) trunc(q - 4 * sqrt(k)) else trunc(k - 4 * sqrt(k))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -5089,12 +5107,8 @@ plotphyperlttplot <- function(q, m, n, k, rounding, main = NULL){
                              list(mv = m, nv = n, kv = k)))
 }
 
-
-
-########################
 # Geometric distribution
-########################
-# Plot
+## Plot
 plotpgeomlttplot <- function(q, prob, rounding, main = NULL){
   rmin <- if (q < 10*prob) trunc(q - 4 * sqrt(10*prob)) else trunc(10*prob - 4 * sqrt(10*prob))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -5147,12 +5161,8 @@ plotpgeomlttplot <- function(q, prob, rounding, main = NULL){
                              list(probv = prob)))
 }
 
-
-
-#######################
 # Uniform distribution
-#######################
-# Plot
+## Plot
 plotpuniflttplot <- function(q, min, max, rounding, main = NULL){
   rmin <- if (q < min) trunc(q - 4 * sqrt(min)) else trunc(min - 4 * sqrt(min))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -5202,12 +5212,8 @@ plotpuniflttplot <- function(q, min, max, rounding, main = NULL){
                              list( A = min, B = max)))
 }
 
-
-
-#####################
 # Wilcoxon distribution
-#####################
-# Plot
+## Plot
 plotpwilcoxlttplot <- function(q, m, n, rounding, main = NULL){
   rmin <- if (q < m+n) trunc(q - 4 * sqrt(m+n)) else trunc(m+n - 4 * sqrt(m+n))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -5260,12 +5266,8 @@ plotpwilcoxlttplot <- function(q, m, n, rounding, main = NULL){
                              list(mv = m, nv = n)))
 }
 
-
-
-##############################
 # Signed Wilcoxon distribution
-##############################
-# Plot
+## Plot
 plotpswilcoxlttplot <- function(q, n, rounding, main = NULL){
   rmin <- if (q < n) trunc(q - 4 * sqrt(n)) else trunc(n - 4 * sqrt(n))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -5320,18 +5322,15 @@ plotpswilcoxlttplot <- function(q, n, rounding, main = NULL){
 
 
 
-################################################################################
 ## lower.tail == FALSE (name: plot+q+name_distribution+ltf+type_distribution)
-################################################################################
 # OBS.: lt - lower.tail; ltf - lower.tail == FALSE;
 #       type_distribution: cdf - cumulative distribution function;
 #       pdf - probability density function
-#-------------------------------------------------------------------------------
-#---------------------------- Continuous Distributions -------------------------
-#####################
+
+# Continuous Distributions
+
 # Normal distribution
-#####################
-# Plot
+## Plot
 plotpnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
   minimo <- if (q <= mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
@@ -5385,13 +5384,9 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
                                   parametro = parametro)))
 }
 
-
-
-########################
 # T-Student distribution
-########################
-# Plot
-plotptstudentltfplot <- function(q, df, rounding, main = NULL){
+## Plot
+plotptstudentltfplot <- function(q, df, rounding, main = NULL) {
   nu <- df
   lim <- if(abs(q) > 6) abs(q + 2) else 6
   x <- seq(q, lim, by=0.01)
@@ -5399,7 +5394,10 @@ plotptstudentltfplot <- function(q, df, rounding, main = NULL){
   fx <- dt(x, df = nu)
   fy <- dt(y, df = nu)
   if(is.null(main)){
-    main <- substitute(atop(bold("Probability function plot: T-student"), f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~S[X](t1)== 1 - F[X](t1)~ "="*1 - integral(f[X](x)*"dx", -infinity, t1)~"="*P(X>= t1) == integral(f[X](x)*"dx", t1, infinity)), list(t1 = q, x = "x"))
+    titulo <- gettext("Probability function plot: t-Student", domain = "R-leem")
+    main <- substitute(atop(bold(titulo),
+                            f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~S[X](t1)== 1 - F[X](t1)~ "="*1 - integral(f[X](x)*"dx", -infinity, t1)~"="*P(X>= t1) == integral(f[X](x)*"dx", t1, infinity)),
+                       list(t1 = q, x = "x", titulo = titulo))
   }
   curve(dt(x, df = nu), -lim, lim, ylab = expression(f[X](x)),
         xlab="X", ylim = c(0, 1.2 * max(c(fx,fy))), panel.first = grid(col = "gray90"),
@@ -5430,17 +5428,14 @@ plotptstudentltfplot <- function(q, df, rounding, main = NULL){
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
                                        list(q = qq, Pr = Pr)))
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(-lim, legaux$text$y, bty="n", bg = "white",cex=0.8,
-         legend = substitute("Parameters:"~nu == df,
+         legend = substitute(parametro~nu == df,
                              list(df = nu)))
 }
 
-
-
-##########################
 # Chi-Squared distribution
-##########################
-# Plot
+## Plot
 plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
   minimo <- if (q <=  ncp - 4 * df) q - 4 * df else 0
   maximo <- if (q > ncp + 4 * df) q + 4 * df else ncp + 4 * df
@@ -5495,12 +5490,8 @@ plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
                              list(ncpv = ncp, dfv = df)))
 }
 
-
-
-#####################
 # F distribution
-#####################
-# Plot
+## Plot
 plotpfltfplot <- function(q, df1, df2, rounding, main = NULL) {
   minimo <- 0
   maximo <- 10
@@ -5559,12 +5550,8 @@ plotpfltfplot <- function(q, df1, df2, rounding, main = NULL) {
                              list(df1v = df1, df2v = df2)))
 }
 
-
-
-
-#####################
 # Gumbel distribution
-#####################
+## Plot
 plotpgumbelltfplot <- function(q, location, scale, rounding, main = NULL){
   minimo <- if (q <=  scale - 10 * location) q - 10 * location else scale - 10 * location
   maximo <- if (q > scale + 10 * location) q + 10 * location else scale + 10 * location
@@ -5613,9 +5600,8 @@ plotpgumbelltfplot <- function(q, location, scale, rounding, main = NULL){
                              list(scalev = scale, locationv = location)))
 }
 
-#####################
 # Beta distribution
-#####################
+## Plot
 plotpbetaltfplot <- function(q, shape1 , shape2, rounding, main = NULL ) {
 x <- seq(q, 1, by=0.01)
 y <- seq(0, 1, by=0.01)
@@ -5665,9 +5651,8 @@ legend(0, legaux$text$y, bty="n", bg = "white", cex=0.8,
                            list(alphav = shape1, betav = shape2)))
 }
 
-##########################
 # Exponential distribution
-##########################
+## Plot
 plotpexpltfplot <- function(q, rate, rounding, main = NULL) {
   rmin <- 0
   rmax <- (q + ceiling(1 / rate + 7 * sqrt(1 / rate^2)))
@@ -5733,10 +5718,8 @@ plotpexpltfplot <- function(q, rate, rounding, main = NULL) {
                              list(rat = rate)))
 }
 
-#####################
 # Gamma distribution
-#####################
-# Plot
+## Plot
 plotpgammaltfplot <- function(q, shape, rate, scale, rounding, main = NULL) {
   if(is.na(rate)){
     rate <- 1/scale
@@ -5813,11 +5796,8 @@ plotpgammaltfplot <- function(q, shape, rate, scale, rounding, main = NULL) {
                              list(shapev = shape, ratev = rate, scalev = scale)))
 }
 
-
-
-#####################
 # Cauchy distribution
-#####################
+## Plot
 plotpcauchyltfplot <- function(q, location, scale, rounding, main = NULL){
   minimo <- if (q <=  scale - 10 * scale) q - 10 * scale else scale - 10 * scale
   maximo <- if (q > scale + 10 * scale) q + 10 * scale else scale + 10 * scale
@@ -5866,9 +5846,9 @@ plotpcauchyltfplot <- function(q, location, scale, rounding, main = NULL){
                              list(scalev = scale, locationv = location)))
 }
 
-#######################
+
 # Logistic distribution
-#######################
+## Plot
 plotplogisltfplot <- function(q, location, scale, rounding, main = NULL){
   minimo <- if (q <=  scale - 10 * location) q - 10 * location else scale - 10 * location
   maximo <- if (q > scale + 10 * location) q + 10 * location else scale + 10 * location
@@ -5917,10 +5897,9 @@ plotplogisltfplot <- function(q, location, scale, rounding, main = NULL){
                              list(scalev = scale, locationv = location)))
 }
 
-#################################
+
 # Logarithmic Normal distribution
-#################################
-# Plot
+## Plot
 plotplnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
   minimo <- if (q <= mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
@@ -5969,15 +5948,12 @@ plotplnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
                              list(mean = mu, varen = sigma)))
 }
 
-
-
-################################
 # Studentized Range distribution
-################################
-#####################
+## Plot
+## Soon...
+
 # Weibull distribution
-#####################
-# Plot
+## Plot
 plotpweibullltfplot <- function(q, shape, scale, rounding, main = NULL) {
   minimo <- if (q <= shape - 4 * shape) q - 4 * shape else 0
   maximo <- if (q > shape + 4 * shape) q + 4 * shape else shape + 4 * shape
@@ -6027,12 +6003,11 @@ plotpweibullltfplot <- function(q, shape, scale, rounding, main = NULL) {
 }
 
 
+# Discrete Distributions
 
-#----------------------------- Discrete Distributions --------------------------
-######################
+
 # Poisson distribution
-######################
-# Plot
+## Plot
 plotppoissonltfplot <- function(q, lambda, rounding, main = NULL){
   rmin <- if (q < lambda) trunc(q - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6087,12 +6062,8 @@ plotppoissonltfplot <- function(q, lambda, rounding, main = NULL){
                              list(lambd = lambda)), cex=0.8)
 }
 
-
-
-#######################
 # Binomial distribution
-#######################
-# Plot
+## Plot
 plotpbinomialltfplot <- function(q, size, prob, rounding, main = NULL){
   rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6144,12 +6115,8 @@ plotpbinomialltfplot <- function(q, size, prob, rounding, main = NULL){
                              list( N = size, P = prob)))
 }
 
-
-
-
-#################################
 # Negative Binomial distribution
-################################
+## Plot
 plotpnbinomialltfplot <- function(q, size, prob, rounding, main = NULL){
   rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6201,10 +6168,8 @@ plotpnbinomialltfplot <- function(q, size, prob, rounding, main = NULL){
                              list( N = size, P = prob)))
 }
 
-#############################
 # Hypergeometric distribution
-#############################
-# Plot
+## Plot
 plotphyperltfplot <- function(q, m, n, k, rounding, main = NULL){
   rmin <- if (q < k) trunc(q - 4 * sqrt(k)) else trunc(k - 4 * sqrt(k))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6259,12 +6224,8 @@ plotphyperltfplot <- function(q, m, n, k, rounding, main = NULL){
                              list(mv = m, nv = n, kv = k)))
 }
 
-
-
-########################
 # Geometric distribution
-########################
-# Plot
+## Plot
 plotpgeomltfplot <- function(q, prob, rounding, main = NULL){
   rmin <- if (q < 10*prob) trunc(q - 4 * sqrt(10*prob)) else trunc(10*prob - 4 * sqrt(10*prob))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6319,12 +6280,8 @@ plotpgeomltfplot <- function(q, prob, rounding, main = NULL){
                              list(probv = prob)))
 }
 
-
-
-#######################
 # Uniform distribution
-#######################
-# Plot
+## Plot
 plotpunifltfplot <- function(q, min, max, rounding, main = NULL){
   rmin <- if (q < min) trunc(q - 4 * sqrt(min)) else trunc(min - 4 * sqrt(min))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6376,13 +6333,8 @@ plotpunifltfplot <- function(q, min, max, rounding, main = NULL){
                              list( A = min, B = max)))
 }
 
-
-
-
-#############################
 # Wilcoxon distribution
-#############################
-# Plot
+## Plot
 plotpwilcoxltfplot <- function(q, m, n, rounding, main = NULL){
   rmin <- if (q < m+n) trunc(q - 4 * sqrt(m+n)) else trunc(m+n - 4 * sqrt(m+n))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6437,12 +6389,8 @@ plotpwilcoxltfplot <- function(q, m, n, rounding, main = NULL){
                              list(mv = m, nv = n)))
 }
 
-
-
-##############################
 # Signed Wilcoxon distribution
-##############################
-# Plot
+## Plot
 plotpswilcoxltfplot <- function(q, n, rounding, main = NULL){
   rmin <- if (q < n) trunc(q - 4 * sqrt(n)) else trunc(n - 4 * sqrt(n))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6498,19 +6446,15 @@ plotpswilcoxltfplot <- function(q, n, rounding, main = NULL){
 }
 
 
-
-################################################################################
 ## lower.tail == NULL (name: plot+q+name_distribution+ltn+type_distribution)
-################################################################################
 # OBS.: lt - lower.tail; ltn - lower.tail == NULL;
 #       type_distribution: cdf - cumulative distribution function;
 #       pdf - probability density function
-#-------------------------------------------------------------------------------
-#----------------------------- Discrete Distributions --------------------------
-######################
+
+# Discrete Distributions
+
 # Poisson distribution
-######################
-# Plot
+## Plot
 plotppoissonltnplot <- function(q, lambda, rounding, main = NULL){
   rmin <- if (q < lambda) trunc(q - 4 * sqrt(lambda)) else trunc(lambda - 4 * sqrt(lambda))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6561,10 +6505,8 @@ plotppoissonltnplot <- function(q, lambda, rounding, main = NULL){
                              list(lambd = lambda)), cex=0.8)
 }
 
-#######################
 # Binomial distribution
-######################
-# Plot
+## Plot
 plotpbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
   rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6615,12 +6557,8 @@ plotpbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
                              list( N = size, P = prob)),cex = 0.8)
 }
 
-
-
-
-################################
 # Negative Binomial distribution
-################################
+## Plot
 plotpnbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
   rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6671,10 +6609,8 @@ plotpnbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
                              list( N = size, P = prob)),cex = 0.8)
 }
 
-#############################
 # Hypergeometric distribution
-#############################
-# Plot
+## Plot
 plotphyperltnplot <- function(q, m, n, k, rounding, main = NULL){
   rmin <- if (q < k) trunc(q - 4 * sqrt(k)) else trunc(k - 4 * sqrt(k))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6725,10 +6661,8 @@ plotphyperltnplot <- function(q, m, n, k, rounding, main = NULL){
                              list(mv = m, nv = n, kv = k)))
 }
 
-########################
 # Geometric distribution
-########################
-# Plot
+## Plot
 plotpgeomltnplot <- function(q, prob, rounding, main = NULL){
   rmin <- if (q < 10*prob) trunc(q - 4 * sqrt(10*prob)) else trunc(10*prob - 4 * sqrt(10*prob))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6779,10 +6713,8 @@ plotpgeomltnplot <- function(q, prob, rounding, main = NULL){
                              list(probv = prob)))
 }
 
-#######################
 # Uniform distribution
-######################
-# Plot
+## Plot
 plotpunifltnplot <- function(q, min, max, rounding, main = NULL){
   rmin <- if (q < min) trunc(q - 4 * sqrt(min)) else trunc(min - 4 * sqrt(min))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6833,13 +6765,8 @@ plotpunifltnplot <- function(q, min, max, rounding, main = NULL){
                              list( A = min, B = max)))
 }
 
-
-
-
-#####################
 # Wilcoxon distribution
-#####################
-# Plot
+## Plot
 plotpwilcoxltnplot <- function(q, m, n, rounding, main = NULL){
   rmin <- if (q < m+n) trunc(q - 4 * sqrt(m+n)) else trunc(m+n - 4 * sqrt(m+n))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
@@ -6890,10 +6817,8 @@ plotpwilcoxltnplot <- function(q, m, n, rounding, main = NULL){
                              list(mv = m, nv = n)))
 }
 
-##############################
 # Signed Wilcoxon distribution
-##############################
-# Plot
+## Plot
 plotpswilcoxltnplot <- function(q, n, rounding, main = NULL){
   rmin <- if (q < n) trunc(q - 4 * sqrt(n)) else trunc(n - 4 * sqrt(n))
   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)

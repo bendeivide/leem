@@ -508,3 +508,24 @@ msgstr "Teste Z para uma amostra (Teste unilateral à esquerda)"
 
 msgid "One Sample z-test (Greater test)"
 msgstr "Teste Z para um amostra (Teste unilateral à direita)"
+
+msgid "Probability function plot: t-Student"
+msgstr "Gráfico da FDP: t-Student"
+
+msgid "Enter the value of 'mean' argument:"
+msgstr "Insira o valor do argumento 'mean':"
+
+msgid "Enter the value of 'sd' argument:"
+msgstr "Insira o valor do argumento 'sd':"
+
+msgid "The 'sd' argument must be greater then zero!"
+msgstr "O argumento 'sd' deve ser maior que zero!"
+
+msgid "Enter the value of 'df' argument:"
+msgstr "Insira o valor do argumento 'df':"
+
+msgid "leem package: t-Student Distribution"
+msgstr "Pacote leem: Distribuição t de Student"
+
+msgid "Degree of freedom"
+msgstr "Grau de liberdade"

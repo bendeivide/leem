@@ -105,7 +105,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         nu <- argaddit$df
 
         #Auxiliary Arguments
-        llower <- if(abs(q[1]) > 6) abs(q[1] + 2) else 6
+        llower <- if(abs(q[1]) < -6) abs(q[1] - 2) else -6
         lupper <- if(abs(q[2]) > 6) abs(q[2] + 2) else 6
 
 
@@ -114,128 +114,25 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotptstudentarrstudio(q1, q2, df, rounding, main, q),
-                                 q1 = manipulate::slider(-llower, q[2], q[1]),
+                                 q1 = manipulate::slider(llower, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], lupper, q[2]),
                                  df = manipulate::slider(1, nu + 100, nu))
         }
-        # if (gui == "tcltk") {
-        #   # Environment of package
-        envleem <- new.env(parent = base::emptyenv())
-          leemget <- function(x) {
-            get(x, envir= envleem, inherits=FALSE )
-          }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-        #   globalvariables <- function(x, value) {
-        #     assign(x, value, envir= .GlobalEnv)
-        #   }
-        #   # Desabilitar warnings global
-        #   #options(warn = - 1)
-        #   war <- options(warn = - 1)
-        #   # on.exit(options(war))
-        #
-        #   plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
-        #     q[1] <- q1
-        #     q[2] <- q2
-        #     plotcurve(q, nu)
-        #   }
-          tk_q1 <- leemset("tk_q1", tclVar(q[1]))
-          tk_q2 <- leemset("tk_q2", tclVar(q[2]))
-          tk_df <- leemset("tk_df", tclVar(nu))
-        #   sapply(c("tk_q1", "tk_q2", "tk_df"),
-        #          function(x) globalvariables(x, leemget(x)))
-            sapply(c("tk_q1", "tk_q2", "tk_df"),
-                   function(x) leemget(x))
-        #   # q1 <- NULL
-        #   # q2 <- NULL
-        #   # nu <- NULL
-        #   ##
-        #   # Disabled GUI (Type I)
-        #   oldmode <- tclServiceMode(FALSE)
-        #   # Logo
-        #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-        #   # Plot
-        #   tkplot <- tktoplevel()
-        #   #Icon main toplevel window
-        #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-        #   # Title
-        #   tkwm.title(tkplot,
-        #              gettext("leem package: T Distribution", domain = "R-leem"))
-        #
-        #   tkpack(tklabel(tkplot, text = "Parameters"))
-        #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-        #                               height = 500, fun = function(...) {
-        #                                 q1 <- as.numeric(tclvalue(tk_q1))
-        #                                 q2 <- as.numeric(tclvalue(tk_q2))
-        #                                 nu <- as.numeric(tclvalue(tk_df))
-        #                                 plotcurveaux(q1 = q1, q2 = q2, nu = nu)
-        #                               })
-        #   s02 <- tcltk::tkscale(
-        #     tkplot,
-        #     from = q[2],
-        #     to = lupper,
-        #     label = 'q2',
-        #     variable = tk_q2,
-        #     showvalue = TRUE,
-        #     resolution = 1,
-        #     repeatdelay = 200,
-        #     repeatinterval = 100,
-        #     orient = "hor"
-        #   )
-        #   s01 <- tcltk::tkscale(
-        #     tkplot,
-        #     from = -llower,
-        #     to = q[2],
-        #     label = 'q1',
-        #     variable = tk_q1,
-        #     showvalue = TRUE,
-        #     resolution = 1,
-        #     repeatdelay = 200,
-        #     repeatinterval = 100,
-        #     orient = "hor"
-        #   )
-        #   s03 <- tkscale(
-        #     tkplot,
-        #     from = 1,
-        #     to = nu + 100,
-        #     label = 'df',
-        #     variable = tk_df,
-        #     showvalue = TRUE,
-        #     resolution = 1,
-        #     repeatdelay = 200,
-        #     repeatinterval = 100,
-        #     orient = "hor"
-        #   )
-        #   tkpack(s01, s02, s03,
-        #          side = "top",
-        #          expand = TRUE,
-        #          before = tkplot$env$canvas,
-        #          fill = "both")
-        #   # Activate GUI
-        #   finish <- tclServiceMode(oldmode)
-        #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-        #     response <- tk_messageBox(
-        #       title = gettext("Tell me something:", domain = "R-leem"),
-        #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-        #       icon = "question",
-        #       type = "yesno"
-        #     )
-        #     if (response == "yes") {
-        #       if (exists("tk_q1", envir = .GlobalEnv)) {
-        #         rm("tk_q1", "tk_q2", "tk_df", envir = .GlobalEnv)
-        #       }
-        #       tkdestroy(tkplot)
-        #     }
-        #
-        #   })
-        #   # Desabilitar warnings global
-        #   #options(warn = - 1)
-        #   #war <- options(warn = - 1)
-        #   on.exit(options(war))
-        # }
-        # # Calculates the desired probability
-        # prob <- pt(q[1], df = nu, lower.tail = T) + pt(q[2], df = nu, lower.tail = F)
+        if (gui == "tcltk") {
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          # on.exit(options(war))
+
+          .tkplotleemtstudent3(q[1], q[2], nu, rounding, main, llower, lupper, q)
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
+        }
+        # Calculates the desired probability
+        prob <- pt(q[1], df = nu, lower.tail = T) + pt(q[2], df = nu, lower.tail = F)
       }
       if (dist == "chisq") {
         if (!any(names(argaddit) == "ncp")) {
@@ -1094,12 +991,12 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if (dist == "t-student") {
         if (!any(names(argaddit) == "df")) {
-          df <- readline(gettext("Insert the value of degree of freedom (df): ", domain = "R-leem"))
+          df <- readline(gettext("Enter the value of degree of freedom (df): ", domain = "R-leem"))
           argaddit$df <- as.numeric(df)
         }
         # Auxiliar objects
         nu <- argaddit$df
-        llower <- if(abs(q[1]) > 6) abs(q[1] + 2) else 6
+        llower <- if(abs(q[1]) < -6) abs(q[1] - 2) else -6
         lupper <- if(abs(q[2]) > 6) abs(q[2] + 2) else 6
         nu <- argaddit$df
         # Function
@@ -1108,179 +1005,79 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotptstudentbrrstudio(q1, q2, df, rounding, main, q),
-                                 q1 = manipulate::slider(-llower, q[2], q[1]),
+                                 q1 = manipulate::slider(llower, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], lupper, q[2]),
                                  df = manipulate::slider(1, nu + 100, nu))
         }
-        # if (gui == "tcltk") {
-        #   # Environment of package
-        #   envleem <- new.env(parent = base::emptyenv())
-        #   leemget <- function(x) {
-        #     get(x, envir= envleem, inherits=FALSE )
-        #   }
-        #   leemset <- function(x, value) {
-        #     assign(x, value, envir= envleem)
-        #   }
-        #   globalvariables <- function(x, value) {
-        #     assign(x, value, envir= .GlobalEnv)
-        #   }
-        #   # Desabilitar warnings global
-        #   #options(warn = - 1)
-        #   war <- options(warn = - 1)
-        #   # on.exit(options(war))
-        #   plotcurveaux <- function(q1 = q[1], q2 = q[2], nu = nu, ...) {
-        #     q[1] <- q1
-        #     q[2] <- q2
-        #     plotcurve(q, nu)
-        #   }
-        #   tk_q1 <- leemset("tk_q1", tclVar(q[1]))
-        #   tk_q2 <- leemset("tk_q2", tclVar(q[2]))
-        #   tk_df <- leemset("tk_df", tclVar(nu))
-        #   sapply(c("tk_q1", "tk_q2", "tk_df"),
-        #          function(x) globalvariables(x, leemget(x)))
-        #   # q1 <- NULL
-        #   # q2 <- NULL
-        #   # nu <- NULL
-        #   ##
-        #   # Disabled GUI (Type I)
-        #   oldmode <- tclServiceMode(FALSE)
-        #   # Logo
-        #   tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
-        #   # Plot
-        #   tkplot <- tktoplevel()
-        #   #Icon main toplevel window
-        #   tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-        #   # Title
-        #   tkwm.title(tkplot,
-        #              gettext("leem package: T Distribution", domain = "R-leem"))
-        #
-        #   tkpack(tklabel(tkplot, text = "Parameters"))
-        #   tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-        #                               height = 500, fun = function(...) {
-        #                                 q1 <- as.numeric(tclvalue(tk_q1))
-        #                                 q2 <- as.numeric(tclvalue(tk_q2))
-        #                                 nu <- as.numeric(tclvalue(tk_df))
-        #                                 plotcurveaux(q1 = q1, q2 = q2, nu = nu)
-        #                               })
-        #   s02 <- tcltk::tkscale(
-        #     tkplot,
-        #     from = q[2],
-        #     to = lupper,
-        #     label = 'q2',
-        #     variable = tk_q2,
-        #     showvalue = TRUE,
-        #     resolution = 1,
-        #     repeatdelay = 200,
-        #     repeatinterval = 100,
-        #     orient = "hor"
-        #   )
-        #   s01 <- tcltk::tkscale(
-        #     tkplot,
-        #     from = -llower,
-        #     to = q[2],
-        #     label = 'q1',
-        #     variable = tk_q1,
-        #     showvalue = TRUE,
-        #     resolution = 1,
-        #     repeatdelay = 200,
-        #     repeatinterval = 100,
-        #     orient = "hor"
-        #   )
-        #   s03 <- tkscale(
-        #     tkplot,
-        #     from = 1,
-        #     to = nu + 100,
-        #     label = 'df',
-        #     variable = tk_df,
-        #     showvalue = TRUE,
-        #     resolution = 1,
-        #     repeatdelay = 200,
-        #     repeatinterval = 100,
-        #     orient = "hor"
-        #   )
-        #   tkpack(s01, s02, s03,
-        #          side = "top",
-        #          expand = TRUE,
-        #          before = tkplot$env$canvas,
-        #          fill = "both")
-        #   # Activate GUI
-        #   finish <- tclServiceMode(oldmode)
-        #   tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-        #     response <- tk_messageBox(
-        #       title = gettext("Tell me something:", domain = "R-leem"),
-        #       message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-        #       icon = "question",
-        #       type = "yesno"
-        #     )
-        #     if (response == "yes") {
-        #       if (exists("tk_q1", envir = .GlobalEnv)) {
-        #         rm("tk_q1", "tk_q2", "tk_df", envir = .GlobalEnv)
-        #       }
-        #       tkdestroy(tkplot)
-        #     }
-        #
-        #   })
-        #   # Desabilitar warnings global
-        #   #options(warn = - 1)
-        #   #war <- options(warn = - 1)
-        #   on.exit(options(war))
-        # }
-        if (gui == "shiny") {
-          # # Environment of package
-          # envleem <- new.env(parent = base::emptyenv())
-          # assign("shinyaux", NULL, envir = envleem)
-          # assign("tk_q2", NULL, envir = envleem)
-          # assign("tk_df", NULL, envir = envleem)
-          # nu <- argaddit$df
-          # prob <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
-          # plotcurveaux <- function(q1 = q[1], q2 = q[2], df, ...) {
-          #   q[1] <- q1
-          #   q[2] <- q2
-          #   plotcurve(q, df)
-          # }
-          # shinyaux <<- function(...) {
-          #   require(shiny)
-          #   # Define UI for application that draws a histogram
-          #   ui <- fluidPage(
-          #
-          #     # Application title
-          #     titlePanel(gettext("t-Student distribution", domain = "R-leem")),
-          #
-          #     # Sidebar with a slider input for number of bins
-          #     sidebarLayout(
-          #       sidebarPanel(
-          #         sliderInput("q1",
-          #                     "Lower limit:",
-          #                     min = -6,
-          #                     max = q[2],
-          #                     value = q[1])
-          #       ),
-          #
-          #       # Show a plot of the generated distribution
-          #       mainPanel(
-          #         plotOutput("distPlot")
-          #       )
-          #     )
-          #   )
-          #
-          #   # Define server logic required to draw a histogram
-          #   server <- function(input, output) {
-          #     prob <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
-          #     plotcurveaux <- function(q1 = q[1], q2 = q[2], df, ...) {
-          #       q[1] <- q1
-          #       q[2] <- q2
-          #       plotcurve(q, df)
-          #     }
-          #     output$distPlot <- renderPlot({
-          #       plotcurveaux(q1 = input$q1, q2=q[2], df=nu)
-          #     })
-          #   }
-          #
-          #   # Run the application
-          #   shinyApp(ui = ui, server = server)
-          # }
-          # shinyaux()
+        if (gui == "tcltk") {
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          # on.exit(options(war))
+
+          .tkplotleemtstudent4(q[1], q[2], nu, rounding, main, llower, lupper, q)
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
+        # if (gui == "shiny") {
+        #   # # Environment of package
+        #   # envleem <- new.env(parent = base::emptyenv())
+        #   # assign("shinyaux", NULL, envir = envleem)
+        #   # assign("tk_q2", NULL, envir = envleem)
+        #   # assign("tk_df", NULL, envir = envleem)
+        #   # nu <- argaddit$df
+        #   # prob <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
+        #   # plotcurveaux <- function(q1 = q[1], q2 = q[2], df, ...) {
+        #   #   q[1] <- q1
+        #   #   q[2] <- q2
+        #   #   plotcurve(q, df)
+        #   # }
+        #   # shinyaux <<- function(...) {
+        #   #   require(shiny)
+        #   #   # Define UI for application that draws a histogram
+        #   #   ui <- fluidPage(
+        #   #
+        #   #     # Application title
+        #   #     titlePanel(gettext("t-Student distribution", domain = "R-leem")),
+        #   #
+        #   #     # Sidebar with a slider input for number of bins
+        #   #     sidebarLayout(
+        #   #       sidebarPanel(
+        #   #         sliderInput("q1",
+        #   #                     "Lower limit:",
+        #   #                     min = -6,
+        #   #                     max = q[2],
+        #   #                     value = q[1])
+        #   #       ),
+        #   #
+        #   #       # Show a plot of the generated distribution
+        #   #       mainPanel(
+        #   #         plotOutput("distPlot")
+        #   #       )
+        #   #     )
+        #   #   )
+        #   #
+        #   #   # Define server logic required to draw a histogram
+        #   #   server <- function(input, output) {
+        #   #     prob <- round(pt(q[2], df = nu, lower.tail = T) - pt(q[1], df = nu, lower.tail = T), digits=rounding)
+        #   #     plotcurveaux <- function(q1 = q[1], q2 = q[2], df, ...) {
+        #   #       q[1] <- q1
+        #   #       q[2] <- q2
+        #   #       plotcurve(q, df)
+        #   #     }
+        #   #     output$distPlot <- renderPlot({
+        #   #       plotcurveaux(q1 = input$q1, q2=q[2], df=nu)
+        #   #     })
+        #   #   }
+        #   #
+        #   #   # Run the application
+        #   #   shinyApp(ui = ui, server = server)
+        #   # }
+        #   # shinyaux()
+        # }
         # Compute the desired probability
         prob <- pt(q[2], df = nu) - pt(q[1], df = nu)
       }
@@ -2062,11 +1859,11 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
   else {
     if (dist == "normal") {
       if (!any(names(argaddit) == "mean")) {
-        mean <- readline(gettext("Insert the value of 'mean' argument: ", domain = "R-leem"))
+        mean <- readline(paste0(gettext("Enter the value of 'mean' argument:", domain = "R-leem"), " "))
         argaddit$mean <- as.numeric(mean)
       }
       if (!any(names(argaddit) == "sd")) {
-        sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
+        sd <- readline(paste0(gettext("Enter the value of 'sd' argument:", domain = "R-leem"), " "))
         argaddit$sd <- as.numeric(sd)
       }
       if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
@@ -2142,7 +1939,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
     }
     if (dist == "t-student") {
       if (!any(names(argaddit) == "df")) {
-        df <- readline(gettext("Insert the value of degree of freedom (df): ", domain = "R-leem"))
+        df <- readline(paste0(gettext("Enter the value of 'df' argument:", domain = "R-leem"), " "))
         argaddit$df <- as.numeric(df)
       }
       lim <- if(abs(q) > 6) abs(q + 2) else 6
@@ -2154,98 +1951,22 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "rstudio") {
           manipulate::manipulate(plotptstudentlttplot(q, nu, rounding, main),
                                  q = manipulate::slider(-lim, lim, q),
-                                 nu = manipulate::slider(1, nu+100, nu))
+                                 nu = manipulate::slider(1, nu * 10, nu))
         }
         if (gui == "tcltk") {
-          # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          # leemget <- function(x) {
-          #   get(x, envir= envleem, inherits=FALSE )
-          # }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          # globalvariables <- function(x, value) {
-          #   assign(x, value, envir= .GlobalEnv)
-          # }
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          #on.exit(options(war))
 
-          tk_q1 <- leemset("tk_q1", tclVar(q[1]))
-          tk_df <- leemset("tk_df", tclVar(nu))
-          # sapply(c("tk_q1", "tk_df"),
-          #        function(x) globalvariables(x, leemget(x)))
+          # Plot tk da dist t-student com q de comp 1 (~/tkplotleem.R)
+          .tkplotleemtstudent(q, nu, rounding, main, -lim, lim)
 
-          # Disabled GUI (Type I)
-          oldmode <- tclServiceMode(FALSE)
-          # Logo
-          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
 
-          # Plot
-          tkplot <- tktoplevel()
-
-          #Icon main toplevel window
-          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-          # Title
-          tkwm.title(tkplot,
-                     gettext("leem package: T Distribution", domain = "R-leem"))
-
-          tkpack(tklabel(tkplot, text = "Parameters"))
-
-          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                      height = 500, fun = function(...) {
-                                        q <- as.numeric(tclvalue(tk_q1))
-                                        nu <- as.numeric(tclvalue(tk_df))
-                                        plotptstudentlttplot(q = q, df = nu, rounding, main)
-                                      })
-          s01 <- tcltk::tkscale(
-            tkplot,
-            from = -6,
-            to = q,
-            label = 'q',
-            variable = tk_q1,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s03 <- tkscale(
-            tkplot,
-            from = 1,
-            to = 200,
-            label = 'df',
-            variable = tk_df,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          tkpack(s01, s03,
-                 side = "top",
-                 expand = TRUE,
-                 before = tkplot$env$canvas,
-                 fill = "both")
-          # Activate GUI
-          finish <- tclServiceMode(oldmode)
-          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-            response <- tk_messageBox(
-              title = gettext("Tell me something:", domain = "R-leem"),
-              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-              icon = "question",
-              type = "yesno"
-            )
-            if (response == "yes") {
-              if (exists("tk_q1", envir = .GlobalEnv)) {
-                rm("tk_q1", "tk_df", envir = .GlobalEnv)
-              }
-              tkdestroy(tkplot)
-            }
-            # Desabilitar warnings global
-            #options(warn = - 1)
-            war <- options(warn = - 1)
-            on.exit(options(war))
-          })
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
         # Calculates the desired probability
         prob <- pt(q = q, df = nu)
@@ -2256,105 +1977,24 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "rstudio") {
           manipulate::manipulate(plotptstudentltfplot(q, nu, rounding, main),
                                  q = manipulate::slider(-lim, lim, q),
-                                 nu = manipulate::slider(1, nu+100, nu))
+                                 nu = manipulate::slider(1, nu * 10, nu))
         }
         if (gui == "tcltk") {
-          # Environment of package
-          envleem <- new.env(parent = base::emptyenv())
-          # leemget <- function(x) {
-          #   get(x, envir= envleem, inherits=FALSE )
-          # }
-          leemset <- function(x, value) {
-            assign(x, value, envir= envleem)
-          }
-          # globalvariables <- function(x, value) {
-          #   assign(x, value, envir= .GlobalEnv)
-          # }
           # Desabilitar warnings global
           #options(warn = - 1)
           war <- options(warn = - 1)
           on.exit(options(war))
-          tk_q1 <- leemset("tk_q1", tclVar(q[1]))
-          tk_df <- leemset("tk_df", tclVar(nu))
-          # sapply(c("tk_q1", "tk_df"),
-          #        function(x) globalvariables(x, leemget(x)))
 
-          # Disabled GUI (Type I)
-          oldmode <- tclServiceMode(FALSE)
-          # Logo
-          tkimage.create("photo", "::image::iconleem", file = system.file("etc", "leem-icon.png", package = "leem"))
+          # Plot tk da dist t-student com q de comp 1 (~/tkplotleem.R)
+          .tkplotleemtstudent2(q, nu, rounding, main, -lim, lim)
 
-          # Plot
-          tkplot <- tktoplevel()
-
-          #Icon main toplevel window
-          tcl("wm", "iconphoto", tkplot, "-default", "::image::iconleem")
-
-          # Title
-          tkwm.title(tkplot,
-                     gettext("leem package: t Distribution", domain = "R-leem"))
-
-          tkpack(tklabel(tkplot, text = "Parameters"))
-
-          tkplot <- tkRplotR::tkRplot(W = tkplot, width = 500,
-                                      height = 500, fun = function(...) {
-                                        q <- as.numeric(tclvalue(tk_q1))
-                                        nu <- as.numeric(tclvalue(tk_df))
-                                        plotcurve(q = q, nu = nu)
-                                      })
-          s01 <- tcltk::tkscale(
-            tkplot,
-            from = -6,
-            to = q,
-            label = 'q',
-            variable = tk_q1,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          s03 <- tkscale(
-            tkplot,
-            from = 1,
-            to = 200,
-            label = 'df',
-            variable = tk_df,
-            showvalue = TRUE,
-            resolution = 1,
-            repeatdelay = 200,
-            repeatinterval = 100,
-            orient = "hor"
-          )
-          tkpack(s01, s03,
-                 side = "top",
-                 expand = TRUE,
-                 before = tkplot$env$canvas,
-                 fill = "both")
-          # Activate GUI
-          finish <- tclServiceMode(oldmode)
-          tkwm.protocol(tkplot, "WM_DELETE_WINDOW", function() {
-            response <- tk_messageBox(
-              title = gettext("Tell me something:", domain = "R-leem"),
-              message = gettext("Do you want to use the GUI for the package?", domain = "R-leem"),
-              icon = "question",
-              type = "yesno"
-            )
-            if (response == "yes") {
-              if (exists("tk_q1", envir = .GlobalEnv)) {
-                rm("tk_q1", "tk_df", envir = .GlobalEnv)
-              }
-              tkdestroy(tkplot)
-            }
-            # options(warn = - 1)
-            # war <- options(warn = - 1)
-            on.exit(options(war))
-          })
+          # options(warn = - 1)
+          # war <- options(warn = - 1)
+          on.exit(options(war))
+          }
         }
         # Calculates the desired probability
         prob <- pt(q = q, df = nu, lower.tail = FALSE)
-
-      }
     }
     if (dist == "chisq") {
       if (!any(names(argaddit) == "ncp")) {
