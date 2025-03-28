@@ -24,7 +24,7 @@
   tkpack(main_frame, canvas, fill = "both", expand=TRUE)
 
   # Slider Frame
-  tkpack(tklabel(base, text = gettext("Parameters:", domain="R-leem")))
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
   slider_frame <- tkframe(base)
   tkpack(slider_frame, side = "bottom", fill = "x")
 
@@ -151,7 +151,7 @@
   tkpack(main_frame, canvas, fill = "both", expand=TRUE)
 
   # Slider Frame
-  tkpack(tklabel(base, text = gettext("Parameters:", domain="R-leem")))
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
   slider_frame <- tkframe(base)
   tkpack(slider_frame, side = "bottom", fill = "x")
 
@@ -279,7 +279,7 @@
   tkpack(main_frame, canvas, fill = "both", expand=TRUE)
 
   # Slider Frame
-  tkpack(tklabel(base, text = gettext("Parameters:", domain="R-leem")))
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
   slider_frame <- tkframe(base)
   tkpack(slider_frame, side = "bottom", fill = "x")
 
@@ -434,7 +434,7 @@
   tkpack(main_frame, canvas, fill = "both", expand=TRUE)
 
   # Slider Frame
-  tkpack(tklabel(base, text = gettext("Parameters:", domain="R-leem")))
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
   slider_frame <- tkframe(base)
   tkpack(slider_frame, side = "bottom", fill = "x")
 
@@ -577,7 +577,7 @@
 
   # Title
   tkwm.title(base,
-             gettext("leem package: t-Student Distribution", domain = "R-leem"))
+             gettext("leem package: Student's t Distribution", domain = "R-leem"))
 
   # Variables for sliders
   q_var <- tclVar(q)
@@ -590,7 +590,7 @@
   tkpack(main_frame, canvas, fill = "both", expand=TRUE)
 
   # Slider Frame
-  tkpack(tklabel(base, text = gettext("Parameters:", domain="R-leem")))
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
   slider_frame <- tkframe(base)
   tkpack(slider_frame, side = "bottom", fill = "x")
 
@@ -677,7 +677,7 @@
     }
   })
 }
-# Plot tk dist normal para q de comprimento 1 (lower.tail = F)
+# Plot tk dist t-student para q de comprimento 1 (lower.tail = F)
 .tkplotleemtstudent2 <- function(q, df, rounding, main, minimo, maximo) {
   # Disabled GUI (Type I)
   oldmode <- tclServiceMode(FALSE)
@@ -690,7 +690,7 @@
 
   # Title
   tkwm.title(base,
-             gettext("leem package: t-Student Distribution", domain = "R-leem"))
+             gettext("leem package: Student's t Distribution", domain = "R-leem"))
 
   # Variables for sliders
   q_var <- tclVar(q)
@@ -703,7 +703,7 @@
   tkpack(main_frame, canvas, fill = "both", expand=TRUE)
 
   # Slider Frame
-  tkpack(tklabel(base, text = gettext("Parameters:", domain="R-leem")))
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
   slider_frame <- tkframe(base)
   tkpack(slider_frame, side = "bottom", fill = "x")
 
@@ -790,7 +790,7 @@
     }
   })
 }
-# Plot tk dist normal para q > 1, regiona
+# Plot tk dist t-student para q > 1, regiona
 .tkplotleemtstudent3 <- function(q1, q2, df, rounding, main, minimo, maximo, q) {
   # Disabled GUI (Type I)
   oldmode <- tclServiceMode(FALSE)
@@ -803,7 +803,7 @@
 
   # Title
   tkwm.title(base,
-             gettext("leem package: t-Student Distribution", domain = "R-leem"))
+             gettext("leem package: Student's t Distribution", domain = "R-leem"))
 
   # Variables for sliders
   q1_var <- tclVar(q1)
@@ -817,7 +817,7 @@
   tkpack(main_frame, canvas, fill = "both", expand=TRUE)
 
   # Slider Frame
-  tkpack(tklabel(base, text = gettext("Parameters:", domain="R-leem")))
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
   slider_frame <- tkframe(base)
   tkpack(slider_frame, side = "bottom", fill = "x")
 
@@ -930,7 +930,7 @@
     }
   })
 }
-
+# Plot tk dist t-student para q > 1, regionb
 .tkplotleemtstudent4 <- function(q1, q2, df, rounding, main, minimo, maximo, q) {
   # Disabled GUI (Type I)
   oldmode <- tclServiceMode(FALSE)
@@ -943,7 +943,7 @@
 
   # Title
   tkwm.title(base,
-             gettext("leem package: t-Student Distribution", domain = "R-leem"))
+             gettext("leem package: Student's t Distribution", domain = "R-leem"))
 
   # Variables for sliders
   q1_var <- tclVar(q1)
@@ -957,7 +957,7 @@
   tkpack(main_frame, canvas, fill = "both", expand=TRUE)
 
   # Slider Frame
-  tkpack(tklabel(base, text = gettext("Parameters:", domain="R-leem")))
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
   slider_frame <- tkframe(base)
   tkpack(slider_frame, side = "bottom", fill = "x")
 
@@ -1072,6 +1072,563 @@
 }
 
 
+# Plot tk dist chisq para q de comprimento 1 (lower.tail = T)
+.tkplotleemchisq <- function(q, df, ncp = 0, rounding, main, minimo, maximo) {
+  # Disabled GUI (Type I)
+  oldmode <- tclServiceMode(FALSE)
+
+
+  # Main Window
+  base <- tktoplevel(padx=10, pady=10)
+
+  tkwm.geometry(base, "600x700")
+
+  # Title
+  tkwm.title(base,
+             gettext("leem package: Chi-Squared Distribution", domain = "R-leem"))
+
+  # Variables for sliders
+  q_var <- tclVar(q)
+  df_var <- tclVar(df)
+  ncp_var <- tclVar(ncp)
+
+
+  # Main Frame
+  main_frame <- tkframe(base, relief="sunken", borderwidth = 1)
+  canvas <- tkcanvas(main_frame)
+  tkpack(main_frame, canvas, fill = "both", expand=TRUE)
+
+  # Slider Frame
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
+  slider_frame <- tkframe(base)
+  tkpack(slider_frame, side = "bottom", fill = "x")
+
+  # Slider para q
+  slider_q <- tkscale(slider_frame,
+                      from = minimo,
+                      to = maximo,
+                      orient = "horizontal",
+                      variable = q_var,
+                      resolution = 0.1,
+                      label = gettext("Quantile", domain="R-leem"),
+                      showvalue = TRUE)
+  tkpack(slider_q, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para df
+  slider_df <- tkscale(slider_frame,
+                       from = 1, to = 10 * df,
+                       orient = "horizontal",
+                       variable = df_var,
+                       resolution = 0.1,
+                       label = gettext("Degree of freedom", domain="R-leem"),
+                       showvalue = TRUE)
+  tkpack(slider_df, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para ncp
+  slider_ncp <- tkscale(slider_frame,
+                       from = 0, to = ncp + 2 * df,
+                       orient = "horizontal",
+                       variable = ncp_var,
+                       resolution = 0.1,
+                       label = gettext("Noncentrality parameter", domain="R-leem"),
+                       showvalue = TRUE)
+  tkpack(slider_ncp, side = "top", fill = "x", padx=10, pady=2)
+
+  # Funcao para desenhar o grafico
+  drawGraph <- function() {
+    oldw <- getOption("warn")
+    options(warn = -1)
+
+    # Dimensoes do canvas
+    height <- as.numeric(tclvalue(tkwinfo("height", main_frame)))
+    width <- as.numeric(tclvalue(tkwinfo("width", main_frame)))
+
+    # Pega os valores dos sliders
+    quantil <- as.numeric(tclvalue(q_var))
+    glib <- as.numeric(tclvalue(df_var))
+    pnc <- as.numeric(tclvalue(ncp_var))
+
+
+    # Arquivo temporario
+    fp2 <- tempfile(pattern = "leem.", tmpdir = tempdir(), fileext = ".png")
+
+    # Cria a Imagem do Grafico
+    png(filename = fp2, width = width, height = height, units = "px")
+    try(plotpchisqlttplot(quantil, glib, pnc, rounding, main), silent = TRUE)
+    dev.off()
+
+    # Cria imagem no Tk
+    tkimage.create("photo", "::image::imgteste2", file = fp2)
+
+    # Limpa o canvas antes de desenhar
+    tkdelete(canvas, "all")
+    tkcreate(canvas, "image", 0, 0, anchor = "nw", image = "::image::imgteste2")
+
+    options(warn = oldw)
+  }
+
+  # Atualiza o grafico quando qualquer slider eh movido
+  tkconfigure(slider_q, command = function(...) drawGraph())
+  tkconfigure(slider_df, command = function(...) drawGraph())
+  tkconfigure(slider_ncp, command = function(...) drawGraph())
+
+  # CALLBACKS
+  onResize <- function() {
+    drawGraph()
+  }
+
+
+
+  # Atualiza o grafico quando redimensiona
+  tkbind(base, '<Configure>', onResize)
+
+  drawGraph()
+
+  # Activate GUI
+  finish <- tclServiceMode(oldmode)
+  tkwm.protocol(base, "WM_DELETE_WINDOW", function() {
+    response <- tk_messageBox(
+      title = gettext("Tell me something:", domain = "R-leem"),
+      message = gettext("Do you want to close?", domain = "R-leem"),
+      icon = "question",
+      type = "yesno"
+    )
+    if (response == "yes") {
+      tkdestroy(base)
+    }
+  })
+}
+# Plot tk dist chisq para q de comprimento 1 (lower.tail = T)
+.tkplotleemchisq02 <- function(q, df, ncp = 0, rounding, main, minimo, maximo) {
+  # Disabled GUI (Type I)
+  oldmode <- tclServiceMode(FALSE)
+
+
+  # Main Window
+  base <- tktoplevel(padx=10, pady=10)
+
+  tkwm.geometry(base, "800x700")
+
+  # Title
+  tkwm.title(base,
+             gettext("leem package: Chi-Squared Distribution", domain = "R-leem"))
+
+  # Variables for sliders
+  q_var <- tclVar(q)
+  df_var <- tclVar(df)
+  ncp_var <- tclVar(ncp)
+
+
+  # Main Frame
+  main_frame <- tkframe(base, relief="sunken", borderwidth = 1)
+  canvas <- tkcanvas(main_frame)
+  tkpack(main_frame, canvas, fill = "both", expand=TRUE)
+
+  # Slider Frame
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
+  slider_frame <- tkframe(base)
+  tkpack(slider_frame, side = "bottom", fill = "x")
+
+  # Slider para q
+  slider_q <- tkscale(slider_frame,
+                      from = minimo,
+                      to = maximo,
+                      orient = "horizontal",
+                      variable = q_var,
+                      resolution = 0.1,
+                      label = gettext("Quantile", domain="R-leem"),
+                      showvalue = TRUE)
+  tkpack(slider_q, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para df
+  slider_df <- tkscale(slider_frame,
+                       from = 1, to = 10 * df,
+                       orient = "horizontal",
+                       variable = df_var,
+                       resolution = 0.1,
+                       label = gettext("Degree of freedom", domain="R-leem"),
+                       showvalue = TRUE)
+  tkpack(slider_df, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para ncp
+  slider_ncp <- tkscale(slider_frame,
+                        from = 0, to = ncp + 2 * df,
+                        orient = "horizontal",
+                        variable = ncp_var,
+                        resolution = 0.1,
+                        label = gettext("Noncentrality parameter", domain="R-leem"),
+                        showvalue = TRUE)
+  tkpack(slider_ncp, side = "top", fill = "x", padx=10, pady=2)
+
+  # Funcao para desenhar o grafico
+  drawGraph <- function() {
+    oldw <- getOption("warn")
+    options(warn = -1)
+
+    # Dimensoes do canvas
+    height <- as.numeric(tclvalue(tkwinfo("height", main_frame)))
+    width <- as.numeric(tclvalue(tkwinfo("width", main_frame)))
+
+    # Pega os valores dos sliders
+    quantil <- as.numeric(tclvalue(q_var))
+    glib <- as.numeric(tclvalue(df_var))
+    pnc <- as.numeric(tclvalue(ncp_var))
+
+
+    # Arquivo temporario
+    fp2 <- tempfile(pattern = "leem.", tmpdir = tempdir(), fileext = ".png")
+
+    # Cria a Imagem do Grafico
+    png(filename = fp2, width = width, height = height, units = "px")
+    try(plotpchisqltfplot(quantil, glib, pnc, rounding, main), silent = TRUE)
+    dev.off()
+
+    # Cria imagem no Tk
+    tkimage.create("photo", "::image::imgteste2", file = fp2)
+
+    # Limpa o canvas antes de desenhar
+    tkdelete(canvas, "all")
+    tkcreate(canvas, "image", 0, 0, anchor = "nw", image = "::image::imgteste2")
+
+    options(warn = oldw)
+  }
+
+  # Atualiza o grafico quando qualquer slider eh movido
+  tkconfigure(slider_q, command = function(...) drawGraph())
+  tkconfigure(slider_df, command = function(...) drawGraph())
+  tkconfigure(slider_ncp, command = function(...) drawGraph())
+
+  # CALLBACKS
+  onResize <- function() {
+    drawGraph()
+  }
+
+
+
+  # Atualiza o grafico quando redimensiona
+  tkbind(base, '<Configure>', onResize)
+
+  drawGraph()
+
+  # Activate GUI
+  finish <- tclServiceMode(oldmode)
+  tkwm.protocol(base, "WM_DELETE_WINDOW", function() {
+    response <- tk_messageBox(
+      title = gettext("Tell me something:", domain = "R-leem"),
+      message = gettext("Do you want to close?", domain = "R-leem"),
+      icon = "question",
+      type = "yesno"
+    )
+    if (response == "yes") {
+      tkdestroy(base)
+    }
+  })
+}
+# Plot tk dist t-student para q > 1, regiona
+.tkplotleemchisq3 <- function(q1, q2, df, ncp = 0, rounding, main, minimo, maximo, q) {
+  # Disabled GUI (Type I)
+  oldmode <- tclServiceMode(FALSE)
+
+
+  # Main Window
+  base <- tktoplevel(padx=10, pady=10)
+
+  tkwm.geometry(base, "800x700")
+
+  # Title
+  tkwm.title(base,
+             gettext("leem package: Chi-Squared Distribution", domain = "R-leem"))
+
+  # Variables for sliders
+  q1_var <- tclVar(q1)
+  q2_var <- tclVar(q2)
+  df_var <- tclVar(df)
+  ncp_var <- tclVar(ncp)
+
+
+  # Main Frame
+  main_frame <- tkframe(base, relief="sunken", borderwidth = 1)
+  canvas <- tkcanvas(main_frame)
+  tkpack(main_frame, canvas, fill = "both", expand=TRUE)
+
+  # Slider Frame
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
+  slider_frame <- tkframe(base)
+  tkpack(slider_frame, side = "bottom", fill = "x")
+
+  # Slider para q1
+  slider_q1 <- tkscale(slider_frame,
+                       from = minimo,
+                       to = maximo,
+                       orient = "horizontal",
+                       variable = q1_var,
+                       resolution = 0.1,
+                       label = gettext("q1", domain="R-leem"),
+                       showvalue = TRUE)
+  tkpack(slider_q1, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para q2
+  slider_q2 <- tkscale(slider_frame,
+                       from = minimo,
+                       to = maximo,
+                       orient = "horizontal",
+                       variable = q2_var,
+                       resolution = 0.1,
+                       label = gettext("q2", domain="R-leem"),
+                       showvalue = TRUE)
+  tkpack(slider_q2, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para df
+  slider_df <- tkscale(slider_frame,
+                       from = 1, to = 10 * df,
+                       orient = "horizontal",
+                       variable = df_var,
+                       resolution = 0.1,
+                       label = gettext("Degree of freedom", domain="R-leem"),
+                       showvalue = TRUE)
+  tkpack(slider_df, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para ncp
+  slider_ncp <- tkscale(slider_frame,
+                        from = 0, to = ncp + 2 * df,
+                        orient = "horizontal",
+                        variable = ncp_var,
+                        resolution = 0.1,
+                        label = gettext("Noncentrality parameter", domain="R-leem"),
+                        showvalue = TRUE)
+  tkpack(slider_ncp, side = "top", fill = "x", padx=10, pady=2)
+
+  # Funcao para desenhar o grafico
+  drawGraph <- function() {
+    oldw <- getOption("warn")
+    options(warn = -1)
+
+    # Dimensoes do canvas
+    height <- as.numeric(tclvalue(tkwinfo("height", main_frame)))
+    width <- as.numeric(tclvalue(tkwinfo("width", main_frame)))
+
+    # Pega os valores dos sliders
+    quantil01 <- as.numeric(tclvalue(q1_var))
+    quantil02 <- as.numeric(tclvalue(q2_var))
+    df <- as.numeric(tclvalue(df_var))
+    pnc <- as.numeric(tclvalue(ncp_var))
+
+
+    # Arquivo temporario
+    fp2 <- tempfile(pattern = "leem.", tmpdir = tempdir(), fileext = ".png")
+
+    # Cria a Imagem do Grafico
+    png(filename = fp2, width = width, height = height, units = "px")
+    try(plotpchisqartcltk(quantil01, quantil02, df, pnc, rounding, main, q), silent = TRUE)
+    dev.off()
+
+    # Cria imagem no Tk
+    tkimage.create("photo", "::image::imgteste2", file = fp2)
+
+    # Limpa o canvas antes de desenhar
+    tkdelete(canvas, "all")
+    tkcreate(canvas, "image", 0, 0, anchor = "nw", image = "::image::imgteste2")
+
+    options(warn = oldw)
+  }
+
+  # Atualiza o slider_q1 para ter como maximo o valor atual de q2
+  tkconfigure(slider_q1, command = function(...) {
+    novo_q2 <- as.numeric(tclvalue(q2_var))
+    tkconfigure(slider_q1, to = novo_q2)
+    drawGraph()
+  })
+
+  # Atualiza o slider_q2 para ter como minimo o valor atual de q1
+  tkconfigure(slider_q2, command = function(...) {
+    novo_q1 <- as.numeric(tclvalue(q1_var))
+    tkconfigure(slider_q2, from = novo_q1)
+    drawGraph()
+  })
+  # Atualiza o slider_df para ter como minimo o valor atual de q1
+  tkconfigure(slider_df, command = function(...) drawGraph())
+  # Atualiza o slider_ncp para ter como minimo o valor atual de ncp
+  tkconfigure(slider_ncp, command = function(...) drawGraph())
+
+  # CALLBACKS
+  onResize <- function() {
+    drawGraph()
+  }
+
+
+
+  # Atualiza o grafico quando redimensiona
+  tkbind(base, '<Configure>', onResize)
+
+  drawGraph()
+
+  # Activate GUI
+  finish <- tclServiceMode(oldmode)
+  tkwm.protocol(base, "WM_DELETE_WINDOW", function() {
+    response <- tk_messageBox(
+      title = gettext("Tell me something:", domain = "R-leem"),
+      message = gettext("Do you want to close?", domain = "R-leem"),
+      icon = "question",
+      type = "yesno"
+    )
+    if (response == "yes") {
+      tkdestroy(base)
+    }
+  })
+}
+# Plot tk dist t-student para q > 1, regionb
+.tkplotleemchisq4 <- function(q1, q2, df, ncp = 0, rounding, main, minimo, maximo, q) {
+  # Disabled GUI (Type I)
+  oldmode <- tclServiceMode(FALSE)
+
+
+  # Main Window
+  base <- tktoplevel(padx=10, pady=10)
+
+  tkwm.geometry(base, "800x700")
+
+  # Title
+  tkwm.title(base,
+             gettext("leem package: Chi-Squared Distribution", domain = "R-leem"))
+
+  # Variables for sliders
+  q1_var <- tclVar(q1)
+  q2_var <- tclVar(q2)
+  df_var <- tclVar(df)
+  ncp_var <- tclVar(ncp)
+
+
+  # Main Frame
+  main_frame <- tkframe(base, relief="sunken", borderwidth = 1)
+  canvas <- tkcanvas(main_frame)
+  tkpack(main_frame, canvas, fill = "both", expand=TRUE)
+
+  # Slider Frame
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
+  slider_frame <- tkframe(base)
+  tkpack(slider_frame, side = "bottom", fill = "x")
+
+  # Slider para q1
+  slider_q1 <- tkscale(slider_frame,
+                       from = minimo,
+                       to = maximo,
+                       orient = "horizontal",
+                       variable = q1_var,
+                       resolution = 0.1,
+                       label = gettext("q1", domain="R-leem"),
+                       showvalue = TRUE)
+  tkpack(slider_q1, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para q2
+  slider_q2 <- tkscale(slider_frame,
+                       from = minimo,
+                       to = maximo,
+                       orient = "horizontal",
+                       variable = q2_var,
+                       resolution = 0.1,
+                       label = gettext("q2", domain="R-leem"),
+                       showvalue = TRUE)
+  tkpack(slider_q2, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para df
+  slider_df <- tkscale(slider_frame,
+                       from = 1, to = 10 * df,
+                       orient = "horizontal",
+                       variable = df_var,
+                       resolution = 0.1,
+                       label = gettext("Degree of freedom", domain="R-leem"),
+                       showvalue = TRUE)
+  tkpack(slider_df, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para ncp
+  slider_ncp <- tkscale(slider_frame,
+                        from = 0, to = ncp + 2 * df,
+                        orient = "horizontal",
+                        variable = ncp_var,
+                        resolution = 0.1,
+                        label = gettext("Noncentrality parameter", domain="R-leem"),
+                        showvalue = TRUE)
+  tkpack(slider_ncp, side = "top", fill = "x", padx=10, pady=2)
+
+  # Funcao para desenhar o grafico
+  drawGraph <- function() {
+    oldw <- getOption("warn")
+    options(warn = -1)
+
+    # Dimensoes do canvas
+    height <- as.numeric(tclvalue(tkwinfo("height", main_frame)))
+    width <- as.numeric(tclvalue(tkwinfo("width", main_frame)))
+
+    # Pega os valores dos sliders
+    quantil01 <- as.numeric(tclvalue(q1_var))
+    quantil02 <- as.numeric(tclvalue(q2_var))
+    df <- as.numeric(tclvalue(df_var))
+    pnc <- as.numeric(tclvalue(ncp_var))
+
+
+    # Arquivo temporario
+    fp2 <- tempfile(pattern = "leem.", tmpdir = tempdir(), fileext = ".png")
+
+    # Cria a Imagem do Grafico
+    png(filename = fp2, width = width, height = height, units = "px")
+    try(plotpchisqbrtcltk(quantil01, quantil02, df, pnc, rounding, main, q), silent = TRUE)
+    dev.off()
+
+    # Cria imagem no Tk
+    tkimage.create("photo", "::image::imgteste2", file = fp2)
+
+    # Limpa o canvas antes de desenhar
+    tkdelete(canvas, "all")
+    tkcreate(canvas, "image", 0, 0, anchor = "nw", image = "::image::imgteste2")
+
+    options(warn = oldw)
+  }
+
+  # Atualiza o slider_q1 para ter como maximo o valor atual de q2
+  tkconfigure(slider_q1, command = function(...) {
+    novo_q2 <- as.numeric(tclvalue(q2_var))
+    tkconfigure(slider_q1, to = novo_q2)
+    drawGraph()
+  })
+
+  # Atualiza o slider_q2 para ter como minimo o valor atual de q1
+  tkconfigure(slider_q2, command = function(...) {
+    novo_q1 <- as.numeric(tclvalue(q1_var))
+    tkconfigure(slider_q2, from = novo_q1)
+    drawGraph()
+  })
+  # Atualiza o slider_df para ter como minimo o valor atual de q1
+  tkconfigure(slider_df, command = function(...) drawGraph())
+  # Atualiza o slider_ncp para ter como minimo o valor atual de ncp
+  tkconfigure(slider_ncp, command = function(...) drawGraph())
+
+  # CALLBACKS
+  onResize <- function() {
+    drawGraph()
+  }
+
+
+
+  # Atualiza o grafico quando redimensiona
+  tkbind(base, '<Configure>', onResize)
+
+  drawGraph()
+
+  # Activate GUI
+  finish <- tclServiceMode(oldmode)
+  tkwm.protocol(base, "WM_DELETE_WINDOW", function() {
+    response <- tk_messageBox(
+      title = gettext("Tell me something:", domain = "R-leem"),
+      message = gettext("Do you want to close?", domain = "R-leem"),
+      icon = "question",
+      type = "yesno"
+    )
+    if (response == "yes") {
+      tkdestroy(base)
+    }
+  })
+}
+
 
 .plotcurve <- function(gui) {
 
@@ -1123,7 +1680,7 @@
     tkpack(main_frame, canvas, fill = "both", expand=TRUE)
 
     # Slider Frame
-    tkpack(tklabel(base, text = gettext("Parameters:", domain="R-leem")))
+    tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
     slider_frame <- tkframe(base)
     tkpack(slider_frame, side = "bottom", fill = "x")
 

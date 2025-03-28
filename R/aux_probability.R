@@ -1,6 +1,6 @@
 # Auxiliar functions of P()
 # Observations:
-#    - `%<=X<=%`() internal function
+#    - `%>X>%`() internal function
 # Continuous Distributions
 ## A-region (name: plot+p+name_distribution+ar+gui)
 # OBS.: ar - A-region; gui: "plot", "rstudio", "tcltk"
@@ -19,19 +19,19 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
   if (is.null(main)) {
     if (attr(q, "region") == "region1") {
       titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
-      main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region3") {
       titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
-      main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region5") {
       titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
-      main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region6") {
       titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
-      main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
   }
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
@@ -118,13 +118,13 @@ plotpnormalartcltk <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
 
 
 
-# T-Student distribution
+# Student's t distribution
 ## Plot
 plotptstudentarplot <- function(q, df, rounding, main = NULL){
   nu <- df
   # Auxiliar function
-  llower <- if(abs(q[1]) > 6) abs(q[1] + 2) else 6
-  lupper <- if(abs(q[2]) > 6) abs(q[2] + 2) else 6
+  llower <- if(abs(q[1]) > 6) abs(q[1]) + 2 else 6
+  lupper <- if(abs(q[2]) > 6) abs(q[2]) + 2 else 6
   x <- seq(-llower, q[1], by=0.01)
   z <- seq(q[2], lupper, by=0.01)
   y <- seq(-llower, lupper, by=0.01)
@@ -133,27 +133,27 @@ plotptstudentarplot <- function(q, df, rounding, main = NULL){
   fy <- dt(y, df = nu)
   if (is.null(main)) {
     if (attr(q, "region") == "region1") {
-      titulo <- gettext("Probability function plot: T-student", domain = "R-leem")
+      titulo <- gettext("Probability function plot: Student's t", domain = "R-leem")
       main <- substitute(atop(bold(titulo),
-                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)),
+                              f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)),
                          list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region3") {
-      titulo <- gettext("Probability function plot: T-student", domain = "R-leem")
+      titulo <- gettext("Probability function plot: Student's t", domain = "R-leem")
       main <- substitute(atop(bold(titulo),
-                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)),
+                              f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)),
                          list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region5") {
-      titulo <- gettext("Probability function plot: T-student", domain = "R-leem")
+      titulo <- gettext("Probability function plot: Student's t", domain = "R-leem")
       main <- substitute(atop(bold(titulo),
-                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)),
+                              f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)),
                          list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region6") {
-      titulo <- gettext("Probability function plot: T-student", domain = "R-leem")
+      titulo <- gettext("Probability function plot: Student's t", domain = "R-leem")
       main <- substitute(atop(bold(titulo),
-                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)),
+                              f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)),
                          list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
   }
@@ -254,19 +254,25 @@ plotpchisqarplot <- function(q, df, ncp, rounding, main = NULL) {
     auxmain <- c(0, 1.2 * max(fx,fy,fz))
   }
   if (is.null(main)) {
+    titulo <- gettext("Probability function plot: Chi-Squared", domain = "R-leem")
     if (attr(q, "region") == "region1") {
-      main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~nu) == frac(1, 2^{nu/2}*Gamma(nu/2))*x^{nu/2-1}*e^{- x / 2} *","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region3") {
-      main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~nu) == frac(1, 2^{nu/2}*Gamma(nu/2))*x^{nu/2-1}*e^{- x / 2} *","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region5") {
-      main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~nu) == frac(1, 2^{nu/2}*Gamma(nu/2))*x^{nu/2-1}*e^{- x / 2} *","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region6") {
-      main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~nu) == frac(1, 2^{nu/2}*Gamma(nu/2))*x^{nu/2-1}*e^{- x / 2} *","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
   }
+  parametro <- gettext("Parameters:", domain = "R-leem")
   curve(dchisq(x, df = df, ncp = ncp), minimo, maximo,
         ylim = auxmain,
         xlab="X",
@@ -304,34 +310,26 @@ plotpchisqarplot <- function(q, df, ncp, rounding, main = NULL) {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
-                               list(ncpv = ncp, dfv = df)))
   }
   if (attr(q, "region") == "region3") {
     legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
-           legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
-                               list(ncpv = ncp, dfv = df)))
   }
   if (attr(q, "region") == "region5") {
     legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.7,
-           legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
-                               list(ncpv = ncp, dfv = df)))
   }
-  if ( attr(q, "region") == "region6") {
+  if (attr(q, "region") == "region6") {
     legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
-                               list(ncpv = ncp, dfv = df)))
   }
+  # Legend
+  legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute(parametro~nu == dfv,
+                             list(dfv = df, parametro = parametro)))
 } # plotcurve (older)
 ## RStudio
 plotpchisqarrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
@@ -340,7 +338,12 @@ plotpchisqarrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
   plotpchisqarplot(q, df, ncp, rounding, main)
 }
 ## Tcl/tk
-## Soon...
+plotpchisqartcltk <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
+  q[1] <- q1
+  q[2] <- q2
+  plotpchisqarplot(q, df, ncp, rounding, main)
+}
+
 
 # F distribution
 ## Plot
@@ -2301,7 +2304,9 @@ plotpswilcoxarrstudio <- function(q1, q2, n, rounding, main = NULL, q) {
 }
 
 
-
+# Auxiliar functions of P()
+# Observations:
+#    - `%<X<%`() internal function
 # B-region (name: plot+p+name_distribution+br+gui)
 # OBS.: br - B-region; gui: "plot", "rstudio", "tcltk"
 
@@ -2320,7 +2325,7 @@ plotpnormalbrplot <- function(q, mu, sigma, rounding, main = NULL) {
     if (attr(q, "region") == "region2") {
       titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
       main <- substitute(atop(bold(titulo),
-                              f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                              f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
                          list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region4") {
@@ -2418,39 +2423,39 @@ plotpnormalbrtcltk <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
   plotpnormalbrplot(q, mu, sigma, rounding, main)
 }
 
-# T-Student distribution
+# Student's t distribution
 ## Plot
 plotptstudentbrplot <- function(q, df, rounding, main = NULL) {
   nu <- df
-  llower <- if(abs(q[1]) > 6) abs(q[1] + 2) else 6
-  lupper <- if(abs(q[2]) > 6) abs(q[2] + 2) else 6
+  llower <- if(abs(q[1]) > 6) abs(q[1]) + 2 else 6
+  lupper <- if(abs(q[2]) > 6) abs(q[2]) + 2 else 6
   x <- seq(q[1], q[2], by=0.01)
   y <- seq(-llower, lupper, by=0.01)
   fx <- dt(x, df = nu)
   fy <- dt(y, df = nu)
   if (is.null(main)) {
     if (attr(q, "region") == "region2") {
-      titulo <- gettext("Probability function plot: t-Student")
+      titulo <- gettext("Probability function plot: Student's t")
       main <- substitute(atop(bold(titulo),
-                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                              f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
                          list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region4") {
-      titulo <- gettext("Probability function plot: t-Student")
+      titulo <- gettext("Probability function plot: Student's t")
       main <- substitute(atop(bold(titulo),
-                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                              f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
                          list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region7") {
-      titulo <- gettext("Probability function plot: t-Student")
+      titulo <- gettext("Probability function plot: Student's t")
       main <- substitute(atop(bold(titulo),
-                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                              f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
                          list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region8") {
-      titulo <- gettext("Probability function plot: t-Student")
+      titulo <- gettext("Probability function plot: Student's t")
       main <- substitute(atop(bold(titulo),
-                              f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                              f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
                          list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
 
     }
@@ -2541,19 +2546,25 @@ plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
     auxmain <- c(0, 1.2 * max(fx,fy))
   }
   if (is.null(main)) {
+    titulo <- gettext("Probability function plot: Chi-Squared", domain = "R-leem")
     if (attr(q, "region") == "region2") {
-      main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~nu) == frac(1, 2^{nu/2}*Gamma(nu/2))*x^{nu/2-1}*e^{- x / 2} *","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region4") {
-      main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~nu) == frac(1, 2^{nu/2}*Gamma(nu/2))*x^{nu/2-1}*e^{- x / 2} *","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region7") {
-      main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~nu) == frac(1, 2^{nu/2}*Gamma(nu/2))*x^{nu/2-1}*e^{- x / 2} *","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region8") {
-      main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~nu) == frac(1, 2^{nu/2}*Gamma(nu/2))*x^{nu/2-1}*e^{- x / 2} *","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo))
     }
   }
+  parametro <- gettext("Parameters:", domain = "R-leem")
   curve(dchisq(x, df = df, ncp = ncp), minimo, maximo,
         ylab = expression(f[X](x)), xlab = "X",
         ylim = auxmain,
@@ -2582,34 +2593,25 @@ plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
-                               list(ncpv = ncp, dfv = df)))
   }
   if (attr(q, "region") == "region4") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<=~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
-                               list(ncpv = ncp, dfv = df)))
   }
   if (attr(q, "region") == "region7") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<=~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
-                               list(ncpv = ncp, dfv = df)))
   }
   if ( attr(q, "region") == "region8") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
-           legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
-                               list(ncpv = ncp, dfv = df)))
   }
+  legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute(parametro~nu == dfv,
+                             list(dfv = df, parametro = parametro)))
 } # plotcurve (older)
 ## RStudio
 plotpchisqbrrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
@@ -2618,7 +2620,11 @@ plotpchisqbrrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
   plotpchisqbrplot(q, df, ncp, rounding, main)
 }
 ## Tcl/tk
-## Soon...
+plotpchisqbrtcltk <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
+  q[1] <- q1
+  q[2] <- q2
+  plotpchisqbrplot(q, df, ncp, rounding, main)
+}
 
 # F distribution
 ## Plot
@@ -4261,7 +4267,7 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
 
   if (is.null(main)) {
     titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
-    main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x", titulo = titulo))
+    main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x", titulo = titulo))
   }
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
@@ -4300,19 +4306,19 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
                              list(media = mu, varen = sigma, paramet = paramet)))
 }
 
-# T-Student distribution
+# Student's t distribution
 ## Plot
 plotptstudentlttplot <- function(q, df, rounding, main = NULL){
   nu <- df
-  lim <- if (abs(q) > 6) abs(q + 2) else 6
+  lim <- if (abs(q) > 6) abs(q) + 2 else 6
   x <- seq(-lim, q, by=0.01)
   y <- seq(q, lim, by=0.01)
   fx <- dt(x, df = nu)
   fy <- dt(y, df = nu)
   if (is.null(main)) {
-    titulo <- gettext("Probability function plot: t-Student", domain = "R-leem")
+    titulo <- gettext("Probability function plot: Student's t", domain = "R-leem")
     main <- substitute(atop(bold(titulo),
-                            f[X](x) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)),
+                            f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)),
                        list(t1 = q, x = "x", titulo = titulo))
   }
   curve(dt(x, df = nu), -lim, lim, ylab = expression(f[X](X)),
@@ -4352,8 +4358,8 @@ plotptstudentlttplot <- function(q, df, rounding, main = NULL){
 # Chi-Squared distribution
 ## Plot
 plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
-  minimo <- if (q <=  ncp - 4 * df) q - 4 * df else 0
-  maximo <- if (q > ncp + 4 * df) q + 4 * df else ncp + 4 * df
+  minimo <- 0
+  maximo <- if (q > ncp + 4 * df) q + 10 * df else ncp + 10 * df
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- dchisq(x, df = df, ncp = ncp)
@@ -4366,7 +4372,9 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
     auxmain <- c(0, 1.2 * max(fx,fy))
   }
   if (is.null(main)) {
-    main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2} *","~~Fx(t1)== integral(f[X](x^2)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
+    titulo <- gettext("Probability function plot: Chi-Squared", domain = "R-leem")
+    main <- substitute(atop(bold(titulo), f[X](x*";"~nu) == frac(1, 2^{nu/2}*Gamma(nu/2))*x^{nu/2-1}*e^{- x / 2} *","~~Fx(t1)== integral(f[X](x)*"dx", 0, t1)),
+                       list(t1 = q, x = "x", titulo = titulo))
   }
   curve(dchisq(x, df = df, ncp = ncp), minimo, maximo,
         ylim = auxmain,
@@ -4400,9 +4408,10 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
-         legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
-                             list(ncpv = ncp, dfv = df)))
+         legend = substitute(parametro~nu == dfv,
+                             list(dfv = df, parametro = parametro)))
 }
 
 # F distribution
@@ -5341,7 +5350,7 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
   if (is.null(main)) {
     titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
     main = substitute(atop(bold(titulo),
-                           f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
+                           f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
                       list(t = q, titulo = titulo))
   }
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
@@ -5384,19 +5393,19 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
                                   parametro = parametro)))
 }
 
-# T-Student distribution
+# Student's t distribution
 ## Plot
 plotptstudentltfplot <- function(q, df, rounding, main = NULL) {
   nu <- df
-  lim <- if(abs(q) > 6) abs(q + 2) else 6
+  lim <- if (abs(q) > 6) abs(q) + 2 else 6
   x <- seq(q, lim, by=0.01)
   y <- seq(-lim, q, by=0.01)
   fx <- dt(x, df = nu)
   fy <- dt(y, df = nu)
   if(is.null(main)){
-    titulo <- gettext("Probability function plot: t-Student", domain = "R-leem")
+    titulo <- gettext("Probability function plot: Student's t", domain = "R-leem")
     main <- substitute(atop(bold(titulo),
-                            f[X](x) == frac(1, root(nu)*B*(frac(1,2)*","*frac(nu,2)))*(1+frac("t"^2, nu))^{-(nu+1)/2}*","~~S[X](t1)== 1 - F[X](t1)~ "="*1 - integral(f[X](x)*"dx", -infinity, t1)~"="*P(X>= t1) == integral(f[X](x)*"dx", t1, infinity)),
+                            f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~S[X](t1)== 1 - F[X](t1)~ "="*1 - integral(f[X](x)*"dx", -infinity, t1)~"="*P(X>= t1) == integral(f[X](x)*"dx", t1, infinity)),
                        list(t1 = q, x = "x", titulo = titulo))
   }
   curve(dt(x, df = nu), -lim, lim, ylab = expression(f[X](x)),
@@ -5437,8 +5446,8 @@ plotptstudentltfplot <- function(q, df, rounding, main = NULL) {
 # Chi-Squared distribution
 ## Plot
 plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
-  minimo <- if (q <=  ncp - 4 * df) q - 4 * df else 0
-  maximo <- if (q > ncp + 4 * df) q + 4 * df else ncp + 4 * df
+  minimo <- 0
+  maximo <- if (q > ncp + 4 * df) q + 10 * df else ncp + 10 * df
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- dchisq(x, df = df, ncp = ncp)
@@ -5451,7 +5460,9 @@ plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
     auxmain <- c(0, 1.2 * max(fx,fy))
   }
   if (is.null(main)) {
-    main <- substitute(atop(bold("Probability function plot: Chi-Squared"), f[X](x^2) == frac(1, 2^{k/2}*gamma(k/2))*(x[k]^2)^{k/2-1}*e^{-x[k]^2/2}*","~~S[X](t1)~"="~1-Fx(t1)~"="~1-integral(f[X](x^2)*"dx", -infinity, t1)~"="~P(X>5)~"="~integral(f[X](x^2)*"dx", t1, infinity)), list(t1 = q, x = "x"))
+    titulo <- gettext("Probability function plot: Chi-Squared", domain = "R-leem")
+    main <- substitute(atop(bold(titulo), f[X](x*";"~nu) == frac(1, 2^{nu/2}*Gamma(nu/2))*x^{nu/2-1}*e^{- x / 2} *","~~S[X](t1)~"="~1-Fx(t1)~"="~1-integral(f[X](x)*"dx", -infinity, t1)~"="~P(X>5)~"="~integral(f[X](x)*"dx", t1, infinity)),
+                       list(t1 = q, x = "x", titulo = titulo))
   }
   curve(dchisq(x, df = df, ncp = ncp), minimo, maximo,
         ylim = auxmain,
@@ -5485,9 +5496,10 @@ plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(Fx(t1)==P(X>t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
-         legend = substitute("Parameters:"~ncp == ncpv ~ "," ~ df == dfv,
-                             list(ncpv = ncp, dfv = df)))
+         legend = substitute(parametro~nu == dfv,
+                             list(dfv = df, parametro = parametro)))
 }
 
 # F distribution

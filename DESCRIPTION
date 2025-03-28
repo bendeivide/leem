@@ -1,7 +1,7 @@
 Package: leem
 Type: Package
 Title: Laboratory of Teaching to Statistics and Mathematics
-Version: 0.2.0
+Version: 0.3.9000
 Authors@R: c(
     person("Ben", "Deivide", email = "ben.deivide@gmail.com", 
     role = c("aut", "cre"), comment = c(ORCID = '0000-0001-7019-8794')),

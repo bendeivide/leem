@@ -41,11 +41,19 @@ P(
 \details{
 The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
 The additional arguments represent the parameters of the distributions, that is:
+\itemize{
+\item If \code{dist = "normal"} (Default); the additional arguments are: \code{mean} (\eqn{\mu}) and \code{sd} (\eqn{\sigma}). The PDF is given by:
+\deqn{\displaystyle{\frac {1}{\sqrt {2\pi \sigma ^{2}}}}e^{-{\frac {(x-\mu )^{2}}{2\sigma ^{2}}}}, \quad \mu \in \mathbb{R},~\sigma^2 > 0;}
+\item If \code{dist = "t-student"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
+\deqn{\displaystyle{\frac {\Gamma \left({\frac {\ \nu +1\ }{2}}\right)}{{\sqrt {\pi \ \nu \ }}\ \Gamma \left({\frac {\nu }{\ 2\ }}\right)}}\left(\ 1+{\frac {~x^{2}\ }{\nu }}\ \right)^{-{\frac {\ \nu +1\ }{2}}}, \quad \nu > 1;}
+\item If \code{dist = "chisq"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
+\deqn{\displaystyle{\frac {1}{2^{k/2}\Gamma (k/2)}}\;x^{k/2-1}e^{-x/2}, \quad \nu > 0;}
+}
 }
 \examples{
 # Loading package
 library(leem)
-# Example 1 - t-Student distribution
+# Example 1 - Student's t distribution
 \dontrun{
 P(q = 2, dist = "t-student", df = 10)
 P(q = 2, dist = "t-student", df = 10, gui = 'rstudio')

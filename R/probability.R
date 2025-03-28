@@ -2,9 +2,6 @@
 #'
 #' \code{P} Compute the cumulative distribution function for multiple distributions
 #'
-#' @details The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
-#' The additional arguments represent the parameters of the distributions, that is:
-#'
 #' @param q quantile. The \code{q} argument can have length 1 or 2. See Details.
 #' @param dist distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....
 #' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.
@@ -14,12 +11,21 @@
 #' @param main defalt is \code{NULL}; it represents title of plot.
 #' @param ... additional arguments according to the chosen distribution.
 #'
+#' @details The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
+#' The additional arguments represent the parameters of the distributions, that is:
+#' - If \code{dist = "normal"} (Default); the additional arguments are: \code{mean} (\eqn{\mu}) and \code{sd} (\eqn{\sigma}). The PDF is given by:
+#' \deqn{\displaystyle{\frac {1}{\sqrt {2\pi \sigma ^{2}}}}e^{-{\frac {(x-\mu )^{2}}{2\sigma ^{2}}}}, \quad \mu \in \mathbb{R},~\sigma^2 > 0;}
+#' - If \code{dist = "t-student"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
+#' \deqn{\displaystyle{\frac {\Gamma \left({\frac {\ \nu +1\ }{2}}\right)}{{\sqrt {\pi \ \nu \ }}\ \Gamma \left({\frac {\nu }{\ 2\ }}\right)}}\left(\ 1+{\frac {~x^{2}\ }{\nu }}\ \right)^{-{\frac {\ \nu +1\ }{2}}}, \quad \nu > 1;}
+#' - If \code{dist = "chisq"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
+#'  \deqn{\displaystyle{\frac {1}{2^{k/2}\Gamma (k/2)}}\;x^{k/2-1}e^{-x/2}, \quad \nu > 0;}
+#'
 #' @return \code{P} returns the probability and its graphical representation. The result can be given as a percentage or not.
 #'
 #' @examples
 #' # Loading package
 #' library(leem)
-#' # Example 1 - t-Student distribution
+#' # Example 1 - Student's t distribution
 #' \dontrun{
 #' P(q = 2, dist = "t-student", df = 10)
 #' P(q = 2, dist = "t-student", df = 10, gui = 'rstudio')
@@ -59,7 +65,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
           argaddit$sd <- as.numeric(sd)
         }
-        if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+        if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
 
         mu <- argaddit$mean
         sigma <- argaddit$sd
@@ -98,15 +104,15 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if (dist == "t-student") {
         if (!any(names(argaddit) == "df")) {
-          df <- readline(gettext("Insert the value of degree of freedom (df): ", domain = "R-leem"))
+          df <- readline(gettext("Enter the value of 'df' argument:", domain = "R-leem"))
           argaddit$df <- as.numeric(df)
         }
 
         nu <- argaddit$df
 
         #Auxiliary Arguments
-        llower <- if(abs(q[1]) < -6) abs(q[1] - 2) else -6
-        lupper <- if(abs(q[2]) > 6) abs(q[2] + 2) else 6
+        llower <- if(abs(q[1]) > 6) abs(q[1]) + 2 else 6
+        lupper <- if(abs(q[2]) > 6) abs(q[2]) + 2 else 6
 
 
         if (gui == "plot" ) {
@@ -114,7 +120,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotptstudentarrstudio(q1, q2, df, rounding, main, q),
-                                 q1 = manipulate::slider(llower, q[2], q[1]),
+                                 q1 = manipulate::slider(-llower, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], lupper, q[2]),
                                  df = manipulate::slider(1, nu + 100, nu))
         }
@@ -124,7 +130,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           war <- options(warn = - 1)
           # on.exit(options(war))
 
-          .tkplotleemtstudent3(q[1], q[2], nu, rounding, main, llower, lupper, q)
+          .tkplotleemtstudent3(q[1], q[2], nu, rounding, main, -llower, lupper, q)
 
           # Desabilitar warnings global
           #options(warn = - 1)
@@ -144,28 +150,38 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           argaddit$df <- as.numeric(df)
         }
 
-        if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+        if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
 
         ncp <- argaddit$ncp
-        df <- argaddit$df
-        minimo <- if (q[1] <= ncp - 4 * df) ncp - 4 * df else 0
-        maximo <- if (q[2] > ncp + 4 * df) q[2] + 4 * df else ncp + 4 * df
+        nu <- argaddit$df
+        minimo <- 0
+        maximo <- if (q[2] > ncp + 4 * nu) q[2] + 4 * nu else ncp + 4 * nu
 
         if (gui == "plot") {
-          plotpchisqarplot(q, df, ncp, rounding, main)
+          plotpchisqarplot(q, nu, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpchisqarrstudio(q1, q2, df, ncp, rounding, main, q),
+          manipulate::manipulate(plotpchisqarrstudio(q1, q2, nu, ncp, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
-                                 df = manipulate::slider(1, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(0, ncp + 2 * df, ncp))
+                                 df = manipulate::slider(1, ncp + 2 * nu, nu),
+                                 ncp = manipulate::slider(0, ncp + 2 * nu, ncp))
         }
         if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          # on.exit(options(war))
+
+          .tkplotleemchisq3(q[1], q[2], nu, ncp, rounding, main, minimo, maximo, q)
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
-        prob <- pchisq(q[1], df = df, ncp = ncp, lower.tail = T) +
-          pchisq(q[2], df = df, ncp = ncp, lower.tail = F)
+        prob <- pchisq(q[1], df = nu, ncp = ncp, lower.tail = T) +
+          pchisq(q[2], df = nu, ncp = ncp, lower.tail = F)
       }
       if (dist == "f") {
         if (!any(names(argaddit) == "df1")) {
@@ -177,8 +193,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           argaddit$df2 <- as.numeric(df2)
         }
 
-        if (argaddit$df1 <= 0) stop("The df1 arguments must be greater then zero!", call. = FALSE, domain = "R-leem")
-        if (argaddit$df2 <= 0) stop("The df2 arguments must be greater then zero!", call. = FALSE, domain = "R-leem")
+        if (argaddit$df1 <= 0) stop("The df1 arguments must be greater than zero!", call. = FALSE, domain = "R-leem")
+        if (argaddit$df2 <= 0) stop("The df2 arguments must be greater than zero!", call. = FALSE, domain = "R-leem")
 
         df1 <- argaddit$df1
         df2 <- argaddit$df2
@@ -419,7 +435,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
           argaddit$sd <- as.numeric(sd)
         }
-        if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+        if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
 
         mu <- argaddit$mean
         sigma <- argaddit$sd
@@ -959,7 +975,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           argaddit$sd <- as.numeric(sd)
         }
         if (argaddit$sd <= 0 ) {
-          stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+          stop("The 'sd' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
         }
         # Auxiliar variables
         minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
@@ -991,13 +1007,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if (dist == "t-student") {
         if (!any(names(argaddit) == "df")) {
-          df <- readline(gettext("Enter the value of degree of freedom (df): ", domain = "R-leem"))
+          df <- readline(gettext("Enter the value of 'df' argument:", domain = "R-leem"))
           argaddit$df <- as.numeric(df)
         }
         # Auxiliar objects
         nu <- argaddit$df
-        llower <- if(abs(q[1]) < -6) abs(q[1] - 2) else -6
-        lupper <- if(abs(q[2]) > 6) abs(q[2] + 2) else 6
+        llower <- if(abs(q[1]) > 6) abs(q[1]) + 2 else 6
+        lupper <- if(abs(q[2]) > 6) abs(q[2]) + 2 else 6
         nu <- argaddit$df
         # Function
         if (gui == "plot" ) {
@@ -1005,7 +1021,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotptstudentbrrstudio(q1, q2, df, rounding, main, q),
-                                 q1 = manipulate::slider(llower, q[2], q[1]),
+                                 q1 = manipulate::slider(-llower, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], lupper, q[2]),
                                  df = manipulate::slider(1, nu + 100, nu))
         }
@@ -1015,7 +1031,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           war <- options(warn = - 1)
           # on.exit(options(war))
 
-          .tkplotleemtstudent4(q[1], q[2], nu, rounding, main, llower, lupper, q)
+          .tkplotleemtstudent4(q[1], q[2], nu, rounding, main, -llower, lupper, q)
 
           # Desabilitar warnings global
           #options(warn = - 1)
@@ -1091,26 +1107,36 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           argaddit$df <- as.numeric(df)
         }
         ncp <- argaddit$ncp
-        df <- argaddit$df
-        minimo <- if (q[1] <= ncp - 4 * df) ncp - 4 * df else 0
-        maximo <- if (q[2] > ncp + 4 * df) q[2] + 4 * df else ncp + 4 * df
+        nu <- argaddit$df
+        minimo <- 0
+        maximo <- if (q[2] > ncp + 4 * nu) q[2] + 4 * nu else ncp + 4 * nu
 
-        if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+        if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
 
         if (gui == "plot") {
-          plotpchisqbrplot(q, df, ncp, rounding, main)
+          plotpchisqbrplot(q, nu, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpchisqbrrstudio(q1, q2, df, ncp, rounding, main, q),
+          manipulate::manipulate(plotpchisqbrrstudio(q1, q2, nu, ncp, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], maximo, q[2]),
-                                 df = manipulate::slider(1, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(0, ncp + 2 * df, ncp))
+                                 df = manipulate::slider(1, ncp + 2 * nu, nu),
+                                 ncp = manipulate::slider(0, ncp + 2 * nu, ncp))
         }
         if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          # on.exit(options(war))
+
+          .tkplotleemchisq4(q[1], q[2], nu, ncp, rounding, main, minimo, maximo, q)
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
-        prob <- pchisq(q = q[2], df = df, ncp= ncp) - pchisq(q = q[1], df = df, ncp = ncp)
+        prob <- pchisq(q = q[2], df = nu, ncp= ncp) - pchisq(q = q[1], df = nu, ncp = ncp)
       }
       if (dist == "f") {
         if (!any(names(argaddit) == "df1")) {
@@ -1122,8 +1148,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           argaddit$df2 <- as.numeric(df2)
         }
 
-        if (argaddit$df1 <= 0) stop("The df1 arguments must be greater then zero!", call. = FALSE, domain = "R-leem")
-        if (argaddit$df2 <= 0) stop("The df2 arguments must be greater then zero!", call. = FALSE, domain = "R-leem")
+        if (argaddit$df1 <= 0) stop("The df1 arguments must be greater than zero!", call. = FALSE, domain = "R-leem")
+        if (argaddit$df2 <= 0) stop("The df2 arguments must be greater than zero!", call. = FALSE, domain = "R-leem")
 
         df1 <- argaddit$df1
         df2 <- argaddit$df2
@@ -1357,7 +1383,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           argaddit$sd <- as.numeric(sd)
         }
         if (argaddit$sd <= 0 ) {
-          stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+          stop("The 'sd' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
         }
         # Auxiliar variables
         minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
@@ -1866,7 +1892,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         sd <- readline(paste0(gettext("Enter the value of 'sd' argument:", domain = "R-leem"), " "))
         argaddit$sd <- as.numeric(sd)
       }
-      if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+      if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
       if (lower.tail) {
         # Auxiliar variables
         minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
@@ -1942,7 +1968,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         df <- readline(paste0(gettext("Enter the value of 'df' argument:", domain = "R-leem"), " "))
         argaddit$df <- as.numeric(df)
       }
-      lim <- if(abs(q) > 6) abs(q + 2) else 6
+      lim <- if (abs(q) > 6) abs(q) + 2 else 6
       nu <- argaddit$df
       if (lower.tail) {
         if (gui == "plot" ) {
@@ -1997,50 +2023,78 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         prob <- pt(q = q, df = nu, lower.tail = FALSE)
     }
     if (dist == "chisq") {
+      if (q < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
       if (!any(names(argaddit) == "ncp")) {
         ncp <- 0
         argaddit$ncp <- as.numeric(ncp)
       }
       if (!any(names(argaddit) == "df")) {
-        df <- readline(gettext("Insert the value of 'df' argument: ", domain = "R-leem"))
+        df <- readline(gettext("Enter the value of 'df' argument:", domain = "R-leem"))
         argaddit$df <- as.numeric(df)
       }
       ncp <- argaddit$ncp
-      df <- argaddit$df
-      minimo <- if (q <=  ncp - 4 * df) q - 4 * df else 0
-      maximo <- if (q > ncp + 4 * df) q + 4 * df else ncp + 4 * df
+      nu <- argaddit$df
 
-      if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+      if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
       if (lower.tail) {
         # Auxiliar variables
         if (gui == "plot" ) {
-          plotpchisqlttplot(q, df, ncp, rounding, main)
+          plotpchisqlttplot(q, nu, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpchisqlttplot(q, df, ncp, rounding, main),
-                                 q = manipulate::slider(0, ncp + 4 * df, q),
-                                 df = manipulate::slider(1, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(0, ncp + 2 * df, ncp))
+          manipulate::manipulate(plotpchisqlttplot(q, nu, ncp, rounding, main),
+                                 q = manipulate::slider(0, ncp + 4 * nu, q),
+                                 df = manipulate::slider(1, ncp + 2 * nu, nu),
+                                 ncp = manipulate::slider(0, ncp + 2 * nu, ncp))
         }
         if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          #on.exit(options(war))
+
+          # Plot tk da dist Qui-quadrado com q de comp 1 (~/tkplotleem.R)
+          .tkplotleemchisq(q, nu, ncp, rounding, main, 0, ncp + 4 * nu)
+
+
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
+
+
+
         }
-        prob <- pchisq(q = q, df = df, ncp = ncp)
+        prob <- pchisq(q = q, df = nu, ncp = ncp)
       }
       else {
         if (gui == "plot" ) {
-          plotpchisqltfplot(q, df, ncp, rounding, main)
+          plotpchisqltfplot(q, nu, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpchisqltfplot(q, df, ncp, rounding, main),
-                                 q = manipulate::slider(0, ncp + 4 * df, q),
-                                 df = manipulate::slider(1, ncp + 2 * df, df),
-                                 ncp = manipulate::slider(0, ncp + 2 * df, ncp))
+          manipulate::manipulate(plotpchisqltfplot(q, nu, ncp, rounding, main),
+                                 q = manipulate::slider(0, ncp + 4 * nu, q),
+                                 df = manipulate::slider(1, ncp + 2 * nu, nu),
+                                 ncp = manipulate::slider(0, ncp + 2 * nu, ncp))
         }
         if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          #on.exit(options(war))
+
+          # Plot tk da dist Qui-quadrado com q de comp 1 (~/tkplotleem.R)
+          .tkplotleemchisq02(q, nu, ncp, rounding, main, 0, ncp + 4 * nu)
+
+
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
-        prob <- pchisq(q = q, df = df, ncp = ncp, lower.tail = FALSE)
+        prob <- pchisq(q = q, df = nu, ncp = ncp, lower.tail = FALSE)
       }
     }
     if (dist == "f") {
@@ -2053,8 +2107,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         argaddit$df2 <- as.numeric(df2)
       }
 
-      if (argaddit$df1 <= 0) stop("The df1 arguments must be greater then zero!", call. = FALSE, domain = "R-leem")
-      if (argaddit$df2 <= 0) stop("The df2 arguments must be greater then zero!", call. = FALSE, domain = "R-leem")
+      if (argaddit$df1 <= 0) stop("The df1 arguments must be greater than zero!", call. = FALSE, domain = "R-leem")
+      if (argaddit$df2 <= 0) stop("The df2 arguments must be greater than zero!", call. = FALSE, domain = "R-leem")
 
       df1 <- argaddit$df1
       df2 <- argaddit$df2
@@ -2411,7 +2465,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
         argaddit$sd <- as.numeric(sd)
       }
-      if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater then zero!", call. = FALSE, domain = "R-leem")
+      if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
       if (lower.tail) {
         # Auxiliar variables
         minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
