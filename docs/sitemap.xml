@@ -1,18 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/leem.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/Gumbel_distribution.html</loc></url>
+<url><loc>/reference/P.html</loc></url>
+<url><loc>/reference/Q.html</loc></url>
+<url><loc>/reference/Regions_of_probability.html</loc></url>
+<url><loc>/reference/amplitude.html</loc></url>
+<url><loc>/reference/apf.html</loc></url>
+<url><loc>/reference/barplot.leem.html</loc></url>
+<url><loc>/reference/boxplot.leem.html</loc></url>
+<url><loc>/reference/cdfd.html</loc></url>
+<url><loc>/reference/cv.html</loc></url>
+<url><loc>/reference/hist.leem.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/insert.html</loc></url>
+<url><loc>/reference/insert.leem.html</loc></url>
+<url><loc>/reference/leem.html</loc></url>
+<url><loc>/reference/madev.html</loc></url>
+<url><loc>/reference/mean.leem.html</loc></url>
+<url><loc>/reference/medev.html</loc></url>
+<url><loc>/reference/median.leem.html</loc></url>
+<url><loc>/reference/mfreq.html</loc></url>
+<url><loc>/reference/mpos.html</loc></url>
+<url><loc>/reference/mstde.html</loc></url>
+<url><loc>/reference/new_leem.html</loc></url>
+<url><loc>/reference/ogive.html</loc></url>
+<url><loc>/reference/piechart.html</loc></url>
+<url><loc>/reference/polyfreq.html</loc></url>
+<url><loc>/reference/polyfreq.leem.html</loc></url>
+<url><loc>/reference/probnormal.html</loc></url>
+<url><loc>/reference/propofnormal.html</loc></url>
+<url><loc>/reference/sdev.html</loc></url>
+<url><loc>/reference/showboxplot.html</loc></url>
+<url><loc>/reference/showcdf.html</loc></url>
+<url><loc>/reference/showci.html</loc></url>
+<url><loc>/reference/showkur.html</loc></url>
+<url><loc>/reference/showpar.html</loc></url>
+<url><loc>/reference/showskew.html</loc></url>
+<url><loc>/reference/showtabnormal.html</loc></url>
+<url><loc>/reference/skewness.html</loc></url>
+<url><loc>/reference/stickchart.html</loc></url>
+<url><loc>/reference/tabfreq.html</loc></url>
+<url><loc>/reference/tabfreq.leem.html</loc></url>
+<url><loc>/reference/th.html</loc></url>
+<url><loc>/reference/variance.html</loc></url>
 </urlset>
+
