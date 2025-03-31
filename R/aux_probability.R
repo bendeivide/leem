@@ -4416,27 +4416,29 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
 
 # F distribution
 ## Plot
-plotpflttplot <- function(q, df1, df2, rounding, main = NULL) {
+plotpflttplot <- function(q, df1, df2, ncp = 0, rounding, main = NULL) {
   minimo <- 0
   maximo <- 10
-  if(q>10){
-    maximo <- q+ 2*(df1/df2)
+  if (q > 10) {
+    maximo <- q + ncp + 2 * (df1 / df2)
   }
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
-  fx <- df(x, df1, df2)
-  fy <- df(y, df1, df2)
-  if(is.infinite(1.2 * max(fx,fy))){
+  fx <- df(x, df1, df2, ncp)
+  fy <- df(y, df1, df2, ncp)
+  if (is.infinite(1.2 * max(fx,fy))) {
     auxmain <- c(0, 2.5 + (df1/df2));
     auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
-  }else{
+  } else {
     auxrect <- max(fx,fy)
     auxmain <- c(0, 1.2 * max(fx,fy))
   }
   if (is.null(main)) {
-    main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/ xB(frac(d[1],2),frac(d[2],2))*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x"))
+    titulo <- gettext("Probability function plot: F", domain = "R-leem")
+    main <- substitute(atop(bold(titulo), f[X](x*";"~nu[1]*","~nu[2]) == root(frac((nu[1]*x)^nu[1]*nu[2]^nu[2],(nu[1]*x+nu[2])^{nu[1]+nu[2]}))/ xB(frac(nu[1],2),frac(nu[2],2))*","~~Fx(t1)== integral(f[X](x)*"dx", 0, t1)),
+                       list(t1 = q, x = "x", titulo = titulo))
   }
-  curve(df(x, df1, df2), minimo, maximo,
+  curve(df(x, df1, df2, ncp), minimo, maximo, n =  300,
         ylim = auxmain, ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
         main = main,
@@ -4450,7 +4452,7 @@ plotpflttplot <- function(q, df1, df2, rounding, main = NULL) {
   # Insert vertical line over the mean
   qq <- round(q, digits=2)
   qqaux <-round(q, digits=2)
-  Pr <- round(pf(qq,  df1, df2, lower.tail = TRUE), digits=rounding)
+  Pr <- round(pf(qq,  df1, df2, ncp, lower.tail = TRUE), digits = rounding)
   #Pr <- gsub("\\.", ",", Pr)
   ##qq <- gsub("\\.", ",", qq)
   # Insert red q point
@@ -4467,9 +4469,11 @@ plotpflttplot <- function(q, df1, df2, rounding, main = NULL) {
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr)))
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-         legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                             list(df1v = df1, df2v = df2)))
+         legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                             list(df1v = df1, df2v = df2,
+                                  parametro = parametro)))
 } # plotcurve (older)
 
 # Gumbel distribution

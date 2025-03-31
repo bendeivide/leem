@@ -139,6 +139,13 @@
           - [ ] lower.tail = T/F
       - [X] Geometric
           - [X] lower.tail = T/F
+          
+# leem 0.2.1
+  - fixed bugs for P() function:
+    - Normal distribution
+    - Student's t-distribution
+    - Chi-squared distribution
+    - F distribution
 # leem 0.3.0
   - [X] Bugs fixed in plots, no longer needing to use the tabfreq() function directly;
   - [X] *Test of Hypothesis*: `th()`

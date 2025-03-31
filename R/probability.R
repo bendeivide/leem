@@ -2025,8 +2025,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
     if (dist == "chisq") {
       if (q < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
       if (!any(names(argaddit) == "ncp")) {
-        ncp <- 0
-        argaddit$ncp <- as.numeric(ncp)
+        argaddit$ncp <- 0
       }
       if (!any(names(argaddit) == "df")) {
         df <- readline(gettext("Enter the value of 'df' argument:", domain = "R-leem"))
@@ -2098,6 +2097,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
     }
     if (dist == "f") {
+      if (q < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+      if (!any(names(argaddit) == "ncp")) {
+        argaddit$ncp <- 0
+      }
       if (!any(names(argaddit) == "df1")) {
         df1 <- readline(gettext("Insert the value of 'df1' argument: ", domain = "R-leem"))
         argaddit$df1 <- as.numeric(df1)
@@ -2112,28 +2115,40 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
       df1 <- argaddit$df1
       df2 <- argaddit$df2
-
-      minimo <- if (q >= df1 - 4 * df2) q - 4 * df2 else 0
-      maximo <- if (q > df1 + 4 * df2) q + 4 * df2 else df1 + 4 * df2
+      ncp <- argaddit$ncp
 
       if (lower.tail) {
         if (gui == "plot") {
-          plotpflttplot(q, df1, df2, rounding, main)
+          plotpflttplot(q, df1, df2, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpflttplot(q, df1, df2, rounding, main),
-                                 q = manipulate::slider(0, 10, q),
+          manipulate::manipulate(plotpflttplot(q, df1, df2, ncp, rounding, main),
+                                 q = manipulate::slider(0, q + 10, q),
                                  df1 = manipulate::slider(1, df1  + 2 * df1, df1),
-                                 df2 = manipulate::slider(1, df2 + 2 * df2, df2))
+                                 df2 = manipulate::slider(1, df2 + 2 * df2, df2),
+                                 ncp = manipulate::slider(0, ncp + 10, ncp))
         }
         if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          #on.exit(options(war))
+
+          # Plot tk da dist F com q de comp 1 (~/tkplotleem.R)
+          .tkplotleemf(q, df1, df2, ncp, rounding, main)
+
+
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
         # Compute the desired probability
-        prob <- pf(q, df1, df2)
+        prob <- pf(q, df1, df2, ncp)
 
       }
-      else{
+      else {
         if (gui == "plot") {
           plotpfltfplot(q, df1, df2, rounding, main)
         }

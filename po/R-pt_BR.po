@@ -547,3 +547,17 @@ msgstr "Entrada(s)"
 
 msgid "The 'q' argument must be greater than zero!"
 msgstr "O argumento 'q' deve ser maior que zero!"
+
+msgid "Probability function plot: F"
+msgstr "Gráfico da FDP: F"
+
+msgid "leem package: F Distribution"
+msgstr "Pacote leem: Distribuição F"
+
+msgid "Degree of freedom (numerator)"
+msgstr "Grau de liberdade (numerador)"
+
+msgid "Degree of freedom (denominator)"
+msgstr "Grau de liberdade (denominador)"
+
+
