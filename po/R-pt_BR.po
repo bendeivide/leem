@@ -560,4 +560,5 @@ msgstr "Grau de liberdade (numerador)"
 msgid "Degree of freedom (denominator)"
 msgstr "Grau de liberdade (denominador)"
 
-
+msgid "the 'ncp' argument must be a non-negative value!"
+msgstr "O argumento 'ncp' deve ser um valor não negativo!"

@@ -3,7 +3,7 @@
 #' \code{P} Compute the cumulative distribution function for multiple distributions
 #'
 #' @param q quantile. The \code{q} argument can have length 1 or 2. See Details.
-#' @param dist distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....
+#' @param dist distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'chisq'}, \code{'f'}, ...
 #' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.
 #' @param rounding numerical; it represents the number of decimals for calculating the probability.
 #' @param porcentage logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.
@@ -14,11 +14,20 @@
 #' @details The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
 #' The additional arguments represent the parameters of the distributions, that is:
 #' - If \code{dist = "normal"} (Default); the additional arguments are: \code{mean} (\eqn{\mu}) and \code{sd} (\eqn{\sigma}). The PDF is given by:
-#' \deqn{\displaystyle{\frac {1}{\sqrt {2\pi \sigma ^{2}}}}e^{-{\frac {(x-\mu )^{2}}{2\sigma ^{2}}}}, \quad \mu \in \mathbb{R},~\sigma^2 > 0;}
+#' \deqn{\displaystyle{f_X(x; \mu, \sigma) = \frac {1}{\sqrt {2\pi \sigma ^{2}}}}e^{-{\frac {(x-\mu )^{2}}{2\sigma ^{2}}}}, \quad x \in \mathbb{R},~ \mu \in \mathbb{R},~\sigma^2 > 0;}
 #' - If \code{dist = "t-student"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
-#' \deqn{\displaystyle{\frac {\Gamma \left({\frac {\ \nu +1\ }{2}}\right)}{{\sqrt {\pi \ \nu \ }}\ \Gamma \left({\frac {\nu }{\ 2\ }}\right)}}\left(\ 1+{\frac {~x^{2}\ }{\nu }}\ \right)^{-{\frac {\ \nu +1\ }{2}}}, \quad \nu > 1;}
+#' \deqn{\displaystyle{f_X(x; \nu) = \frac {\Gamma \left({\frac {\ \nu +1\ }{2}}\right)}{{\sqrt {\pi \ \nu \ }}\ \Gamma \left({\frac {\nu }{\ 2\ }}\right)}}\left(\ 1+{\frac {~x^{2}\ }{\nu }}\ \right)^{-{\frac {\ \nu +1\ }{2}}}, \quad x \in \mathbb{R},~\nu > 1;}
 #' - If \code{dist = "chisq"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
-#'  \deqn{\displaystyle{\frac {1}{2^{k/2}\Gamma (k/2)}}\;x^{k/2-1}e^{-x/2}, \quad \nu > 0;}
+#'  \deqn{\displaystyle{f_X(x; \nu) = \frac {1}{2^{k/2}\Gamma (k/2)}}\;x^{k/2-1}e^{-x/2}, \quad x > 0,~\nu > 0;}
+#' - If \code{dist = "f"}; the additional argument is: \code{df1} (\eqn{\nu_1}) and \code{df2} (\eqn{\nu_2}). The PDF is given by:
+#'  \deqn{f_X(x; \nu_1, \nu_2) = {\displaystyle {\frac {\sqrt {\frac {(\nu_{1}x)^{\nu_{1}}\nu_{2}^{\nu_{2}}}{(\nu_{1}x+\nu_{2})^{\nu_{1}+\nu_{2}}}}}{x\,\mathrm {B} \!\left({\frac {\nu_{1}}{2}},{\frac {\nu_{2}}{2}}\right),}}\!}, \quad x > 0,~\nu_1,\nu_2 > 0;}
+#'  where, \eqn{x > 0}, \eqn{\nu_1,~\nu_2} > 0, and \eqn{B} is the beta function.
+#'
+#' The \code{ncp} parameter (\eqn{\lambda \in \mathbb{R}}) represents the noncentrality parameter. The PDFs presented graphically do not take this parameter into account. However, to reinforce the importance of this parameter
+#' in the three distributions (Student's t-distribution, F-distribution and Chi-squared distribution), especially when studying hypothesis testing, we present their distributions taking into account the \code{ncp} parameter, as follows:
+#' - The PDF for the noncentral t-distribution with \eqn{\nu > 0} degrees of freedom and noncentrality parameter \eqn{\lambda} is based on the \link[stats]{pt} function. If \eqn{Z}
+#' is a standard normal random variable, and \eqn{V} is a chi-squared distribution random variable with \eqn{\nu} degrees of freedom that is independent of \eqn{Z}, then \eqn{T = (Z + \lambda) / \sqrt{V / \nu}} is
+#' a noncentral t-distributed random variable with \eqn{\nu} degrees of freedom and noncentrality parameter \eqn{\lambda}. If \eqn{\lambda = 0}, the PDF reduces to the probability density function of the Student's t-distribution. However, it is worth noting that the parameter \eqn{\lambda \in \mathbb{R}}.
 #'
 #' @return \code{P} returns the probability and its graphical representation. The result can be given as a percentage or not.
 #'
@@ -80,7 +89,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "rstudio") {
           manipulate::manipulate(plotpnormalarrstudio(q1, q2, mean, sd, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], maximo, q[2]),
+                                 q2 = manipulate::slider(q[1], maximo, q[2]),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
         }
@@ -103,26 +112,33 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
       }
       if (dist == "t-student") {
+        if (!any(names(argaddit) == "ncp")) {
+          argaddit$ncp <- 0
+        }
         if (!any(names(argaddit) == "df")) {
           df <- readline(gettext("Enter the value of 'df' argument:", domain = "R-leem"))
           argaddit$df <- as.numeric(df)
         }
 
         nu <- argaddit$df
+        ncp <- argaddit$ncp
 
         #Auxiliary Arguments
-        llower <- if(abs(q[1]) > 6) abs(q[1]) + 2 else 6
-        lupper <- if(abs(q[2]) > 6) abs(q[2]) + 2 else 6
+        # Auxiliar function
+        llower <- if (nu <= 2) q[1] - 6 else q[1]  - 4 * .erro_padrao_t_nc(nu, ncp)
+        lupper <- if (nu <= 2) q[2] + 6 else q[2] + 4 * .erro_padrao_t_nc(nu, ncp)
+        #x <- seq(-llower, q[1], by=0.01)
 
 
         if (gui == "plot" ) {
-          plotptstudentarplot(q, nu, rounding, main)
+          plotptstudentarplot(q, nu, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotptstudentarrstudio(q1, q2, df, rounding, main, q),
-                                 q1 = manipulate::slider(-llower, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], lupper, q[2]),
-                                 df = manipulate::slider(1, nu + 100, nu))
+          manipulate::manipulate(plotptstudentarrstudio(q1, q2, df, ncp, rounding, main, q),
+                                 q1 = manipulate::slider(llower, q[2], q[1]),
+                                 q2 = manipulate::slider(q[1], lupper, q[2]),
+                                 df = manipulate::slider(1, nu + 100, nu),
+                                 ncp = manipulate::slider(ncp - 5, ncp + 5, ncp))
         }
         if (gui == "tcltk") {
           # Desabilitar warnings global
@@ -130,7 +146,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           war <- options(warn = - 1)
           # on.exit(options(war))
 
-          .tkplotleemtstudent3(q[1], q[2], nu, rounding, main, -llower, lupper, q)
+          .tkplotleemtstudent3(q[1], q[2], nu, ncp, rounding, main, llower, lupper, q)
 
           # Desabilitar warnings global
           #options(warn = - 1)
@@ -138,7 +154,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           on.exit(options(war))
         }
         # Calculates the desired probability
-        prob <- pt(q[1], df = nu, lower.tail = T) + pt(q[2], df = nu, lower.tail = F)
+        prob <- pt(q[1], df = nu, ncp, lower.tail = T) + pt(q[2], df = nu, ncp, lower.tail = F)
       }
       if (dist == "chisq") {
         if (!any(names(argaddit) == "ncp")) {
@@ -154,8 +170,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
         ncp <- argaddit$ncp
         nu <- argaddit$df
-        minimo <- 0
-        maximo <- if (q[2] > ncp + 4 * nu) q[2] + 4 * nu else ncp + 4 * nu
+        sig4n <- nu + ncp - 4 * sqrt(2 * (nu + 2 * ncp)) # mu - 4 * sigma
+        sig4p <- nu + ncp + 5 * sqrt(2 * (nu + 2 * ncp)) # mu + 5 * sigma
+        minimo <- if (sig4n < 0 | sig4n > q[1]) 0 else sig4n
+        maximo <- if (sig4p < q[2]) q[2] + sig4p else sig4p
 
         if (gui == "plot") {
           plotpchisqarplot(q, nu, ncp, rounding, main)
@@ -163,9 +181,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "rstudio") {
           manipulate::manipulate(plotpchisqarrstudio(q1, q2, nu, ncp, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], maximo, q[2]),
-                                 df = manipulate::slider(1, ncp + 2 * nu, nu),
-                                 ncp = manipulate::slider(0, ncp + 2 * nu, ncp))
+                                 q2 = manipulate::slider(q[1], maximo, q[2]),
+                                 nu = manipulate::slider(1, nu * 10, nu),
+                                 ncp = manipulate::slider(0, ncp + 5, ncp))
         }
         if (gui == "tcltk") {
           # Desabilitar warnings global
@@ -988,7 +1006,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "rstudio") {
           manipulate::manipulate(plotpnormalbrrstudio(q1, q2, mean, sd, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], maximo, q[2]),
+                                 q2 = manipulate::slider(q[1], maximo, q[2]),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
         }
@@ -1006,24 +1024,29 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
       }
       if (dist == "t-student") {
+        if (!any(names(argaddit) == "ncp")) {
+          argaddit$ncp <- 0
+        }
         if (!any(names(argaddit) == "df")) {
           df <- readline(gettext("Enter the value of 'df' argument:", domain = "R-leem"))
           argaddit$df <- as.numeric(df)
         }
-        # Auxiliar objects
         nu <- argaddit$df
-        llower <- if(abs(q[1]) > 6) abs(q[1]) + 2 else 6
-        lupper <- if(abs(q[2]) > 6) abs(q[2]) + 2 else 6
-        nu <- argaddit$df
+        ncp <- argaddit$ncp
+
+        #Auxiliary Arguments
+        llower <- if (nu <= 2) q[1] - 8 - 2 * abs(ncp) else q[1]  - 4 * .erro_padrao_t_nc(nu, ncp)
+        lupper <- if (nu <= 2) q[2] + 8 + 2 * abs(ncp) else q[2] + 4 * .erro_padrao_t_nc(nu, ncp)
         # Function
         if (gui == "plot" ) {
-          plotptstudentbrplot(q, nu, rounding, main)
+          plotptstudentbrplot(q, nu, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotptstudentbrrstudio(q1, q2, df, rounding, main, q),
-                                 q1 = manipulate::slider(-llower, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], lupper, q[2]),
-                                 df = manipulate::slider(1, nu + 100, nu))
+          manipulate::manipulate(plotptstudentbrrstudio(q1, q2, df, ncp, rounding, main, q),
+                                 q1 = manipulate::slider(llower, q2, q[1]),
+                                 q2 = manipulate::slider(q1, lupper, q[2]),
+                                 df = manipulate::slider(1, nu + 100, nu),
+                                 ncp = manipulate::slider(ncp - 5, ncp + 5, ncp))
         }
         if (gui == "tcltk") {
           # Desabilitar warnings global
@@ -1031,7 +1054,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           war <- options(warn = - 1)
           # on.exit(options(war))
 
-          .tkplotleemtstudent4(q[1], q[2], nu, rounding, main, -llower, lupper, q)
+          .tkplotleemtstudent4(q[1], q[2], nu, ncp, rounding, main, llower, lupper, q)
 
           # Desabilitar warnings global
           #options(warn = - 1)
@@ -1108,8 +1131,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         ncp <- argaddit$ncp
         nu <- argaddit$df
-        minimo <- 0
-        maximo <- if (q[2] > ncp + 4 * nu) q[2] + 4 * nu else ncp + 4 * nu
+        sig4n <- nu + ncp - 4 * sqrt(2 * (nu + 2 * ncp)) # mu - 4 * sigma
+        sig4p <- nu + ncp + 5 * sqrt(2 * (nu + 2 * ncp)) # mu + 5 * sigma
+        minimo <- if (sig4n < 0 | sig4n > q[1]) 0 else sig4n
+        maximo <- if (sig4p < q[2]) q[2] + sig4p else sig4p
 
         if (argaddit$ncp < 0 ) stop("The 'ncp' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
 
@@ -1119,9 +1144,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "rstudio") {
           manipulate::manipulate(plotpchisqbrrstudio(q1, q2, nu, ncp, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], maximo, q[2]),
-                                 df = manipulate::slider(1, ncp + 2 * nu, nu),
-                                 ncp = manipulate::slider(0, ncp + 2 * nu, ncp))
+                                 q2 = manipulate::slider(q[1], maximo, q[2]),
+                                 df = manipulate::slider(1, nu * 10, nu),
+                                 ncp = manipulate::slider(0, ncp + 5, ncp))
         }
         if (gui == "tcltk") {
           # Desabilitar warnings global
@@ -1964,20 +1989,26 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
     }
     if (dist == "t-student") {
+      if (!any(names(argaddit) == "ncp")) {
+        argaddit$ncp <- 0
+      }
       if (!any(names(argaddit) == "df")) {
         df <- readline(paste0(gettext("Enter the value of 'df' argument:", domain = "R-leem"), " "))
         argaddit$df <- as.numeric(df)
       }
-      lim <- if (abs(q) > 6) abs(q) + 2 else 6
       nu <- argaddit$df
+      ncp <- argaddit$ncp
+      lim <- if (abs(q) > 6) abs(q) + 2 + abs(ncp) * 3  else 6 + abs(ncp) * 3
+      lim <- if(nu < 3) lim + nu * 20 else lim
       if (lower.tail) {
         if (gui == "plot" ) {
-          plotptstudentlttplot(q, nu, rounding, main)
+          plotptstudentlttplot(q, nu, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotptstudentlttplot(q, nu, rounding, main),
+          manipulate::manipulate(plotptstudentlttplot(q, nu, ncp, rounding, main),
                                  q = manipulate::slider(-lim, lim, q),
-                                 nu = manipulate::slider(1, nu * 10, nu))
+                                 nu = manipulate::slider(1, nu * 10, nu),
+                                 ncp = manipulate::slider(ncp - 5 , ncp + 5, ncp))
         }
         if (gui == "tcltk") {
           # Desabilitar warnings global
@@ -1986,7 +2017,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #on.exit(options(war))
 
           # Plot tk da dist t-student com q de comp 1 (~/tkplotleem.R)
-          .tkplotleemtstudent(q, nu, rounding, main, -lim, lim)
+          .tkplotleemtstudent(q, nu, ncp, rounding, main, -lim, lim)
 
 
           # Desabilitar warnings global
@@ -1995,15 +2026,16 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           on.exit(options(war))
         }
         # Calculates the desired probability
-        prob <- pt(q = q, df = nu)
+        prob <- pt(q = q, df = nu, ncp = ncp)
       } else {
         if (gui == "plot") {
-          plotptstudentltfplot(q, nu, rounding, main)
+          plotptstudentltfplot(q, nu, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotptstudentltfplot(q, nu, rounding, main),
+          manipulate::manipulate(plotptstudentltfplot(q, nu, ncp, rounding, main),
                                  q = manipulate::slider(-lim, lim, q),
-                                 nu = manipulate::slider(1, nu * 10, nu))
+                                 nu = manipulate::slider(1, nu * 10, nu),
+                                 ncp = manipulate::slider(ncp - 5, ncp + 5, ncp))
         }
         if (gui == "tcltk") {
           # Desabilitar warnings global
@@ -2012,15 +2044,16 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           on.exit(options(war))
 
           # Plot tk da dist t-student com q de comp 1 (~/tkplotleem.R)
-          .tkplotleemtstudent2(q, nu, rounding, main, -lim, lim)
+          .tkplotleemtstudent2(q, nu, ncp, rounding, main, -lim, lim)
 
           # options(warn = - 1)
           # war <- options(warn = - 1)
           on.exit(options(war))
-          }
         }
         # Calculates the desired probability
-        prob <- pt(q = q, df = nu, lower.tail = FALSE)
+        prob <- pt(q = q, df = nu, ncp = ncp, lower.tail = FALSE)
+        }
+
     }
     if (dist == "chisq") {
       if (q < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
@@ -2043,8 +2076,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "rstudio") {
           manipulate::manipulate(plotpchisqlttplot(q, nu, ncp, rounding, main),
                                  q = manipulate::slider(0, ncp + 4 * nu, q),
-                                 df = manipulate::slider(1, ncp + 2 * nu, nu),
-                                 ncp = manipulate::slider(0, ncp + 2 * nu, ncp))
+                                 nu = manipulate::slider(1, nu * 10, nu),
+                                 ncp = manipulate::slider(0, ncp + 5, ncp))
         }
         if (gui == "tcltk") {
           # Desabilitar warnings global
@@ -2098,7 +2131,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
     }
     if (dist == "f") {
       if (q < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
-      if (!any(names(argaddit) == "ncp")) {
+      if (ncp < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+      if (any(names(argaddit) == "ncp")) {
+        if (argaddit$ncp < 0) stop("the 'ncp' argument must be a non-negative value!", call. = FALSE, domain = "R-leem")
+      } else {
         argaddit$ncp <- 0
       }
       if (!any(names(argaddit) == "df1")) {
@@ -2150,16 +2186,30 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       else {
         if (gui == "plot") {
-          plotpfltfplot(q, df1, df2, rounding, main)
+          plotpfltfplot(q, df1, df2, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpfltfplot(q, df1, df2, rounding, main),
+          manipulate::manipulate(plotpfltfplot(q, df1, df2, ncp, rounding, main),
                                  q = manipulate::slider(0, 10, q),
                                  df1 = manipulate::slider(1, df1  + 2 * df1, df1),
-                                 df2 = manipulate::slider(1, df2 + 2 * df2, df2))
+                                 df2 = manipulate::slider(1, df2 + 2 * df2, df2),
+                                 ncp = manipulate::slider(0, ncp + 10, ncp))
         }
         if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          #on.exit(options(war))
+
+          # Plot tk da dist F com q de comp 1 (~/tkplotleem.R)
+          .tkplotleemf02(q, df1, df2, ncp, rounding, main)
+
+
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
         # Compute the desired probability
         prob <- pf(q, df1, df2, lower.tail = F)

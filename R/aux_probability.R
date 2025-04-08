@@ -120,17 +120,17 @@ plotpnormalartcltk <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
 
 # Student's t distribution
 ## Plot
-plotptstudentarplot <- function(q, df, rounding, main = NULL){
+plotptstudentarplot <- function(q, df, ncp = 0, rounding, main = NULL) {
   nu <- df
   # Auxiliar function
-  llower <- if(abs(q[1]) > 6) abs(q[1]) + 2 else 6
-  lupper <- if(abs(q[2]) > 6) abs(q[2]) + 2 else 6
-  x <- seq(-llower, q[1], by=0.01)
+  llower <- if (nu <= 2) q[1] - 8 - 2 * abs(ncp) else q[1]  - 4 * .erro_padrao_t_nc(nu, ncp)
+  lupper <- if (nu <= 2) q[2] + 8 + 2 * abs(ncp) else q[2] + 4 * .erro_padrao_t_nc(nu, ncp)
+  x <- seq(llower, q[1], by=0.01)
   z <- seq(q[2], lupper, by=0.01)
-  y <- seq(-llower, lupper, by=0.01)
-  fx <- dt(x, df = nu)
-  fz <- dt(z, df = nu)
-  fy <- dt(y, df = nu)
+  y <- seq(llower, lupper, by=0.01)
+  fx <- dt(x, df = nu, ncp)
+  fz <- dt(z, df = nu, ncp)
+  fy <- dt(y, df = nu, ncp)
   if (is.null(main)) {
     if (attr(q, "region") == "region1") {
       titulo <- gettext("Probability function plot: Student's t", domain = "R-leem")
@@ -158,7 +158,7 @@ plotptstudentarplot <- function(q, df, rounding, main = NULL){
     }
   }
 
-  curve(dt(x, df = nu), -llower, lupper, ylab = expression(f[X](x)), xlab="X",
+  curve(dt(x, df = nu, ncp), llower, lupper, ylab = expression(f[X](x)), xlab="X",
         ylim = c(0, 1.2 * max(c(fx, fy))), panel.first = grid(col = "gray90"),
         main = main, cex = 0.8)
   polygon(c(y, rev(y)),
@@ -171,7 +171,7 @@ plotptstudentarplot <- function(q, df, rounding, main = NULL){
           c(fz, rep(0, length(fz))),
           col="red")
   qq <- round(q, digits=2)
-  Pr <- round(pt(q[1], df = nu, lower.tail = T) + pt(q[2], df = nu, lower.tail = F), digits=rounding)
+  Pr <- round(pt(q[1], df = nu, ncp, lower.tail = T) + pt(q[2], df = nu, ncp, lower.tail = F), digits=rounding)
   #Pr <- gsub("\\.", ",", Pr)
   ##qq <- gsub("\\.", ",", qq)
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
@@ -188,58 +188,61 @@ plotptstudentarplot <- function(q, df, rounding, main = NULL){
   abline(v = qq, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region1") {
+    parametro <- gettext("Parameters:", domain = "R-leem")
     legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~nu == df,
-                               list(df = nu)))
+    legend(llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute(parametro~nu == df,
+                               list(df = nu, parametro = parametro)))
   }
   if (attr(q, "region") == "region3") {
     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~nu == df,
-                               list(df = nu)))
+    legend(llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute(parametro~nu == df,
+                               list(df = nu, parametro = parametro)))
   }
   if (attr(q, "region") == "region5") {
     legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~nu == df,
-                               list(df = nu)))
+    legend(llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute(parametro~nu == df,
+                               list(df = nu, parametro = parametro)))
   }
   if (attr(q, "region") == "region6") {
     legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~nu == df,
-                               list(df = nu)))
+    legend(llower, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute(parametro~nu == df,
+                               list(df = nu, parametro = parametro)))
   }
 }
 ## RStudio
-plotptstudentarrstudio <- function(q1,q2, df, rounding, main = NULL, q) {
+plotptstudentarrstudio <- function(q1,q2, df, ncp = 0, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
-  plotptstudentarplot(q, df, rounding, main)
+  plotptstudentarplot(q, df, ncp, rounding, main)
 }
 ## Tcl/tk
-plotptstudentartcltk <- function(q1,q2, df, rounding, main = NULL, q) {
+plotptstudentartcltk <- function(q1,q2, df, ncp = 0, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
-  plotptstudentarplot(q, df, rounding, main)
+  plotptstudentarplot(q, df, ncp, rounding, main)
 }
 
 
 
 # Chi-Squared distribution
 ## Plot
-plotpchisqarplot <- function(q, df, ncp, rounding, main = NULL) {
-  minimo <- if (q[1] <= ncp - 4 * df) ncp - 4 * df else 0
-  maximo <- if (q[2] > ncp + 4 * df) q[2] + 4 * df else ncp + 4 * df
+plotpchisqarplot <- function(q, df, ncp = 0, rounding, main = NULL) {
+  sig4n <- df + ncp - 4 * sqrt(2 * (df + 2 * ncp)) # mu - 4 * sigma
+  sig4p <- df + ncp + 5 * sqrt(2 * (df + 2 * ncp)) # mu + 5 * sigma
+  minimo <- if (sig4n < 0 | sig4n > q[1]) 0 else sig4n
+  maximo <- if (sig4p < q[2]) q[2] + sig4p else sig4p
   x <- seq(minimo, q[1], by = 0.01)
   z <- seq(q[2], maximo, by = 0.01)
   y <-seq(minimo, maximo, by = 0.01)
@@ -2425,14 +2428,15 @@ plotpnormalbrtcltk <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
 
 # Student's t distribution
 ## Plot
-plotptstudentbrplot <- function(q, df, rounding, main = NULL) {
+plotptstudentbrplot <- function(q, df, ncp = 0, rounding, main = NULL) {
   nu <- df
-  llower <- if(abs(q[1]) > 6) abs(q[1]) + 2 else 6
-  lupper <- if(abs(q[2]) > 6) abs(q[2]) + 2 else 6
+  #Auxiliary Arguments
+  llower <- if (nu <= 2) q[1] - 8 - 2 * abs(ncp) else q[1]  - 4 * .erro_padrao_t_nc(nu, ncp)
+  lupper <- if (nu <= 2) q[2] + 8 + 2 * abs(ncp) else q[2] + 4 * .erro_padrao_t_nc(nu, ncp)
   x <- seq(q[1], q[2], by=0.01)
-  y <- seq(-llower, lupper, by=0.01)
-  fx <- dt(x, df = nu)
-  fy <- dt(y, df = nu)
+  y <- seq(llower, lupper, by=0.01)
+  fx <- dt(x, df = nu, ncp)
+  fy <- dt(y, df = nu, ncp)
   if (is.null(main)) {
     if (attr(q, "region") == "region2") {
       titulo <- gettext("Probability function plot: Student's t")
@@ -2460,7 +2464,7 @@ plotptstudentbrplot <- function(q, df, rounding, main = NULL) {
 
     }
   }
-  curve(dt(x, df = nu), -llower, lupper, ylab = expression(f[X](x)), xlab="X",
+  curve(dt(x, df = nu, ncp), llower, lupper, ylab = expression(f[X](x)), xlab="X", n = 300,
         ylim = c(0, 1.2 * max(c(fx, fy))), panel.first = grid(col = "gray90"),
         main = main, cex = 0.8)
   polygon(c(y, rev(y)),
@@ -2471,7 +2475,7 @@ plotptstudentbrplot <- function(q, df, rounding, main = NULL) {
           col="red")
   qq <- round(q, digits=2)
   qqaux <- qq
-  Pr <- round(pt(q[2], df = nu) - pt(q[1], df = nu), digits=rounding)
+  Pr <- round(pt(q[2], df = nu, ncp) - pt(q[1], df = nu, ncp), digits=rounding)
   #Pr <- gsub("\\.", ",", Pr)
   ##qq <- gsub("\\.", ",", qq)
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
@@ -2481,12 +2485,12 @@ plotptstudentbrplot <- function(q, df, rounding, main = NULL) {
        col="red", font = 2, col.axis = "red")
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  parametros <- gettext("Parameters:", domain = "R-leem")
   if (attr(q, "region") == "region2") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X>t1)+P(X<t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(-llower, legaux$text$y, bty="n", bg = "white", cex=0.8,
+    legend(llower, legaux$text$y, bty="n", bg = "white", cex=0.8,
            legend = substitute(parametros~nu == df,
                                list(df = nu, parametros = parametros)))
   }
@@ -2494,8 +2498,7 @@ plotptstudentbrplot <- function(q, df, rounding, main = NULL) {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X>=t1)+P(X<=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(-llower, legaux$text$y, bty="n", bg = "white",cex=0.8,
+    legend(llower, legaux$text$y, bty="n", bg = "white",cex=0.8,
            legend = substitute(parametros~nu == df,
                                list(df = nu, parametros)))
   }
@@ -2503,37 +2506,39 @@ plotptstudentbrplot <- function(q, df, rounding, main = NULL) {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X>=t1)+P(X<t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white",cex=0.8,
-           legend = substitute("Parameters:"~nu == df,
-                               list(df = nu)))
+    legend(llower, legaux$text$y, bty="n", bg = "white",cex=0.8,
+           legend = substitute(parametros~nu == df,
+                               list(df = nu, parametros = parametros)))
   }
   if (attr(q, "region") == "region8") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(X>t1)+P(X<=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    legend(-llower, legaux$text$y, bty="n", bg = "white",cex=0.8,
-           legend = substitute("Parameters:"~nu == df,
-                               list(df = nu)))
+    legend(llower, legaux$text$y, bty="n", bg = "white",cex=0.8,
+           legend = substitute(parametros~nu == df,
+                               list(df = nu, parametros = parametros)))
   }
 }
 ## RStudio
-plotptstudentbrrstudio <- function(q1, q2, df, rounding, main = NULL, q) {
+plotptstudentbrrstudio <- function(q1, q2, df, ncp = 0, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
-  plotptstudentbrplot(q, df, rounding, main)
+  plotptstudentbrplot(q, df, ncp, rounding, main)
 }
 ## Tcl/tk
-plotptstudentbrtcltk <- function(q1, q2, df, rounding, main = NULL, q) {
+plotptstudentbrtcltk <- function(q1, q2, df, ncp = 0, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
-  plotptstudentbrplot(q, df, rounding, main)
+  plotptstudentbrplot(q, df, ncp, rounding, main)
 }
 
 # Chi-Squared distribution
 ## Plot
 plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
-  minimo <- if (q[1] <= ncp - 4 * df) ncp - 4 * df else 0
-  maximo <- if (q[2] > ncp + 4 * df) q[2] + 4 * df else ncp + 4 * df
+  sig4n <- df + ncp - 4 * sqrt(2 * (df + 2 * ncp)) # mu - 4 * sigma
+  sig4p <- df + ncp + 5 * sqrt(2 * (df + 2 * ncp)) # mu + 5 * sigma
+  minimo <- if (sig4n < 0 | sig4n > q[1]) 0 else sig4n
+  maximo <- if (sig4p < q[2]) q[2] + sig4p else sig4p
   x <- seq(q[1], q[2], by = 0.01)
   y <- seq(minimo, maximo, by = 0.01)
   fx <- dchisq(x, df = df, ncp = ncp)
@@ -4308,20 +4313,21 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
 
 # Student's t distribution
 ## Plot
-plotptstudentlttplot <- function(q, df, rounding, main = NULL){
+plotptstudentlttplot <- function(q, df, ncp = 0, rounding, main = NULL){
   nu <- df
-  lim <- if (abs(q) > 6) abs(q) + 2 else 6
+  lim <- if (abs(q) > 6) abs(q) + 2 + abs(ncp) * 3  else 6 + abs(ncp) * 3
+  lim <- if(nu < 3) lim + nu * 20 else lim
   x <- seq(-lim, q, by=0.01)
   y <- seq(q, lim, by=0.01)
-  fx <- dt(x, df = nu)
-  fy <- dt(y, df = nu)
+  fx <- dt(x, df = nu, ncp)
+  fy <- dt(y, df = nu, ncp)
   if (is.null(main)) {
     titulo <- gettext("Probability function plot: Student's t", domain = "R-leem")
     main <- substitute(atop(bold(titulo),
                             f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)),
                        list(t1 = q, x = "x", titulo = titulo))
   }
-  curve(dt(x, df = nu), -lim, lim, ylab = expression(f[X](X)),
+  curve(dt(x, df = nu, ncp), -lim, lim, ylab = expression(f[X](X)), n = 300,
         xlab="X", ylim = c(0, 1.2 * max(c(fx, fy))), panel.first = grid(col = "gray90"),
         main = main, cex = 0.8)
   polygon(c(x, rev(x)),
@@ -4332,7 +4338,7 @@ plotptstudentlttplot <- function(q, df, rounding, main = NULL){
           col="gray90")
   qq <- round(q, digits=2)
   qqaux <-round(q, digits=2)
-  Pr <- round(pt(qq, df = nu, lower.tail = T), digits=rounding)
+  Pr <- round(pt(qq, df = nu, ncp, lower.tail = T), digits=rounding)
   #Pr <- gsub("\\.", ",", Pr)
   ##qq <- gsub("\\.", ",", qq)
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
@@ -4357,7 +4363,7 @@ plotptstudentlttplot <- function(q, df, rounding, main = NULL){
 
 # Chi-Squared distribution
 ## Plot
-plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
+plotpchisqlttplot <- function(q, df, ncp = 0, rounding, main = NULL) {
   minimo <- 0
   maximo <- if (q > ncp + 4 * df) q + 10 * df else ncp + 10 * df
   x <- seq(minimo, q, by = 0.01)
@@ -4367,7 +4373,7 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
   if(is.infinite(1.2 * max(fx,fy))){
     auxmain <- c(0, 2.5 + df);
     auxrect <- c(2 + df, 3.5 + df)
-  }else{
+  } else {
     auxrect <- max(fx,fy)
     auxmain <- c(0, 1.2 * max(fx,fy))
   }
@@ -4418,9 +4424,10 @@ plotpchisqlttplot <- function(q, df, ncp, rounding, main = NULL) {
 ## Plot
 plotpflttplot <- function(q, df1, df2, ncp = 0, rounding, main = NULL) {
   minimo <- 0
-  maximo <- 10
-  if (q > 10) {
-    maximo <- q + ncp + 2 * (df1 / df2)
+  if (df2 <= 4) {
+    maximo <- q + ncp + 6 * (df1 / df2)
+  } else {
+    maximo <- q + 6 * .desvio_padrao_f_nc(df1, df2, ncp)
   }
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
@@ -5399,20 +5406,21 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
 
 # Student's t distribution
 ## Plot
-plotptstudentltfplot <- function(q, df, rounding, main = NULL) {
+plotptstudentltfplot <- function(q, df, ncp = 0, rounding, main = NULL) {
   nu <- df
-  lim <- if (abs(q) > 6) abs(q) + 2 else 6
+  lim <- if (abs(q) > 6) abs(q) + 2 + abs(ncp) * 3  else 6 + abs(ncp) * 3
+  lim <- if(nu < 3) lim + nu * 20 else lim
   x <- seq(q, lim, by=0.01)
   y <- seq(-lim, q, by=0.01)
-  fx <- dt(x, df = nu)
-  fy <- dt(y, df = nu)
+  fx <- dt(x, df = nu, ncp)
+  fy <- dt(y, df = nu, ncp)
   if(is.null(main)){
     titulo <- gettext("Probability function plot: Student's t", domain = "R-leem")
     main <- substitute(atop(bold(titulo),
                             f[X](x*";"~nu) == frac(Gamma*group("[",(nu + 1) / 2,"]"), root(nu*pi)*Gamma*group("(",frac(1,2)*","*frac(nu,2),")"))*(1+frac(x^2, nu))^{-(nu+1)/2}*","~~S[X](t1)== 1 - F[X](t1)~ "="*1 - integral(f[X](x)*"dx", -infinity, t1)~"="*P(X>= t1) == integral(f[X](x)*"dx", t1, infinity)),
                        list(t1 = q, x = "x", titulo = titulo))
   }
-  curve(dt(x, df = nu), -lim, lim, ylab = expression(f[X](x)),
+  curve(dt(x, df = nu, ncp), -lim, lim, ylab = expression(f[X](x)),
         xlab="X", ylim = c(0, 1.2 * max(c(fx,fy))), panel.first = grid(col = "gray90"),
         main = main, cex = 0.8)
 
@@ -5424,7 +5432,7 @@ plotptstudentltfplot <- function(q, df, rounding, main = NULL) {
           col="gray90")
   qq <- round(q, digits=2)
   qqaux <-round(q, digits=2)
-  Pr <- round(pt(qq, df = nu, lower.tail = F), digits=rounding)
+  Pr <- round(pt(qq, df = nu, ncp, lower.tail = F), digits=rounding)
   #Pr <- gsub("\\.", ",", Pr)
   ##qq <- gsub("\\.", ",", qq)
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
@@ -5449,7 +5457,7 @@ plotptstudentltfplot <- function(q, df, rounding, main = NULL) {
 
 # Chi-Squared distribution
 ## Plot
-plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
+plotpchisqltfplot <- function(q, df, ncp = 0, rounding, main = NULL) {
   minimo <- 0
   maximo <- if (q > ncp + 4 * df) q + 10 * df else ncp + 10 * df
   x <- seq(minimo, q, by = 0.01)
@@ -5508,27 +5516,30 @@ plotpchisqltfplot <- function(q, df, ncp, rounding, main = NULL) {
 
 # F distribution
 ## Plot
-plotpfltfplot <- function(q, df1, df2, rounding, main = NULL) {
+plotpfltfplot <- function(q, df1, df2, ncp = 0, rounding, main = NULL) {
   minimo <- 0
-  maximo <- 10
-  if(q>10){
-    maximo <- q+ 2*(df1/df2)
+  if (df2 <= 4) {
+    maximo <- q + ncp + 6 * (df1 / df2)
+  } else {
+    maximo <- q + 6 * .desvio_padrao_f_nc(df1, df2, ncp)
   }
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
-  fx <- df(x, df1, df2)
-  fy <- df(y, df1, df2)
+  fx <- df(x, df1, df2, ncp)
+  fy <- df(y, df1, df2, ncp)
   if (is.null(main)) {
-    if(is.infinite(1.2 * max(fx,fy))){
-      auxmain <- c(0, 2.5 + (df1/df2));
+    if (is.infinite(1.2 * max(fx,fy))) {
+      auxmain <- c(0, 2.5 + (df1/df2))
       auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
-    }else{
+    } else {
       auxrect <- max(fx,fy)
       auxmain <- c(0, 1.2 * max(fx,fy))
     }
-    main = substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)), list(t = q))
+    titulo <- gettext("Probability function plot: F", domain = "R-leem")
+    main = substitute(atop(bold(titulo), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
+                      list(t = q, titulo = titulo))
   }
-  curve(df(x, df1, df2), minimo, maximo,
+  curve(df(x, df1, df2, ncp), minimo, maximo, n = 300,
         ylim = auxmain, ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
         main = main,
@@ -5541,7 +5552,7 @@ plotpfltfplot <- function(q, df1, df2, rounding, main = NULL) {
           col="red")
   qq <- round(q, digits=2)
   qqaux <-round(q, digits=2)
-  Pr <- round(pf(qq,  df1, df2, lower.tail = FALSE), digits=rounding)
+  Pr <- round(pf(qq,  df1, df2, ncp, lower.tail = FALSE), digits = rounding)
   # Pr <- gsub("\\.", ",", Pr)
   # #qq <- gsub("\\.", ",", qq)
   # Insert red q point
@@ -5561,9 +5572,11 @@ plotpfltfplot <- function(q, df1, df2, rounding, main = NULL) {
   legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
                                        list(q = qq, Pr = Pr)))
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
-         legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                             list(df1v = df1, df2v = df2)))
+         legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                             list(df1v = df1, df2v = df2,
+                                  parametro = parametro)))
 }
 
 # Gumbel distribution

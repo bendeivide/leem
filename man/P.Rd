@@ -18,7 +18,7 @@ P(
 \arguments{
 \item{q}{quantile. The \code{q} argument can have length 1 or 2. See Details.}
 
-\item{dist}{distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'gumbel'}, \code{'binomial'}, \code{'poisson'}, and ....}
+\item{dist}{distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'chisq'}, \code{'f'}, ...}
 
 \item{lower.tail}{logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.}
 
@@ -43,11 +43,22 @@ The argument that can have length 2, when we use the functions that give us the 
 The additional arguments represent the parameters of the distributions, that is:
 \itemize{
 \item If \code{dist = "normal"} (Default); the additional arguments are: \code{mean} (\eqn{\mu}) and \code{sd} (\eqn{\sigma}). The PDF is given by:
-\deqn{\displaystyle{\frac {1}{\sqrt {2\pi \sigma ^{2}}}}e^{-{\frac {(x-\mu )^{2}}{2\sigma ^{2}}}}, \quad \mu \in \mathbb{R},~\sigma^2 > 0;}
+\deqn{\displaystyle{f_X(x; \mu, \sigma) = \frac {1}{\sqrt {2\pi \sigma ^{2}}}}e^{-{\frac {(x-\mu )^{2}}{2\sigma ^{2}}}}, \quad x \in \mathbb{R},~ \mu \in \mathbb{R},~\sigma^2 > 0;}
 \item If \code{dist = "t-student"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
-\deqn{\displaystyle{\frac {\Gamma \left({\frac {\ \nu +1\ }{2}}\right)}{{\sqrt {\pi \ \nu \ }}\ \Gamma \left({\frac {\nu }{\ 2\ }}\right)}}\left(\ 1+{\frac {~x^{2}\ }{\nu }}\ \right)^{-{\frac {\ \nu +1\ }{2}}}, \quad \nu > 1;}
+\deqn{\displaystyle{f_X(x; \nu) = \frac {\Gamma \left({\frac {\ \nu +1\ }{2}}\right)}{{\sqrt {\pi \ \nu \ }}\ \Gamma \left({\frac {\nu }{\ 2\ }}\right)}}\left(\ 1+{\frac {~x^{2}\ }{\nu }}\ \right)^{-{\frac {\ \nu +1\ }{2}}}, \quad x \in \mathbb{R},~\nu > 1;}
 \item If \code{dist = "chisq"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
-\deqn{\displaystyle{\frac {1}{2^{k/2}\Gamma (k/2)}}\;x^{k/2-1}e^{-x/2}, \quad \nu > 0;}
+\deqn{\displaystyle{f_X(x; \nu) = \frac {1}{2^{k/2}\Gamma (k/2)}}\;x^{k/2-1}e^{-x/2}, \quad x > 0,~\nu > 0;}
+\item If \code{dist = "f"}; the additional argument is: \code{df1} (\eqn{\nu_1}) and \code{df2} (\eqn{\nu_2}). The PDF is given by:
+\deqn{f_X(x; \nu_1, \nu_2) = {\displaystyle {\frac {\sqrt {\frac {(\nu_{1}x)^{\nu_{1}}\nu_{2}^{\nu_{2}}}{(\nu_{1}x+\nu_{2})^{\nu_{1}+\nu_{2}}}}}{x\,\mathrm {B} \!\left({\frac {\nu_{1}}{2}},{\frac {\nu_{2}}{2}}\right),}}\!}, \quad x > 0,~\nu_1,\nu_2 > 0;}
+where, \eqn{x > 0}, \eqn{\nu_1,~\nu_2} > 0, and \eqn{B} is the beta function.
+}
+
+The \code{ncp} parameter (\eqn{\lambda \in \mathbb{R}}) represents the noncentrality parameter. The PDFs presented graphically do not take this parameter into account. However, to reinforce the importance of this parameter
+in the three distributions (Student's t-distribution, F-distribution and Chi-squared distribution), especially when studying hypothesis testing, we present their distributions taking into account the \code{ncp} parameter, as follows:
+\itemize{
+\item The PDF for the noncentral t-distribution with \eqn{\nu > 0} degrees of freedom and noncentrality parameter \eqn{\lambda} is based on the \link[stats]{pt} function. If \eqn{Z}
+is a standard normal random variable, and \eqn{V} is a chi-squared distribution random variable with \eqn{\nu} degrees of freedom that is independent of \eqn{Z}, then \eqn{T = (Z + \lambda) / \sqrt{V / \nu}} is
+a noncentral t-distributed random variable with \eqn{\nu} degrees of freedom and noncentrality parameter \eqn{\lambda}. If \eqn{\lambda = 0}, the PDF reduces to the probability density function of the Student's t-distribution. However, it is worth noting that the parameter \eqn{\lambda \in \mathbb{R}}.
 }
 }
 \examples{
