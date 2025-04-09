@@ -335,13 +335,13 @@ plotpchisqarplot <- function(q, df, ncp = 0, rounding, main = NULL) {
                              list(dfv = df, parametro = parametro)))
 } # plotcurve (older)
 ## RStudio
-plotpchisqarrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
+plotpchisqarrstudio <- function(q1, q2, df, ncp = 0, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpchisqarplot(q, df, ncp, rounding, main)
 }
 ## Tcl/tk
-plotpchisqartcltk <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
+plotpchisqartcltk <- function(q1, q2, df, ncp = 0, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpchisqarplot(q, df, ncp, rounding, main)
@@ -350,40 +350,46 @@ plotpchisqartcltk <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
 
 # F distribution
 ## Plot
-plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
+plotpfarplot <- function(q, df1, df2, ncp = 0, rounding, main = NULL) {
   minimo <- 0
-  maximo <- 10
-  if(q[2]>10){
-    maximo <- q[2]+ 2*(df1/df2)
+  if (df2 <= 4) {
+    maximo <- q[2] + ncp + 6 * (df1 / df2)
+  } else {
+    maximo <- q[2] + 6 * .desvio_padrao_f_nc(df1, df2, ncp)
   }
   x <- seq(minimo, q[1], by = 0.01)
   z <- seq(q[2], maximo, by = 0.01)
   y <- seq(minimo, maximo, by = 0.01)
-  fx <- df(x, df1, df2)
-  fz <- df(z, df1, df2)
-  fy <- df(y, df1, df2)
-  if(is.infinite(1.2 * max(fx,fy,fz))){
-    auxmain <- c(0, 2.5 + (df1/df2));
-    auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
-  }else{
+  fx <- df(x, df1, df2, ncp)
+  fz <- df(z, df1, df2, ncp)
+  fy <- df(y, df1, df2, ncp)
+  if (is.infinite(1.2 * max(fx, fy, fz)))  {
+    auxmain <- c(0, 2.5 + (df1 / df2));
+    auxrect <- c(2 + df1 / df2, 3.5 + df1 / df2)
+  } else {
     auxrect <- max(fx,fy)
     auxmain <- c(0, 1.2 * max(fx,fy,fz))
   }
-  if (is.null(main)) {###Ajustar
+  if (is.null(main)) {
+    titulo <- gettext("Probability function plot: F", domain = "R-leem")
     if (attr(q, "region") == "region1") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region3") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region5") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region6") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
   }
-  curve(df(x, df1, df2),
+  curve(df(x, df1, df2, ncp),
         minimo,
         maximo,
         ylim = auxmain,
@@ -391,7 +397,7 @@ plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
         ylab = expression(f[X](X)),
         panel.first = grid(col="gray90"),
         main = main,
-        cex.main=1)
+        cex.main=1, n = 300)
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
           col="gray90")
@@ -403,7 +409,7 @@ plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
           col="red" )
   qq <- round(q, digits=2)
   qqaux <- qq
-  Pr <- round(pf(q[1], df1, df2, lower.tail = T) + pf(q[2], df1, df2, lower.tail = F), digits=rounding)
+  Pr <- round(pf(q[1], df1, df2, ncp,  lower.tail = T) + pf(q[2], df1, df2, ncp, lower.tail = F), digits=rounding)
   #Pr <- gsub("\\.", ",", Pr)
   ##qq <- gsub("\\.", ",", qq)
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
@@ -419,47 +425,52 @@ plotpfarplot <- function(q, df1, df2, rounding, main = NULL) {
        col="red", font = 2, lwd.ticks = 1, labels = FALSE)
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
+  parametro <- gettext("Parameters:", domain = "R-leem")
   if (attr(q, "region") == "region1") {
     legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                               list(df1v = df1, df2v = df2)))
+           legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                               list(df1v = df1, df2v = df2, parametro = parametro)))
   }
   if (attr(q, "region") == "region3") {
     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
-                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+                     legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                                         list(df1v = df1, df2v = df2, parametro = parametro)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                               list(df1v = df1, df2v = df2)))
+           legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                               list(df1v = df1, df2v = df2, parametro = parametro)))
   }
   if (attr(q, "region") == "region5") {
     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                               list(df1v = df1, df2v = df2)))
+           legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                               list(df1v = df1, df2v = df2, parametro = parametro)))
   }
   if ( attr(q, "region") == "region6") {
     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                               list(df1v = df1, df2v = df2)))
+           legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                               list(df1v = df1, df2v = df2, parametro = parametro)))
   }
 } # plotcurve (older)
 ## RStudio
-plotpfarrstudio <- function(q1, q2, df1, df2, rounding, main = NULL, q) {
+plotpfarrstudio <- function(q1, q2, df1, df2, ncp = 0, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
-  plotpfarplot(q, df1, df2, rounding, main)
+  plotpfarplot(q, df1, df2, ncp, rounding, main)
 }
 ## Tcl/tk
-## Soon...
+plotpfartcltk <- function(q1, q2, df1, df2, ncp = 0, rounding, main = NULL, q) {
+  q[1] <- q1
+  q[2] <- q2
+  plotpfarplot(q, df1, df2, ncp, rounding, main)
+}
 
 # Gumbel distribution
 ## Plot
@@ -2534,7 +2545,7 @@ plotptstudentbrtcltk <- function(q1, q2, df, ncp = 0, rounding, main = NULL, q) 
 
 # Chi-Squared distribution
 ## Plot
-plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
+plotpchisqbrplot <- function(q, df, ncp = 0, rounding, main = NULL) {
   sig4n <- df + ncp - 4 * sqrt(2 * (df + 2 * ncp)) # mu - 4 * sigma
   sig4p <- df + ncp + 5 * sqrt(2 * (df + 2 * ncp)) # mu + 5 * sigma
   minimo <- if (sig4n < 0 | sig4n > q[1]) 0 else sig4n
@@ -2619,13 +2630,13 @@ plotpchisqbrplot <- function(q, df, ncp, rounding, main = NULL) {
                              list(dfv = df, parametro = parametro)))
 } # plotcurve (older)
 ## RStudio
-plotpchisqbrrstudio <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
+plotpchisqbrrstudio <- function(q1, q2, df, ncp = 0, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpchisqbrplot(q, df, ncp, rounding, main)
 }
 ## Tcl/tk
-plotpchisqbrtcltk <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
+plotpchisqbrtcltk <- function(q1, q2, df, ncp = 0, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
   plotpchisqbrplot(q, df, ncp, rounding, main)
@@ -2633,7 +2644,7 @@ plotpchisqbrtcltk <- function(q1, q2, df, ncp, rounding, main = NULL, q) {
 
 # F distribution
 ## Plot
-plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
+plotpfbrplot <- function(q, df1, df2, ncp = 0, rounding, main = NULL) {
   minimo <- 0
   maximo <- 10
   if(q[2]>10){
@@ -2641,8 +2652,8 @@ plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
   }
   x <- seq(q[1], q[2], by = 0.01)
   y <- seq(minimo, maximo, by = 0.01)
-  fx <- df(x, df1, df2)
-  fy <- df(y, df1, df2)
+  fx <- df(x, df1, df2, ncp)
+  fy <- df(y, df1, df2, ncp)
   if(is.infinite(1.2 * max(fx,fy))){
     auxmain <- c(0, 2.5 + (df1/df2));
     auxrect <- c(2 + df1/df2, 3.5 + df1/df2)
@@ -2651,20 +2662,25 @@ plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
     auxmain <- c(0, 1.2 * max(fx,fy))
   }
   if (is.null(main)) {
+    titulo <- gettext("Probability function plot: F", domain = "R-leem")
     if (attr(q, "region") == "region2") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region4") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region7") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
     if (attr(q, "region") == "region8") {
-      main <- substitute(atop(bold("Probability function plot: F"), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)), list(t1 = q[1], t2 = q[2], x = "x"))
+      main <- substitute(atop(bold(titulo), f[X](x) == root(frac((d[1]*x)^d[1]*d[2]^d[2],(d[1]*x+d[2])^{d[1]+d[2]}))/xB(frac(d[1],2),frac(d[2],2))*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                         list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
   }
-  curve(df(x, df1, df2), minimo, maximo,
+  curve(df(x, df1, df2, ncp), minimo, maximo,
         ylab = expression(f[X](x)), xlab = "X",
         ylim = auxmain,
         panel.first = grid(col="gray90"),
@@ -2678,7 +2694,7 @@ plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
           col="red")
   qq <- round(q, digits=2)
   qqaux <- qq
-  Pr <- round(pf(q[2], df1, df2, lower.tail = T) - pf(q[1], df1, df2, lower.tail = T), digits=rounding)
+  Pr <- round(pf(q[2], df1, df2, ncp, lower.tail = T) - pf(q[1], df1, df2, ncp, lower.tail = T), digits=rounding)
   #Pr <- gsub("\\.", ",", Pr)
   ##qq <- gsub("\\.", ",", qq)
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
@@ -2688,47 +2704,52 @@ plotpfbrplot <- function(q, df1, df2, rounding, main = NULL) {
        col="red", font = 2, col.axis = "red")
   abline(v = qqaux, lty=2, col = "red")
   rect(par("usr")[1], 1.03 * auxrect, par("usr")[2], par("usr")[4], col = "gray")
+  parametro <- gettext("Parameters:", domain = "R-leem")
   if (attr(q, "region") == "region2") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                               list(df1v = df1, df2v = df2)))
+           legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                               list(df1v = df1, df2v = df2, parametro = parametro)))
   }
   if (attr(q, "region") == "region4") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<=~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                               list(df1v = df1, df2v = df2)))
+           legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                               list(df1v = df1, df2v = df2, parametro = parametro)))
   }
   if (attr(q, "region") == "region7") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<=~X<~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                               list(df1v = df1, df2v = df2)))
+           legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                               list(df1v = df1, df2v = df2, parametro = parametro)))
   }
   if ( attr(q, "region") == "region8") {
     legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
                      legend = substitute(P(t1<~X<=~t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
-           legend = substitute("Parameters:"~df1 == df1v ~ "," ~ df2 == df2v,
-                               list(df1v = df1, df2v = df2)))
+           legend = substitute(parametro~nu[1] == df1v ~ "," ~ nu[2] == df2v,
+                               list(df1v = df1, df2v = df2, parametro = parametro)))
   }
 } # plotcurve (older)
 ## RStudio
-plotpfbrrstudio <- function(q1, q2, df1, df2, rounding, main = NULL, q) {
+plotpfbrrstudio <- function(q1, q2, df1, df2, ncp = 0, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
-  plotpfbrplot(q, df1, df2, rounding, main)
+  plotpfbrplot(q, df1, df2, ncp, rounding, main)
 }
 ## Tcl/tk
-## Soon...
+plotpfbrtcltk <- function(q1, q2, df1, df2, ncp = 0, rounding, main = NULL, q) {
+  q[1] <- q1
+  q[2] <- q2
+  plotpfbrplot(q, df1, df2, ncp, rounding, main)
+}
 
 # Gumbel distribution
 ## Plot

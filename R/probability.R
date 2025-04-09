@@ -202,6 +202,14 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           pchisq(q[2], df = nu, ncp = ncp, lower.tail = F)
       }
       if (dist == "f") {
+        if (q[1] < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+        if (q[2] < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+        if (ncp < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+        if (any(names(argaddit) == "ncp")) {
+          if (argaddit$ncp < 0) stop("the 'ncp' argument must be a non-negative value!", call. = FALSE, domain = "R-leem")
+        } else {
+          argaddit$ncp <- 0
+        }
         if (!any(names(argaddit) == "df1")) {
           df1 <- readline(gettext("Insert the value of 'df1' argument: ", domain = "R-leem"))
           argaddit$df1 <- as.numeric(df1)
@@ -216,20 +224,43 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
         df1 <- argaddit$df1
         df2 <- argaddit$df2
+        minimo <- 0
+        if (df2 <= 4) {
+          maximo <- q[2] + ncp + 6 * (df1 / df2)
+        } else {
+          maximo <- q[2] + 6 * .desvio_padrao_f_nc(df1, df2, ncp)
+        }
         # Auxiliar variables
 
         if (gui == "plot") {
-          plotpfarplot(q, df1, df2, rounding, main)
+          plotpfarplot(q, df1, df2, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpfarrstudio(q1, q2, df1, df2, rounding, main, q),
+          manipulate::manipulate(plotpfarrstudio(q1, q2, df1, df2, ncp, rounding, main, q),
                                  q1 = manipulate::slider(0, q[2], q[1]),
-                                 q2 = manipulate::slider(q[1], 20, q[2]),
+                                 q2 = manipulate::slider(q[1], q[2] + 10, q[2]),
                                  df1 = manipulate::slider(1, df1  * 10 , df1),
-                                 df2 = manipulate::slider(1, df2 * 10, df2))
+                                 df2 = manipulate::slider(1, df2 * 10, df2),
+                                 ncp = manipulate::slider(0, ncp + 10, ncp))
+
+
+
         }
         if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          #on.exit(options(war))
+
+          # Plot tk da dist F com q de comp 2 (~/tkplotleem.R)
+          .tkplotleemf03(q[1], q[2], df1, df2, ncp, rounding, main, minimo, maximo, q)
+
+
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
         # Calculates the desired probability
         prob <- pf(q[1], df1, df2, lower.tail = T) +
@@ -1164,6 +1195,14 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         prob <- pchisq(q = q[2], df = nu, ncp= ncp) - pchisq(q = q[1], df = nu, ncp = ncp)
       }
       if (dist == "f") {
+        if (q[1] < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+        if (q[2] < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+        if (ncp < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+        if (any(names(argaddit) == "ncp")) {
+          if (argaddit$ncp < 0) stop("the 'ncp' argument must be a non-negative value!", call. = FALSE, domain = "R-leem")
+        } else {
+          argaddit$ncp <- 0
+        }
         if (!any(names(argaddit) == "df1")) {
           df1 <- readline(gettext("Insert the value of 'df1' argument: ", domain = "R-leem"))
           argaddit$df1 <- as.numeric(df1)
@@ -1178,22 +1217,39 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
         df1 <- argaddit$df1
         df2 <- argaddit$df2
-        # Auxiliar variables
-        minimo <- if (q[1] >= df1 - 4 * df2) q[1] - 4 * df2 else 0
-        maximo <- if (q[2] > df1 + 4 * df2) q[2] + 4 * df2 else df1 + 4 * df2
+        minimo <- 0
+        if (df2 <= 4) {
+          maximo <- q[2] + ncp + 6 * (df1 / df2)
+        } else {
+          maximo <- q[2] + 6 * .desvio_padrao_f_nc(df1, df2, ncp)
+        }
 
         if (gui == "plot") {
-          plotpfbrplot(q, df1, df2, rounding, main)
+          plotpfbrplot(q, df1, df2, ncp, rounding, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpfbrrstudio(q1, q2, df1, df2, rounding, main, q),
+          manipulate::manipulate(plotpfbrrstudio(q1, q2, df1, df2, ncp, rounding, main, q),
                                  q1 = manipulate::slider(0, q[2], q[1]),
                                  q2 = manipulate::slider(q[2], 20, q[2]),
                                  df1 = manipulate::slider(1, df1  * 2 , df1),
-                                 df2 = manipulate::slider(1, df2 * 2, df2))
+                                 df2 = manipulate::slider(1, df2 * 2, df2),
+                                 ncp = manipulate::slider(0, ncp + 10, ncp))
         }
         if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          #on.exit(options(war))
+
+          # Plot tk da dist F com q de comp 2 (~/tkplotleem.R)
+          .tkplotleemf04(q[1], q[2], df1, df2, ncp, rounding, main, minimo, maximo, q)
+
+
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
         # Calculates the desired probability
         prob <- pf(q = q[2], df1, df2) - pf(q = q[1], df1, df2)
@@ -2152,6 +2208,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       df1 <- argaddit$df1
       df2 <- argaddit$df2
       ncp <- argaddit$ncp
+
 
       if (lower.tail) {
         if (gui == "plot") {
