@@ -204,7 +204,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       if (dist == "f") {
         if (q[1] < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
         if (q[2] < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
-        if (ncp < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+
         if (any(names(argaddit) == "ncp")) {
           if (argaddit$ncp < 0) stop("the 'ncp' argument must be a non-negative value!", call. = FALSE, domain = "R-leem")
         } else {
@@ -224,6 +224,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
         df1 <- argaddit$df1
         df2 <- argaddit$df2
+        ncp <- argaddit$ncp
+        if (ncp < 0 ) stop("the 'ncp' argument must be greater than or equal to zero!", call. = FALSE, domain = "R-leem")
+
         minimo <- 0
         if (df2 <= 4) {
           maximo <- q[2] + ncp + 6 * (df1 / df2)
@@ -1197,7 +1200,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       if (dist == "f") {
         if (q[1] < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
         if (q[2] < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
-        if (ncp < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
         if (any(names(argaddit) == "ncp")) {
           if (argaddit$ncp < 0) stop("the 'ncp' argument must be a non-negative value!", call. = FALSE, domain = "R-leem")
         } else {
@@ -1217,6 +1219,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
         df1 <- argaddit$df1
         df2 <- argaddit$df2
+        ncp <- argaddit$ncp
+        if (ncp < 0 ) stop("the 'ncp' argument must be greater than or equal to zero!", call. = FALSE, domain = "R-leem")
+
         minimo <- 0
         if (df2 <= 4) {
           maximo <- q[2] + ncp + 6 * (df1 / df2)
@@ -2187,7 +2192,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
     }
     if (dist == "f") {
       if (q < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
-      if (ncp < 0 ) stop("The 'q' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
       if (any(names(argaddit) == "ncp")) {
         if (argaddit$ncp < 0) stop("the 'ncp' argument must be a non-negative value!", call. = FALSE, domain = "R-leem")
       } else {
@@ -2208,6 +2212,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       df1 <- argaddit$df1
       df2 <- argaddit$df2
       ncp <- argaddit$ncp
+      if (ncp < 0 ) stop("the 'ncp' argument must be greater than or equal to zero!", call. = FALSE, domain = "R-leem")
 
 
       if (lower.tail) {

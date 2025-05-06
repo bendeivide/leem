@@ -38,12 +38,12 @@ subtnames <- function(x) {
 }
 
 # Standard deviation of the noncentral F distribution
-.desvio_padrao_f_nc <- function(d1, d2, lambda) {
+.desvio_padrao_f_nc <- function(d1, d2, ncp) {
   if (d2 <= 4) {
     stop("The variance exists only for df2 > 4.")
   }
 
   term1 <- 2 * (d2^2) / (d1^2 * (d2 - 2)^2 * (d2 - 4))
-  term2 <- d1 * (d2 - 2) + 2 * lambda * (d2 - 4)
+  term2 <- d1 * (d2 - 2) + 2 * ncp * (d2 - 4)
   sqrt(term1 * term2)
 }
