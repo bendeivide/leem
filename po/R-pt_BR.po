@@ -562,3 +562,6 @@ msgstr "Grau de liberdade (denominador)"
 
 msgid "the 'ncp' argument must be a non-negative value!"
 msgstr "O argumento 'ncp' deve ser um valor não negativo!"
+
+msgid "Survival Function"
+msgstr "Função de sobrevivência"
