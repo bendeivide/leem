@@ -32,6 +32,7 @@ showcdf <- function(variable = "discrete", prop = NULL) {
     titdist <- gettext("Distribution Function", domain = "R-leem")
     titvar <- gettext("Discrete variable", domain = "R-leem")
     titprp <- gettext("Distribution Function Properties", domain = "R-leem")
+    #oldpar <- par(mgp = c(2, 0, 0))  # salva configuracoes anteriores
     if (is.null(prop)) {
       title(substitute(atop(bold(titdist), titvar), list(titdist = titdist, titvar = titvar)),
             xlab = bquote(X), ylab = bquote(F[X](x)), col.lab = "blue")
@@ -39,19 +40,18 @@ showcdf <- function(variable = "discrete", prop = NULL) {
       title(substitute(atop(bold(titprp), titvar), list(titprp = titprp, titvar = titvar)),
             xlab = bquote(X), ylab = bquote(F[X](x)), col.lab = "blue")
     }
-
-
-    for(i in 3:7) {
+    #par(oldpar)  # restaura configuracoes padrao
+    axis(1, at = x[3], labels = bquote(min*group("(", x, ")")), tick = TRUE, lwd = 0, lwd.ticks = 1,
+         col.axis = "blue", col = "blue", pos = 0.015)
+    for(i in 4:7) {
       axis(1, at = x[i], labels = substitute(x[i], list(i = i-2)), tick = TRUE, lwd = 0, lwd.ticks = 1,
            col.axis = "blue", col = "blue", pos = 0.015)
     }
-    #axis(1, at = x[6], labels = bquote({}^{"..."}), col.axis = "blue", tick = FALSE)
-    axis(1, at = x[9], labels = bquote(x[k]), tick = TRUE, col.axis = "blue", col = "blue", pos = 0.015)
-    #axis(1, at = x[8], labels = bquote({}^{"..."}), tick = FALSE, col.axis = "blue")
+    axis(1, at = x[9], labels = bquote(max*group("(", x, ")")), tick = TRUE, col.axis = "blue", col = "blue", pos = 0.015)
     segments(-0.320,0,x[7]+0.5, 0, col = "blue")
     #text(x[6], -0.1, "...", col = "blue")
-    axis(1, at = x[10], labels = "...", col.axis = "blue", col = "blue",
-         tick = FALSE, lwd = 0, lwd.ticks = 1, pos = 0.04)
+    # axis(1, at = x[10], labels = "...", col.axis = "blue", col = "blue",
+    #      tick = FALSE, lwd = 0, lwd.ticks = 1, pos = 0.04)
     axis(1, at = x[8], labels = "...", col.axis = "blue", col = "blue",
          tick = FALSE, lwd = 0, lwd.ticks = 1, pos = 0.12)
     arrows(x[8]+0.5, 0, x[10], 0, col = "blue", length = 0.1)
@@ -86,33 +86,36 @@ showcdf <- function(variable = "discrete", prop = NULL) {
       col = "black"
     )
 
-    points(x, ppois(x - 1, lambda = lambda), lwd = 2, pch = 19, bg = "white", col = "white")
-    points(x, ppois(x - 1, lambda = lambda), lwd = 2, pch = 1)
-    pointx <- ppois(x, lambda = 2)
-    points(x, pointx, lwd = 2, pch = 19)
-
     text(5.3, ppois(4, 2), "...", srt = 30)
     axis(2, at = c(0, 0.5, 1), col.axis = "blue", col = "blue", las = 2)
 
     if (is.null(prop)) {
       for (i in 1:length(w)) {
-        # segments(
-        #   w[i],
-        #   ppois(w[i], lambda = lambda),
-        #   w[i + 1],
-        #   max(ppois(w[i], lambda = lambda)),
-        #   lty = 1,
-        #   col = "black"
-        # )
         segments(w[i + 1],
                  min(ppois(w[i + 1], lambda = lambda)),
                  w[i + 1],
                  max(ppois(w[i], lambda = lambda)),
                  lty = 2,
-                 col = "black")
+                 col = "gray")
       }
+      # Pontos cheios
+      pointx <- ppois(x, lambda = 2)
+      points(x, pointx, lwd = 2, pch = 19, bg = "white", col = "white")
+      points(x, pointx, lwd = 2, pch = 19)
+      # Pontos vazados
+      points(x[-6], ppois(x[-6] - 1, lambda = lambda), lwd = 2, pch = 19, bg = "white", col = "white")
+      points(x[-6], ppois(x[-6] - 1, lambda = lambda), lwd = 2, pch = 1)
+
     } else {
       if (prop == 1) {
+        for (i in 1:length(w)) {
+          segments(w[i + 1],
+                   min(ppois(w[i + 1], lambda = lambda)),
+                   w[i + 1],
+                   max(ppois(w[i], lambda = lambda)),
+                   lty = 2,
+                   col = "gray")
+        }
         # property I
         text(7, 1.08, bquote(lim(F[X](x), x %->% infinity) == 1), col = "red")
         text(-1, 0.2, bquote(lim(F[X](x), x %->%~-infinity) == 0), col = "red")
@@ -124,8 +127,23 @@ showcdf <- function(variable = "discrete", prop = NULL) {
           lty = 1,
           col = "red"
         )
+        # Pontos cheios
+        pointx <- ppois(x, lambda = 2)
+        points(x, pointx, lwd = 2, pch = 19, bg = "white", col = "white")
+        points(x, pointx, lwd = 2, pch = 19)
+        # Pontos vazados
+        points(x[-6], ppois(x[-6] - 1, lambda = lambda), lwd = 2, pch = 19, bg = "white", col = "white")
+        points(x[-6], ppois(x[-6] - 1, lambda = lambda), lwd = 2, pch = 1)
       }
       if (prop == 2) {
+        for (i in 1:length(w)) {
+          segments(w[i + 1],
+                   min(ppois(w[i + 1], lambda = lambda)),
+                   w[i + 1],
+                   max(ppois(w[i], lambda = lambda)),
+                   lty = 2,
+                   col = "gray")
+        }
         # Segments
         segments(c(1.5, 2.5), c(0,0), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
         segments(c(1.5, 2.5), c(0,0), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
@@ -138,13 +156,39 @@ showcdf <- function(variable = "discrete", prop = NULL) {
         segments(rep(par("usr")[1], 2), c(ppois(1.5, 2), ppois(2.5, 2)), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
         axis(2, at = c(ppois(1.5, 2)), labels = bquote(F[X](x)), col.axis = "red", las = 2, col = "red")
         axis(2, at = c(ppois(2.5, 2)), labels = bquote(F[X](y)), col.axis = "red", las = 2, col = "red")
+        # Pontos cheios
+        pointx <- ppois(x, lambda = 2)
+        points(x, pointx, lwd = 2, pch = 19, bg = "white", col = "white")
+        points(x, pointx, lwd = 2, pch = 19)
+        # Pontos vazados
+        points(x[-6], ppois(x[-6] - 1, lambda = lambda), lwd = 2, pch = 19, bg = "white", col = "white")
+        points(x[-6], ppois(x[-6] - 1, lambda = lambda), lwd = 2, pch = 1)
       }
       if (prop == 3) {
+        for (i in 1:length(w)) {
+          segments(w[i + 1],
+                   min(ppois(w[i + 1], lambda = lambda)),
+                   w[i + 1],
+                   max(ppois(w[i], lambda = lambda)),
+                   lty = 2,
+                   col = "gray")
+        }
+
         points(2, ppois(2, 2), lwd = 2, pch = 19, col = "red")
         text(2, 0.78, bquote(x[3]), col = "red")
-        text(3.5, 0.78, bquote(x[n]), col = "red")
-        arrows(3.2, ppois(2, 2), 2.3, ppois(2, 2), col = "red", length = 0.1, lwd = 2)
-        text(4, 0.53, bquote(lim(F[X](x[n]), x[n]*symbol("\257")*x[3])*symbol("\257")*F[X](x[3])), col = "red")
+        text(3, 0.78, bquote(x[n]), col = "red")
+
+        # Pontos cheios
+        pointx <- ppois(x, lambda = 2)
+        points(x, pointx, lwd = 2, pch = 19, bg = "white", col = "white")
+        points(x, pointx, lwd = 2, pch = 19)
+        # Pontos vazados
+        points(x[-6], ppois(x[-6] - 1, lambda = lambda), lwd = 2, pch = 19, bg = "white", col = "white")
+        points(x[-6], ppois(x[-6] - 1, lambda = lambda), lwd = 2, pch = 1)
+        # Coninuidade
+        arrows(2.8, ppois(2, 2), 2.1, ppois(2, 2), col = "red", length = 0.1, lwd = 2)
+        text(2.5, 0.53, bquote(lim(F[X](x[n]), x[n]*symbol("\257")*x[3])*symbol("\257")*F[X](x[3])), col = "red")
+
       }
 
     }
