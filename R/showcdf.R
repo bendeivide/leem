@@ -239,9 +239,9 @@ showcdf <- function(variable = "discrete", prop = NULL) {
 
       if (prop == 1) {
         # property I
-        text(2, 1.1, bquote(lim(F[X](x), x %->% infinity) == 1), col = "red")
+        text(2, 1.1, bquote(lim(F[X](x), x %->% infinity) == 1), col = "red", cex = 1.2)
         arrows(3, 1.03, 4, 1.03, col = "red", length = 0.1, lwd = 2)
-        text(-3, 0.2, bquote(lim(F[X](x), x %->%~-infinity) == 0), col = "red")
+        text(-3, 0.2, bquote(lim(F[X](x), x %->%~-infinity) == 0), col = "red", cex = 1.2)
         arrows(-3, 0.05, -4, 0.05, col = "red", length = 0.1, lwd = 2)
       }
       if (prop == 2) {
@@ -253,7 +253,7 @@ showcdf <- function(variable = "discrete", prop = NULL) {
         points(1, pnorm(1), lwd = 2, pch = 19, col = "red")
         text(0.9, 0.9, bquote(y), col = "red")
         ##
-        text(-1, 1, bquote(atop(F[X](x) <= F[X](y), x <= y)), col = "red")
+        text(-1, 1, bquote(atop(F[X](x) <= F[X](y), x <= y)), col = "red", cex = 1.2)
         segments(rep(par("usr")[1], 2), c(pnorm(0), pnorm(1)), c(0, 1), c(pnorm(0), pnorm(1)), col = "red", lty = 2)
         axis(2, at = c(pnorm(0)), labels = bquote(F[X](x)), col.axis = "red", las = 2, col = "red")
         axis(2, at = c(pnorm(1)), labels = bquote(F[X](y)), col.axis = "red", las = 2, col = "red")
@@ -264,7 +264,8 @@ showcdf <- function(variable = "discrete", prop = NULL) {
         points(1, pnorm(1), lwd = 2, pch = 19, col = "red")
         text(0.9, 0.9, bquote(x[n]), col = "red")
         arrows(1, pnorm(0.9), 0.2, pnorm(0.1), col = "red", length = 0.1, lwd = 3)
-        text(-1, 0.8, bquote(lim(F[X](x[n]), x[n]*symbol("\257")*x)*symbol("\257")*F[X](x)), col = "red")
+        text(-1, 0.8, bquote(lim(F[X](x[n]), x[n]%->%x)%->%F[X](x)), col = "red",
+             cex = 1.2)
       }
 
     }
