@@ -1,19 +1,19 @@
-#' Distribution Function Properties
+#' Survival Function Properties
 #'
-#' Graphic presentation of properties for distribution function
+#' Graphic presentation of properties for survival function
 #'
 #' @param variable Variabe type. Defaults \code{variable = "discrete"}. The options are: \code{discrete} or "\code{1}" and \code{continuous} or "\code{2}".
-#' @param prop Properties for distribution function. See Details.
+#' @param prop Properties for survival function. See Details.
 #' @details
-#' - \code{prop = 1}: \eqn{\lim_{x\rightarrow\infty}F_X(x)=1} and \eqn{\lim_{x\rightarrow -\infty}F_X(x)=0};
+#' - \code{prop = 1}: \eqn{\lim_{x\rightarrow\infty}S_X(x)=0} and \eqn{\lim_{x\rightarrow -\infty}S_X(x)=1};
 #'
-#' - \code{prop = 2}: \eqn{F_X(x)\leq F_X(y), ~ x\leq y~\forall x,y \in \mathbb{R}};
+#' - \code{prop = 2}: \eqn{S_X(x)\geq S_X(y), ~ x\leq y~\forall x,y \in \mathbb{R}};
 #'
-#' - \code{prop = 3}: \eqn{\lim_{x_n\downarrow x}F_X(x_n)\downarrow F_X(x)}.
+#' - \code{prop = 3}: \eqn{\lim_{x_n\downarrow x}S_X(x_n)\downarrow S_X(x)}.
 #'
 #' @examples
 #' library(leem)
-#' # Example 1
+#' # Example 1: Plot of survival function
 #' showsf()
 #' @export
 showsf <- function(variable = "discrete", prop = NULL) {
@@ -81,13 +81,6 @@ showsf <- function(variable = "discrete", prop = NULL) {
       lty = 1,
       col = "black"
     )
-    x <- c(x, 6)
-    points(x, ppois(x, lambda = lambda, lower.tail = FALSE), lwd = 2, pch = 1, bg = "white", col = "white")
-    points(x, ppois(x, lambda = lambda, lower.tail = FALSE), lwd = 2, pch = 19)
-    # x <- x[-6]
-    # pointx <- ppois(x, lambda = lambda, lower.tail = FALSE)
-    # points(x, c(1, pointx[-5]), lwd = 2, pch = 1, lwd = 2, pch = 19, bg = "white", col = "white")
-    # points(x, c(1, pointx[-5]), lwd = 2, pch = 1)
 
     text(-0.5, 0.94, "...", srt = -30)
     text(5.5, 0.03, "...", srt = -30)
@@ -100,48 +93,107 @@ showsf <- function(variable = "discrete", prop = NULL) {
                  w[i + 1],
                  max(ppois(w[i], lambda = lambda, lower.tail = FALSE)),
                  lty = 2,
-                 col = "black")
+                 col = "gray")
       }
+      # Pontos cheios
+      x <- c(x, 6)
+      points(x, ppois(x, lambda = lambda, lower.tail = FALSE), lwd = 2, pch = 1, bg = "white", col = "white")
+      points(x, ppois(x, lambda = lambda, lower.tail = FALSE), lwd = 2, pch = 19)
+      # Pontos vazados
+      x <- x[-6]
+      pointx <- ppois(x, lambda = lambda, lower.tail = FALSE)
+      points(x, c(1, pointx[-5]), lwd = 2, pch = 19, bg = "white", col = "white")
+      points(x, c(1, pointx[-5]), lwd = 2, pch = 1)
     } else {
       if (prop == 1) {
         # property I
-        text(7, 1.08, bquote(lim(F[X](x), x %->% infinity) == 1), col = "red")
-        text(-1, 0.2, bquote(lim(F[X](x), x %->%~-infinity) == 0), col = "red")
+        text(6.5, 0.2, bquote(lim(S[X](x), x %->% infinity) == 0), col = "red")
+        text(-0.5, 1.08, bquote(lim(S[X](x), x %->%~-infinity) == 1), col = "red")
         segments(
           c(-1, 6),
-          c(0, 1),
+          c(1, 0),
           c(0, 7),
-          c(0, 1),
+          c(1, 0),
           lty = 1,
           col = "red"
         )
+        for (i in 1:length(w)) {
+          segments(w[i + 1],
+                   min(ppois(w[i + 1], lambda = lambda, lower.tail = FALSE)),
+                   w[i + 1],
+                   max(ppois(w[i], lambda = lambda, lower.tail = FALSE)),
+                   lty = 2,
+                   col = "gray")
+        }
+        # Pontos cheios
+        x <- c(x, 6)
+        points(x, ppois(x, lambda = lambda, lower.tail = FALSE), lwd = 2, pch = 1, bg = "white", col = "white")
+        points(x, ppois(x, lambda = lambda, lower.tail = FALSE), lwd = 2, pch = 19)
+        # Pontos vazados
+        x <- x[-6]
+        pointx <- ppois(x, lambda = lambda, lower.tail = FALSE)
+        points(x, c(1, pointx[-5]), lwd = 2, pch = 19, bg = "white", col = "white")
+        points(x, c(1, pointx[-5]), lwd = 2, pch = 1)
       }
       if (prop == 2) {
         # Segments
-        segments(c(1.5, 2.5), c(0,0), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
-        segments(c(1.5, 2.5), c(0,0), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
+        segments(c(1.5, 2.5), c(0,0), c(1.5, 2.5), c(ppois(1.5, 2, lower.tail = FALSE), ppois(2.5, 2, lower.tail = FALSE)), col = "red", lty = 2)
+        segments(c(1.5, 2.5), c(0,0), c(1.5, 2.5), c(ppois(1.5, 2, lower.tail = FALSE), ppois(2.5, 2, lower.tail = FALSE)), col = "red", lty = 2)
         # Points
-        points(1.5, ppois(1.5, 2), lwd = 2, pch = 19, col = "red")
-        text(1.5, 0.46, bquote(x), col = "red")
-        points(2.5, ppois(2.5, 2), lwd = 2, pch = 19, col = "red")
-        text(2.5, 0.74, bquote(y), col = "red")
-        text(0.5, 0.8, bquote(atop(F[X](x) <= F[X](y), x <= y)), col = "red")
-        segments(rep(par("usr")[1], 2), c(ppois(1.5, 2), ppois(2.5, 2)), c(1.5, 2.5), c(ppois(1.5, 2), ppois(2.5, 2)), col = "red", lty = 2)
-        axis(2, at = c(ppois(1.5, 2)), labels = bquote(F[X](x)), col.axis = "red", las = 2, col = "red")
-        axis(2, at = c(ppois(2.5, 2)), labels = bquote(F[X](y)), col.axis = "red", las = 2, col = "red")
+        points(1.5, ppois(1.5, 2, lower.tail = FALSE), lwd = 2, pch = 19, col = "red")
+        text(1.5, 0.7, bquote(x), col = "red")
+        points(2.5, ppois(2.5, 2, lower.tail = FALSE), lwd = 2, pch = 19, col = "red")
+        text(2.5, 0.4, bquote(y), col = "red")
+        text(3, 0.7, bquote(atop(S[X](x) >= S[X](y), x <= y)), col = "red")
+        segments(rep(-1.5, 2), c(ppois(1.5, 2, lower.tail = FALSE), ppois(2.5, 2, lower.tail = FALSE)), c(1.5, 2.5), c(ppois(1.5, 2, lower.tail = FALSE), ppois(2.5, 2, lower.tail = FALSE)), col = "red", lty = 2)
+        oldpar <- par(mgp = c(0, -1, 0))  # salva configuracoes anteriores
+        axis(2, at = c(ppois(1.5, 2, lower.tail = FALSE)), labels = bquote(S[X](x)), col.axis = "red", las = 2, col = "red", tick = FALSE)
+        axis(2, at = c(ppois(2.5, 2, lower.tail = FALSE)), labels = bquote(S[X](y)), col.axis = "red", las = 2, col = "red", tick = FALSE)
+        par(oldpar)  # restaura configuracoes padrao
+        for (i in 1:length(w)) {
+          segments(w[i + 1],
+                   min(ppois(w[i + 1], lambda = lambda, lower.tail = FALSE)),
+                   w[i + 1],
+                   max(ppois(w[i], lambda = lambda, lower.tail = FALSE)),
+                   lty = 2,
+                   col = "gray")
+        }
+        # Pontos cheios
+        x <- c(x, 6)
+        points(x, ppois(x, lambda = lambda, lower.tail = FALSE), lwd = 2, pch = 1, bg = "white", col = "white")
+        points(x, ppois(x, lambda = lambda, lower.tail = FALSE), lwd = 2, pch = 19)
+        # Pontos vazados
+        x <- x[-6]
+        pointx <- ppois(x, lambda = lambda, lower.tail = FALSE)
+        points(x, c(1, pointx[-5]), lwd = 2, pch = 19, bg = "white", col = "white")
+        points(x, c(1, pointx[-5]), lwd = 2, pch = 1)
       }
       if (prop == 3) {
-        points(2, ppois(2, 2), lwd = 2, pch = 19, col = "red")
-        text(2, 0.78, bquote(x[3]), col = "red")
-        text(3.5, 0.78, bquote(x[n]), col = "red")
-        arrows(3.2, ppois(2, 2), 2.3, ppois(2, 2), col = "red", length = 0.1, lwd = 2)
-        text(4, 0.53, bquote(lim(F[X](x[n]), x[n]*symbol("\257")*x[3])*symbol("\257")*F[X](x[3])), col = "red")
+        points(2, ppois(2, 2, lower.tail = FALSE), lwd = 2, pch = 19, col = "red")
+        text(2, 0.40, bquote(x[3]), col = "red")
+        text(3, 0.40, bquote(x[n]), col = "red")
+        arrows(2.8, ppois(2, 2, ppois(2, 2, lower.tail = FALSE)), 2.3, ppois(2, 2, ppois(2, 2, lower.tail = FALSE)), col = "red", length = 0.1, lwd = 2)
+        text(4, 0.53, bquote(lim(S[X](x[n]), x[n]*symbol("\257")*x[3])*symbol("\257")*S[X](x[3])), col = "red")
+
+        for (i in 1:length(w)) {
+          segments(w[i + 1],
+                   min(ppois(w[i + 1], lambda = lambda, lower.tail = FALSE)),
+                   w[i + 1],
+                   max(ppois(w[i], lambda = lambda, lower.tail = FALSE)),
+                   lty = 2,
+                   col = "gray")
+        }
+        # Pontos cheios
+        x <- c(x, 6)
+        points(x, ppois(x, lambda = lambda, lower.tail = FALSE), lwd = 2, pch = 1, bg = "white", col = "white")
+        points(x, ppois(x, lambda = lambda, lower.tail = FALSE), lwd = 2, pch = 19)
+        # Pontos vazados
+        x <- x[-6]
+        pointx <- ppois(x, lambda = lambda, lower.tail = FALSE)
+        points(x, c(1, pointx[-5]), lwd = 2, pch = 19, bg = "white", col = "white")
+        points(x, c(1, pointx[-5]), lwd = 2, pch = 1)
       }
     }
-    x <- x[-6]
-    pointx <- ppois(x, lambda = lambda, lower.tail = FALSE)
-    points(x, c(1, pointx[-5]), lwd = 2, pch = 19, bg = "white", col = "white")
-    points(x, c(1, pointx[-5]), lwd = 2, pch = 1)
   }
   if (variable == "continuous") {
     p <- 0.8; mu <- 0; sigma <- 1

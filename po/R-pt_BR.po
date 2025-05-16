@@ -565,3 +565,6 @@ msgstr "O argumento 'ncp' deve ser um valor não negativo!"
 
 msgid "Survival Function"
 msgstr "Função de sobrevivência"
+
+msgid "Survival Function Properties"
+msgstr "Propriedades da Função de Sobrevivência"
