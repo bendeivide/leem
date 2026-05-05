@@ -548,11 +548,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if (dist == "poisson") {
         if (!any(names(argaddit) == "lambda")) {
-          lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
+          par1 <- gettext("Insert the value of 'lambda' argument:", domain = "R-leem")
+          lambda <- readline(paste0(par1, " "))
           argaddit$lambda <- as.numeric(lambda)
         }
         while (argaddit$lambda <= 0) {
-          lambda <- readline(gettext("Please, Insert the value of 'lambda' greater then 0: ", domain = "R-leem"))
+          arg1 <- gettext("Please, Insert the value of 'lambda' greater then 0:", domain = "R-leem")
+          lambda <- readline(paste0(arg1, " "))
           argaddit$lambda <- as.numeric(lambda)
         }
 
@@ -608,11 +610,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if (dist == "binomial") {
         if (!any(names(argaddit) == "size")) {
-          size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+          arg1 <- gettext("Insert the value of 'size' argument:", domain = "R-leem")
+          size <- readline(paste0(arg1, " "))
           argaddit$size <- as.numeric(size)
         }
         if (!any(names(argaddit) == "prob")) {
-          prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
+          arg2 <- gettext("Insert the value of 'prob' argument:", domain = "R-leem")
+          prob <- readline(paste0(arg2, " "))
           argaddit$prob <- as.numeric(prob)
         }
         size <- argaddit$size
@@ -653,11 +657,11 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           if (attr(q, "region") == "region8") {
             q[1] <- q[1] + 1
           }
-          if (q[1] >= q[2]) {
-            saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
-            cat(saida)
-            stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
-          }
+          # if (q[1] >= q[2]) {
+          #   saida <- paste0("\nThis was equivalent to: \n", "- Lower limit: ", q[1], "\n", "- Upper limit: ", q[2], "\n\n")
+          #   cat(saida)
+          #   stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+          # }
         }
         prob <- round(pbinom(q = q[1], size = size, prob = prob) + pbinom(q = q[2] - 1, size = size, prob = prob, lower.tail = FALSE),
                       digits = rounding)
@@ -1525,11 +1529,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if (dist == "poisson") {
         if (!any(names(argaddit) == "lambda")) {
-          lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
+          par1 <- gettext("Insert the value of 'lambda' argument:", domain = "R-leem")
+          lambda <- readline(paste0(par1, " "))
           argaddit$lambda <- as.numeric(lambda)
         }
         while (argaddit$lambda <= 0) {
-          lambda <- readline(gettext("Please, Insert the value of 'lambda' greater then 0: ", domain = "R-leem"))
+          arg1 <- gettext("Please, Insert the value of 'lambda' greater then 0:", domain = "R-leem")
+          lambda <- readline(paste0(arg1, " "))
           argaddit$lambda <- as.numeric(lambda)
         }
 
@@ -1584,11 +1590,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if (dist == "binomial") {
         if (!any(names(argaddit) == "size")) {
-          size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+          arg1 <- gettext("Insert the value of 'size' argument:", domain = "R-leem")
+          size <- readline(paste0(arg1, " "))
           argaddit$size <- as.numeric(size)
         }
         if (!any(names(argaddit) == "prob")) {
-          prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
+          arg2 <- gettext("Insert the value of 'prob' argument:", domain = "R-leem")
+          prob <- readline(paste0(arg2, " "))
           argaddit$prob <- as.numeric(prob)
         }
 
@@ -1640,7 +1648,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
             stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
           }
         }
-        prob <- round(pbinom(q = q[2], size, prob) - pbinom(q = q[1],size, prob), digits = rounding)
+        prob <- round(sum(dbinom(q[1]:q[2], size = size, prob = prob)),
+                      digits = rounding)
       }
       if (dist == "nbinom") {
         if (!any(names(argaddit) == "prob")) {
@@ -2692,7 +2701,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
     }
     if (dist == "poisson") {
       if (!any(names(argaddit) == "lambda")) {
-        lambda <- readline(gettext("Insert the value of 'lambda' argument: ", domain = "R-leem"))
+        par1 <- gettext("Insert the value of 'lambda' argument:", domain = "R-leem")
+        lambda <- readline(paste0(par1, " "))
+        argaddit$lambda <- as.numeric(lambda)
+      }
+      while (argaddit$lambda <= 0) {
+        arg1 <- gettext("Please, Insert the value of 'lambda' greater then 0:", domain = "R-leem")
+        lambda <- readline(paste0(arg1, " "))
         argaddit$lambda <- as.numeric(lambda)
       }
       lambda <- argaddit$lambda
@@ -2747,11 +2762,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
     }
     if (dist == "binomial") {
       if (!any(names(argaddit) == "size")) {
-        size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+        arg1 <- gettext("Insert the value of 'size' argument:", domain = "R-leem")
+        size <- readline(paste0(arg1, " "))
         argaddit$size <- as.numeric(size)
       }
       if (!any(names(argaddit) == "prob")) {
-        prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
+        arg2 <- gettext("Insert the value of 'prob' argument:", domain = "R-leem")
+        prob <- readline(paste0(arg2, " "))
         argaddit$prob <- as.numeric(prob)
       }
       size <- argaddit$size

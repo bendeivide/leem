@@ -568,3 +568,27 @@ msgstr "Função de sobrevivência"
 
 msgid "Survival Function Properties"
 msgstr "Propriedades da Função de Sobrevivência"
+
+msgid "The 'b' argument must be greater than 'a' argument!"
+msgstr "O argumento 'a' deve ser maior que o argumento 'a'!"
+
+msgid "Insert the value of 'size' argument:"
+msgstr "Insira o valor do argumento 'size':"
+
+msgid "Insert the value of 'prob' argument:"
+msgstr "Insira o valor do argumento 'prob':"
+
+msgid "Insert the value of 'lambda' argument:"
+msgstr "Insira o valor do argumento 'lambda':"
+
+msgid "Probability function plot: Poisson"
+msgstr "Gráfico da função de probabilidade: Poisson"
+
+msgid "Please, Insert the value of 'lambda' greater then 0:"
+msgstr "Por favor, insira o valor de 'lambda' maior que 0:"
+
+msgid "Please, Insert the value of 'size' greater then 0:"
+msgstr "Por favor, insira o valor de 'size' maior que 0:"
+
+msgid "Please, Insert the value for 'prob' between 0 and 1:"
+msgstr "Por favor, insira o valor para 'prob' entre 0 e 1:"

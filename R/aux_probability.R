@@ -1578,7 +1578,7 @@ plotpbinomialarplot <- function(q, size, prob, rounding, main = NULL){
     if (attr(q, "region") == "region8") {
       q[1] <- q[1] + 1
     }
-    if (q[1] >= q[2]) stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
+    # if (q[1] >= q[2]) stop("Lower limit must be less than upper limit", call. = FALSE, domain = "R-leem")
   }
 
   rmin <- if (q[1] < size) trunc(q[1] - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
@@ -1591,9 +1591,10 @@ plotpbinomialarplot <- function(q, size, prob, rounding, main = NULL){
   ylim <- c(0, max(probx)*1.2)
   plot.new()
   plot.window(xlim, ylim)
+  grid(col = "gray90")
   axis(1, at = 5*(0:rmax))
   axis(2)
-  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  points(x, probx, lwd = 2, pch = 19)
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
@@ -1625,11 +1626,14 @@ plotpbinomialarplot <- function(q, size, prob, rounding, main = NULL){
   # rectangle
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
   # title and legends
+  titulo <- gettext("Probability function plot: Binomial", domain = "R-leem")
   if (qqmin < 0) {
     axis(side=1, at=as.character(qqmin), tick = TRUE, lwd = 1,
          col="red", font = 2, lwd.ticks = 1, labels = FALSE)
     title(ylab = expression(p[X](x)), xlab = "X",
-          main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
+          main = substitute(atop(bold(titulo),
+                                 p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)),
+                            list(t1 = qqmin, t2 = qqmax, x = "x", titulo = titulo)), cex = 1)
     # legends
     legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
@@ -1637,18 +1641,21 @@ plotpbinomialarplot <- function(q, size, prob, rounding, main = NULL){
     legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
                                list( N = size, P = prob)))
-  } else{
+  } else {
     axis(side=1, at=as.character(c(rmin, qqmin)), tick = TRUE, lwd = 1,
          col="red", font = 2, lwd.ticks = 1, labels = FALSE)
     title(ylab = expression(p[X](x)), xlab = "X",
-          main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)), list(t1 = qqmin, t2 = qqmax, x = "x")), cex = 1)
+          main = substitute(atop(bold(titulo),
+                                 p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(X <= t1)== sum(p[X](x), x <= t1, "")*","~~P(X >= t2)== sum(p[X](x), x >= t2, infinity)),
+                            list(t1 = qqmin, t2 = qqmax, x = "x", titulo = titulo)), cex = 1)
     # legends
     legaux <- legend("topleft", bty="n", fill="red", cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qqmin,t2=qqmax, Pr = Pr)))
+    parametro <- gettext("Parameters:", domain = "R-leem")
     legend(rmin, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
-                               list( N = size, P = prob)))
+           legend = substitute(parametro~ n == N ~ "," ~ p == P,
+                               list(N = size, P = prob, parametro = parametro)))
   }
 }
 ## Rstudio
@@ -3688,11 +3695,12 @@ plotpbinomialbrplot <- function(q, size, prob, rounding, main = NULL){
   plot.window(xlim, ylim)
   axis(1, at = 5*(0:rmax))
   axis(2)
-  points(x, probx, lwd = 2, pch = 19, panel.first = grid(col = "gray90"))
+  grid(col = "gray90")
+  points(x, probx, lwd = 2, pch = 19)
   lines(x, probx, type = "h", lwd = 2)
   qq <- round(q, digits = rounding)
   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  Pr <- round(pbinom(q = q[2], size = size, prob = prob) - pbinom(q = q[1], size = size, prob = prob),
+  Pr <- round(sum(dbinom(q[1]:q[2], size = size, prob = prob)),
               digits = rounding)
   qqmin <- qq[1]
   qqmax <- qq[2]
@@ -3711,14 +3719,17 @@ plotpbinomialbrplot <- function(q, size, prob, rounding, main = NULL){
   abline(v = c(qqmin, qqmax), lty=2, col = "red")
   # rectangle
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
+  titulo <- gettext("Probability function plot: Binomial", domain = "R-leem")
   title(ylab = expression(p[X](x)), xlab = "X",
-        main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)), list(t1 = qqmin, t2 = qqmax, x = "x")))
+        main = substitute(atop(bold(titulo), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)),
+                          list(t1 = qqmin, t2 = qqmax, x = "x", titulo = titulo)))
   legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                    legend = substitute(P(t1<=~X<=~t2)==Pr,
                                        list(t1=qqmin,t2=qqmax, Pr = Pr)))
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
-         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
-                             list( N = size, P = prob)))
+         legend = substitute(parametro~ n == N ~ "," ~ p == P,
+                             list(N = size, P = prob, parametro = parametro)))
 }
 ## RStudio
 plotpbinomialbrrstudio <- function(q1, q2, size, prob, rouding, main = NULL, q){
@@ -3800,7 +3811,9 @@ plotpnbinombrplot <- function(q, size, prob, rounding, main = NULL){
   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
   # title
   if (is.null(main)) {
-    main <- substitute(atop(bold("Probability function plot: Negative Binomial"), p[X](x) == (atop(k+r-1,k))*(1-p)^n*p^k*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)), list(t1 = qqmin, t2 = qqmax, x = "x"))
+    main <- substitute(atop(bold("Probability function plot: Negative Binomial"),
+                            p[X](x) == (atop(k+r-1,k))*(1-p)^n*p^k*","~~P(t1<=~X<=~t2)== sum(p[X](x), x == t1, t2)),
+                       list(t1 = qqmin, t2 = qqmax, x = "x"))
   }
   title(ylab = expression(p[X](x)), xlab = "X",
         main = main, cex = 1)
@@ -4955,10 +4968,12 @@ plotppoissonlttplot <- function(q, lambda, rounding, main = NULL){
   plot.window(xlim, ylim)
   axis(1, at = 5*(0:rmax))
   axis(2)
+  titulo <- gettext("Probability function plot: Poisson", domain = "R-leem")
   title(ylab = expression(p[X](x)), xlab = "X",
-        main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~F[X](t) == sum(p[X](x), x<=t, "")),
-                          list(t = q, t2 = q + 1)))
-  lines(x2, probx2, type = "h", lwd = 2, panel.first = grid(col = "gray90"))
+        main = substitute(atop(bold(titulo), p[X](x) == frac(symbol(lambda)^x*e^-symbol(lambda), x*"!")*","~~F[X](t) == sum(p[X](x), x<=t, "")),
+                          list(t = q, t2 = q + 1, titulo = titulo)))
+  grid(col = "gray90")
+  lines(x2, probx2, type = "h", lwd = 2)
   points(x2, probx2, lwd = 2, pch = 19)
   lines(x1, probx1, type = "h", lwd = 2, col = "red")
   points(x1, probx1, lwd = 2, col = "red", pch = 19)
@@ -4986,9 +5001,10 @@ plotppoissonlttplot <- function(q, lambda, rounding, main = NULL){
   legaux <- legend("topleft", bty="n", fill="red",
                    legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
                                        list(q = qq, Pr = Pr)), cex=0.8)
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(rmin, legaux$text$y, bty="n", bg = "white",
-         legend = substitute("Parameters:"~lambda == lambd,
-                             list(lambd = lambda)), cex=0.8)
+         legend = substitute(parametro~lambda == lambd,
+                             list(lambd = lambda, parametro = parametro)), cex=0.8)
 }
 
 
@@ -5010,11 +5026,14 @@ plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
   plot.window(xlim, ylim)
   axis(1, at = 5*(0:rmax))
   axis(2)
-  title(ylab = expression(p[X](x)), xlab = "X",main=substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~F[X](t) == sum(p[X](x), x<=t, "")),
-                                                               list(t = q, t2 = q + 1)))
+  titulo <- gettext("Probability function plot: Binomial", domain = "R-leem")
+  title(ylab = expression(p[X](x)), xlab = "X",main=substitute(atop(bold(titulo),
+                                                                    p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~F[X](t) == sum(p[X](x), x<=t, "")),
+                                                               list(t = q, t2 = q + 1, titulo = titulo)))
+  grid(col = "gray90")
   lines(x2, probx2, type = "h", lwd = 2)
   points(x2, probx2, lwd = 2, pch = 19)
-  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2, col = "red")
+  lines(x1, probx1, type = "h", lwd = 2, col = "red")
   points(x1, probx1, lwd = 2, col = "red", pch = 19)
   qq <- round(q, digits = 2)
   qqaux <- round(q, digits = 2)
@@ -5038,9 +5057,10 @@ plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
   legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
                    legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
                                        list(q = qq, Pr = Pr)))
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(rmin, legaux$text$y, bty="n", bg = "white",cex=0.8,
-         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
-                             list( N = size, P = prob)))
+         legend = substitute(parametro~ n == N ~ "," ~ p == P,
+                             list(N = size, P = prob, parametro = parametro)))
 }
 
 # Negative Binomial distribution
@@ -6075,10 +6095,12 @@ plotppoissonltfplot <- function(q, lambda, rounding, main = NULL){
   plot.window(xlim, ylim)
   axis(1, at = 5*(0:rmax))
   axis(2)
+  titulo <- gettext("Probability function plot: Poisson", domain = "R-leem")
   title(ylab = expression(p[X](x)), xlab = "X",
-        main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x %*% e^-symbol(lambda), x*"!")*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
-                          list(t = q, t2 = q + 1)))
-  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+        main = substitute(atop(bold(titulo), p[X](x) == frac(symbol(lambda)^x*e^-symbol(lambda), x*"!")*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
+                          list(t = q, t2 = q + 1, titulo = titulo)))
+  grid(col = "gray90")
+  lines(x1, probx1, type = "h", lwd = 2)
   points(x1, probx1, lwd = 2, pch = 19)
   lines(x2, probx2, type = "h", lwd = 2, col = "red")
   points(x2, probx2, lwd = 2, col = "red", pch = 19)
@@ -6107,9 +6129,10 @@ plotppoissonltfplot <- function(q, lambda, rounding, main = NULL){
   legaux <- legend("topleft", bty="n", fill="red",
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
                                        list(q = qq, Pr = Pr, q2 = qq + 1)),cex=0.8)
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(rmin, legaux$text$y, bty="n", bg = "white",
-         legend = substitute("Parameters:"~lambda == lambd,
-                             list(lambd = lambda)), cex=0.8)
+         legend = substitute(parametro~lambda == lambd,
+                             list(lambd = lambda, parametro = parametro)), cex=0.8)
 }
 
 # Binomial distribution
@@ -6131,9 +6154,11 @@ plotpbinomialltfplot <- function(q, size, prob, rounding, main = NULL){
   plot.window(xlim, ylim)
   axis(1, at = 5*(0:rmax))
   axis(2)
-  title(ylab = expression(p[X](x)), xlab = "X", main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
-                                                                  list(t = q, t2 = q + 1)))
-  lines(x1, probx1, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  titulo <- gettext("Probability function plot: Binomial", domain = "R-leem")
+  title(ylab = expression(p[X](x)), xlab = "X", main = substitute(atop(bold(titulo), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - sum(p[X](x), x<=t, "")~"="*P(X >= t2) == sum(p[X](x), x >= t2, infinity)),
+                                                                  list(t = q, t2 = q + 1, titulo = titulo)))
+  grid(col = "gray90")
+  lines(x1, probx1, type = "h", lwd = 2)
   points(x1, probx1, lwd = 2, pch = 19)
   lines(x2, probx2, type = "h", lwd = 2, col = "red")
   points(x2, probx2, lwd = 2, col = "red", pch = 19)
@@ -6160,9 +6185,10 @@ plotpbinomialltfplot <- function(q, size, prob, rounding, main = NULL){
   legaux <- legend("topleft", bty="n", fill="red",
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X >= q2) == Pr,
                                        list(q = qq, Pr = Pr, q2 = qq + 1)), cex=0.8)
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(rmin, legaux$text$y, bty="n", bg = "white", cex=0.8,
-         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
-                             list( N = size, P = prob)))
+         legend = substitute(parametro~ n == N ~ "," ~ p == P,
+                             list(N = size, P = prob, parametro = parametro)))
 }
 
 # Negative Binomial distribution
@@ -6520,10 +6546,12 @@ plotppoissonltnplot <- function(q, lambda, rounding, main = NULL){
   plot.window(xlim, ylim)
   axis(1, at = 5*(0:rmax))
   axis(2)
+  titulo <- gettext("Probability function plot: Poisson", domain = "R-leem")
   title(ylab = expression(p[X](x)), xlab = "X",
-        main = substitute(atop(bold("Probability function plot: Poisson"), p[X](x) == frac(symbol(lambda)^x * e^-symbol(lambda), x*"!")*","~~p[X](t1) ~"="~ P(X == 20)),
-                          list(t1 = q)))
-  lines(x, probx, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+        main = substitute(atop(bold(titulo), p[X](x) == frac(symbol(lambda)^x*e^-symbol(lambda), x*"!")*","~~p[X](t1) ~"="~ P(X == 20)),
+                          list(t1 = q, titulo = titulo)))
+  grid(col = "gray90")
+  lines(x, probx, type = "h", lwd = 2)
   points(x, probx, lwd = 2, pch = 19)
   lines(x2, probx2, type = "h", lwd = 2, col = "red")
   points(x2, probx2, lwd = 2, col = "red", pch = 19)
@@ -6550,8 +6578,9 @@ plotppoissonltnplot <- function(q, lambda, rounding, main = NULL){
   legaux <- legend("topleft", bty="n", fill="red",
                    legend = substitute(P[X](q)~"="~P(X == q) == Pr,
                                        list(q = qq, Pr = Pr)), cex=0.8)
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(rmin, legaux$text$y, bty="n", bg = "white",
-         legend = substitute("Parameters:"~lambda == lambd,
+         legend = substitute(parametro~lambda == lambd,
                              list(lambd = lambda)), cex=0.8)
 }
 
@@ -6572,10 +6601,12 @@ plotpbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
   plot.window(xlim, ylim)
   axis(1, at = 5*(0:rmax))
   axis(2)
+  titulo <- gettext("Probability function plot: Binomial", domain = "R-leem")
   title(ylab = expression(p[X](x)), xlab = "X",
-        main = substitute(atop(bold("Probability function plot: Binomial"), p[X](x) == frac(n*"!",x*"!"*(n-x)*"!")*","~~p[X](t1) ~"="~ P(X == 20)),
-                          list(t1 = q)))
-  lines(x, probx, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+        main = substitute(atop(bold(titulo), p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~p[X](t1) ~"="~ P(X == 20)),
+                          list(t1 = q, titulo = titulo)))
+  grid(col = "gray90")
+  lines(x, probx, type = "h", lwd = 2)
   points(x, probx, lwd = 2, pch = 19)
   lines(x2, probx2, type = "h", lwd = 2, col = "red")
   points(x2, probx2, lwd = 2, col = "red", pch = 19)
@@ -6602,9 +6633,10 @@ plotpbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
   legaux <- legend("topleft", bty="n", fill="red",
                    legend = substitute(P[X](q)~"="~P(X == q) == Pr,
                                        list(q = qq, Pr = Pr)), cex=0.8)
+  parametro <- gettext("Parameters:", domain = "R-leem")
   legend(rmin, legaux$text$y, bty="n", bg = "white",
-         legend = substitute("Parameters:"~ n == N ~ "," ~ p == P,
-                             list( N = size, P = prob)),cex = 0.8)
+         legend = substitute(parametro~ n == N ~ "," ~ p == P,
+                             list(N = size, P = prob, parametro = parametro)),cex = 0.8)
 }
 
 # Negative Binomial distribution
@@ -6627,7 +6659,8 @@ plotpnbinomialltnplot <- function(q, size, prob, rounding, main = NULL){
   title(ylab = expression(p[X](x)), xlab = "X",
         main = substitute(atop(bold("Probability function plot: Negative Binomial"), p[X](x) == (atop(k+r-1,k))*(1-p)^n*p^k*","~~p[X](t1) ~"="~ P(X == 20)),
                           list(t1 = q)))
-  lines(x, probx, type = "h", panel.first = grid(col = "gray90"), lwd = 2)
+  grid(col = "gray90")
+  lines(x, probx, type = "h", lwd = 2)
   points(x, probx, lwd = 2, pch = 19)
   lines(x2, probx2, type = "h", lwd = 2, col = "red")
   points(x2, probx2, lwd = 2, col = "red", pch = 19)

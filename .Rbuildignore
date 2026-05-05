@@ -15,3 +15,5 @@ README.Rmd
 \_criando\_site.R
 logo.png
 images
+^\.positai$
+^\.claude$
