@@ -4,16 +4,28 @@
 \alias{showtabnormal}
 \title{showtabnormal}
 \usage{
-showtabnormal(z)
+showtabnormal(z, ask = interactive())
 }
 \arguments{
-\item{z}{Parameter for lacate the z value on the table; default \code{NULL} means error if not insert a number.}
+\item{z}{Numeric value or vector of Z values.}
+
+\item{ask}{Logical; if TRUE, prompts before showing next plot.}
 }
 \description{
-Detailing of the Ztable, showing the main information contained in this type of table.
+Displays how to locate values in the standard normal (Z) table.
+Supports scalar or vector input. For multiple values, one plot
+is shown per value.
 }
 \examples{
-library(leem)
-# Example 1
-showtabnormal(1)
+# Single value
+showtabnormal(1.25)
+
+# Multiple values (interactive mode)
+\dontrun{
+showtabnormal(c(0.23, 1.45, 2.01))
+}
+
+# Multiple values without interaction (runs all plots)
+showtabnormal(c(0.23, 1.45), ask = FALSE)
+
 }

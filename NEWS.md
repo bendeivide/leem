@@ -83,7 +83,7 @@
       - [X] raw data
       - [X] Insert into plots: insert()
   - [X] *Output*: `print.leem()` 
-  - [X] *Probability Function*: `P()`
+  - [ ] *Probability Function*: `P()`
     - Distributions:
       - [X] T-student
         - [X] lower.tail = T/F
@@ -141,11 +141,40 @@
           - [X] lower.tail = T/F
           
 # leem 0.2.1
+  - z() function created
+  - showtabnormal() function was vectorized
   - fixed bugs for P() function:
-    - Normal distribution
-    - Student's t-distribution
-    - Chi-squared distribution
-    - F distribution
+    - dist argument:
+      - Normal distribution
+      - Poisson distribution
+      - Binomial Distribution
+    - inserted value NULL for lower.tail argument. Now, the values are T/F/NULL
+  - [ ] *Probability Function*: `P()`
+    - Distributions:
+      - [] T-student
+        - [] lower.tail = T/F
+      - [] Gumbel
+        - [] lower.tail = T/F
+      - [] Normal
+        - [ ] lower.tail = T/F/NULL
+        - [X] gui => plot/rstudio/tcltk
+      - [X] Poisson
+        - [X] lower.tail = T/F/NULL
+        - [ ] gui => plot/rstudio/
+      - [] Beta
+        - [] lower.tail = T/F
+      - [] Exponential
+        - [] lower.tail = T/F
+      - [X] Binomial
+        - [X] lower.tail = T/F/NULL
+        - [X] gui => plot/none/rstudio/tcltk/shiny
+      - [] Hypergeometric  (`hyper`)
+        - [] lower.tail = T/F
+      - [ ] Negative Binomial (`nbinom`)
+        - [ ] lower.tail = T/F
+      - [] Geometric
+        - [] lower.tail = T/F
+
 # leem 0.3.0
   - [X] Bugs fixed in plots, no longer needing to use the tabfreq() function directly;
   - [X] *Test of Hypothesis*: `th()`

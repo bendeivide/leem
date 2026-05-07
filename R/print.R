@@ -17,7 +17,8 @@ print.leem <- function(x, ...) {
          table = output_table(x),
          newleem = output_newleem(x),
          rprob = output_rprob(x),
-         confint = output_confint(x))
+         confint = output_confint(x),
+         pshiny = output_pshiny(x))
 }
 
 output_confint <- function(x) {
@@ -306,4 +307,20 @@ output_newleem <- function(x) {
 output_rprob <- function(x) {
   attributes(x) <- NULL
   print(x)
+}
+
+# Output for probability with shiny interface
+output_pshiny <- function(x) {
+
+  print(x$probability)
+
+  # Interface Shiny
+
+  shiny::runApp(
+    x$process_shiny,
+    launch.browser = x$browser.shiny,
+    quiet = TRUE
+  )
+
+
 }

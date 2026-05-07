@@ -1,13 +1,13 @@
 #' Cumulative distribution function
 #'
-#' \code{P} Compute the cumulative distribution function for multiple distributions
+#' \code{P} Compute the probability for multiple distributions
 #'
 #' @param q quantile. The \code{q} argument can have length 1 or 2. See Details.
 #' @param dist distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'chisq'}, \code{'f'}, ...
-#' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.
+#' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. There is also a third option, \code{lower.tail = NULL}, which returns the value of the probability density function or probability mass function. This argument is valid only if \code{q} has length 1.
 #' @param rounding numerical; it represents the number of decimals for calculating the probability.
 #' @param porcentage logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.
-#' @param gui default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'none'}, \code{'rstudio'} or \code{'tcltk'}.
+#' @param gui default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'none'}, \code{'rstudio'}, \code{'tcltk'} or \code{'shiny'}.
 #' @param main defalt is \code{NULL}; it represents title of plot.
 #' @param ... additional arguments according to the chosen distribution.
 #'
@@ -15,14 +15,31 @@
 #' The additional arguments represent the parameters of the distributions, that is:
 #' - If \code{dist = "normal"} (Default); the additional arguments are: \code{mean} (\eqn{\mu}) and \code{sd} (\eqn{\sigma}). The PDF is given by:
 #' \deqn{\displaystyle{f_X(x; \mu, \sigma) = \frac {1}{\sqrt {2\pi \sigma ^{2}}}}e^{-{\frac {(x-\mu )^{2}}{2\sigma ^{2}}}}, \quad x \in \mathbb{R},~ \mu \in \mathbb{R},~\sigma^2 > 0;}
+#'
 #' - If \code{dist = "t-student"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
 #' \deqn{\displaystyle{f_X(x; \nu) = \frac {\Gamma \left({\frac {\ \nu +1\ }{2}}\right)}{{\sqrt {\pi \ \nu \ }}\ \Gamma \left({\frac {\nu }{\ 2\ }}\right)}}\left(\ 1+{\frac {~x^{2}\ }{\nu }}\ \right)^{-{\frac {\ \nu +1\ }{2}}}, \quad x \in \mathbb{R},~\nu > 1;}
-#' - If \code{dist = "chisq"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
-#'  \deqn{\displaystyle{f_X(x; \nu) = \frac {1}{2^{k/2}\Gamma (k/2)}}\;x^{k/2-1}e^{-x/2}, \quad x > 0,~\nu > 0;}
-#' - If \code{dist = "f"}; the additional argument is: \code{df1} (\eqn{\nu_1}) and \code{df2} (\eqn{\nu_2}). The PDF is given by:
-#'  \deqn{f_X(x; \nu_1, \nu_2) = {\displaystyle {\frac {\sqrt {\frac {(\nu_{1}x)^{\nu_{1}}\nu_{2}^{\nu_{2}}}{(\nu_{1}x+\nu_{2})^{\nu_{1}+\nu_{2}}}}}{x\,\mathrm {B} \!\left({\frac {\nu_{1}}{2}},{\frac {\nu_{2}}{2}}\right),}}\!}, \quad x > 0,~\nu_1,\nu_2 > 0;}
-#'  where, \eqn{x > 0}, \eqn{\nu_1,~\nu_2} > 0, and \eqn{B} is the beta function.
 #'
+#' - If \code{dist = "chisq"}; the additional argument is: \code{df} (\eqn{\nu}). The PDF is given by:
+#' \deqn{\displaystyle{f_X(x; \nu) = \frac {1}{2^{k/2}\Gamma (k/2)}}\;x^{k/2-1}e^{-x/2}, \quad x > 0,~\nu > 0;}
+#'
+#' - If \code{dist = "f"}; the additional argument is: \code{df1} (\eqn{\nu_1}) and \code{df2} (\eqn{\nu_2}). The PDF is given by:
+#' \deqn{f_X(x; \nu_1, \nu_2) = {\displaystyle {\frac {\sqrt {\frac {(\nu_{1}x)^{\nu_{1}}\nu_{2}^{\nu_{2}}}{(\nu_{1}x+\nu_{2})^{\nu_{1}+\nu_{2}}}}}{x\,\mathrm {B} \!\left({\frac {\nu_{1}}{2}},{\frac {\nu_{2}}{2}}\right),}}\!}, \quad x > 0,~\nu_1,\nu_2 > 0;}
+#' where, \eqn{x > 0}, \eqn{\nu_1,~\nu_2} > 0, and \eqn{B} is the beta function.
+#'
+#' - If \code{dist = "binomial"}; the additional arguments are: \code{size} (\eqn{n}) and \code{prob} (\eqn{p}). The PMF is given by:
+#' \deqn{\displaystyle{P(X = x) = \binom{n}{x} p^x (1-p)^{n-x}}, \quad x = 0,1,\dots,n,~0 < p < 1;}
+#'
+#' - If \code{dist = "poisson"}; the additional argument is: \code{lambda} (\eqn{\lambda}). The PMF is given by:
+#' \deqn{\displaystyle{P(X = x) = \frac{\lambda^x e^{-\lambda}}{x!}}, \quad x = 0,1,2,\dots,~\lambda > 0;}
+#'
+#' - If \code{dist = "geom"}; the additional argument is: \code{prob} (\eqn{p}). The PMF is given by:
+#' \deqn{\displaystyle{P(X = x) = (1-p)^x p}, \quad x = 0,1,2,\dots,~0 < p < 1;}
+#'
+#' - If \code{dist = "nbinom"}; the additional arguments are: \code{size} (\eqn{r}) and \code{prob} (\eqn{p}). The PMF is given by:
+#' \deqn{\displaystyle{P(X = x) = \binom{x+r-1}{x} (1-p)^x p^r}, \quad x = 0,1,2,\dots,~r > 0,~0 < p < 1;}
+#'
+#' - If \code{dist = "hyper"}; the additional arguments are: \code{m} (\eqn{M}), \code{n} (\eqn{N-M}) and \code{k} (\eqn{n}). The PMF is given by:
+#' \deqn{\displaystyle{P(X = x) = \frac{\binom{M}{x}\binom{N-M}{n-x}}{\binom{N}{n}}}, \quad \max(0, n-(N-M)) \le x \le \min(n, M);}#'
 #' The \code{ncp} parameter (\eqn{\lambda \in \mathbb{R}}) represents the noncentrality parameter. The PDFs presented graphically do not take this parameter into account. However, to reinforce the importance of this parameter
 #' in the three distributions (Student's t-distribution, F-distribution and Chi-squared distribution), especially when studying hypothesis testing, we present their distributions taking into account the \code{ncp} parameter, as follows:
 #' - The PDF for the noncentral t-distribution with \eqn{\nu > 0} degrees of freedom and noncentrality parameter \eqn{\lambda} is based on the \link[stats]{pt} function. If \eqn{Z}
@@ -47,15 +64,16 @@
 #'   exp(-1/2 * (x - mu)^2/sigma^2)))
 #' @import manipulate
 #' @import tkRplotR
-#  @import shiny
 #' @importFrom "stats" "dbeta" "dbinom" "dcauchy" "dchisq" "dexp" "df" "dgamma" "dgeom" "dhyper" "dlnorm" "dlogis" "dnbinom" "dnorm" "dpois" "dsignrank" "dt" "dunif" "dweibull" "dwilcox" "pbeta" "pbinom" "pcauchy" "pchisq" "pexp" "pf" "pgamma" "pgeom" "phyper" "plnorm" "plogis" "pnbinom" "pnorm" "ppois" "psignrank" "pt" "ptukey" "punif" "pweibull" "pwilcox" "qbeta" "qbinom" "qcauchy" "qchisq" "qexp" "qf" "qgamma" "qgeom" "qhyper" "qlnorm" "qlogis" "qnbinom" "qnorm" "qpois" "qsignrank" "qt" "qunif" "qweibull" "qwilcox" "rnorm" "sd" "sigma" "var"
+#' @importFrom shiny fluidPage
 #' @export
 P <- function(q, dist = "normal", lower.tail = TRUE,
-              rounding = 5, porcentage = FALSE, gui = "plot", main = NULL, ...) {
-  # defensive programming
-  ## dist
-  ## gui
-  ## q
+              rounding = 5, porcentage = FALSE,
+              gui = c("plot", "none", "tcltk", "shiny"), main = NULL,
+              browser.shiny = getOption("shiny.launch.browser", interactive()), ...) {
+
+  # Default gui="plot"
+  gui <- match.arg(gui)
 
   # Arguments in '...'
   argaddit <- list(...)
@@ -74,8 +92,11 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
           argaddit$sd <- as.numeric(sd)
         }
-        if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
-
+        while (argaddit$sd <= 0) {
+          arg1 <- gettext("Please, Insert the value of 'sd' greater then 0:", domain = "R-leem")
+          sd <- readline(paste0(arg1, " "))
+          argaddit$sd <- as.numeric(sd)
+        }
         mu <- argaddit$mean
         sigma <- argaddit$sd
 
@@ -104,9 +125,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #options(warn = - 1)
           #war <- options(warn = - 1)
           on.exit(options(war))
-          # prob <- round(pt(q[2], df = nu,
-          #                  lower.tail = T) + pt(q[1], df = nu, lower.tail = F), digits=rounding)
-        }
+         }
         # Calculates the desired probability
         prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
           pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
@@ -614,13 +633,28 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           size <- readline(paste0(arg1, " "))
           argaddit$size <- as.numeric(size)
         }
+        while (argaddit$size <= 0) {
+          arg1 <- gettext("Please, Insert the value of 'size' greater then 0:", domain = "R-leem")
+          lambda <- readline(paste0(arg1, " "))
+          argaddit$lambda <- as.numeric(lambda)
+        }
         if (!any(names(argaddit) == "prob")) {
           arg2 <- gettext("Insert the value of 'prob' argument:", domain = "R-leem")
           prob <- readline(paste0(arg2, " "))
           argaddit$prob <- as.numeric(prob)
         }
+        while (argaddit$size <= 0) {
+          arg2 <- gettext("Please, Insert the value for 'prob' between 0 and 1:", domain = "R-leem")
+          lambda <- readline(paste0(arg1, " "))
+          argaddit$lambda <- as.numeric(lambda)
+        }
         size <- argaddit$size
         prob <- argaddit$prob
+
+        # Auxiliar variables
+        minimo <- 0
+        maximo <- size
+
 
         if (gui == "plot") {
           plotpbinomialarplot(q, size, prob, rounding, main)
@@ -633,7 +667,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  prob = manipulate::slider(0, 1, prob))
         }
         if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+
         }
         if (is.double(q)) {
           if (attr(q, "region") == "region5") {
@@ -1030,8 +1064,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
           argaddit$sd <- as.numeric(sd)
         }
-        if (argaddit$sd <= 0 ) {
-          stop("The 'sd' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+        while (argaddit$sd <= 0) {
+          arg1 <- gettext("Please, Insert the value of 'sd' greater then 0:", domain = "R-leem")
+          sd <- readline(paste0(arg1, " "))
+          argaddit$sd <- as.numeric(sd)
         }
         # Auxiliar variables
         minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
@@ -1594,10 +1630,20 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           size <- readline(paste0(arg1, " "))
           argaddit$size <- as.numeric(size)
         }
+        while (argaddit$size <= 0) {
+          arg1 <- gettext("Please, Insert the value of 'size' greater then 0:", domain = "R-leem")
+          lambda <- readline(paste0(arg1, " "))
+          argaddit$lambda <- as.numeric(lambda)
+        }
         if (!any(names(argaddit) == "prob")) {
           arg2 <- gettext("Insert the value of 'prob' argument:", domain = "R-leem")
           prob <- readline(paste0(arg2, " "))
           argaddit$prob <- as.numeric(prob)
+        }
+        while (argaddit$size <= 0) {
+          arg2 <- gettext("Please, Insert the value for 'prob' between 0 and 1:", domain = "R-leem")
+          lambda <- readline(paste0(arg1, " "))
+          argaddit$lambda <- as.numeric(lambda)
         }
 
         size <- argaddit$size
@@ -1987,7 +2033,11 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         sd <- readline(paste0(gettext("Enter the value of 'sd' argument:", domain = "R-leem"), " "))
         argaddit$sd <- as.numeric(sd)
       }
-      if (argaddit$sd <= 0 ) stop("The 'sd' argument must be greater than zero!", call. = FALSE, domain = "R-leem")
+      while (argaddit$sd <= 0) {
+        arg1 <- gettext("Please, Insert the value of 'sd' greater then 0:", domain = "R-leem")
+        sd <- readline(paste0(arg1, " "))
+        argaddit$sd <- as.numeric(sd)
+      }
       if (lower.tail) {
         # Auxiliar variables
         minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
@@ -2766,13 +2816,27 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         size <- readline(paste0(arg1, " "))
         argaddit$size <- as.numeric(size)
       }
+      while (argaddit$size <= 0) {
+        arg1 <- gettext("Please, Insert the value of 'size' greater then 0:", domain = "R-leem")
+        lambda <- readline(paste0(arg1, " "))
+        argaddit$lambda <- as.numeric(lambda)
+      }
       if (!any(names(argaddit) == "prob")) {
         arg2 <- gettext("Insert the value of 'prob' argument:", domain = "R-leem")
         prob <- readline(paste0(arg2, " "))
         argaddit$prob <- as.numeric(prob)
       }
+      while (argaddit$size <= 0) {
+        arg2 <- gettext("Please, Insert the value for 'prob' between 0 and 1:", domain = "R-leem")
+        lambda <- readline(paste0(arg1, " "))
+        argaddit$lambda <- as.numeric(lambda)
+      }
       size <- argaddit$size
       prob <- argaddit$prob
+
+      # Auxiliar variables
+      minimo <- 0
+      maximo <- size
 
       if (isTRUE(lower.tail)) {
         if (gui == "plot") {
@@ -2782,12 +2846,35 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           manipulate::manipulate(plotpbinomiallttplot(q, size, prob, rounding, main),
                                  q = manipulate::slider(0, size, q),
                                  size = manipulate::slider(1, size+30, size),
-                                 prob = manipulate::slider(0, 1, prob)
+                                 prob = manipulate::slider(0.01, 0.99, prob)
           )
         }
         if (gui == "tcltk") {
-          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+
+          .tkplotleembinomial(q, size, prob, rounding, main, minimo, maximo)
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
         }
+        if (gui == "shiny") {
+          # Rouding
+          p <- pbinom(q, size, prob)
+          # Result in percentage
+          if (porcentage == TRUE) p <- p * 100
+          listres <- list(probability = p,
+               process_shiny = .shinyplotleembinomial(q, size, prob, rounding, main),
+               browser.shiny = browser.shiny)
+          attr(listres, "output") <- "pshiny"
+          class(listres) <- "leem"
+          return(listres)
+
+        }
+
         prob <- pbinom(q, size, prob)
       }
       if(isFALSE(lower.tail)) {

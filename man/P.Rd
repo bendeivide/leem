@@ -10,8 +10,9 @@ P(
   lower.tail = TRUE,
   rounding = 5,
   porcentage = FALSE,
-  gui = "plot",
+  gui = c("plot", "none", "tcltk", "shiny"),
   main = NULL,
+  browser.shiny = getOption("shiny.launch.browser", interactive()),
   ...
 )
 }
@@ -20,13 +21,13 @@ P(
 
 \item{dist}{distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'chisq'}, \code{'f'}, ...}
 
-\item{lower.tail}{logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. This argument is valid only if \code{q} has length 1.}
+\item{lower.tail}{logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. There is also a third option, \code{lower.tail = NULL}, which returns the value of the probability density function or probability mass function. This argument is valid only if \code{q} has length 1.}
 
 \item{rounding}{numerical; it represents the number of decimals for calculating the probability.}
 
 \item{porcentage}{logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.}
 
-\item{gui}{default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'none'}, \code{'rstudio'} or \code{'tcltk'}.}
+\item{gui}{default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'none'}, \code{'rstudio'}, \code{'tcltk'} or \code{'shiny'}.}
 
 \item{main}{defalt is \code{NULL}; it represents title of plot.}
 
@@ -36,7 +37,7 @@ P(
 \code{P} returns the probability and its graphical representation. The result can be given as a percentage or not.
 }
 \description{
-\code{P} Compute the cumulative distribution function for multiple distributions
+\code{P} Compute the probability for multiple distributions
 }
 \details{
 The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
@@ -51,11 +52,18 @@ The additional arguments represent the parameters of the distributions, that is:
 \item If \code{dist = "f"}; the additional argument is: \code{df1} (\eqn{\nu_1}) and \code{df2} (\eqn{\nu_2}). The PDF is given by:
 \deqn{f_X(x; \nu_1, \nu_2) = {\displaystyle {\frac {\sqrt {\frac {(\nu_{1}x)^{\nu_{1}}\nu_{2}^{\nu_{2}}}{(\nu_{1}x+\nu_{2})^{\nu_{1}+\nu_{2}}}}}{x\,\mathrm {B} \!\left({\frac {\nu_{1}}{2}},{\frac {\nu_{2}}{2}}\right),}}\!}, \quad x > 0,~\nu_1,\nu_2 > 0;}
 where, \eqn{x > 0}, \eqn{\nu_1,~\nu_2} > 0, and \eqn{B} is the beta function.
-}
-
+\item If \code{dist = "binomial"}; the additional arguments are: \code{size} (\eqn{n}) and \code{prob} (\eqn{p}). The PMF is given by:
+\deqn{\displaystyle{P(X = x) = \binom{n}{x} p^x (1-p)^{n-x}}, \quad x = 0,1,\dots,n,~0 < p < 1;}
+\item If \code{dist = "poisson"}; the additional argument is: \code{lambda} (\eqn{\lambda}). The PMF is given by:
+\deqn{\displaystyle{P(X = x) = \frac{\lambda^x e^{-\lambda}}{x!}}, \quad x = 0,1,2,\dots,~\lambda > 0;}
+\item If \code{dist = "geom"}; the additional argument is: \code{prob} (\eqn{p}). The PMF is given by:
+\deqn{\displaystyle{P(X = x) = (1-p)^x p}, \quad x = 0,1,2,\dots,~0 < p < 1;}
+\item If \code{dist = "nbinom"}; the additional arguments are: \code{size} (\eqn{r}) and \code{prob} (\eqn{p}). The PMF is given by:
+\deqn{\displaystyle{P(X = x) = \binom{x+r-1}{x} (1-p)^x p^r}, \quad x = 0,1,2,\dots,~r > 0,~0 < p < 1;}
+\item If \code{dist = "hyper"}; the additional arguments are: \code{m} (\eqn{M}), \code{n} (\eqn{N-M}) and \code{k} (\eqn{n}). The PMF is given by:
+\deqn{\displaystyle{P(X = x) = \frac{\binom{M}{x}\binom{N-M}{n-x}}{\binom{N}{n}}}, \quad \max(0, n-(N-M)) \le x \le \min(n, M);}#'
 The \code{ncp} parameter (\eqn{\lambda \in \mathbb{R}}) represents the noncentrality parameter. The PDFs presented graphically do not take this parameter into account. However, to reinforce the importance of this parameter
 in the three distributions (Student's t-distribution, F-distribution and Chi-squared distribution), especially when studying hypothesis testing, we present their distributions taking into account the \code{ncp} parameter, as follows:
-\itemize{
 \item The PDF for the noncentral t-distribution with \eqn{\nu > 0} degrees of freedom and noncentrality parameter \eqn{\lambda} is based on the \link[stats]{pt} function. If \eqn{Z}
 is a standard normal random variable, and \eqn{V} is a chi-squared distribution random variable with \eqn{\nu} degrees of freedom that is independent of \eqn{Z}, then \eqn{T = (Z + \lambda) / \sqrt{V / \nu}} is
 a noncentral t-distributed random variable with \eqn{\nu} degrees of freedom and noncentrality parameter \eqn{\lambda}. If \eqn{\lambda = 0}, the PDF reduces to the probability density function of the Student's t-distribution. However, it is worth noting that the parameter \eqn{\lambda \in \mathbb{R}}.

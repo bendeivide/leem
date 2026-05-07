@@ -1,8 +1,150 @@
+# Plot tk dist binomial para q de comprimento 1 (lower.tail = T)
+.tkplotleembinomial <- function(q, size, prob, rounding, main, minimo, maximo) {
+  # Disabled GUI (Type I)
+  oldmode <- tclServiceMode(FALSE)
+
+  # Main Window
+  base <- tktoplevel(padx=10, pady=10)
+
+  tkwm.geometry(base, "600x700")
+
+  # Title
+  tkwm.title(base,
+             gettext("leem package: Binomial Distribution", domain = "R-leem"))
+
+  # Variables for sliders
+  q_var <- tclVar(q)
+  size_var <- tclVar(size)
+  prob_var <- tclVar(prob)
+
+  # Main Frame
+  main_frame <- tkframe(base, relief="sunken", borderwidth = 1)
+  canvas <- tkcanvas(main_frame)
+  tkpack(main_frame, canvas, fill = "both", expand=TRUE)
+
+  # Slider Frame
+  tkpack(tklabel(base, text = gettext("Input(s):", domain="R-leem")))
+  slider_frame <- tkframe(base)
+  tkpack(slider_frame, side = "bottom", fill = "x")
+
+  # Slider para q
+  slider_q <- tkscale(slider_frame,
+                      from = minimo,
+                      to = tclvalue(size_var),
+                      orient = "horizontal",
+                      variable = q_var,
+                      resolution = 1,
+                      label = gettext("Quantile", domain="R-leem"),
+                      showvalue = TRUE)
+  tkpack(slider_q, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para size
+  slider_size <- tkscale(slider_frame,
+                          from = tclvalue(q_var), to = size + 30,
+                          orient = "horizontal",
+                          variable = size_var,
+                          resolution = 1,
+                          label = gettext("Size", domain="R-leem"),
+                          showvalue = TRUE)
+  tkpack(slider_size, side = "top", fill = "x", padx=10, pady=2)
+
+  # Slider para prob
+  slider_prob <- tkscale(slider_frame,
+                       from = 0.01, to = 0.99,
+                       orient = "horizontal",
+                       variable = prob_var,
+                       resolution = 0.1,
+                       label = gettext("Success", domain="R-leem"),
+                       showvalue = TRUE)
+  tkpack(slider_prob, side = "top", fill = "x", padx=10, pady=2)
+
+  # Funcao para desenhar o grafico
+  drawGraph <- function() {
+    oldw <- getOption("warn")
+    options(warn = -1)
+
+    # Dimensoes do canvas
+    height <- as.numeric(tclvalue(tkwinfo("height", main_frame)))
+    width <- as.numeric(tclvalue(tkwinfo("width", main_frame)))
+
+    # Pega os valores dos sliders
+    quantil <- as.numeric(tclvalue(q_var))
+    n <- as.numeric(tclvalue(size_var))
+    p <- as.numeric(tclvalue(prob_var))
+
+    # Arquivo temporario
+    fp2 <- tempfile(pattern = "leem.", tmpdir = tempdir(), fileext = ".png")
+
+    # Cria a Imagem do Grafico
+    png(filename = fp2, width = width, height = height, units = "px")
+    try(plotpbinomiallttplot(quantil, n, p, rounding, main), silent = TRUE)
+    dev.off()
+
+    # Cria imagem no Tk
+    tkimage.create("photo", "::image::imgteste2", file = fp2)
+
+    # Limpa o canvas antes de desenhar
+    tkdelete(canvas, "all")
+    tkcreate(canvas, "image", 0, 0, anchor = "nw", image = "::image::imgteste2")
+
+    options(warn = oldw)
+  }
+
+
+  # Atualiza o slider_q para ter como maximo o valor atual de size
+  tkconfigure(slider_size, command = function(...) {
+    novo_q <- as.numeric(tclvalue(size_var))
+    tkconfigure(slider_q, to = novo_q)
+    drawGraph()
+  })
+
+  # Slider q
+  tkconfigure(slider_q, command = function(...) {
+    drawGraph()
+  })
+
+  # Slider prob
+  tkconfigure(slider_prob, command = function(...) {
+    drawGraph()
+  })
+
+
+
+
+
+
+
+  # CALLBACKS
+  onResize <- function() {
+    drawGraph()
+  }
+
+
+
+  # Atualiza o grafico quando redimensiona
+  tkbind(base, '<Configure>', onResize)
+
+  drawGraph()
+
+  # Activate GUI
+  finish <- tclServiceMode(oldmode)
+  tkwm.protocol(base, "WM_DELETE_WINDOW", function() {
+    response <- tk_messageBox(
+      title = gettext("Tell me something:", domain = "R-leem"),
+      message = gettext("Do you want to close?", domain = "R-leem"),
+      icon = "question",
+      type = "yesno"
+    )
+    if (response == "yes") {
+      tkdestroy(base)
+    }
+  })
+}
+
 # Plot tk dist normal para q de comprimento 1 (lower.tail = T)
 .tkplotleemnormal <- function(q, mu, sigma, rounding, main, minimo, maximo) {
   # Disabled GUI (Type I)
   oldmode <- tclServiceMode(FALSE)
-
 
   # Main Window
   base <- tktoplevel(padx=10, pady=10)
@@ -2293,6 +2435,7 @@
   })
 }
 
+##
 .plotcurve <- function(gui) {
 
   # Parameters

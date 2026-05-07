@@ -592,3 +592,57 @@ msgstr "Por favor, insira o valor de 'size' maior que 0:"
 
 msgid "Please, Insert the value for 'prob' between 0 and 1:"
 msgstr "Por favor, insira o valor para 'prob' entre 0 e 1:"
+
+msgid "Please, Insert the value of 'sd' greater then 0:"
+msgstr "Por favor, insira o valor de 'sd' maior que 0:"
+
+msgid "Argument 'x' must be numeric."
+msgstr "O argumento 'x' deve ser numérico."
+
+msgid "Argument 'mu' must be a single numeric value."
+msgstr "O argumento 'mu' deve ser um único valor numérico."
+
+msgid "Argument 'sd' must be a positive numeric value."
+msgstr "O argumento 'sd' deve ser um valor numérico positivo."
+
+msgid "Argument 'z' must be numeric."
+msgstr "O argumento 'z' deve ser numérico."
+
+msgid "No valid values provided."
+msgstr "Nenhum valor válido foi fornecido."
+
+msgid "Showing Z = %.4f (%d of %d)"
+msgstr "Mostrando Z = %.4f (%d de %d)"
+
+msgid "Showing positive value (symmetry) Z = %.4f (%d of %d)"
+msgstr "Mostrando valor positivo (simetria) de Z = %.4f (%d of %d)"
+
+msgid "Next"
+msgstr "Próximo"
+
+msgid "Stop"
+msgstr "Parar"
+
+msgid "Show next Z value?"
+msgstr "Mostrar o próximo valor de Z?"
+
+msgid "Interrupted by user."
+msgstr "Interrompido pelo usuário."
+
+msgid "Standard normal distribution"
+msgstr "Distribuição normal padrão"
+
+msgid "Z Table"
+msgstr "Tabela Z"
+
+msgid "Understanding the standard normal distribution table"
+msgstr "Compreendendo a tabela da distribuição normal padrão"
+
+msgid "Success"
+msgstr "Sucesso"
+
+msgid "leem package: Binomial Distribution"
+msgstr "pacote leem: Distribuição Binomial"
+
+msgid "Size"
+msgstr "Tamanho"
