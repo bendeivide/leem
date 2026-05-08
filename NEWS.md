@@ -150,13 +150,15 @@
       - Binomial Distribution
     - inserted value NULL for lower.tail argument. Now, the values are T/F/NULL
   - [ ] *Probability Function*: `P()`
+    - Arguments created: browser.shiny, long.segment, col, plot.type, dec,
+    lty
     - Distributions:
       - [] T-student
         - [] lower.tail = T/F
       - [] Gumbel
         - [] lower.tail = T/F
       - [] Normal
-        - [ ] lower.tail = T/F/NULL
+        - [X] lower.tail = T/F/NULL
         - [X] gui => plot/rstudio/tcltk
       - [X] Poisson
         - [X] lower.tail = T/F/NULL

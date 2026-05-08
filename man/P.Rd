@@ -2,7 +2,7 @@
 % Please edit documentation in R/probability.R
 \name{P}
 \alias{P}
-\title{Cumulative distribution function}
+\title{Probability Computation and Graphical Visualization}
 \usage{
 P(
   q,
@@ -10,9 +10,15 @@ P(
   lower.tail = TRUE,
   rounding = 5,
   porcentage = FALSE,
-  gui = c("plot", "none", "tcltk", "shiny"),
+  gui = c("none", "plot", "tcltk", "rstudio", "shiny"),
   main = NULL,
   browser.shiny = getOption("shiny.launch.browser", interactive()),
+  plot.type = c("pdf", "cdf", "pmf"),
+  dec = c(".", ","),
+  long.segment = FALSE,
+  col = "#8EC5E5",
+  col2 = "#38A8E8",
+  lty = 2,
   ...
 )
 }
@@ -21,15 +27,55 @@ P(
 
 \item{dist}{distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'chisq'}, \code{'f'}, ...}
 
-\item{lower.tail}{logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. There is also a third option, \code{lower.tail = NULL}, which returns the value of the probability density function or probability mass function. This argument is valid only if \code{q} has length 1.}
+\item{lower.tail}{Logical value indicating the probability region:
+\itemize{
+\item \code{TRUE}: computes lower tail probability.
+\item \code{FALSE}: computes upper tail probability.
+\item \code{NULL}: computes the probability density/mass function.
+}}
 
 \item{rounding}{numerical; it represents the number of decimals for calculating the probability.}
 
-\item{porcentage}{logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.}
+\item{porcentage}{If \code{TRUE}, probabilities are multiplied by 100.}
 
-\item{gui}{default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'none'}, \code{'rstudio'}, \code{'tcltk'} or \code{'shiny'}.}
+\item{gui}{Character string specifying the graphical interface used.
+Possible values are:
+\itemize{
+\item \code{"none"}: analytical computation only.
+\item \code{"plot"}: static base R graphics.
+\item \code{"tcltk"}: interactive Tcl/Tk graphical interface.
+\item \code{"rstudio"}: interactive manipulate interface in RStudio.
+\item \code{"shiny"}: interactive Shiny application.
+}}
 
 \item{main}{defalt is \code{NULL}; it represents title of plot.}
+
+\item{browser.shiny}{Logical indicating whether the Shiny application
+should be opened in a browser. The default behavior follows:
+\code{getOption("shiny.launch.browser", interactive())}.}
+
+\item{plot.type}{Character string specifying the graphical representation:
+\itemize{
+\item \code{"pdf"}: probability density function.
+\item \code{"cdf"}: cumulative distribution function.
+\item \code{"pmf"}: probability mass function.
+}}
+
+\item{dec}{Character string specifying the decimal separator used
+in graphical annotations. Possible values are:
+\code{"."} or \code{","}.}
+
+\item{long.segment}{Logical. If \code{TRUE}, auxiliary graphical
+segments are drawn with extended length.}
+
+\item{col}{Character string specifying the primary color used
+in the graphical visualization.}
+
+\item{col2}{Character string specifying the secondary color used
+in the graphical visualization.}
+
+\item{lty}{Integer or character specifying the line type used
+in auxiliary graphical elements.}
 
 \item{...}{additional arguments according to the chosen distribution.}
 }
@@ -37,9 +83,14 @@ P(
 \code{P} returns the probability and its graphical representation. The result can be given as a percentage or not.
 }
 \description{
-\code{P} Compute the probability for multiple distributions
+Computes probabilities associated with several probability distributions
+and optionally produces interactive graphical visualizations using
+base graphics, Tcl/Tk, RStudio manipulate, or Shiny interfaces.
 }
 \details{
+The function was designed for educational purposes, combining analytical
+computation with dynamic graphical interpretation of probability models.
+
 The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
 The additional arguments represent the parameters of the distributions, that is:
 \itemize{

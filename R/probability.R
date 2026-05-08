@@ -1,14 +1,65 @@
-#' Cumulative distribution function
+#' Probability Computation and Graphical Visualization
 #'
-#' \code{P} Compute the probability for multiple distributions
+#' Computes probabilities associated with several probability distributions
+#' and optionally produces interactive graphical visualizations using
+#' base graphics, Tcl/Tk, RStudio manipulate, or Shiny interfaces.
+#'
+#' The function was designed for educational purposes, combining analytical
+#' computation with dynamic graphical interpretation of probability models.
 #'
 #' @param q quantile. The \code{q} argument can have length 1 or 2. See Details.
+#'
 #' @param dist distribution to use. The default is \code{'normal'}. Options: \code{'normal'}, \code{'t-student'}, \code{'chisq'}, \code{'f'}, ...
-#' @param lower.tail logical; if \code{TRUE} (default), probabilities are \eqn{P[X \leq x]} otherwise, \eqn{P[X > x]}. There is also a third option, \code{lower.tail = NULL}, which returns the value of the probability density function or probability mass function. This argument is valid only if \code{q} has length 1.
+#'
+#' @param lower.tail Logical value indicating the probability region:
+#'   \itemize{
+#'     \item \code{TRUE}: computes lower tail probability.
+#'     \item \code{FALSE}: computes upper tail probability.
+#'     \item \code{NULL}: computes the probability density/mass function.
+#'   }
+#'
 #' @param rounding numerical; it represents the number of decimals for calculating the probability.
-#' @param porcentage logical; if \code{FALSE} (default), the result in decimal. Otherwise, probability is given in percentage.
-#' @param gui default is \code{'plot'}; it graphically displays the result of the probability. Others options are: \code{'none'}, \code{'rstudio'}, \code{'tcltk'} or \code{'shiny'}.
+#'
+#' @param porcentage If \code{TRUE}, probabilities are multiplied by 100.
+#'
+#' @param gui Character string specifying the graphical interface used.
+#'   Possible values are:
+#'   \itemize{
+#'     \item \code{"none"}: analytical computation only.
+#'     \item \code{"plot"}: static base R graphics.
+#'     \item \code{"tcltk"}: interactive Tcl/Tk graphical interface.
+#'     \item \code{"rstudio"}: interactive manipulate interface in RStudio.
+#'     \item \code{"shiny"}: interactive Shiny application.
+#'   }
+#'
 #' @param main defalt is \code{NULL}; it represents title of plot.
+#'
+#' @param browser.shiny Logical indicating whether the Shiny application
+#'   should be opened in a browser. The default behavior follows:
+#'   \code{getOption("shiny.launch.browser", interactive())}.
+#'
+#' @param plot.type Character string specifying the graphical representation:
+#'   \itemize{
+#'     \item \code{"pdf"}: probability density function.
+#'     \item \code{"cdf"}: cumulative distribution function.
+#'     \item \code{"pmf"}: probability mass function.
+#'   }
+#' @param dec Character string specifying the decimal separator used
+#'   in graphical annotations. Possible values are:
+#'   \code{"."} or \code{","}.
+#'
+#' @param long.segment Logical. If \code{TRUE}, auxiliary graphical
+#'   segments are drawn with extended length.
+#'
+#' @param col Character string specifying the primary color used
+#'   in the graphical visualization.
+#'
+#' @param col2 Character string specifying the secondary color used
+#'   in the graphical visualization.
+#'
+#' @param lty Integer or character specifying the line type used
+#'   in auxiliary graphical elements.
+#'
 #' @param ... additional arguments according to the chosen distribution.
 #'
 #' @details The argument that can have length 2, when we use the functions that give us the probability regions, given by: \code{\%<X<\%}, \code{\%<=X<\%}, \code{\%<X<=\%}, \code{\%<=X<=\%}, \code{\%>X>\%}, \code{\%>X=>\%}, \code{\%>X=>\%} and \code{\%>=X=>\%}.
@@ -69,14 +120,21 @@
 #' @export
 P <- function(q, dist = "normal", lower.tail = TRUE,
               rounding = 5, porcentage = FALSE,
-              gui = c("plot", "none", "tcltk", "shiny"), main = NULL,
-              browser.shiny = getOption("shiny.launch.browser", interactive()), ...) {
+              gui = c("none", "plot", "tcltk", "rstudio", "shiny"), main = NULL,
+              browser.shiny = getOption("shiny.launch.browser", interactive()),
+              plot.type = c("pdf", "cdf", "pmf"),
+              dec = c(".", ","), long.segment = FALSE, col = "#8EC5E5",
+              col2 = "#38A8E8", lty = 2,
+              ...) {
 
-  # Default gui="plot"
+  # Default
   gui <- match.arg(gui)
+  plot.type <- match.arg(plot.type)
+  dec <- match.arg(dec)
 
   # Arguments in '...'
   argaddit <- list(...)
+
   # Formal arguments
   argdef <- formals(P)
   if ( length(q) > 1 & !is.null(attr(q, "class"))) {
@@ -2038,17 +2096,19 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         sd <- readline(paste0(arg1, " "))
         argaddit$sd <- as.numeric(sd)
       }
-      if (lower.tail) {
+      if(isTRUE(lower.tail)) {
         # Auxiliar variables
         minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
         maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
         mu <- argaddit$mean
         sigma <- argaddit$sd
         if (gui == "plot" ) {
-          plotpnormallttplot(q, mu,sigma, rounding, main)
+          plotpnormallttplot(q, mu, sigma, rounding, dec, long.segment, col,
+                             col2, lty, main, ...)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpnormallttplot(q, mean, sd, rounding, main),
+          manipulate::manipulate(plotpnormallttplot(q, mean, sd, rounding, dec, long.segment, col,
+                                                    col2, lty, main, ...),
                                  q = manipulate::slider(q, mu + 4 * sigma, q),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma)
@@ -2056,12 +2116,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         if (gui == "tcltk") {
           # Desabilitar warnings global
-          #options(warn = - 1)
+          #options(warn = - ufs1)
           war <- options(warn = - 1)
           #on.exit(options(war))
 
           # Plot tk da dist normal com q de comp 1 (~/tkplotleem.R)
-          .tkplotleemnormal(q, mu, sigma, rounding, main, minimo, maximo)
+          .tkplotleemnormal(q, mu, sigma, rounding, minimo, maximo, dec, long.segment, col,
+                            col2, lty, main, ...)
 
 
           # Desabilitar warnings global
@@ -2073,7 +2134,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         prob <- pnorm(q = q, mean = mu, sd = sigma)
 
       }
-      else {
+      if(isFALSE(lower.tail)) {
         # Auxiliar variables
         minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
         maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
@@ -2106,6 +2167,41 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         # Compute the desired probability
         prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
+      }
+      if(is.null(lower.tail)) {
+        # Auxiliar variables
+        minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+        maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+        # Plot function
+        mu <- argaddit$mean
+        sigma <- argaddit$sd
+        if (gui == "plot") {
+          plotpnormalltnplot(q, mu, sigma, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpnormalltnplot(q, mean, sd, rounding, main),
+                                 q = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q, step = 0.01),
+                                 mean = manipulate::slider(-abs(q), mu + 3 * sigma, mu, step = 0.01),
+                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma, step = 0.01)
+                                 )
+
+        }
+
+        if (gui == "tcltk") {
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          war <- options(warn = - 1)
+          #on.exit(options(war))
+
+          .tkplotleemltnnormal(q, mu, sigma, rounding, main, minimo, maximo)
+
+          # Desabilitar warnings global
+          #options(warn = - 1)
+          #war <- options(warn = - 1)
+          on.exit(options(war))
+        }
+        # Compute the probability density function
+        prob <- dnorm(x = q, mean = mu, sd=sigma)
       }
     }
     if (dist == "t-student") {

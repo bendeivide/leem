@@ -1,3 +1,8 @@
+#########################################################################
+# "These functions only work correctly if executed through function P()."
+#########################################################################
+
+
 # Auxiliar functions of P()
 # Observations:
 #    - `%>X>%`() internal function
@@ -4297,49 +4302,108 @@ plotpswilcoxbrrstudio <- function(q1, q2, n, rounding, main = NULL, q) {
 
 # Normal distribution
 ## Plot
-plotpnormallttplot <- function(q, mu, sigma, rounding, main = NULL) {
+plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.segment = FALSE, col = "#8EC5E5",
+                               col2 = "#38A8E8", lty = 2, main = NULL, ...) {
+
   minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
   x <- seq(minimo, q, by = 0.01)
   y <- seq(q, maximo, by = 0.01)
   fx <- dnorm(x, mean = mu, sd = sigma)
   fy <- dnorm(y, mean = mu, sd = sigma)
+  pdf <- dnorm(q, mu, sigma)
 
   if (is.null(main)) {
-    titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+    titulo <- gettext("Normal Distribution", domain = "R-leem")
     main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x", titulo = titulo))
   }
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
-        main = main,
+        main = main, xaxt = "n",
         cex = 0.8)
+  # X-axis
+  z <- pretty(minimo:maximo)
+  axis(
+    side = 1,
+    at = z
+  )
+  # Area  P(X<= q)
+  ## col1 of P()
   polygon(c(x, rev(x)),
           c(fx, rep(0, length(fx))),
-          col="red")
+          col = col)
+  # Background
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
           col="gray90")
   # Insert vertical line over the mean
   qq <- round(q, digits=2)
   qqaux <-round(q, digits=2)
-  Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
-  #Pr <- gsub("\\.", ",", Pr)
-  ##qq <- gsub("\\.", ",", qq)
+  Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE),
+              digits=rounding)
+
+  # Decimals in plot
+  ## dec of P()
+  w <- pretty(dnorm(minimo:maximo, mu, sigma))
+  if (dec == ",") {
+    Pr_text <- gsub("\\.", ",", Pr)
+    qq_text <- gsub("\\.", ",", qq)
+    pdf_text <- gsub("\\.", ",", round(pdf, 3))
+    # Y-axis
+    axis(
+      side = 2,
+      at = w,
+      labels = format(
+        w,
+        decimal.mark = ",",
+        nsmall = 2
+      )
+    )
+  } else {
+    Pr_text <- Pr
+    qq_text <- qq
+    pdf_text <- round(pdf, 3)
+    # Y-axis
+    axis(
+      side = 2,
+      at = w
+    )
+  }
+
   # Insert red q point
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  axis(side=1, at=qq, lwd = 0,
-       col="red", font = 2, tick = TRUE, col.axis = "red", pos = aux2)
+  ## col2 of P()
+  #X-axis
+  mtext(qq_text, side = 1, at = qq, line = 2, col = col2, font = 2)
   axis(side=1, at=qqaux, labels=FALSE,
-       col="red", font = 2, col.axis = "red", tick = TRUE,lwd.ticks = 1)
+       col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
   # Insert red horizontal and vertical line (X-axis)
   axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-  abline(v = qqaux, lty=2, col = "red")
+       col=col2, font = 2, lwd.ticks = 0, labels = FALSE)
+  # Y-axis
+  mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2)
+  axis(side=2, at=pdf, labels=FALSE,
+       col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
+
+  # Long segment and type
+  ## col2 and lty of P()
+  if (isTRUE(long.segment)) {
+    abline(v = qqaux, col = col2, lty = lty, ...)
+    abline(h = pdf, col = col2, lty = lty, ...)
+  } else {
+    segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty, ...)
+    segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty, ...)
+  }
+  # Point inserted
+  points(qqaux, pdf, pch = 19)
+
+  # Rectangle topleft (Legends)
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
+
+  # Legends
+  legaux <- legend("topleft", bty="n", fill=col2,cex=0.8,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
-                                       list(t1 = q, Pr = Pr)))
+                                       list(t1 = q, Pr = Pr_text)))
   paramet <- gettext("Parameters:", domain = "R-leem")
   legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
          legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
@@ -5012,132 +5076,6 @@ plotppoissonlttplot <- function(q, lambda, rounding, main = NULL){
 # Binomial distribution
 ## Plot
 
-# plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
-#
-#   # ------------------------------------------------------------
-#   # Define plotting range (adaptive to q and size)
-#   # ------------------------------------------------------------
-#   rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
-#   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-#
-#   rmax <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
-#
-#   x  <- rmin:rmax
-#   x1 <- rmin:q
-#   x2 <- q:rmax
-#
-#   # ------------------------------------------------------------
-#   # Binomial probabilities
-#   # ------------------------------------------------------------
-#   probx  <- dbinom(x,  size = size, prob = prob)
-#   probx1 <- dbinom(x1, size = size, prob = prob)
-#   probx2 <- dbinom(x2, size = size, prob = prob)
-#
-#   # ------------------------------------------------------------
-#   # Plot limits
-#   # ------------------------------------------------------------
-#   xlim <- c(rmin, rmax)
-#   ylim <- c(0, max(probx) * 1.25)
-#
-#   plot.new()
-#   plot.window(xlim, ylim)
-#
-#   axis(1, at = seq(rmin, rmax, by = 5))
-#   axis(2)
-#
-#   # ------------------------------------------------------------
-#   # Title (kept as original structure)
-#   # ------------------------------------------------------------
-#   titulo <- gettext("Probability function plot: Binomial", domain = "R-leem")
-#
-#   title(
-#     ylab = expression(p[X](x)),
-#     xlab = "X",
-#     main = substitute(
-#       atop(
-#         bold(titulo),
-#         p[X](x) == frac(n*"!", x*"!"*(n-x)*"!") * p^x * (1-p)^{n-x} * "," ~~
-#           F[X](t) == sum(p[X](x), x <= t)
-#       ),
-#       list(t = q, titulo = titulo)
-#     )
-#   )
-#
-#   grid(col = "gray90")
-#
-#   # ------------------------------------------------------------
-#   # Distribution lines
-#   # ------------------------------------------------------------
-#   lines(x2, probx2, type = "h", lwd = 2)
-#   points(x2, probx2, pch = 19)
-#
-#   lines(x1, probx1, type = "h", lwd = 2, col = "red")
-#   points(x1, probx1, pch = 19, col = "red")
-#
-#   # ------------------------------------------------------------
-#   # Reference line
-#   # ------------------------------------------------------------
-#   abline(v = q, lty = 2, col = "red")
-#
-#   # ------------------------------------------------------------
-#   # Adaptive background rectangle (CRAN-safe, no par("pin"))
-#   # ------------------------------------------------------------
-#   usr <- par("usr")
-#
-#   xleft  <- usr[1]
-#   xright <- usr[2]
-#
-#   # Height proportional to plot region
-#   header_height <- 0.12 * diff(usr[3:4])
-#
-#   y_top    <- usr[4]
-#   y_bottom <- usr[4] - header_height
-#
-#   rect(
-#     xleft, y_bottom,
-#     xright, y_top,
-#     col = "gray90",
-#     border = NA
-#   )
-#
-#   # ------------------------------------------------------------
-#   # Probability and labels
-#   # ------------------------------------------------------------
-#   qq <- round(q, digits = 2)
-#   Pr <- round(pbinom(q, size = size, prob = prob, lower.tail = TRUE), rounding)
-#
-#   # ------------------------------------------------------------
-#   # Legend: cumulative probability
-#   # ------------------------------------------------------------
-#   legaux <- legend(
-#     "topleft",
-#     bty = "n",
-#     fill = "red",
-#     cex = 0.85,
-#     legend = substitute(
-#       F[X](q) == P(X <= q) ~ "=" ~ Pr,
-#       list(q = qq, Pr = Pr)
-#     )
-#   )
-#
-#   # ------------------------------------------------------------
-#   # Legend: parameters
-#   # ------------------------------------------------------------
-#   parametro <- gettext("Parameters:", domain = "R-leem")
-#
-#   legend(
-#     x = rmin,
-#     y = legaux$text$y,
-#     bty = "n",
-#     bg = "white",
-#     cex = 0.85,
-#     legend = substitute(
-#       parametro ~ n == N ~ "," ~ p == P,
-#       list(N = size, P = prob, parametro = parametro)
-#     )
-#   )
-# }
-
 plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL) {
 
   # =========================
@@ -5342,58 +5280,7 @@ plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL) {
   )
 }
 
-# plotpbinomiallttplot <- function(q, size, prob, rounding, main = NULL){
-#   rmin <- if (q < size) trunc(q - 4 * sqrt(size)) else trunc(size - 4 * sqrt(size))
-#   if (rmin < 0) rmin <- 0 else rmin <- round(rmin)
-#   rmax <- if (q > size) ceiling(q + 4 * sqrt(size)) else ceiling(size + 4 * sqrt(size))
-#   x <- rmin:rmax
-#   x1 <- rmin:q
-#   x2 <- q:rmax
-#   probx <- dbinom(x, size = size, prob = prob)
-#   probx1 <- dbinom(x1, size = size, prob = prob)
-#   probx2 <- dbinom(x2, size = size, prob = prob)
-#   xlim <- c(rmin, rmax)
-#   ylim <- c(min(probx), max(probx) * 1.2)
-#   plot.new()
-#   plot.window(xlim, ylim)
-#   axis(1, at = 5*(0:rmax))
-#   axis(2)
-#   titulo <- gettext("Probability function plot: Binomial", domain = "R-leem")
-#   title(ylab = expression(p[X](x)), xlab = "X",main=substitute(atop(bold(titulo),
-#                                                                     p[X](x) == frac(n*"!", x*"!"*(n-x)*"!")*p^x*(1-p)^{n-x}*","~~F[X](t) == sum(p[X](x), x<=t, "")),
-#                                                                list(t = q, t2 = q + 1, titulo = titulo)))
-#   grid(col = "gray90")
-#   lines(x2, probx2, type = "h", lwd = 2)
-#   points(x2, probx2, lwd = 2, pch = 19)
-#   lines(x1, probx1, type = "h", lwd = 2, col = "red")
-#   points(x1, probx1, lwd = 2, col = "red", pch = 19)
-#   qq <- round(q, digits = 2)
-#   qqaux <- round(q, digits = 2)
-#   Pr <- round(pbinom(q, size = size, prob = prob, lower.tail = T), rounding)
-#   aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-#   axis(side=1, at=as.character(q), lwd = 0,
-#        col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
-#   axis(
-#     side = 1,
-#     at = as.character(q),
-#     tick = TRUE,
-#     lwd = 0,
-#     col = "red",
-#     font = 2,
-#     lwd.ticks = 1,
-#     labels = FALSE
-#   )
-#   axis(side = 1, at = c(rmin,q), labels = FALSE,col = "red",col.axis = "red",  font = 2, lwd.ticks = 0, lwd = 1)
-#   abline(v = qqaux, lty = 2, col = "red")
-#   rect(par("usr")[1], 1.03 * max(probx), par("usr")[2], par("usr")[4], col = "gray")
-#   legaux <- legend("topleft", bty="n", fill="red", cex=0.8,
-#                    legend = substitute(F[X](q)~"="~P(X<= q) == Pr,
-#                                        list(q = qq, Pr = Pr)))
-#   parametro <- gettext("Parameters:", domain = "R-leem")
-#   legend(rmin, legaux$text$y, bty="n", bg = "white",cex=0.8,
-#          legend = substitute(parametro~ n == N ~ "," ~ p == P,
-#                              list(N = size, P = prob, parametro = parametro)))
-# }
+
 
 # Negative Binomial distribution
 ## Plot
@@ -7284,3 +7171,51 @@ plotpswilcoxltnplot <- function(q, n, rounding, main = NULL){
          legend = substitute("Parameters:"~n == nv,
                              list(nv = n)))
 }
+
+# Normal Distribution
+plotpnormalltnplot <- function(q, mu, sigma, rounding, main = NULL) {
+  minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
+  maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
+  y <- seq(minimo, maximo, by = 0.01)
+  fy <- dnorm(y, mean = mu, sd = sigma)
+  pdf <- dnorm(q, mu, sigma)
+
+  if (is.null(main)) {
+    titulo <- gettext("Probability density function plot: Normal", domain = "R-leem")
+    main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2), list(t1 = q, x = "x", titulo = titulo))
+  }
+  curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
+        ylim = c(0, 1.2*max(fy)), ylab = expression(f[X](x)), xlab="X",
+        panel.first = grid(col = "gray90"),
+        main = main,
+        cex = 0.8)
+
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col="gray90")
+
+  # X-axis
+  mtext(q, side = 1, at = q, line = 2, col = "red", font = 2)
+  axis(side=1, at=q, labels=FALSE,
+       col="red", font = 2, col.axis = "red", tick = TRUE, lwd.ticks = 1)
+  points(q, pdf, col = "red", type = "o", pch = 19)
+  #segments(q, 0, q, pdf, lty = 2, col = "red")
+  abline(v = q, lty = 2, col = "red")
+
+  # Y-axis
+  mtext(round(pdf, 3), side = 2, at = pdf, line = 2, col = "red", font = 2)
+  axis(side=2, at=pdf, labels=FALSE,
+       col="red", font = 2, col.axis = "red", tick = TRUE, lwd.ticks = 1)
+  #segments(par("usr")[1], pdf, q, pdf, lty = 2, col = "red")
+  abline(h = pdf, lty = 2, col = "red")
+
+  rect(par("usr")[1], 1.03 * max(fy), par("usr")[2], par("usr")[4], col = "gray")
+  legaux <- legend("topleft", bty="n", pt.cex = 1.2, cex=0.8, pch = 19, col = "red",
+                   legend = substitute(f[X](t1)==pdf,
+                                       list(t1 = q, pdf = pdf)))
+  paramet <- gettext("Parameters:", domain = "R-leem")
+  legend(par("usr")[1], legaux$text$y, bty="n", bg = "white", cex=0.8,
+         legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
+                             list(media = mu, varen = sigma, paramet = paramet)))
+}
+

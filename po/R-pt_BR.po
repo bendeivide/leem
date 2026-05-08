@@ -646,3 +646,9 @@ msgstr "pacote leem: Distribuição Binomial"
 
 msgid "Size"
 msgstr "Tamanho"
+
+msgid "Probability density function plot: Normal"
+msgstr "Gráfico da FDP: Normal"
+
+msgid "Normal Distribution"
+msgstr "Distribuição Normal"
