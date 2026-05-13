@@ -148,7 +148,7 @@
 
 # Plot tk dist normal para q de comprimento 1 (lower.tail = T)
 .tkplotleemnormal <- function(q, mu, sigma, rounding, minimo, maximo, dec, long.segment, col,
-                              col2, lty, main, ...) {
+                              col2, lty, main) {
   # Disabled GUI (Type I)
   oldmode <- tclServiceMode(FALSE)
 
@@ -250,7 +250,7 @@
     # Cria a Imagem do Grafico
     png(filename = fp2, width = width, height = height, units = "px")
     try(plotpnormallttplot(quantil, media, desvpad, rounding, dec, long.segment, col,
-                           col2, lty, main, ...), silent = TRUE)
+                           col2, lty, main), silent = TRUE)
 
     dev.off()
 
@@ -426,7 +426,9 @@
   })
 }
 # Plot tk dist normal para q de comprimento 1 (lower.tail = F)
-.tkplotleemltnnormal <- function(q, mu, sigma, rounding, main, minimo, maximo) {
+.tkplotleemltnnormal <- function(q, mu, sigma, rounding, minimo, maximo, dec,
+                                 long.segment, col,
+                                 lty, main) {
   # Disabled GUI (Type I)
   oldmode <- tclServiceMode(FALSE)
 
@@ -505,7 +507,9 @@
 
     # Cria a Imagem do Grafico
     png(filename = fp2, width = width, height = height, units = "px")
-    try(plotpnormalltnplot(quantil, media, desvpad, rounding, main), silent = TRUE)
+    try(plotpnormalltnplot(quantil, media, desvpad, rounding, dec,
+                           long.segment, col,
+                           lty, main), silent = TRUE)
     dev.off()
 
     # Cria imagem no Tk

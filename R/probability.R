@@ -2104,11 +2104,11 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         sigma <- argaddit$sd
         if (gui == "plot" ) {
           plotpnormallttplot(q, mu, sigma, rounding, dec, long.segment, col,
-                             col2, lty, main, ...)
+                             col2, lty, main)
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotpnormallttplot(q, mean, sd, rounding, dec, long.segment, col,
-                                                    col2, lty, main, ...),
+                                                    col2, lty, main),
                                  q = manipulate::slider(q, mu + 4 * sigma, q),
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma)
@@ -2122,7 +2122,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
           # Plot tk da dist normal com q de comp 1 (~/tkplotleem.R)
           .tkplotleemnormal(q, mu, sigma, rounding, minimo, maximo, dec, long.segment, col,
-                            col2, lty, main, ...)
+                            col2, lty, main)
 
 
           # Desabilitar warnings global
@@ -2176,10 +2176,14 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         mu <- argaddit$mean
         sigma <- argaddit$sd
         if (gui == "plot") {
-          plotpnormalltnplot(q, mu, sigma, rounding, main)
+          plotpnormalltnplot(q, mu, sigma, rounding, dec,
+                             long.segment, col,
+                             lty, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpnormalltnplot(q, mean, sd, rounding, main),
+          manipulate::manipulate(plotpnormalltnplot(q, mean, sd, rounding, dec,
+                                                    long.segment, col,
+                                                    lty, main),
                                  q = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q, step = 0.01),
                                  mean = manipulate::slider(-abs(q), mu + 3 * sigma, mu, step = 0.01),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma, step = 0.01)
@@ -2193,7 +2197,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           war <- options(warn = - 1)
           #on.exit(options(war))
 
-          .tkplotleemltnnormal(q, mu, sigma, rounding, main, minimo, maximo)
+          .tkplotleemltnnormal(q, mu, sigma, rounding, minimo, maximo, dec,
+                               long.segment, col,
+                               lty, main)
+
 
           # Desabilitar warnings global
           #options(warn = - 1)

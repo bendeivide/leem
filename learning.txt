@@ -1,0 +1,48 @@
+# Função P()
+
+P()
+|
+|-- dist
+  |-- "normal"
+  |-- "binomial"
+  |-- ...
+|-- plot.type
+  |-- "pdf" => Função densidade
+  |-- "pmf" => Função de probabilidade
+  |-- "cdf" => Função de distribuição
+|-- length(q)
+  |-- 1
+    |-- lower.tail
+      |-- TRUE
+        |-- gui
+          |-- "none"
+          |-- "plot"
+          |-- "tcltk"
+          |-- "shiny"
+      |-- FALSE
+        |-- gui
+          |-- "none"
+          |-- "plot"
+          |-- "tcltk"
+          |-- "shiny"
+      |-- NULL (LEMBRAR DE INSERIR WARNING NESSES CASOS)
+        |-- gui
+          |-- "none"
+          |-- "plot"
+          |-- "tcltk"
+          |-- "shiny"
+  |-- 2
+    |-- região A
+      |-- gui
+          |-- "none"
+          |-- "plot"
+          |-- "tcltk"
+          |-- "shiny"
+    |-- região B
+      |-- gui
+          |-- "none"
+          |-- "plot"
+          |-- "tcltk"
+          |-- "shiny"
+
+

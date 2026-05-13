@@ -17,3 +17,5 @@ logo.png
 images
 ^\.positai$
 ^\.claude$
+learning.txt
+learning.md

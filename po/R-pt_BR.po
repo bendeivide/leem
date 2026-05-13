@@ -652,3 +652,78 @@ msgstr "Gráfico da FDP: Normal"
 
 msgid "Normal Distribution"
 msgstr "Distribuição Normal"
+
+msgid "Central Limit Theorem"
+msgstr "Teorema do Limite Central"
+
+msgid "Sample means"
+msgstr "Médias amostrais"
+
+msgid "Density"
+msgstr "Densidade"
+
+msgid "Normal distribution"
+msgstr "Distribuição Normal"
+
+msgid "Uniform distribution"
+msgstr "Distribuição Uniforme"
+
+msgid "Exponential distribution"
+msgstr "Distribuição Exponencial"
+
+msgid "Binomial distribution"
+msgstr "Distribuição Binomial"
+
+msgid "Poisson distribution"
+msgstr "Distribuição de Poisson"
+
+msgid "Simulated means"
+msgstr "Médias simuladas"
+
+msgid "Normal approximation"
+msgstr "Aproximação Normal"
+
+msgid "Shapiro-Wilk test"
+msgstr "Teste de Shapiro-Wilk"
+
+msgid "Approximate normality"
+msgstr "Normalidade aproximada"
+
+msgid "Non-normal distribution"
+msgstr "Distribuição não normal"
+
+msgid "Population"
+msgstr "População"
+
+msgid "Simulation"
+msgstr "Simulação"
+
+msgid "Distribution"
+msgstr "Distribuição"
+
+msgid "Choose distribution"
+msgstr "Escolha a distribuição"
+
+msgid "Sample size"
+msgstr "Tamanho da amostra"
+
+msgid "Number of simulations"
+msgstr "Número de simulações"
+
+msgid "Standard deviation"
+msgstr "Desvio padrão"
+
+msgid "Lambda"
+msgstr "Lambda"
+
+msgid "Probability"
+msgstr "Probabilidade"
+
+msgid "Binomial size"
+msgstr "Tamanho binomial"
+
+msgid "Poisson lambda"
+msgstr "Lambda de Poisson"
+
+msgid "Warning"
+msgstr "Aviso"

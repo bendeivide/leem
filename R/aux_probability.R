@@ -4303,7 +4303,7 @@ plotpswilcoxbrrstudio <- function(q1, q2, n, rounding, main = NULL, q) {
 # Normal distribution
 ## Plot
 plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.segment = FALSE, col = "#8EC5E5",
-                               col2 = "#38A8E8", lty = 2, main = NULL, ...) {
+                               col2 = "#38A8E8", lty = 2, main = NULL) {
 
   minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
@@ -4388,11 +4388,11 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.s
   # Long segment and type
   ## col2 and lty of P()
   if (isTRUE(long.segment)) {
-    abline(v = qqaux, col = col2, lty = lty, ...)
-    abline(h = pdf, col = col2, lty = lty, ...)
+    abline(v = qqaux, col = col2, lty = lty)
+    abline(h = pdf, col = col2, lty = lty)
   } else {
-    segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty, ...)
-    segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty, ...)
+    segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty)
+    segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty)
   }
   # Point inserted
   points(qqaux, pdf, pch = 19)
@@ -4401,7 +4401,7 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.s
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
 
   # Legends
-  legaux <- legend("topleft", bty="n", fill=col2,cex=0.8,
+  legaux <- legend("topleft", bty="n", fill=col,cex=0.8,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
                                        list(t1 = q, Pr = Pr_text)))
   paramet <- gettext("Parameters:", domain = "R-leem")
@@ -5611,7 +5611,8 @@ plotpswilcoxlttplot <- function(q, n, rounding, main = NULL){
 
 # Normal distribution
 ## Plot
-plotpnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
+plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.segment = FALSE, col = "#8EC5E5",
+                               col2 = "#38A8E8", lty = 2, main = NULL) {
   minimo <- if (q <= mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
   x <- seq(minimo, q, by = 0.01)
@@ -5634,7 +5635,7 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, main = NULL) {
           col="gray90")
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
-          col="red")
+          col=col)
   qq <- round(q, digits=2)
   qqaux <-round(q, digits=2)
   Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
@@ -7173,7 +7174,9 @@ plotpswilcoxltnplot <- function(q, n, rounding, main = NULL){
 }
 
 # Normal Distribution
-plotpnormalltnplot <- function(q, mu, sigma, rounding, main = NULL) {
+plotpnormalltnplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
+                               long.segment = FALSE, col = "#38A8E8",
+                               lty = 2, main = NULL) {
   minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
   y <- seq(minimo, maximo, by = 0.01)
@@ -7181,36 +7184,77 @@ plotpnormalltnplot <- function(q, mu, sigma, rounding, main = NULL) {
   pdf <- dnorm(q, mu, sigma)
 
   if (is.null(main)) {
-    titulo <- gettext("Probability density function plot: Normal", domain = "R-leem")
+    titulo <- gettext("Normal Distribution", domain = "R-leem")
     main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2), list(t1 = q, x = "x", titulo = titulo))
   }
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
         ylim = c(0, 1.2*max(fy)), ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
-        main = main,
+        main = main, xaxt = "n",
         cex = 0.8)
+
+  # X-axis
+  z <- pretty(minimo:maximo)
+  axis(
+    side = 1,
+    at = z
+  )
 
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
           col="gray90")
 
+  # Decimals in plot
+  ## dec of P()
+  w <- pretty(dnorm(minimo:maximo, mu, sigma))
+  if (dec == ",") {
+    qq_text <- gsub("\\.", ",", q)
+    pdf_text <- gsub("\\.", ",", round(pdf, 3))
+    # Y-axis
+    axis(
+      side = 2,
+      at = w,
+      labels = format(
+        w,
+        decimal.mark = ",",
+        nsmall = 2
+      )
+    )
+  } else {
+    qq_text <- q
+    pdf_text <- round(pdf, 3)
+    # Y-axis
+    axis(
+      side = 2,
+      at = w
+    )
+  }
+
   # X-axis
-  mtext(q, side = 1, at = q, line = 2, col = "red", font = 2)
+  mtext(q, side = 1, at = q, line = 2, col = col, font = 2)
   axis(side=1, at=q, labels=FALSE,
-       col="red", font = 2, col.axis = "red", tick = TRUE, lwd.ticks = 1)
-  points(q, pdf, col = "red", type = "o", pch = 19)
-  #segments(q, 0, q, pdf, lty = 2, col = "red")
-  abline(v = q, lty = 2, col = "red")
+       col=col, font = 2, col.axis = col, tick = TRUE, lwd.ticks = 1)
 
   # Y-axis
-  mtext(round(pdf, 3), side = 2, at = pdf, line = 2, col = "red", font = 2)
+  mtext(round(pdf, 3), side = 2, at = pdf, line = 2, col = col, font = 2)
   axis(side=2, at=pdf, labels=FALSE,
-       col="red", font = 2, col.axis = "red", tick = TRUE, lwd.ticks = 1)
-  #segments(par("usr")[1], pdf, q, pdf, lty = 2, col = "red")
-  abline(h = pdf, lty = 2, col = "red")
+       col=col, font = 2, col.axis = col, tick = TRUE, lwd.ticks = 1)
+
+
+  # Long segment and type
+  ## col2 and lty of P()
+  if (isTRUE(long.segment)) {
+    abline(v = q, col = col, lty = lty)
+    abline(h = pdf, col = col, lty = lty)
+  } else {
+    segments(q, 0, q, pdf, col = col, lty = lty)
+    segments(par("usr")[1], pdf, q, pdf, col = col, lty = lty)
+  }
+  # Point inserted
+  points(q, pdf, pch = 19)
 
   rect(par("usr")[1], 1.03 * max(fy), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", pt.cex = 1.2, cex=0.8, pch = 19, col = "red",
+  legaux <- legend("topleft", bty="n", pt.cex = 1.2, cex=0.8, pch = 19, col = col,
                    legend = substitute(f[X](t1)==pdf,
                                        list(t1 = q, pdf = pdf)))
   paramet <- gettext("Parameters:", domain = "R-leem")
