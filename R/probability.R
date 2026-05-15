@@ -128,28 +128,48 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
               ...) {
 
   # Default
+  # match.arg basically take the first object of a list
   gui <- match.arg(gui)
   plot.type <- match.arg(plot.type)
   dec <- match.arg(dec)
 
   # Arguments in '...'
+  # grab the list of the object in '...', if is some there
   argaddit <- list(...)
 
   # Formal arguments
-  argdef <- formals(P)
-  if ( length(q) > 1 & !is.null(attr(q, "class"))) {
+  argdef <- formals(P) # why argdef is not used?
+
+  # Verifying the lenght and if there's any class on arg q
+  if (length(q) > 1 & !is.null(attr(q, "class"))) {
     regiona <- c("region1", "region3", "region5", "region6") # %>X>%
     regionb <- c("region2", "region4", "region7", "region8") # %<X<%
+    
+    # Checking if the attribute region of q is equal to any regiona object
     if (any(attr(q, "region") == regiona)) {
+      
+      # Verifying if the distrubution is a normal shape 
       if (dist == "normal") {
+
+        # Verifying is there's any arg named "mean"
+        # if not, ask for one
         if (!any(names(argaddit) == "mean")) {
+          
+          # Geting the mean arg from the user
           mean <- readline(gettext("Insert the value of 'mean' argument: ", domain = "R-leem"))
-          argaddit$mean <- as.numeric(mean)
+          # Puting it in a object named "mean" (creating the mean object at the same time)
+          argaddit$mean <- as.numeric(mean)  
         }
+
+        # Verifying is there's any arg named "mean"
+        # if not, ask for one
         if (!any(names(argaddit) == "sd")) {
           sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
           argaddit$sd <- as.numeric(sd)
         }
+
+        # Verifying if the sd is equal to 0
+        # if is, change the value
         while (argaddit$sd <= 0) {
           arg1 <- gettext("Please, Insert the value of 'sd' greater then 0:", domain = "R-leem")
           sd <- readline(paste0(arg1, " "))
@@ -165,6 +185,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "plot") {
           plotpnormalarplot(q, mu, sigma, rounding, main)
         }
+
         if (gui == "rstudio") {
           manipulate::manipulate(plotpnormalarrstudio(q1, q2, mean, sd, rounding, main, q),
                                  q1 = manipulate::slider(minimo, q[2], q[1]),
@@ -172,6 +193,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  mean = manipulate::slider(mu, mu + 2 * sigma, mu),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
         }
+
         if (gui == "tcltk") {
           # Desabilitar warnings global
           #options(warn = - 1)
@@ -188,6 +210,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
           pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
       }
+      
       if (dist == "t-student") {
         if (!any(names(argaddit) == "ncp")) {
           argaddit$ncp <- 0
@@ -2080,7 +2103,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
         prob <-  round(psignrank(q = q[2], n) - psignrank(q = q[1], n), digits = rounding)
       }
-    }}
+    }
+  }
   else {
     if (dist == "normal") {
       if (!any(names(argaddit) == "mean")) {
