@@ -148,7 +148,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
     # Checking if the attribute region of q is equal to any regiona object
     if (any(attr(q, "region") == regiona)) {
       
-      # Verifying if the distrubution is a normal shape 
+      # Verifying if the distrubution is a Normal shape 
       if (dist == "normal") {
 
         # Verifying is there's any arg named "mean"
@@ -161,7 +161,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           argaddit$mean <- as.numeric(mean)  
         }
 
-        # Verifying is there's any arg named "mean"
+        # Verifying is there's any arg named "sd"
         # if not, ask for one
         if (!any(names(argaddit) == "sd")) {
           sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
@@ -175,6 +175,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           sd <- readline(paste0(arg1, " "))
           argaddit$sd <- as.numeric(sd)
         }
+
         mu <- argaddit$mean
         sigma <- argaddit$sd
 
@@ -182,6 +183,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
         maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
 
+        #########################################
+        # Starting call the gui
+        #########################################
         if (gui == "plot") {
           plotpnormalarplot(q, mu, sigma, rounding, main)
         }
