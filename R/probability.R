@@ -209,7 +209,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #options(warn = - 1)
           #war <- options(warn = - 1)
           on.exit(options(war))
-         }
+        }
         # Calculates the desired probability
         prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
           pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
@@ -260,6 +260,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         # Calculates the desired probability
         prob <- pt(q[1], df = nu, ncp, lower.tail = T) + pt(q[2], df = nu, ncp, lower.tail = F)
       }
+      
       if (dist == "chisq") {
         if (!any(names(argaddit) == "ncp")) {
           ncp <- 0
