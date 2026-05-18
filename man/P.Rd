@@ -19,6 +19,11 @@ P(
   col = "#8EC5E5",
   col2 = "#38A8E8",
   lty = 2,
+  text.size = par("cex"),
+  cex.main = par("cex.main"),
+  cex.axis = par("cex.axis"),
+  cex.lab = par("cex.lab"),
+  vert.orien.main = TRUE,
   ...
 )
 }

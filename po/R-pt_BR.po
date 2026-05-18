@@ -727,3 +727,34 @@ msgstr "Lambda de Poisson"
 
 msgid "Warning"
 msgstr "Aviso"
+
+msgid "Text Size"
+msgstr "Tamanho do Texto"
+
+msgid "Vertical Title Orientation"
+msgstr "Orientação Vertical do Título"
+
+msgid "Long segment"
+msgstr "Segmento Longo"
+
+msgid "Comma"
+msgstr "Vírgula"
+
+msgid "Export PNG"
+msgstr "Exportar PNG"
+
+msgid "Export"
+msgstr "Exportar"
+
+msgid "Image successfully exported"
+msgstr "Imagem exportada com sucesso"
+
+msgid "Long Segment"
+msgstr "Segmento Longo"
+
+msgid "Export PDF"
+msgstr "Exportar PDF"
+
+msgid "Export SVG"
+msgstr "Exportar SVG"
+

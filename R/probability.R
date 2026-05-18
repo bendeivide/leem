@@ -125,7 +125,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
               plot.type = c("pdf", "cdf", "pmf"),
               dec = c(".", ","), long.segment = FALSE, col = "#8EC5E5",
               col2 = "#38A8E8", lty = 2,
-              ...) {
+              text.size = par("cex"), cex.main = par("cex.main"),
+              cex.axis = par("cex.axis"), cex.lab = par("cex.lab"),
+              vert.orien.main = TRUE, ...) {
 
   # Default
   gui <- match.arg(gui)
@@ -159,8 +161,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         sigma <- argaddit$sd
 
         # Auxiliar variables
-        minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-        maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+        minimo <- if (q[1] <= argaddit$mean - 3 * argaddit$sd) q[1] - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
+        maximo <- if (q[2] > argaddit$mean + 3 * argaddit$sd) q[2] + 3 * argaddit$sd else argaddit$mean + 3 * argaddit$sd
 
         if (gui == "plot") {
           plotpnormalarplot(q, mu, sigma, rounding, main)
@@ -1128,8 +1130,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           argaddit$sd <- as.numeric(sd)
         }
         # Auxiliar variables
-        minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-        maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+        minimo <- if (q[1] <= argaddit$mean - 3 * argaddit$sd) q[1] - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
+        maximo <- if (q[2] > argaddit$mean + 3 * argaddit$sd) q[2] + 3 * argaddit$sd else argaddit$mean + 3 * argaddit$sd
         mu <- argaddit$mean
         sigma <- argaddit$sd
         if (gui == "plot") {
@@ -2098,8 +2100,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if(isTRUE(lower.tail)) {
         # Auxiliar variables
-        minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-        maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+        minimo <- if (q <=  argaddit$mean - 3 * argaddit$sd) q - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
+        maximo <- if (q > argaddit$mean + 3 * argaddit$sd) q + 3 * argaddit$sd else argaddit$mean + 3 * argaddit$sd
         mu <- argaddit$mean
         sigma <- argaddit$sd
         if (gui == "plot" ) {
@@ -2109,9 +2111,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "rstudio") {
           manipulate::manipulate(plotpnormallttplot(q, mean, sd, rounding, dec, long.segment, col,
                                                     col2, lty, main),
-                                 q = manipulate::slider(q, mu + 4 * sigma, q),
-                                 mean = manipulate::slider(mu, mu + 2 * sigma, mu),
-                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma)
+                                 q = manipulate::slider(minimo, maximo, q, step = 0.1),
+                                 mean = manipulate::slider(minimo, maximo, mu, step = 0.1),
+                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma , step = 0.1)
           )
         }
         if (gui == "tcltk") {
@@ -2121,8 +2123,14 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #on.exit(options(war))
 
           # Plot tk da dist normal com q de comp 1 (~/tkplotleem.R)
-          .tkplotleemnormal(q, mu, sigma, rounding, minimo, maximo, dec, long.segment, col,
-                            col2, lty, main)
+          .tkplotleemlttnormal(
+            q, mu, sigma, rounding,
+            minimo, maximo, dec,
+            long.segment, col,
+            col2, lty, main,
+            text.size, cex.main,
+            cex.axis, cex.lab,
+            vert.orien.main)
 
 
           # Desabilitar warnings global
@@ -2130,24 +2138,47 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #war <- options(warn = - 1)
           on.exit(options(war))
         }
+        if (gui == "shiny" ) {
+          # Rouding
+          p <- pnorm(q = q, mean = mu, sd = sigma)
+          # Result in percentage
+          if (porcentage == TRUE) p <- p * 100
+          # List of results
+          listres <- list(probability = p,
+                          process_shiny = .shinyplotleemlttnormal(q, mu, sigma, rounding,
+                                                                  minimo, maximo, dec,
+                                                                  long.segment, col,
+                                                                  col2, lty, main,
+                                                                  text.size, cex.main,
+                                                                  cex.axis, cex.lab,
+                                                                  vert.orien.main),
+                          browser.shiny = browser.shiny)
+          attr(listres, "output") <- "pshiny"
+          class(listres) <- "leem"
+          return(listres)
+        }
         # Compute the desired probability
         prob <- pnorm(q = q, mean = mu, sd = sigma)
 
       }
       if(isFALSE(lower.tail)) {
         # Auxiliar variables
-        minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-        maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+        minimo <- if (q <=  argaddit$mean - 3 * argaddit$sd) q - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
+        maximo <- if (q > argaddit$mean + 3 * argaddit$sd) q + 3 * argaddit$sd else argaddit$mean + 3 * argaddit$sd
         # Plot function
         mu <- argaddit$mean
         sigma <- argaddit$sd
         if (gui == "plot") {
-          plotpnormalltfplot(q, mu, sigma, rounding, main)
+          plotpnormalltfplot(q, mu, sigma, rounding, dec,
+                             long.segment, col,
+                             col2, lty, main)
         }
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpnormalltfplot(q, mean, sd, rounding, main),
-                                 q = manipulate::slider(q, mu + 4 * sigma, q),
-                                 mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+          manipulate::manipulate(plotpnormalltfplot(q, mean, sd, rounding, dec,
+                                                    long.segment, col,
+                                                    col2, lty, main),
+                                 q = manipulate::slider(minimo, maximo, q, step = 0.1),
+                                 mean = manipulate::slider(minimo, maximo, mu, step = 0.1),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma))
 
         }
@@ -2170,8 +2201,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
       if(is.null(lower.tail)) {
         # Auxiliar variables
-        minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-        maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+        minimo <- if (q <=  argaddit$mean - 3 * argaddit$sd) q - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
+        maximo <- if (q > argaddit$mean + 3 * argaddit$sd) q + 3 * argaddit$sd else argaddit$mean + 3 * argaddit$sd
         # Plot function
         mu <- argaddit$mean
         sigma <- argaddit$sd
@@ -2184,8 +2215,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           manipulate::manipulate(plotpnormalltnplot(q, mean, sd, rounding, dec,
                                                     long.segment, col,
                                                     lty, main),
-                                 q = manipulate::slider(mu - 4 * sigma, mu + 4 * sigma, q, step = 0.01),
-                                 mean = manipulate::slider(-abs(q), mu + 3 * sigma, mu, step = 0.01),
+                                 q = manipulate::slider(minimo, maximo, q, step = 0.01),
+                                 mean = manipulate::slider(minimo, maximo, mu, step = 0.01),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma, step = 0.01)
                                  )
 
@@ -2969,6 +3000,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           p <- pbinom(q, size, prob)
           # Result in percentage
           if (porcentage == TRUE) p <- p * 100
+          # List of results
           listres <- list(probability = p,
                process_shiny = .shinyplotleembinomial(q, size, prob, rounding, main),
                browser.shiny = browser.shiny)
@@ -2986,9 +3018,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotpbinomialltfplot(q, size, prob, rounding, main),
-                                 q = manipulate::slider(0, size, q),
-                                 size = manipulate::slider(1, size+30, size),
-                                 prob = manipulate::slider(0, 1, prob)
+                                 q = manipulate::slider(0, size, q, step = 0.1),
+                                 size = manipulate::slider(1, size+30, size, step = 0.1),
+                                 prob = manipulate::slider(0, 1, prob, step = 0.1)
+
           )
         }
         if (gui == "tcltk") {

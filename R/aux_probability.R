@@ -4302,8 +4302,12 @@ plotpswilcoxbrrstudio <- function(q1, q2, n, rounding, main = NULL, q) {
 
 # Normal distribution
 ## Plot
-plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.segment = FALSE, col = "#8EC5E5",
-                               col2 = "#38A8E8", lty = 2, main = NULL) {
+plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
+                               long.segment = FALSE, col = "#8EC5E5",
+                               col2 = "#38A8E8", lty = 2, main = NULL,
+                               text.size = 1, cex.main = 1.2,
+                               cex.axis = 1, cex.lab = 1,
+                               vert.orien.main = TRUE) {
 
   minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
@@ -4313,30 +4317,6 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.s
   fy <- dnorm(y, mean = mu, sd = sigma)
   pdf <- dnorm(q, mu, sigma)
 
-  if (is.null(main)) {
-    titulo <- gettext("Normal Distribution", domain = "R-leem")
-    main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q, x = "x", titulo = titulo))
-  }
-  curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-        ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
-        panel.first = grid(col = "gray90"),
-        main = main, xaxt = "n",
-        cex = 0.8)
-  # X-axis
-  z <- pretty(minimo:maximo)
-  axis(
-    side = 1,
-    at = z
-  )
-  # Area  P(X<= q)
-  ## col1 of P()
-  polygon(c(x, rev(x)),
-          c(fx, rep(0, length(fx))),
-          col = col)
-  # Background
-  polygon(c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
-          col="gray90")
   # Insert vertical line over the mean
   qq <- round(q, digits=2)
   qqaux <-round(q, digits=2)
@@ -4349,11 +4329,47 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.s
   if (dec == ",") {
     Pr_text <- gsub("\\.", ",", Pr)
     qq_text <- gsub("\\.", ",", qq)
+    mu_text <- gsub("\\.", ",", mu)
+    sigma_text <- gsub("\\.", ",", sigma)
     pdf_text <- gsub("\\.", ",", round(pdf, 3))
+  } else {
+    Pr_text <- Pr
+    qq_text <- qq
+    pdf_text <- round(pdf, 3)
+    mu_text <- mu
+    sigma_text <- sigma
+  }
+
+  if (is.null(main)) {
+    titulo <- gettext("Normal Distribution", domain = "R-leem")
+    if (vert.orien.main) {
+      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = qq_text, x = "x", titulo = titulo))
+    } else {
+      main <- substitute(
+        bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), list(t1 = qq_text, x = "x", titulo = titulo)
+      )
+    }
+
+  }
+
+  curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
+        ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
+        panel.first = grid(col = "gray90"),
+        main = main, xaxt = "n", yaxt = "n",
+        cex.main = cex.main)
+  # X-axis
+  z <- pretty(minimo:maximo)
+  axis(
+    side = 1,
+    at = z
+  )
+
+  if (dec == ",") {
     # Y-axis
     axis(
       side = 2,
       at = w,
+      cex.axis = cex.axis,
       labels = format(
         w,
         decimal.mark = ",",
@@ -4361,27 +4377,36 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.s
       )
     )
   } else {
-    Pr_text <- Pr
-    qq_text <- qq
-    pdf_text <- round(pdf, 3)
     # Y-axis
     axis(
       side = 2,
-      at = w
+      at = w,
+      cex.axis = cex.axis
     )
   }
+
+  # Area  P(X<= q)
+  ## col1 of P()
+  polygon(c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
+          col = col)
+  # Background
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col="gray90")
+
 
   # Insert red q point
   ## col2 of P()
   #X-axis
-  mtext(qq_text, side = 1, at = qq, line = 2, col = col2, font = 2)
+  mtext(qq_text, side = 1, at = qq, line = 2, col = col2, font = 2, cex = text.size)
   axis(side=1, at=qqaux, labels=FALSE,
        col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
   # Insert red horizontal and vertical line (X-axis)
   axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
        col=col2, font = 2, lwd.ticks = 0, labels = FALSE)
   # Y-axis
-  mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2)
+  mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2, cex = text.size)
   axis(side=2, at=pdf, labels=FALSE,
        col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
 
@@ -4401,13 +4426,13 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.s
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
 
   # Legends
-  legaux <- legend("topleft", bty="n", fill=col,cex=0.8,
+  legaux <- legend("topleft", bty="n", fill=col, cex=text.size,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
-                                       list(t1 = q, Pr = Pr_text)))
+                                       list(t1 = qq_text, Pr = Pr_text)))
   paramet <- gettext("Parameters:", domain = "R-leem")
-  legend(minimo, legaux$text$y, bty="n", bg = "white", cex=0.8,
+  legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
          legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
-                             list(media = mu, varen = sigma, paramet = paramet)))
+                             list(media = mu_text, varen = sigma_text, paramet = paramet)))
 }
 
 # Student's t distribution
@@ -5611,7 +5636,8 @@ plotpswilcoxlttplot <- function(q, n, rounding, main = NULL){
 
 # Normal distribution
 ## Plot
-plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.segment = FALSE, col = "#8EC5E5",
+plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
+                               long.segment = FALSE, col = "#8EC5E5",
                                col2 = "#38A8E8", lty = 2, main = NULL) {
   minimo <- if (q <= mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
@@ -5619,8 +5645,10 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.s
   y <- seq(q, maximo, by = 0.01)
   fx <- dnorm(x, mean = mu, sd = sigma)
   fy <- dnorm(y, mean = mu, sd = sigma)
+  pdf <- dnorm(q, mu, sigma)
+
   if (is.null(main)) {
-    titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
+    titulo <- gettext("Normal Distribution", domain = "R-leem")
     main = substitute(atop(bold(titulo),
                            f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
                       list(t = q, titulo = titulo))
@@ -5628,7 +5656,7 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.s
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
-        main = main,
+        main = main, xaxt = "n", yaxt = "n",
         cex = 0.8)
   polygon(c(x, rev(x)),
           c(fx, rep(0, length(fx))),
@@ -5636,28 +5664,70 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","), long.s
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
           col=col)
+
+  # Insert vertical line over the mean
   qq <- round(q, digits=2)
   qqaux <-round(q, digits=2)
   Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
-  # Pr <- gsub("\\.", ",", Pr)
-  # #qq <- gsub("\\.", ",", qq)
+
+  # Decimals in plot
+  ## dec of P()
+  w <- pretty(dnorm(minimo:maximo, mu, sigma))
+  if (dec == ",") {
+    Pr_text <- gsub("\\.", ",", Pr)
+    qq_text <- gsub("\\.", ",", qq)
+    pdf_text <- gsub("\\.", ",", round(pdf, 3))
+    # Y-axis
+    axis(
+      side = 2,
+      at = w,
+      labels = format(
+        w,
+        decimal.mark = ",",
+        nsmall = 2
+      )
+    )
+  } else {
+    Pr_text <- Pr
+    qq_text <- qq
+    pdf_text <- round(pdf, 3)
+    # Y-axis
+    axis(
+      side = 2,
+      at = w
+    )
+  }
+
   # Insert red q point
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
-  axis(side=1, at=qqaux, labels=qqaux,
-       col="red", font = 2, col.axis = "red", tick = FALSE, pos = aux2)
-  abline(v = qqaux, lty=2, col = "red")
-
+  #X-axis
+  mtext(qq_text, side = 1, at = qqaux, line = 2, col = col2, font = 2)
   axis(side=1, at=as.character(qqaux), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+       col=col2, font = 2, lwd.ticks = 1, labels = FALSE)
 
-  # Insert red horizontal and vertical line (X-axis)
-  axis(side=1, at=as.character(c(qqaux, maximo)), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
+  # Y-axis
+  mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2)
+  axis(side=2, at=pdf, labels=FALSE,
+       col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
 
+  # Long segment and type
+  ## col2 and lty of P()
+  if (isTRUE(long.segment)) {
+    abline(v = qqaux, col = col2, lty = lty)
+    abline(h = pdf, col = col2, lty = lty)
+  } else {
+    segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty)
+    segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty)
+  }
+  # Point inserted
+  points(qqaux, pdf, pch = 19)
+
+  # Rectangle topleft (Legends)
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", fill="red",cex=0.8,
+
+  # Legends
+  legaux <- legend("topleft", bty="n", fill=col,cex=0.8,
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
-                                       list(q = qq, Pr = Pr)))
+                                       list(q = qq_text, Pr = Pr_text)))
   parametro <- gettext("Parameters:", domain = "R-leem")
   legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
          legend = substitute(parametro~mu ==  mean ~ "," ~ sigma == varen,

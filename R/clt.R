@@ -90,8 +90,6 @@
 #'   size = 10,
 #'   prob = 0.3
 #' )
-#'
-#' @name TCL
 #' @export
 TCL <- function(n = 30,
                 nsim = 1000,

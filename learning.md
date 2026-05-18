@@ -48,7 +48,24 @@ P()
 ```
 ## Distribuição normal
 
-- [] Cor azul
+- lower.tail = TRUE
+  - [ ] gui
+    - [X] "plot"
+      - [X] title
+      - [X] decimals
+      - [X] long.segment
+      - [X] amplitude dos sliders (0,1 a 0,1)
+    - [X] "rstudio"
+      - [X] amplitude dos sliders (0,1 a 0,1)
+    - [X] "tcltk"
+      - [X] amplitude dos sliders (0,1 a 0,1)
+    - [ ] "shiny"
+      - [ ] amplitude dos sliders (0,1 a 0,1)
+- lower.tail = FALSE
+  - [X] title
+  - [X] decimals
+
+- [ ] Cor azul
   - `q = 1` 
     - [X] lower.tail = TRUE
     - [ ] lower.tail = FALSE
@@ -60,10 +77,7 @@ P()
     - [ ] lower.tail = FALSE
     - [ ] região B (`a <X< b`)
     - [ ] região A (`a >X> b`)
-- [ ] gui
-  - [ ] "plot"
-  - [ ] "tcltk"
-  - [ ] "shiny"
+
 
 
 
