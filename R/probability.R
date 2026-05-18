@@ -118,84 +118,6 @@
 #' @importFrom "stats" "dbeta" "dbinom" "dcauchy" "dchisq" "dexp" "df" "dgamma" "dgeom" "dhyper" "dlnorm" "dlogis" "dnbinom" "dnorm" "dpois" "dsignrank" "dt" "dunif" "dweibull" "dwilcox" "pbeta" "pbinom" "pcauchy" "pchisq" "pexp" "pf" "pgamma" "pgeom" "phyper" "plnorm" "plogis" "pnbinom" "pnorm" "ppois" "psignrank" "pt" "ptukey" "punif" "pweibull" "pwilcox" "qbeta" "qbinom" "qcauchy" "qchisq" "qexp" "qf" "qgamma" "qgeom" "qhyper" "qlnorm" "qlogis" "qnbinom" "qnorm" "qpois" "qsignrank" "qt" "qunif" "qweibull" "qwilcox" "rnorm" "sd" "sigma" "var"
 #' @importFrom shiny fluidPage
 #' @export
-
-normal_distrubution <- function(q, argaddit, rounding, main, gui) {
-
-  # Verifying is there's any arg named "mean"
-  # if not, ask for one
-  if (!any(names(argaddit) == "mean")) {
-          
-    # Geting the mean arg from the user
-    mean <- readline(gettext("Insert the value of 'mean' argument: ", domain = "R-leem"))
-    # Puting it in a object named "mean" (creating the mean object at the same time)
-    argaddit$mean <- as.numeric(mean)  
-  }
-
-  # Verifying is there's any arg named "sd"
-  # if not, ask for one
-  if (!any(names(argaddit) == "sd")) {
-    sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
-    argaddit$sd <- as.numeric(sd)
-  }
-
-  # Verifying if the sd is equal to 0
-  # if is, change the value
-  while (argaddit$sd <= 0) {
-    arg1 <- gettext("Please, Insert the value of 'sd' greater then 0:", domain = "R-leem")
-    sd <- readline(paste0(arg1, " "))
-    argaddit$sd <- as.numeric(sd)
-  }
-
-  mu <- argaddit$mean
-  sigma <- argaddit$sd
-
-  # Auxiliar variables
-  minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-  maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
-
-  #########################################
-  # Starting call the gui
-  #########################################
-  if (gui == "plot") {
-    plotpnormalarplot(q, mu, sigma, rounding, main)
-  }
-
-  if (gui == "rstudio") {
-    manipulate::manipulate(plotpnormalarrstudio(q1, q2, mean, sd, rounding, main, q),
-                           q1 = manipulate::slider(minimo, q[2], q[1]),
-                           q2 = manipulate::slider(q[1], maximo, q[2]),
-                           mean = manipulate::slider(mu, mu + 2 * sigma, mu),
-                           sd = manipulate::slider(sigma, sigma * 1.8, sigma))
-  }
-
-  if (gui == "tcltk") {
-    # Desabilitar warnings global
-    #options(warn = - 1)
-    war <- options(warn = - 1)
-
-    .tkplotleemnormal3(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
-
-    # Desabilitar warnings global
-    #options(warn = - 1)
-    #war <- options(warn = - 1)
-    on.exit(options(war))
-  }
-  
-  # Calculates the desired probability
-  prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
-    pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
-
-  return(prob)
-}
-
-
-
-
-
-
-
-
-
 P <- function(q, dist = "normal", lower.tail = TRUE,
               rounding = 5, porcentage = FALSE,
               gui = c("none", "plot", "tcltk", "rstudio", "shiny"), main = NULL,
@@ -3407,5 +3329,74 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
   }
   prob <- round(prob, rounding)
   if (porcentage == TRUE) prob <- prob * 100
+  return(prob)
+}
+
+normal_distrubution <- function(q, argaddit, rounding, main, gui) {
+
+  # Verifying is there's any arg named "mean"
+  # if not, ask for one
+  if (!any(names(argaddit) == "mean")) {
+          
+    # Geting the mean arg from the user
+    mean <- readline(gettext("Insert the value of 'mean' argument: ", domain = "R-leem"))
+    # Puting it in a object named "mean" (creating the mean object at the same time)
+    argaddit$mean <- as.numeric(mean)  
+  }
+
+  # Verifying is there's any arg named "sd"
+  # if not, ask for one
+  if (!any(names(argaddit) == "sd")) {
+    sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
+    argaddit$sd <- as.numeric(sd)
+  }
+
+  # Verifying if the sd is equal to 0
+  # if is, change the value
+  while (argaddit$sd <= 0) {
+    arg1 <- gettext("Please, Insert the value of 'sd' greater then 0:", domain = "R-leem")
+    sd <- readline(paste0(arg1, " "))
+    argaddit$sd <- as.numeric(sd)
+  }
+
+  mu <- argaddit$mean
+  sigma <- argaddit$sd
+
+  # Auxiliar variables
+  minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+  maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+
+  #########################################
+  # Starting call the gui
+  #########################################
+  if (gui == "plot") {
+    plotpnormalarplot(q, mu, sigma, rounding, main)
+  }
+
+  if (gui == "rstudio") {
+    manipulate::manipulate(plotpnormalarrstudio(q1, q2, mean, sd, rounding, main, q),
+                           q1 = manipulate::slider(minimo, q[2], q[1]),
+                           q2 = manipulate::slider(q[1], maximo, q[2]),
+                           mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+                           sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+  }
+
+  if (gui == "tcltk") {
+    # Desabilitar warnings global
+    #options(warn = - 1)
+    war <- options(warn = - 1)
+
+    .tkplotleemnormal3(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
+
+    # Desabilitar warnings global
+    #options(warn = - 1)
+    #war <- options(warn = - 1)
+    on.exit(options(war))
+  }
+  
+  # Calculates the desired probability
+  prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
+    pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
+
   return(prob)
 }
