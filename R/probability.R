@@ -2105,8 +2105,12 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         mu <- argaddit$mean
         sigma <- argaddit$sd
         if (gui == "plot" ) {
-          plotpnormallttplot(q, mu, sigma, rounding, dec, long.segment, col,
-                             col2, lty, main)
+          plotpnormallttplot(q, mu, sigma, rounding,
+                             dec, long.segment, col,
+                             col2, lty, main,
+                             text.size, cex.main,
+                             cex.axis, cex.lab,
+                             vert.orien.main)
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotpnormallttplot(q, mean, sd, rounding, dec, long.segment, col,

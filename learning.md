@@ -59,8 +59,8 @@ P()
       - [X] amplitude dos sliders (0,1 a 0,1)
     - [X] "tcltk"
       - [X] amplitude dos sliders (0,1 a 0,1)
-    - [ ] "shiny"
-      - [ ] amplitude dos sliders (0,1 a 0,1)
+    - [X] "shiny"
+      - [X] amplitude dos sliders (0,1 a 0,1)
 - lower.tail = FALSE
   - [X] title
   - [X] decimals

@@ -184,7 +184,10 @@
         shiny::hr(),
 
         # Export section title
-        shiny::h4("Export"),
+        shiny::h4(gettext(
+          "Export",
+          domain = "R-leem"
+        )),
 
         # Download buttons
         shiny::downloadButton("dl_png", "Download PNG"),

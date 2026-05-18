@@ -1,6 +1,12 @@
 #########################################################################
 # "These functions only work correctly if executed through function P()."
 #########################################################################
+## (name: plot+p+dist+aux+gui)
+# OBS.: aux : ltt - lower.tail == TRUE; ltf - lower.tail == FALSE;
+#       ltn - low er.tail == NULL; ra - Region A; rb - Regio B
+#       dist: "normal", "binomial", ...
+#       gui: "plot", "rstudio", ...
+#########################################################################
 
 
 # Auxiliar functions of P()
@@ -4293,15 +4299,18 @@ plotpswilcoxbrrstudio <- function(q1, q2, n, rounding, main = NULL, q) {
 ## Tcl/tk
 ## Soon...
 
-# lower.tail = TRUE (name: plot+q+name_distribution+ltt+type_distribution)
-# OBS.: lt - lower.tail; ltt - lower.tail == TRUE;
-#       type_distribution: cdf - cumulative distribution function;
-#                          pdf - probability density function
+# lower.tail = TRUE
+## (name: plot+p+dist+aux+gui)
+# OBS.: aux : ltt - lower.tail == TRUE; ltf - lower.tail == FALSE;
+#       ltn - low er.tail == NULL; ra - Region A; rb - Regio B
+#       dist: "normal", "binomial", ...
+#       gui: "plot", "rstudio", ...
 
 # Continuous Distributions
 
 # Normal distribution
-## Plot
+
+# Low-level function to plot the Normal distribution highlighting P(X <= q)
 plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                long.segment = FALSE, col = "#8EC5E5",
                                col2 = "#38A8E8", lty = 2, main = NULL,
@@ -4309,23 +4318,46 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                cex.axis = 1, cex.lab = 1,
                                vert.orien.main = TRUE) {
 
+  # Define the minimum x-axis limit
   minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
+
+  # Define the maximum x-axis limit
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
+
+  # Sequence of x values from minimum to q
   x <- seq(minimo, q, by = 0.01)
+
+  # Sequence of x values from q to maximum
   y <- seq(q, maximo, by = 0.01)
+
+  # Density values for the left region
   fx <- dnorm(x, mean = mu, sd = sigma)
+
+  # Density values for the right region
   fy <- dnorm(y, mean = mu, sd = sigma)
+
+  # Density value at q
   pdf <- dnorm(q, mu, sigma)
 
   # Insert vertical line over the mean
+
+  # Rounded value of q for display
   qq <- round(q, digits=2)
+
+  # Auxiliary rounded value of q
   qqaux <-round(q, digits=2)
+
+  # Cumulative probability P(X <= q)
   Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE),
               digits=rounding)
 
   # Decimals in plot
+
+  # Generate pretty values for the y-axis
   ## dec of P()
   w <- pretty(dnorm(minimo:maximo, mu, sigma))
+
+  # Replace decimal separator if comma format is requested
   if (dec == ",") {
     Pr_text <- gsub("\\.", ",", Pr)
     qq_text <- gsub("\\.", ",", qq)
@@ -4333,6 +4365,8 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     sigma_text <- gsub("\\.", ",", sigma)
     pdf_text <- gsub("\\.", ",", round(pdf, 3))
   } else {
+
+    # Keep default decimal separator
     Pr_text <- Pr
     qq_text <- qq
     pdf_text <- round(pdf, 3)
@@ -4340,11 +4374,18 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     sigma_text <- sigma
   }
 
+  # Create default title if none is provided
   if (is.null(main)) {
+
+    # Localized title text
     titulo <- gettext("Normal Distribution", domain = "R-leem")
+
+    # Vertical orientation of the mathematical title
     if (vert.orien.main) {
       main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = qq_text, x = "x", titulo = titulo))
     } else {
+
+      # Horizontal orientation of the mathematical title
       main <- substitute(
         bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), list(t1 = qq_text, x = "x", titulo = titulo)
       )
@@ -4352,19 +4393,27 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
   }
 
+  # Draw the Normal density curve
   curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
         main = main, xaxt = "n", yaxt = "n",
         cex.main = cex.main)
+
   # X-axis
+
+  # Generate pretty x-axis values
   z <- pretty(minimo:maximo)
+
+  # Draw x-axis
   axis(
     side = 1,
     at = z
   )
 
+  # Format y-axis labels with comma decimal separator
   if (dec == ",") {
+
     # Y-axis
     axis(
       side = 2,
@@ -4377,6 +4426,8 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
       )
     )
   } else {
+
+    # Default y-axis labels
     # Y-axis
     axis(
       side = 2,
@@ -4386,10 +4437,14 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   }
 
   # Area  P(X<= q)
+
+  # Shade the cumulative probability region
   ## col1 of P()
   polygon(c(x, rev(x)),
           c(fx, rep(0, length(fx))),
           col = col)
+
+  # Shade the remaining area in gray
   # Background
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
@@ -4397,20 +4452,32 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
 
   # Insert red q point
+
+  # Highlight q on the x-axis
   ## col2 of P()
   #X-axis
   mtext(qq_text, side = 1, at = qq, line = 2, col = col2, font = 2, cex = text.size)
+
+  # Draw tick mark at q
   axis(side=1, at=qqaux, labels=FALSE,
        col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
+
   # Insert red horizontal and vertical line (X-axis)
   axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
        col=col2, font = 2, lwd.ticks = 0, labels = FALSE)
+
   # Y-axis
+
+  # Highlight density value at q on the y-axis
   mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2, cex = text.size)
+
+  # Draw tick mark at density value
   axis(side=2, at=pdf, labels=FALSE,
        col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
 
   # Long segment and type
+
+  # Draw full or partial guide lines
   ## col2 and lty of P()
   if (isTRUE(long.segment)) {
     abline(v = qqaux, col = col2, lty = lty)
@@ -4419,17 +4486,26 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty)
     segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty)
   }
+
+  # Add point at (q, density)
   # Point inserted
   points(qqaux, pdf, pch = 19)
 
+  # Draw legend background rectangle
   # Rectangle topleft (Legends)
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
 
   # Legends
+
+  # Display cumulative probability legend
   legaux <- legend("topleft", bty="n", fill=col, cex=text.size,
                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
                                        list(t1 = qq_text, Pr = Pr_text)))
+
+  # Localized parameter label
   paramet <- gettext("Parameters:", domain = "R-leem")
+
+  # Display parameter legend
   legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
          legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
                              list(media = mu_text, varen = sigma_text, paramet = paramet)))
