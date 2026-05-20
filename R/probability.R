@@ -151,7 +151,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       # Verifying if the distrubution is a Normal shape 
       if (dist == "normal") {
 
-        prob <- normal_distrubution(q, argaddit, rounding, main, gui)
+        prob <- normal_distrubution(q, argaddit, rounding, main, gui, lower.tail, dec, col, col2, long.segment, lty)
         
       }
       
@@ -2058,12 +2058,12 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
   }
   else {
     if (dist == "normal") {
-      normal_distrubution(q, argaddit, rounding, main, gui, lower.tail)
+      prob <- normal_distrubution(q, argaddit, rounding, main, gui, lower.tail,  dec, col, col2, long.segment, lty)
     
     
     
     }
-    
+
     if (dist == "t-student") {
       if (!any(names(argaddit) == "ncp")) {
         argaddit$ncp <- 0
@@ -3217,7 +3217,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
   return(prob)
 }
 
-normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail) {
+
+normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, dec, col, col2, long.segment, lty) {
 
   # Verifying is there's any arg named "mean"
   # if not, ask for one
@@ -3243,13 +3244,17 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail) {
     argaddit$sd <- as.numeric(sd)
   }
 
-
   mu <- argaddit$mean
   sigma <- argaddit$sd
 
-  # Auxiliar variables
-  minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-  maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+  if (length(q) > 1){
+    # Auxiliar variables
+    minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+    maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+  } else {
+    minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+    maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+  }
 
   #########################################
   # Starting call the gui
@@ -3358,6 +3363,12 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail) {
     prob <- dnorm(x = q, mean = mu, sd=sigma)
     return(prob)
   }
+
+  #########################################
+  # Starting call the gui
+  # where Lower tail is none and q > 1
+  #########################################
+  
 
   if (gui == "plot") {
     plotpnormalarplot(q, mu, sigma, rounding, main)
