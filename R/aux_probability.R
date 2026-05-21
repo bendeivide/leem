@@ -4299,18 +4299,24 @@ plotpswilcoxbrrstudio <- function(q1, q2, n, rounding, main = NULL, q) {
 ## Tcl/tk
 ## Soon...
 
+##################################################################
 # lower.tail = TRUE
 ## (name: plot+p+dist+aux+gui)
 # OBS.: aux : ltt - lower.tail == TRUE; ltf - lower.tail == FALSE;
 #       ltn - low er.tail == NULL; ra - Region A; rb - Regio B
 #       dist: "normal", "binomial", ...
 #       gui: "plot", "rstudio", ...
+##################################################################
 
+##########################
 # Continuous Distributions
+##########################
 
 # Normal distribution
+#####################
 
 # Low-level function to plot the Normal distribution highlighting P(X <= q)
+# ===> This is the interface reference! <===
 plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                long.segment = FALSE, col = "#8EC5E5",
                                col2 = "#38A8E8", lty = 2, main = NULL,
@@ -5703,25 +5709,85 @@ plotpswilcoxlttplot <- function(q, n, rounding, main = NULL){
 
 
 
-## lower.tail == FALSE (name: plot+q+name_distribution+ltf+type_distribution)
-# OBS.: lt - lower.tail; ltf - lower.tail == FALSE;
-#       type_distribution: cdf - cumulative distribution function;
-#       pdf - probability density function
+##################################################################
+# lower.tail = FALSE
+## (name: plot+d+dist+aux+gui)
+# OBS.: aux : ltt - lower.tail == TRUE; ltf - lower.tail == FALSE;
+#       ltn - low er.tail == NULL; ra - Region A; rb - Regio B
+#       dist: "normal", "binomial", ...
+#       gui: "plot", "rstudio", ...
+##################################################################
 
+##########################
 # Continuous Distributions
+##########################
 
 # Normal distribution
-## Plot
+#####################
+
+# Low-level function to plot the Normal distribution highlighting P(X > q)
+# ===> This is the interface reference! <===
 plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                long.segment = FALSE, col = "#8EC5E5",
-                               col2 = "#38A8E8", lty = 2, main = NULL) {
-  minimo <- if (q <= mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
+                               col2 = "#38A8E8", lty = 2, main = NULL,
+                               text.size = 1, cex.main = 1.2,
+                               cex.axis = 1, cex.lab = 1,
+                               vert.orien.main = TRUE) {
+  # Define the minimum x-axis limit
+  minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
+
+  # Define the maximum x-axis limit
   maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
+
+  # Sequence of x values from minimum to q
   x <- seq(minimo, q, by = 0.01)
+
+  # Sequence of x values from q to maximum
   y <- seq(q, maximo, by = 0.01)
+
+  # Density values for the left region
   fx <- dnorm(x, mean = mu, sd = sigma)
+
+  # Density values for the right region
   fy <- dnorm(y, mean = mu, sd = sigma)
+
+  # Density value at q
   pdf <- dnorm(q, mu, sigma)
+
+  # Insert vertical line over the mean
+
+  # Rounded value of q for display
+  qq <- round(q, digits=2)
+
+  # Auxiliary rounded value of q
+  qqaux <-round(q, digits=2)
+
+  # Cumulative probability P(X <= q)
+  Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE),
+              digits=rounding)
+
+  # Decimals in plot
+
+  # Generate pretty values for the y-axis
+  ## dec of P()
+  w <- pretty(dnorm(minimo:maximo, mu, sigma))
+
+  # Replace decimal separator if comma format is requested
+  if (dec == ",") {
+    Pr_text <- gsub("\\.", ",", Pr)
+    qq_text <- gsub("\\.", ",", qq)
+    mu_text <- gsub("\\.", ",", mu)
+    sigma_text <- gsub("\\.", ",", sigma)
+    pdf_text <- gsub("\\.", ",", round(pdf, 3))
+  } else {
+
+    # Keep default decimal separator
+    Pr_text <- Pr
+    qq_text <- qq
+    pdf_text <- round(pdf, 3)
+    mu_text <- mu
+    sigma_text <- sigma
+  }
 
   if (is.null(main)) {
     titulo <- gettext("Normal Distribution", domain = "R-leem")
@@ -6887,11 +6953,199 @@ plotpswilcoxltfplot <- function(q, n, rounding, main = NULL){
                              list(nv = n)))
 }
 
+############################################################################
+## lower.tail == NULL (name: plot+d+dist+aux+gui)
+# OBS.: aux : ltt - lower.tail == TRUE; ltf - lower.tail == FALSE;
+#       ltn - low er.tail == NULL; ra - Region A; rb - Regio B
+#       dist: "normal", "binomial", ...
+#       gui: "plot", "rstudio", ...
+############################################################################
 
-## lower.tail == NULL (name: plot+q+name_distribution+ltn+type_distribution)
-# OBS.: lt - lower.tail; ltn - lower.tail == NULL;
-#       type_distribution: cdf - cumulative distribution function;
-#       pdf - probability density function
+##########################
+# Continuous Distributions
+##########################
+
+# Normal distribution
+#####################
+
+# Low-level function to plot the Normal distribution highlighting P(X > q)
+# ===> This is the interface reference! <===
+plotdnormalltnplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
+                               long.segment = FALSE, col = "#8EC5E5",
+                               col2 = "#38A8E8", lty = 2, main = NULL,
+                               text.size = 1, cex.main = 1.2,
+                               cex.axis = 1, cex.lab = 1,
+                               vert.orien.main = TRUE) {
+
+  minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
+  maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
+  y <- seq(minimo, maximo, by = 0.01)
+  fy <- dnorm(y, mean = mu, sd = sigma)
+  pdf <- dnorm(q, mu, sigma)
+
+  # Insert vertical line over the mean
+
+  # Rounded value of q for display
+  qq <- round(q, digits=2)
+
+  # Auxiliary rounded value of q
+  qqaux <-round(q, digits=2)
+
+  # Cumulative probability P(X <= q)
+  Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE),
+              digits=rounding)
+
+  # Decimals in plot
+
+  # Generate pretty values for the y-axis
+  ## dec of P()
+  w <- pretty(dnorm(minimo:maximo, mu, sigma))
+
+  # Replace decimal separator if comma format is requested
+  if (dec == ",") {
+    Pr_text <- gsub("\\.", ",", Pr)
+    qq_text <- gsub("\\.", ",", qq)
+    mu_text <- gsub("\\.", ",", mu)
+    sigma_text <- gsub("\\.", ",", sigma)
+    pdf_text <- gsub("\\.", ",", round(pdf, 3))
+  } else {
+
+    # Keep default decimal separator
+    Pr_text <- Pr
+    qq_text <- qq
+    pdf_text <- round(pdf, 3)
+    mu_text <- mu
+    sigma_text <- sigma
+  }
+
+  # Create default title if none is provided
+  if (is.null(main)) {
+
+    # Localized title text
+    titulo <- gettext("Normal Distribution", domain = "R-leem")
+
+    # Vertical orientation of the mathematical title
+    if (vert.orien.main) {
+      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2), list(t1 = qq_text, x = "x", titulo = titulo))
+    } else {
+
+      # Horizontal orientation of the mathematical title
+      main <- substitute(
+        bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2, list(t1 = qq_text, x = "x", titulo = titulo)
+      )
+    }
+
+  }
+
+
+  curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
+        ylim = c(0, 1.2*max(fy)), ylab = expression(f[X](x)), xlab="X",
+        panel.first = grid(col = "gray90"),
+        main = main, xaxt = "n", yaxt = "n",
+        cex = 0.8)
+
+  # X-axis
+  z <- pretty(minimo:maximo)
+  axis(
+    side = 1,
+    at = z
+  )
+
+  polygon(c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col="gray90")
+
+
+  # Format y-axis labels with comma decimal separator
+  if (dec == ",") {
+
+    # Y-axis
+    axis(
+      side = 2,
+      at = w,
+      cex.axis = cex.axis,
+      labels = format(
+        w,
+        decimal.mark = ",",
+        nsmall = 2
+      )
+    )
+  } else {
+
+    # Default y-axis labels
+    # Y-axis
+    axis(
+      side = 2,
+      at = w,
+      cex.axis = cex.axis
+    )
+  }
+
+  # X-axis
+
+  # Generate pretty x-axis values
+  z <- pretty(minimo:maximo)
+
+  # Draw x-axis
+  axis(
+    side = 1,
+    at = z
+  )
+
+  # X-axis
+  mtext(qq_text, side = 1, at = qq, line = 2, col = col2, font = 2, cex = text.size)
+
+  # Draw tick mark at q
+  axis(side=1, at=qqaux, labels=FALSE,
+       col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
+
+  # Insert red horizontal and vertical line (X-axis)
+  axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
+       col=col2, font = 2, lwd.ticks = 0, labels = FALSE)
+
+  # Y-axis
+  # Highlight density value at q on the y-axis
+  mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2, cex = text.size)
+
+  # Draw tick mark at density value
+  axis(side=2, at=pdf, labels=FALSE,
+       col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
+
+
+  # Long segment and type
+
+  # Draw full or partial guide lines
+  ## col2 and lty of P()
+  if (isTRUE(long.segment)) {
+    abline(v = qqaux, col = col2, lty = lty)
+    abline(h = pdf, col = col2, lty = lty)
+  } else {
+    segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty)
+    segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty)
+  }
+
+  # Point inserted
+  points(q, pdf, pch = 19)
+
+  # Draw legend background rectangle
+  # Rectangle topleft (Legends)
+  rect(par("usr")[1], 1.03 * max(fy), par("usr")[2], par("usr")[4], col = "gray")
+
+  # Legends
+
+  # Display fdp legend
+  legaux <- legend("topleft", bty="n", pt.cex = 1.2, pch = 19, cex = text.size,
+                   legend = substitute(f[X](t1)==pdf,
+                                       list(t1 = qq_text, pdf = pdf_text)))
+
+  # Localized parameter label
+  paramet <- gettext("Parameters:", domain = "R-leem")
+
+  # Display parameter legend
+  legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
+         legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
+                             list(media = mu_text, varen = sigma_text, paramet = paramet)))
+}
 
 # Discrete Distributions
 
@@ -7319,93 +7573,5 @@ plotpswilcoxltnplot <- function(q, n, rounding, main = NULL){
                              list(nv = n)))
 }
 
-# Normal Distribution
-plotpnormalltnplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
-                               long.segment = FALSE, col = "#38A8E8",
-                               lty = 2, main = NULL) {
-  minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
-  maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
-  y <- seq(minimo, maximo, by = 0.01)
-  fy <- dnorm(y, mean = mu, sd = sigma)
-  pdf <- dnorm(q, mu, sigma)
 
-  if (is.null(main)) {
-    titulo <- gettext("Normal Distribution", domain = "R-leem")
-    main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2), list(t1 = q, x = "x", titulo = titulo))
-  }
-  curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-        ylim = c(0, 1.2*max(fy)), ylab = expression(f[X](x)), xlab="X",
-        panel.first = grid(col = "gray90"),
-        main = main, xaxt = "n",
-        cex = 0.8)
-
-  # X-axis
-  z <- pretty(minimo:maximo)
-  axis(
-    side = 1,
-    at = z
-  )
-
-  polygon(c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
-          col="gray90")
-
-  # Decimals in plot
-  ## dec of P()
-  w <- pretty(dnorm(minimo:maximo, mu, sigma))
-  if (dec == ",") {
-    qq_text <- gsub("\\.", ",", q)
-    pdf_text <- gsub("\\.", ",", round(pdf, 3))
-    # Y-axis
-    axis(
-      side = 2,
-      at = w,
-      labels = format(
-        w,
-        decimal.mark = ",",
-        nsmall = 2
-      )
-    )
-  } else {
-    qq_text <- q
-    pdf_text <- round(pdf, 3)
-    # Y-axis
-    axis(
-      side = 2,
-      at = w
-    )
-  }
-
-  # X-axis
-  mtext(q, side = 1, at = q, line = 2, col = col, font = 2)
-  axis(side=1, at=q, labels=FALSE,
-       col=col, font = 2, col.axis = col, tick = TRUE, lwd.ticks = 1)
-
-  # Y-axis
-  mtext(round(pdf, 3), side = 2, at = pdf, line = 2, col = col, font = 2)
-  axis(side=2, at=pdf, labels=FALSE,
-       col=col, font = 2, col.axis = col, tick = TRUE, lwd.ticks = 1)
-
-
-  # Long segment and type
-  ## col2 and lty of P()
-  if (isTRUE(long.segment)) {
-    abline(v = q, col = col, lty = lty)
-    abline(h = pdf, col = col, lty = lty)
-  } else {
-    segments(q, 0, q, pdf, col = col, lty = lty)
-    segments(par("usr")[1], pdf, q, pdf, col = col, lty = lty)
-  }
-  # Point inserted
-  points(q, pdf, pch = 19)
-
-  rect(par("usr")[1], 1.03 * max(fy), par("usr")[2], par("usr")[4], col = "gray")
-  legaux <- legend("topleft", bty="n", pt.cex = 1.2, cex=0.8, pch = 19, col = col,
-                   legend = substitute(f[X](t1)==pdf,
-                                       list(t1 = q, pdf = pdf)))
-  paramet <- gettext("Parameters:", domain = "R-leem")
-  legend(par("usr")[1], legaux$text$y, bty="n", bg = "white", cex=0.8,
-         legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
-                             list(media = mu, varen = sigma, paramet = paramet)))
-}
 

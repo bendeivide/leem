@@ -118,7 +118,7 @@
 #' @importFrom "stats" "dbeta" "dbinom" "dcauchy" "dchisq" "dexp" "df" "dgamma" "dgeom" "dhyper" "dlnorm" "dlogis" "dnbinom" "dnorm" "dpois" "dsignrank" "dt" "dunif" "dweibull" "dwilcox" "pbeta" "pbinom" "pcauchy" "pchisq" "pexp" "pf" "pgamma" "pgeom" "phyper" "plnorm" "plogis" "pnbinom" "pnorm" "ppois" "psignrank" "pt" "ptukey" "punif" "pweibull" "pwilcox" "qbeta" "qbinom" "qcauchy" "qchisq" "qexp" "qf" "qgamma" "qgeom" "qhyper" "qlnorm" "qlogis" "qnbinom" "qnorm" "qpois" "qsignrank" "qt" "qunif" "qweibull" "qwilcox" "rnorm" "sd" "sigma" "var"
 #' @importFrom shiny fluidPage
 #' @export
-P <- function(q, dist = "normal", lower.tail = TRUE,
+P <- function(q, dist = "normal", lower.tail = c(TRUE, FALSE, NULL),
               rounding = 5, porcentage = FALSE,
               gui = c("none", "plot", "tcltk", "rstudio", "shiny"), main = NULL,
               browser.shiny = getOption("shiny.launch.browser", interactive()),
@@ -133,6 +133,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
   gui <- match.arg(gui)
   plot.type <- match.arg(plot.type)
   dec <- match.arg(dec)
+  lower.tail <- match.arg(lower.tail)
 
   # Arguments in '...'
   argaddit <- list(...)
@@ -185,7 +186,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           #options(warn = - 1)
           #war <- options(warn = - 1)
           on.exit(options(war))
-         }
+        }
         # Calculates the desired probability
         prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
           pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
@@ -380,7 +381,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         prob <- pgumbel(q[1], location, scale, lower.tail = T) +
           pgumbel(q[2], location, scale, lower.tail = F)
-        }
+      }
       if (dist == "beta") {
         if (!any(names(argaddit) == "alpha")) {
           alpha <- readline(gettext("Insert the value of 'alpha' argument: ",  domain = "R-leem"))
@@ -420,7 +421,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         rate <- argaddit$rate
 
         if (gui == "plot") {
-        plotpexparplot(q, rate, rounding, main = NULL)
+          plotpexparplot(q, rate, rounding, main = NULL)
         }
         if (gui == "rstudio") {
           rmax <- q[2] + ceiling(1 / rate + 7 * sqrt(1 / rate^2))
@@ -459,26 +460,26 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
         if (gui == "rstudio") {
           if (is.na(rate)){
-          auxarg <- scale
-          minimo <- if (q[1] <= auxarg - 4 * sqrt(auxarg)) q[1] - 4 * sqrt(auxarg) else 0
-          maximo <- if (q[2] > auxarg + 4 * sqrt(auxarg)) q[2] + 4 * sqrt(auxarg) else 4 * sqrt(auxarg)
-          manipulate::manipulate(plotpgammaarrstudio(q1, q2, shape, rate, scale, rounding, main, q),
-                                 q1 = manipulate::slider(minimo, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], maximo, q[2]),
-                                 shape = manipulate::slider(shape, shape + 4 * shape, shape),
-                                 scale = manipulate::slider(scale, scale + 4 * scale, scale))
+            auxarg <- scale
+            minimo <- if (q[1] <= auxarg - 4 * sqrt(auxarg)) q[1] - 4 * sqrt(auxarg) else 0
+            maximo <- if (q[2] > auxarg + 4 * sqrt(auxarg)) q[2] + 4 * sqrt(auxarg) else 4 * sqrt(auxarg)
+            manipulate::manipulate(plotpgammaarrstudio(q1, q2, shape, rate, scale, rounding, main, q),
+                                   q1 = manipulate::slider(minimo, q[2], q[1]),
+                                   q2 = manipulate::slider(q[2], maximo, q[2]),
+                                   shape = manipulate::slider(shape, shape + 4 * shape, shape),
+                                   scale = manipulate::slider(scale, scale + 4 * scale, scale))
           }
-        if (is.na(scale)){
-          auxarg <- rate
-          minimo <- if (q[1] <= auxarg - 4 * sqrt(auxarg)) q[1] - 4 * sqrt(auxarg) else 0
-          maximo <- if (q[2] > auxarg + 4 * sqrt(auxarg)) q[2] + 4 * sqrt(auxarg) else 4 * sqrt(auxarg)
-          manipulate::manipulate(plotpgammaarrstudio(q1, q2, shape, rate, scale, rounding, main, q),
-                                 q1 = manipulate::slider(minimo, q[2], q[1]),
-                                 q2 = manipulate::slider(q[2], maximo, q[2]),
-                                 shape = manipulate::slider(shape, shape + 4 * shape, shape),
-                                 rate = manipulate::slider(rate, rate + 4 * rate, rate))
+          if (is.na(scale)){
+            auxarg <- rate
+            minimo <- if (q[1] <= auxarg - 4 * sqrt(auxarg)) q[1] - 4 * sqrt(auxarg) else 0
+            maximo <- if (q[2] > auxarg + 4 * sqrt(auxarg)) q[2] + 4 * sqrt(auxarg) else 4 * sqrt(auxarg)
+            manipulate::manipulate(plotpgammaarrstudio(q1, q2, shape, rate, scale, rounding, main, q),
+                                   q1 = manipulate::slider(minimo, q[2], q[1]),
+                                   q2 = manipulate::slider(q[2], maximo, q[2]),
+                                   shape = manipulate::slider(shape, shape + 4 * shape, shape),
+                                   rate = manipulate::slider(rate, rate + 4 * rate, rate))
+          }
         }
-      }
         if (gui == "tcltk") {
           stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
@@ -1130,8 +1131,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           argaddit$sd <- as.numeric(sd)
         }
         # Auxiliar variables
-        minimo <- if (q[1] <= argaddit$mean - 3 * argaddit$sd) q[1] - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
-        maximo <- if (q[2] > argaddit$mean + 3 * argaddit$sd) q[2] + 3 * argaddit$sd else argaddit$mean + 3 * argaddit$sd
+        minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+        maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
         mu <- argaddit$mean
         sigma <- argaddit$sd
         if (gui == "plot") {
@@ -1856,7 +1857,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
 
         prob <-  round(phyper(q = q[2], m, n, k) - phyper(q = q[1], m, n, k), digits = rounding)
-        }
+      }
       if (dist == "geom") {
         if (!any(names(argaddit) == "prob")) {
           prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
@@ -2211,9 +2212,12 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         mu <- argaddit$mean
         sigma <- argaddit$sd
         if (gui == "plot") {
-          plotpnormalltnplot(q, mu, sigma, rounding, dec,
+          plotdnormalltnplot(q, mu, sigma, rounding, dec,
                              long.segment, col,
-                             lty, main)
+                             col2, lty, main,
+                             text.size, cex.main,
+                             cex.axis, cex.lab,
+                             vert.orien.main  )
         }
         if (gui == "rstudio") {
           manipulate::manipulate(plotpnormalltnplot(q, mean, sd, rounding, dec,
@@ -2222,7 +2226,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  q = manipulate::slider(minimo, maximo, q, step = 0.01),
                                  mean = manipulate::slider(minimo, maximo, mu, step = 0.01),
                                  sd = manipulate::slider(sigma, sigma * 1.8, sigma, step = 0.01)
-                                 )
+          )
 
         }
 
@@ -2310,7 +2314,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         # Calculates the desired probability
         prob <- pt(q = q, df = nu, ncp = ncp, lower.tail = FALSE)
-        }
+      }
 
     }
     if (dist == "chisq") {
@@ -2473,7 +2477,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         # Compute the desired probability
         prob <- pf(q, df1, df2, lower.tail = F)
       }
-      }
+    }
     if (dist == "gumbel") {
       if (!any(names(argaddit) == "location")) {
         location <- readline(gettext("Insert the value of 'location' argument: ",  domain = "R-leem"))
@@ -2519,7 +2523,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         if (gui == "tcltk") {
           stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
         }
-          prob <- pgumbel(q = q, location, scale, lower.tail = FALSE)
+        prob <- pgumbel(q = q, location, scale, lower.tail = FALSE)
       }
     }
     if (dist == "beta") {
@@ -3006,8 +3010,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           if (porcentage == TRUE) p <- p * 100
           # List of results
           listres <- list(probability = p,
-               process_shiny = .shinyplotleembinomial(q, size, prob, rounding, main),
-               browser.shiny = browser.shiny)
+                          process_shiny = .shinyplotleembinomial(q, size, prob, rounding, main),
+                          browser.shiny = browser.shiny)
           attr(listres, "output") <- "pshiny"
           class(listres) <- "leem"
           return(listres)
@@ -3051,68 +3055,68 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
     }
     if (dist == "nbinom") {
-    if (!any(names(argaddit) == "prob")) {
-      prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
-      argaddit$prob <- as.numeric(prob)
+      if (!any(names(argaddit) == "prob")) {
+        prob <- readline(gettext("Insert the value of 'prob' argument: ", domain = "R-leem"))
+        argaddit$prob <- as.numeric(prob)
+      }
+      if (argaddit$prob > 1 || argaddit$prob < 0) {
+        stop("The 'prob' argument must be between zero and one!", call. = FALSE, domain = "R-leem")
+      }
+      if (!any(names(argaddit) == "size")) {
+        size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
+        argaddit$size <- as.numeric(size)
+      }
+      if (argaddit$size < 0) {
+        stop("The 'size' argument must be higther then zero!", call. = FALSE, domain = "R-leem")
+      }
+      prob <- argaddit$prob
+      size <- argaddit$size
+      if (isTRUE(lower.tail)) {
+        if (gui == "plot" ) {
+          plotpnbinomiallttplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpnbinomiallttplot(q, size, prob, rounding, main),
+                                 q = manipulate::slider(q, q + 4 * q, q),
+                                 size = manipulate::slider(size, size + 5 * size, size),
+                                 prob = manipulate::slider(0, 1, prob))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pnbinom(q, size, prob)
+      }
+      if (isFALSE(lower.tail)) {
+        if (gui == "plot" ) {
+          plotpnbinomialltfplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpnbinomialltfplot(q, size, prob, rounding, main),
+                                 q = manipulate::slider(q, q + 4 * q, q),
+                                 size = manipulate::slider(size, size + 5 * size, size),
+                                 prob = manipulate::slider(0, 1, prob))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- pnbinom(q, size, prob, lower.tail = FALSE)
+      }
+      if (is.null(lower.tail)) {
+        if (gui == "plot" ) {
+          plotpnbinomialltnplot(q, size, prob, rounding, main)
+        }
+        if (gui == "rstudio") {
+          manipulate::manipulate(plotpnbinomialltnplot(q, size, prob, rounding, main),
+                                 q = manipulate::slider(q, q + 4 * q, q),
+                                 size = manipulate::slider(size, size + 5 * size, size),
+                                 prob = manipulate::slider(0, 1, prob))
+        }
+        if (gui == "tcltk") {
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- dnbinom(q, size, prob)
+      }
     }
-    if (argaddit$prob > 1 || argaddit$prob < 0) {
-      stop("The 'prob' argument must be between zero and one!", call. = FALSE, domain = "R-leem")
-    }
-    if (!any(names(argaddit) == "size")) {
-      size <- readline(gettext("Insert the value of 'size' argument: ", domain = "R-leem"))
-      argaddit$size <- as.numeric(size)
-    }
-    if (argaddit$size < 0) {
-      stop("The 'size' argument must be higther then zero!", call. = FALSE, domain = "R-leem")
-    }
-    prob <- argaddit$prob
-    size <- argaddit$size
-    if (isTRUE(lower.tail)) {
-      if (gui == "plot" ) {
-        plotpnbinomiallttplot(q, size, prob, rounding, main)
-      }
-      if (gui == "rstudio") {
-        manipulate::manipulate(plotpnbinomiallttplot(q, size, prob, rounding, main),
-                               q = manipulate::slider(q, q + 4 * q, q),
-                               size = manipulate::slider(size, size + 5 * size, size),
-                               prob = manipulate::slider(0, 1, prob))
-      }
-      if (gui == "tcltk") {
-        stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-      }
-      prob <- pnbinom(q, size, prob)
-    }
-    if (isFALSE(lower.tail)) {
-      if (gui == "plot" ) {
-        plotpnbinomialltfplot(q, size, prob, rounding, main)
-      }
-      if (gui == "rstudio") {
-        manipulate::manipulate(plotpnbinomialltfplot(q, size, prob, rounding, main),
-                               q = manipulate::slider(q, q + 4 * q, q),
-                               size = manipulate::slider(size, size + 5 * size, size),
-                               prob = manipulate::slider(0, 1, prob))
-      }
-      if (gui == "tcltk") {
-        stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-      }
-      prob <- pnbinom(q, size, prob, lower.tail = FALSE)
-    }
-    if (is.null(lower.tail)) {
-      if (gui == "plot" ) {
-        plotpnbinomialltnplot(q, size, prob, rounding, main)
-      }
-      if (gui == "rstudio") {
-        manipulate::manipulate(plotpnbinomialltnplot(q, size, prob, rounding, main),
-                               q = manipulate::slider(q, q + 4 * q, q),
-                               size = manipulate::slider(size, size + 5 * size, size),
-                               prob = manipulate::slider(0, 1, prob))
-      }
-      if (gui == "tcltk") {
-        stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-      }
-      prob <- dnbinom(q, size, prob)
-    }
-  }
     if (dist == "hyper") {
       if (!any(names(argaddit) == "m")) {
         m <- readline(gettext("Insert the value of 'm' argument: ", domain = "R-leem"))
@@ -3130,9 +3134,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       n <- argaddit$n
       k <- argaddit$k
       if (isTRUE(lower.tail)) {
-      if (gui == "plot") {
-        plotphyperlttplot(q, m, n, k, rounding, main)
-      }
+        if (gui == "plot") {
+          plotphyperlttplot(q, m, n, k, rounding, main)
+        }
         if (gui == "rstudio") {
           manipulate::manipulate(plotphyperlttplot(q, m, n, k, rounding, main),
                                  q = manipulate::slider(q, q + 4 * q, q),
@@ -3141,9 +3145,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
                                  k = manipulate::slider(k, k + 5 * k, k))
         }
         if (gui == "tcltk") {
-        stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
-      }
-      prob <- round(phyper(q, m, n, k), digits = rounding)
+          stop("Em desenvolvimento...", call. = FALSE, domain = "R-leem")
+        }
+        prob <- round(phyper(q, m, n, k), digits = rounding)
       }
       if (isFALSE(lower.tail)) {
         if (gui == "plot") {

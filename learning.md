@@ -54,13 +54,25 @@ P()
       - [X] title
       - [X] decimals
       - [X] long.segment
-      - [X] amplitude dos sliders (0,1 a 0,1)
     - [X] "rstudio"
       - [X] amplitude dos sliders (0,1 a 0,1)
     - [X] "tcltk"
       - [X] amplitude dos sliders (0,1 a 0,1)
+      - [X] A gui recebe o gráfico no estado determinado.
+            Ex.: Se foi plotado com segmentos longos,
+                 o gráfico aparece como tal, e assim,
+                 com os demais
     - [X] "shiny"
+      - [X] A gui recebe o gráfico no estado determinado.
+            Ex.: Se foi plotado com segmentos longos,
+                 o gráfico aparece como tal, e assim,
+                 com os demais
       - [X] amplitude dos sliders (0,1 a 0,1)
+- lower.tail = NULL
+  - [X] "plot"
+      - [X] title
+      - [X] decimals
+      - [X] long.segment
 - lower.tail = FALSE
   - [X] title
   - [X] decimals

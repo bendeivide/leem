@@ -5,6 +5,12 @@
 ## dist: "normal", "binomial", ...
 ######################################################################
 
+##########################
+# Continuous Distributions
+##########################
+
+# Normal distribution
+#####################
 
 # Low-level Shiny GUI function for the leem package.
 # Generates the Normal Distribution interface associated with
@@ -153,7 +159,7 @@
             domain = "R-leem"
           ),
 
-          TRUE
+          vert.orien.main
         ),
 
         # Long segment option
@@ -165,7 +171,7 @@
             domain = "R-leem"
           ),
 
-          FALSE
+          long.segment
         ),
 
         # Decimal separator option
@@ -177,7 +183,7 @@
             domain = "R-leem"
           ),
 
-          FALSE
+          if (dec == ".") FALSE else TRUE,
         ),
 
         # Horizontal separator
@@ -232,7 +238,7 @@
         mu = input$mu,
         sigma = input$sigma,
         rounding = rounding,
-        dec = if (input$comma) "," else ".",
+        dec = if (isTRUE(input$comma)) "," else ".",
         long.segment = input$lsegment,
         col = col,
         col2 = col2,
@@ -350,6 +356,9 @@
 }
 
 
+##########################
+# Discrete Distributions
+##########################
 
 
 .shinyplotleembinomial <- function(q,
