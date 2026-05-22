@@ -20,7 +20,8 @@
 #'
 #' @param rounding numerical; it represents the number of decimals for calculating the probability.
 #'
-#' @param porcentage If \code{TRUE}, probabilities are multiplied by 100.
+#' @param porcentage If \code{TRUE}, probabilities are multiplied by 100. If \code{lower.tail = NULL}, this argument is ignored.
+
 #'
 #' @param gui Character string specifying the graphical interface used.
 #'   Possible values are:
@@ -118,7 +119,7 @@
 #' @importFrom "stats" "dbeta" "dbinom" "dcauchy" "dchisq" "dexp" "df" "dgamma" "dgeom" "dhyper" "dlnorm" "dlogis" "dnbinom" "dnorm" "dpois" "dsignrank" "dt" "dunif" "dweibull" "dwilcox" "pbeta" "pbinom" "pcauchy" "pchisq" "pexp" "pf" "pgamma" "pgeom" "phyper" "plnorm" "plogis" "pnbinom" "pnorm" "ppois" "psignrank" "pt" "ptukey" "punif" "pweibull" "pwilcox" "qbeta" "qbinom" "qcauchy" "qchisq" "qexp" "qf" "qgamma" "qgeom" "qhyper" "qlnorm" "qlogis" "qnbinom" "qnorm" "qpois" "qsignrank" "qt" "qunif" "qweibull" "qwilcox" "rnorm" "sd" "sigma" "var"
 #' @importFrom shiny fluidPage
 #' @export
-P <- function(q, dist = "normal", lower.tail = c(TRUE, FALSE, NULL),
+P <- function(q, dist = "normal", lower.tail = TRUE,
               rounding = 5, porcentage = FALSE,
               gui = c("none", "plot", "tcltk", "rstudio", "shiny"), main = NULL,
               browser.shiny = getOption("shiny.launch.browser", interactive()),
@@ -129,20 +130,105 @@ P <- function(q, dist = "normal", lower.tail = c(TRUE, FALSE, NULL),
               cex.axis = par("cex.axis"), cex.lab = par("cex.lab"),
               vert.orien.main = TRUE, ...) {
 
-  # Default
+  #################################################
+  # Argument matching
+  #################################################
+
+  # Validate and standardize the graphical
+  # interface argument provided by the user.
+  #
+  # match.arg() ensures that only one of the
+  # predefined interface options is accepted.
   gui <- match.arg(gui)
+
+  # Validate the type of probability-related
+  # plot requested by the user.
+  #
+  # Supported plot types include:
+  #
+  # - pdf -> probability density function
+  # - cdf -> cumulative distribution function
+  # - pmf -> probability mass function
   plot.type <- match.arg(plot.type)
+
+  # Validate the decimal separator used in
+  # numerical labels and graphical outputs.
+  #
+  # Supported formats:
+  #
+  # - "." -> decimal point
+  # - "," -> decimal comma
   dec <- match.arg(dec)
-  lower.tail <- match.arg(lower.tail)
 
   # Arguments in '...'
   argaddit <- list(...)
 
   # Formal arguments
   argdef <- formals(P)
+
+  ###############################################
+  # First processing stage of function P():
+  # the function initially checks the length of q.
+  #
+  # If q has length equal to 1, the argument dist
+  # is evaluated. After validating the selected
+  # distribution, the function checks the
+  # lower.tail argument, and finally evaluates
+  # the gui argument to determine how the result
+  # stored in 'prob' will be returned.
+  # Resume
+  # ======
+  # | P()
+  # |--> q = 1
+  #   |-> dist
+  #   | - "normal", ...
+  #     |-> lower.tail
+  #     | - TRUE or FALSE or NULL
+  #       |-> gui
+  #       | - "plot", "rstudio", "tcltk", "shiny"
+  #         |-> return prob
+  #
+  # If q has length greater than 1, the function
+  # evaluates the probability region associated
+  # with operators such as %>X>%, %<X<%, and their
+  # variants through the 'region' attribute.
+  #
+  # After identifying the corresponding region,
+  # the function evaluates the selected
+  # distribution through the dist argument and,
+  # subsequently, the gui argument to determine
+  # the output interface.
+  #
+  # Resume
+  # ======
+  # | P()
+  # |--> q > 1
+  #   |-> region
+  #     | - A or B
+  #     |-> dist
+  #     | - "normal", ...
+  #       |-> gui
+  #       | - "plot", "rstudio", "tcltk", "shiny"
+  #         |-> return prob
+  #
+  # Finally, function P() returns the value stored
+  # in 'prob'.
+  ################################################
+
+  #########################
+  # Check the q argument
+  #########################
+
+  # If q argument is greater than 1
   if ( length(q) > 1 & !is.null(attr(q, "class"))) {
+
+    # r1: %>X>%; r3 = %>=X>=%; r5: %>=X>%; r6: %>X>=%
     regiona <- c("region1", "region3", "region5", "region6") # %>X>%
+
+    # r2: %<X<%; r4: %<=X<=%; r7: %<=X<%; r8: %<=x<%
     regionb <- c("region2", "region4", "region7", "region8") # %<X<%
+
+    # Region A
     if (any(attr(q, "region") == regiona)) {
       if (dist == "normal") {
         if (!any(names(argaddit) == "mean")) {
@@ -1115,6 +1201,8 @@ P <- function(q, dist = "normal", lower.tail = c(TRUE, FALSE, NULL),
       }
 
     }
+
+    # Region B
     if (any(attr(q, "region") == regionb)) {
       if (dist == "normal") {
         if (!any(names(argaddit) == "mean")) {
@@ -2084,21 +2172,99 @@ P <- function(q, dist = "normal", lower.tail = c(TRUE, FALSE, NULL),
         prob <-  round(psignrank(q = q[2], n) - psignrank(q = q[1], n), digits = rounding)
       }
     }}
-  else {
+  else { # If the q argument is set to 1
+
+    #########################
+    # Check the dist argument
+    #########################
+
+    # If the dist argument is set to "normal"
     if (dist == "normal") {
+
+      #################################################
+      # Interactive input for distribution parameters
+      #################################################
+
+      # Check whether the user supplied the 'mean'
+      # argument inside the additional arguments list.
+      #
+      # If the argument is missing, request the value
+      # interactively through the console using
+      # readline().
+      #
+      # The entered value is converted to numeric
+      # format and stored back into 'argaddit' to
+      # preserve a consistent structure for subsequent
+      # computations inside the package workflow.
       if (!any(names(argaddit) == "mean")) {
-        mean <- readline(paste0(gettext("Enter the value of 'mean' argument:", domain = "R-leem"), " "))
+
+        mean <- readline(
+          paste0(
+            gettext(
+              "Enter the value of 'mean' argument:",
+              domain = "R-leem"
+            ),
+            " "
+          )
+        )
+
         argaddit$mean <- as.numeric(mean)
       }
+
+      # Check whether the user supplied the 'sd'
+      # (standard deviation) argument.
+      #
+      # If the argument is not available, request
+      # the value interactively from the user.
+      #
+      # The value is converted to numeric format
+      # before being stored in 'argaddit'.
       if (!any(names(argaddit) == "sd")) {
-        sd <- readline(paste0(gettext("Enter the value of 'sd' argument:", domain = "R-leem"), " "))
+
+        sd <- readline(
+          paste0(
+            gettext(
+              "Enter the value of 'sd' argument:",
+              domain = "R-leem"
+            ),
+            " "
+          )
+        )
+
         argaddit$sd <- as.numeric(sd)
       }
+
+      #################################################
+      # Validation of the standard deviation parameter
+      #################################################
+
+      # Ensure that the standard deviation parameter
+      # is strictly greater than zero.
+      #
+      # The Normal distribution requires a positive
+      # standard deviation. Therefore, keep requesting
+      # a new value until the user provides a valid
+      # numeric input.
+      #
+      # gettext() is used to support package
+      # internationalization and translation files.
       while (argaddit$sd <= 0) {
-        arg1 <- gettext("Please, Insert the value of 'sd' greater then 0:", domain = "R-leem")
+
+        arg1 <- gettext(
+          "Please, Insert the value of 'sd' greater then 0:",
+          domain = "R-leem"
+        )
+
         sd <- readline(paste0(arg1, " "))
+
         argaddit$sd <- as.numeric(sd)
       }
+
+      ###############################
+      # Check the lower.tail argument
+      ###############################
+
+      # If the lower.tail argument is set to "TRUE"
       if(isTRUE(lower.tail)) {
         # Auxiliar variables
         minimo <- if (q <=  argaddit$mean - 3 * argaddit$sd) q - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
@@ -2166,6 +2332,8 @@ P <- function(q, dist = "normal", lower.tail = c(TRUE, FALSE, NULL),
         prob <- pnorm(q = q, mean = mu, sd = sigma)
 
       }
+
+      # If the lower.tail argument is set to "FALSE"
       if(isFALSE(lower.tail)) {
         # Auxiliar variables
         minimo <- if (q <=  argaddit$mean - 3 * argaddit$sd) q - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
@@ -2204,50 +2372,218 @@ P <- function(q, dist = "normal", lower.tail = c(TRUE, FALSE, NULL),
         # Compute the desired probability
         prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
       }
+
+      # If the lower.tail argument is set to "NULL"
       if(is.null(lower.tail)) {
         # Auxiliar variables
-        minimo <- if (q <=  argaddit$mean - 3 * argaddit$sd) q - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
-        maximo <- if (q > argaddit$mean + 3 * argaddit$sd) q + 3 * argaddit$sd else argaddit$mean + 3 * argaddit$sd
+        minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+        maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
         # Plot function
         mu <- argaddit$mean
         sigma <- argaddit$sd
+
+        ########################
+        # Check the gui argument
+        ########################
+
+        # If the gui argument is set to "plot"
         if (gui == "plot") {
-          plotdnormalltnplot(q, mu, sigma, rounding, dec,
-                             long.segment, col,
-                             col2, lty, main,
-                             text.size, cex.main,
-                             cex.axis, cex.lab,
-                             vert.orien.main  )
+          #################################################
+          # Base R plotting interface
+          #################################################
+
+          # Call the internal plotting function
+          # responsible for generating the static
+          # visualization of the Normal density curve
+          # using base R graphics.
+          #
+          # This interface produces a traditional plot
+          # highlighting the density curve associated
+          # with the Normal distribution.
+          #
+          # ./aux_probability.R
+          plotdnormalltnplot(
+            q, mu, sigma, rounding, dec,
+            long.segment, col,
+            col2, lty, main,
+            text.size, cex.main,
+            cex.axis, cex.lab,
+            vert.orien.main
+          )
         }
+
+        # If the gui argument is set to "rstudio"
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpnormalltnplot(q, mean, sd, rounding, dec,
-                                                    long.segment, col,
-                                                    lty, main),
-                                 q = manipulate::slider(minimo, maximo, q, step = 0.01),
-                                 mean = manipulate::slider(minimo, maximo, mu, step = 0.01),
-                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma, step = 0.01)
+          #################################################
+          # RStudio graphical interface
+          #################################################
+
+          # Call the internal plotting function
+          # responsible for generating the interactive
+          # Normal distribution visualization in the
+          # RStudio environment.
+          #
+          # This interface was designed to provide an
+          # interactive graphical experience directly
+          # within RStudio.
+          #
+          # ./aux_probability.R
+          plotdnormalltnrstudio(
+            q, mu, sigma, rounding,
+            minimo, maximo, dec,
+            long.segment, col,
+            col2, lty, main,
+            text.size, cex.main,
+            cex.axis, cex.lab,
+            vert.orien.main
           )
 
         }
 
+        # If the gui argument is set to "tcltk"
         if (gui == "tcltk") {
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          war <- options(warn = - 1)
-          #on.exit(options(war))
+          #################################################
+          # Tcl/Tk graphical interface
+          #################################################
 
-          .tkplotleemltnnormal(q, mu, sigma, rounding, minimo, maximo, dec,
-                               long.segment, col,
-                               lty, main)
-
-
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          #war <- options(warn = - 1)
-          on.exit(options(war))
+          # Call the internal Tcl/Tk plotting function
+          # responsible for generating the interactive
+          # Normal distribution visualization.
+          #
+          # This graphical interface allows the user to
+          # explore the Normal density curve interactively
+          # using Tcl/Tk components.
+          #
+          # ./aux_probability.R
+          plotdnormalltntcltk(
+            q, mu, sigma, rounding,
+            minimo, maximo, dec,
+            long.segment, col,
+            col2, lty, main,
+            text.size, cex.main,
+            cex.axis, cex.lab,
+            vert.orien.main
+          )
         }
-        # Compute the probability density function
-        prob <- dnorm(x = q, mean = mu, sd=sigma)
+
+        # If the gui argument is set to "shiny"
+        if (gui == "shiny") {
+          #################################################
+          # Shiny graphical interface
+          #################################################
+
+          # If the user selected the Shiny graphical
+          # interface, display a warning message informing
+          # that the returned value corresponds to the
+          # height of the Normal density curve at x = q
+          # and not to a probability value.
+          #
+          # This distinction is important because dnorm()
+          # computes the value of the probability density
+          # function (PDF), whereas probabilities for the
+          # Normal distribution are obtained with pnorm().
+          message(
+            gettext(
+              "Note: the returned value is the height of the Normal density curve at x = q and not a probability.",
+              domain = "R-leem"
+            )
+          )
+
+          # Call the internal Shiny plotting function
+          # responsible for generating the interactive
+          # Normal distribution visualization.
+          #
+          # The returned object contains all information
+          # required for the S3 method print.leem() to
+          # launch the Shiny application automatically.
+          #
+          # ./aux_probability.R
+          return(
+            plotdnormalltnshiny(
+              q, mu, sigma, rounding, porcentage,
+              minimo, maximo, dec,
+              long.segment, col,
+              col2, lty, main,
+              browser.shiny,
+              text.size, cex.main,
+              cex.axis, cex.lab,
+              vert.orien.main
+            )
+          )
+
+          #################################################
+          # Probability density function
+          #################################################
+
+          # Compute the value of the Normal probability
+          # density function (PDF) at x = q.
+          #
+          # The function dnorm() does NOT return a
+          # probability. Instead, it returns the height
+          # of the density curve associated with the
+          # Normal distribution.
+          prob <- dnorm(
+            x = q,
+            mean = mu,
+            sd = sigma
+          )
+
+          # Inform the user about the interpretation
+          # of the returned value to avoid confusion
+          # between density values and probabilities.
+          message(
+            gettext(
+              "Note: the returned value is the height of the Normal density curve at x = q and not a probability.",
+              domain = "R-leem"
+            )
+          )
+        }
+
+        #################################################
+        # Probability density function
+        #################################################
+
+        # Compute the value of the Normal probability
+        # density function (PDF) at x = q.
+        #
+        # The function dnorm() returns the height of
+        # the Normal density curve and not a probability.
+        #
+        # Parameters:
+        # x    -> Point at which the density is evaluated
+        # mean -> Mean of the Normal distribution
+        # sd   -> Standard deviation of the distribution
+        prob <- dnorm(
+          x = q,
+          mean = mu,
+          sd = sigma
+        )
+
+        #################################################
+        # Informative user message
+        #################################################
+
+        # Display a warning message clarifying the
+        # interpretation of the returned value.
+        #
+        # This message was intentionally added because
+        # users frequently confuse:
+        #
+        # - dnorm()  -> density function values
+        # - pnorm()  -> cumulative probabilities
+        #
+        # The message helps prevent the incorrect
+        # interpretation of the density value as a
+        # probability.
+        #
+        # gettext() is used to support package
+        # internationalization and translation files.
+        message(
+          gettext(
+            "Note: the returned value is the height of the Normal density curve at x = q and not a probability.",
+            domain = "R-leem"
+          )
+        )
       }
     }
     if (dist == "t-student") {
@@ -3400,7 +3736,50 @@ P <- function(q, dist = "normal", lower.tail = c(TRUE, FALSE, NULL),
     }
 
   }
+
+  #################################################
+  # Final formatting of the returned value
+  #################################################
+
+  # Round the computed value according to the
+  # number of decimal places specified by the
+  # user through the 'rounding' argument.
+  #
+  # This step standardizes the numerical output
+  # before returning the final result.
   prob <- round(prob, rounding)
-  if (porcentage == TRUE) prob <- prob * 100
+
+  #################################################
+  # Percentage conversion
+  #################################################
+
+  # Check whether the argument 'lower.tail'
+  # is NULL.
+  #
+  # If lower.tail is NULL, the returned value
+  # corresponds to the density function output
+  # produced by dnorm(), and therefore no
+  # percentage conversion is applied.
+  #
+  # Otherwise, convert the value to percentage
+  # format by multiplying it by 100.
+  #
+  # This structure was adopted to maintain
+  # compatibility between probability outputs
+  # and density outputs within the same function.
+  if (is.null(lower.tail)) {
+
+    prob
+
+  } else {
+
+    prob <- prob * 100
+  }
+
+  #################################################
+  # Return final result
+  #################################################
+
+  # Return the formatted value to the user.
   return(prob)
 }

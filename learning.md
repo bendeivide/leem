@@ -48,6 +48,16 @@ P()
 ```
 ## Distribuição normal
 
+### Funções comentadas
+
+- [ ] lower.tail = NULL
+  - [X] plotdnormalltnplot
+  - [X] plotdnormalltntcltk
+  - [X] plotdnormalltnrstudio
+  - [X] plotdnormalltnshiny
+
+### Implementação/organização dos argumentos
+
 - lower.tail = TRUE
   - [ ] gui
     - [X] "plot"
@@ -69,10 +79,35 @@ P()
                  com os demais
       - [X] amplitude dos sliders (0,1 a 0,1)
 - lower.tail = NULL
-  - [X] "plot"
+  - [ ] gui
+    - [X] Mensagem reforçando que o output é uma f(x) e não probabilidade
+    - [X] "plot"
       - [X] title
       - [X] decimals
       - [X] long.segment
+      - [X] A gui recebe o gráfico no estado determinado.
+            Ex.: Se foi plotado com segmentos longos,
+                 o gráfico aparece como tal, e assim,
+                 com os demais
+    - [ ] tcltk
+      - [X] Mensagem reforçando que o output é uma f(x) e não probabilidade
+      - [X] A gui recebe o gráfico no estado determinado.
+            Ex.: Se foi plotado com segmentos longos,
+                 o gráfico aparece como tal, e assim,
+                 com os demais
+    - [ ] "rstudio"
+      - [X] Mensagem reforçando que o output é uma f(x) e não probabilidade
+      - [X] janela de argumentos reformulada
+      - [X] A gui recebe o gráfico no estado determinado.
+            Ex.: Se foi plotado com segmentos longos,
+                 o gráfico aparece como tal, e assim,
+                 com os demais
+    - [ ] shiny
+      - [X] Mensagem reforçando que o output é uma f(x) e não probabilidade
+      - [X] A gui recebe o gráfico no estado determinado.
+            Ex.: Se foi plotado com segmentos longos,
+                 o gráfico aparece como tal, e assim,
+                 com os demais
 - lower.tail = FALSE
   - [X] title
   - [X] decimals

@@ -41,7 +41,7 @@ P(
 
 \item{rounding}{numerical; it represents the number of decimals for calculating the probability.}
 
-\item{porcentage}{If \code{TRUE}, probabilities are multiplied by 100.}
+\item{porcentage}{If \code{TRUE}, probabilities are multiplied by 100. If \code{lower.tail = NULL}, this argument is ignored.}
 
 \item{gui}{Character string specifying the graphical interface used.
 Possible values are:
