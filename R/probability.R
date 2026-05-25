@@ -520,7 +520,9 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
 
   if(isFALSE(lower.tail)) {
     if (gui == "plot") {
-      plotpnormalltfplot(q, mu, sigma, rounding, dec, main)
+      plotpnormalltfplot(q, mu, sigma, rounding, dec,
+                             long.segment, col,
+                             col2, lty, main)
     }
     
     if (gui == "rstudio") {
