@@ -465,20 +465,36 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
 
   # If the lower.tail argument is set to "TRUE"
   if(isTRUE(lower.tail)) {
-    if (gui == "plot" ) {
+    #################################################
+    # Base R plotting interface
+    #################################################
+
+    # Call the internal plotting function
+    # responsible for generating the static
+    # visualization of the Normal probability curve
+    # using base R graphics.
+    #
+    # This interface produces a traditional plot
+    # highlighting the density curve associated
+    # with the Normal distribution.
+    #
+    # ./aux_probability.R
+    if (gui == "plot") {
       plotpnormallttplot(q, mu, sigma, rounding,
                          dec, long.segment, col,
                          col2, lty, main,
                          text.size, cex.main,
                          cex.axis, cex.lab,
-                         vert.orien.main)
+                         vert.orien.main
+                        )
     }
+
     if (gui == "rstudio") {
       manipulate::manipulate(plotpnormallttplot(q, mean, sd, rounding, dec, long.segment, col, col2, lty, main),
                                 q = manipulate::slider(minimo, maximo, q, step = 0.1),
                                 mean = manipulate::slider(minimo, maximo, mu, step = 0.1),
                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma , step = 0.1)
-          )
+      )
     }
 
     if (gui == "tcltk") {
@@ -504,7 +520,7 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
 
   if(isFALSE(lower.tail)) {
     if (gui == "plot") {
-      plotpnormalltfplot(q, mu, sigma, rounding, main)
+      plotpnormalltfplot(q, mu, sigma, rounding, dec, main)
     }
     
     if (gui == "rstudio") {
@@ -515,6 +531,32 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
     }
 
     if (gui == "tcltk") {
+      #################################################
+      # Tcl/Tk graphical interface
+      #################################################
+
+      # Call the internal Tcl/Tk plotting function
+      # responsible for generating the interactive
+      # Normal distribution visualization.
+      #
+      # This graphical interface allows the user to
+      # explore the Normal area interactively
+      # using Tcl/Tk components.
+      #
+      # ./aux_probability.R
+     
+      #plotdnormalltntcltk(
+      #  q, mu, sigma, rounding,
+      #  minimo, maximo, dec,
+      #  long.segment, col,
+      #  col2, lty, main,
+      #  text.size, cex.main,
+      #  cex.axis, cex.lab,
+      #  vert.orien.main
+      #)
+      
+      
+      
       # Desabilitar warnings global
       #options(warn = - 1)
       war <- options(warn = - 1)
@@ -526,7 +568,10 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
       #options(warn = - 1)
       #war <- options(warn = - 1)
       on.exit(options(war))
+
+
     }
+
     # Compute the desired probability
     prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
 
