@@ -64,6 +64,7 @@ should be opened in a browser. The default behavior follows:
 \item \code{"pdf"}: probability density function.
 \item \code{"cdf"}: cumulative distribution function.
 \item \code{"pmf"}: probability mass function.
+\item \code{"sf"}: survival function.
 }}
 
 \item{dec}{Character string specifying the decimal separator used
@@ -81,6 +82,21 @@ in the graphical visualization.}
 
 \item{lty}{Integer or character specifying the line type used
 in auxiliary graphical elements.}
+
+\item{text.size}{Numeric value specifying the size of the text annotations
+displayed in the graphical visualization.}
+
+\item{cex.main}{Numeric value specifying the expansion factor applied
+to the main title of the plot.}
+
+\item{cex.axis}{Numeric value specifying the expansion factor applied
+to the axis tick labels.}
+
+\item{cex.lab}{Numeric value specifying the expansion factor applied
+to the axis labels.}
+
+\item{vert.orien.main}{Logical. If \code{TRUE}, the main title is
+displayed in vertical orientation in interfaces that support this feature.}
 
 \item{...}{additional arguments according to the chosen distribution.}
 }

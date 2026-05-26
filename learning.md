@@ -137,6 +137,11 @@ P()
     - [ ] exportar svg
     - [ ] exportar pdf
 
+- Testar os argumentos da função P()
+  - [ ] lower.tail = TRUE
+  - [ ] lower.tail = FALSE
+  - [ ] lower.tail = NULL
+
 ### Funções comentadas
 
 - [ ] lower.tail = NULL
