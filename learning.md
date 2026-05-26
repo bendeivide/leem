@@ -48,6 +48,95 @@ P()
 ```
 ## Distribuição normal
 
+### Checagem de Marko sobre as interfaces
+
+- lower.tail = TRUE
+  - [ ] TCLTK
+    - [ ] quantil
+    - [ ] média
+    - [ ] desvio padrão
+    - [ ] tamanho de texto
+    - [ ] orientação do título
+    - [ ] vírgula
+    - [ ] exportar png
+    - [ ] exportar svg
+    - [ ] exportar pdf
+  - [ ] RSTUDIO
+    - [ ] quantil
+    - [ ] média
+    - [ ] desvio padrão
+    - [ ] tamanho de texto
+    - [ ] orientação do título
+    - [ ] vírgula
+  - [ ] SHINY
+    - [ ] quantil
+    - [ ] média
+    - [ ] desvio padrão
+    - [ ] tamanho de texto
+    - [ ] orientação do título
+    - [ ] vírgula
+    - [ ] exportar png
+    - [ ] exportar svg
+    - [ ] exportar pdf
+    
+- lower.tail = FALSE
+  - [ ] TCLTK
+    - [ ] quantil
+    - [ ] média
+    - [ ] desvio padrão
+    - [ ] tamanho de texto
+    - [ ] orientação do título
+    - [ ] vírgula
+    - [ ] exportar png
+    - [ ] exportar svg
+    - [ ] exportar pdf
+  - [ ] RSTUDIO
+    - [ ] quantil
+    - [ ] média
+    - [ ] desvio padrão
+    - [ ] tamanho de texto
+    - [ ] orientação do título
+    - [ ] vírgula
+  - [ ] SHINY
+    - [ ] quantil
+    - [ ] média
+    - [ ] desvio padrão
+    - [ ] tamanho de texto
+    - [ ] orientação do título
+    - [ ] vírgula
+    - [ ] exportar png
+    - [ ] exportar svg
+    - [ ] exportar pdf
+
+- lower.tail = NULL
+  - [ ] TCLTK
+    - [ ] quantil
+    - [ ] média
+    - [ ] desvio padrão
+    - [ ] tamanho de texto
+    - [ ] orientação do título
+    - [ ] vírgula
+    - [ ] exportar png
+    - [ ] exportar svg
+    - [ ] exportar pdf
+  - [ ] RSTUDIO
+    - [ ] quantil
+    - [ ] média
+    - [ ] desvio padrão
+    - [ ] tamanho de texto
+    - [ ] orientação do título
+    - [ ] vírgula
+  - [ ] SHINY
+    - [ ] quantil
+    - [ ] média
+    - [ ] desvio padrão
+    - [ ] tamanho de texto
+    - [ ] orientação do título
+    - [ ] vírgula
+    - [ ] exportar png
+    - [ ] exportar svg
+    - [ ] exportar pdf
+
 ### Funções comentadas
 
 - [ ] lower.tail = NULL

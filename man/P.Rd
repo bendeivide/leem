@@ -13,7 +13,7 @@ P(
   gui = c("none", "plot", "tcltk", "rstudio", "shiny"),
   main = NULL,
   browser.shiny = getOption("shiny.launch.browser", interactive()),
-  plot.type = c("pdf", "cdf", "pmf"),
+  plot.type = c("pdf", "pmf", "cdf", "sf"),
   dec = c(".", ","),
   long.segment = FALSE,
   col = "#8EC5E5",

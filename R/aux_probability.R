@@ -4662,7 +4662,7 @@ plotpnormallttrstudio <- function(q, mu, sigma, rounding,
   )
 }
 
-# TCLTK: Low-level function to plot the Normal distribution highlighting f_X(X = q)
+# TCLTK: Low-level function to plot the Normal distribution highlighting P(X <= q)
 plotpnormalltttcltk <- function(q, mu, sigma, rounding,
                                 minimo, maximo, dec,
                                 long.segment, col,
@@ -4715,7 +4715,7 @@ plotpnormalltttcltk <- function(q, mu, sigma, rounding,
                        vert.orien.main)
 }
 
-# SHINY: Low-level function to plot the Normal distribution highlighting f_X(X = q)
+# SHINY: Low-level function to plot the Normal distribution highlighting P(X <= q)
 plotpnormallttshiny <- function(q, mu, sigma, rounding, porcentage,
                                 minimo, maximo, dec,
                                 long.segment, col,
@@ -6099,6 +6099,26 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     sigma_text <- sigma
   }
 
+  # Create default title if none is provided
+  if (is.null(main)) {
+
+    # Localized title text
+    titulo <- gettext("Normal Distribution", domain = "R-leem")
+
+    # Vertical orientation of the mathematical title
+    if (vert.orien.main) {
+      main = substitute(atop(bold(titulo),
+                             f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
+                        list(t = qq_text, titulo = titulo))
+    } else {
+
+      # Horizontal orientation of the mathematical title
+      main <- substitute(
+        bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity), list(t = qq_text, x = "x", titulo = titulo)
+      )
+    }
+
+  }
   if (is.null(main)) {
     titulo <- gettext("Normal Distribution", domain = "R-leem")
     main = substitute(atop(bold(titulo),
@@ -6109,7 +6129,7 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
         ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
         panel.first = grid(col = "gray90"),
         main = main, xaxt = "n", yaxt = "n",
-        cex = 0.8)
+        cex.main = cex.main)
   polygon(c(x, rev(x)),
           c(fx, rep(0, length(fx))),
           col="gray90")
@@ -6133,6 +6153,7 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     axis(
       side = 2,
       at = w,
+      cex.axis = cex.axis,
       labels = format(
         w,
         decimal.mark = ",",
@@ -6146,18 +6167,19 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     # Y-axis
     axis(
       side = 2,
-      at = w
+      at = w,
+      cex.axis = cex.axis,
     )
   }
 
   # Insert red q point
   #X-axis
-  mtext(qq_text, side = 1, at = qqaux, line = 2, col = col2, font = 2)
+  mtext(qq_text, side = 1, at = qqaux, line = 2, col = col2, font = 2, cex = text.size)
   axis(side=1, at=as.character(qqaux), tick = TRUE, lwd = 1,
        col=col2, font = 2, lwd.ticks = 1, labels = FALSE)
 
   # Y-axis
-  mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2)
+  mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2, cex = text.size)
   axis(side=2, at=pdf, labels=FALSE,
        col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
 
@@ -6177,15 +6199,326 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
 
   # Legends
-  legaux <- legend("topleft", bty="n", fill=col,cex=0.8,
+  legaux <- legend("topleft", bty="n", fill = col, cex=text.size,
                    legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
                                        list(q = qq_text, Pr = Pr_text)))
   parametro <- gettext("Parameters:", domain = "R-leem")
-  legend(minimo, legaux$text$y, bty="n", bg = "white",cex=0.8,
+  legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
          legend = substitute(parametro~mu ==  mean ~ "," ~ sigma == varen,
-                             list(mean = mu, varen = sigma,
+                             list(mean = mu_text, varen = sigma_text,
                                   parametro = parametro)))
 }
+
+# RSTUDIO: Low-level function to plot the Normal distribution highlighting P(X > q)
+plotpnormalltfrstudio <- function(q, mu, sigma, rounding,
+                                  minimo, maximo, dec,
+                                  long.segment, col,
+                                  col2, lty, main,
+                                  text.size, cex.main,
+                                  cex.axis, cex.lab,
+                                  vert.orien.main) {
+
+  # Create an interactive Normal distribution plot using the
+  # 'manipulate' package available in RStudio.
+  #
+  # The interface allows the user to dynamically modify
+  # distribution parameters and graphical settings through
+  # sliders and checkboxes.
+  manipulate::manipulate(
+
+    # Main plotting function responsible for drawing the
+    # Normal distribution graph.
+
+    # Arguments:
+    # q                  -> Quantile or x-value to be highlighted.
+    # mu                 -> Mean of the Normal distribution.
+    # sigma              -> Standard deviation of the Normal distribution.
+    # rounding           -> Number of decimal places used in labels/results.
+    # minimo             -> Minimum x-axis value for plotting.
+    # maximo             -> Maximum x-axis value for plotting.
+    # dec                -> Decimal separator style.
+    # long.segment       -> Logical value controlling segment extension.
+    # col                -> Main fill or polygon color.
+    # col2               -> Secondary color used in plot elements.
+    # lty                -> Line type specification.
+    # main               -> Main title of the plot.
+    # text.size          -> Size of additional text annotations.
+    # cex.main           -> Expansion factor for the main title.
+    # cex.axis           -> Expansion factor for axis labels.
+    # cex.lab            -> Expansion factor for axis titles.
+    # vert.orien.main    -> Logical value controlling vertical title orientation.
+
+    #./aux_probability.R
+    plotpnormalltfplot(
+      q, mu, sigma, rounding,
+
+      # Define the decimal separator according to the
+      # checkbox state selected by the user.
+      dec = if (isTRUE(decimals)) "," else ".",
+
+      long.segment, col,
+      col2, lty, main,
+
+      # Text size used in annotations and graphical elements.
+      text.size,
+
+      # Main title size follows the same value chosen
+      # for the general text size.
+      cex.main = text.size,
+
+      cex.axis, cex.lab,
+      vert.orien.main
+    ),
+
+    #################################################
+    # Interactive controls
+    #################################################
+
+    # Slider used to control the x-value (quantile)
+    # highlighted in the Normal distribution plot.
+    q = manipulate::slider(
+      minimo, maximo, q,
+      step = 0.01,
+      label = gettext(
+        "Quantile",
+        domain = "R-leem"
+      )
+    ),
+
+    # Slider controlling the mean of the
+    # Normal distribution.
+    mu = manipulate::slider(
+      minimo, maximo, mu,
+      step = 0.01,
+      label = gettext(
+        "Mean",
+        domain = "R-leem"
+      )
+    ),
+
+    # Slider controlling the standard deviation.
+    #
+    # The upper limit is defined as 1.8 times the
+    # initial standard deviation value.
+    sigma = manipulate::slider(
+      sigma, sigma * 1.8, sigma,
+      step = 0.01,
+      label = gettext(
+        "Standard Deviation",
+        domain = "R-leem"
+      )
+    ),
+
+    # Slider controlling the size of texts displayed
+    # in the graph, including labels and annotations.
+    text.size = manipulate::slider(
+      0.8, 3, text.size,
+      step = 0.01,
+      label = gettext(
+        "Text Size",
+        domain = "R-leem"
+      )
+    ),
+
+    # Checkbox that enables or disables vertical
+    # orientation for the main plot title.
+    vert.orien.main = checkbox(
+      vert.orien.main,
+      gettext(
+        "Vertical Title Orientation",
+        domain = "R-leem"
+      )
+    ),
+
+    # Checkbox controlling whether the highlighted
+    # segment should be extended.
+    long.segment = checkbox(
+      long.segment,
+      gettext(
+        "Long segment",
+        domain = "R-leem"
+      )
+    ),
+
+    # Checkbox used to select the decimal separator.
+    #
+    # TRUE  -> comma (,)
+    # FALSE -> period (.)
+    decimals = checkbox(
+      if (dec == ",") TRUE else FALSE,
+      gettext(
+        "Comma",
+        domain = "R-leem"
+      )
+    )
+  )
+}
+
+# TCLTK: Low-level function to plot the Normal distribution highlighting P(X > q)
+plotpnormalltftcltk <- function(q, mu, sigma, rounding,
+                                minimo, maximo, dec,
+                                long.segment, col,
+                                col2, lty, main,
+                                text.size, cex.main,
+                                cex.axis, cex.lab,
+                                vert.orien.main) {
+
+  # Temporarily suppress warning messages during the execution
+  # of the graphical interface function. This avoids displaying
+  # unnecessary warnings to the user while the plot is being generated.
+  #
+  # The current warning option is stored in 'war' so it can be
+  # restored later when the function finishes.
+  war <- options(warn = -1)
+
+  # Ensure that the original warning configuration is restored
+  # after the function execution, even if an error occurs.
+  on.exit(options(war))
+
+  # Call the low-level plotting function responsible for generating
+  # the Normal distribution graphical interface using Tcl/Tk.
+  #
+  # Arguments:
+  # q                  -> Quantile or x-value to be highlighted.
+  # mu                 -> Mean of the Normal distribution.
+  # sigma              -> Standard deviation of the Normal distribution.
+  # rounding           -> Number of decimal places used in labels/results.
+  # minimo             -> Minimum x-axis value for plotting.
+  # maximo             -> Maximum x-axis value for plotting.
+  # dec                -> Decimal separator style.
+  # long.segment       -> Logical value controlling segment extension.
+  # col                -> Main fill or polygon color.
+  # col2               -> Secondary color used in plot elements.
+  # lty                -> Line type specification.
+  # main               -> Main title of the plot.
+  # text.size          -> Size of additional text annotations.
+  # cex.main           -> Expansion factor for the main title.
+  # cex.axis           -> Expansion factor for axis labels.
+  # cex.lab            -> Expansion factor for axis titles.
+  # vert.orien.main    -> Logical value controlling vertical title orientation.
+
+  #./tkplotleem.R
+  .tkplotleemltfnormal(q, mu, sigma, rounding,
+                       minimo, maximo, dec,
+                       long.segment, col,
+                       col2, lty, main,
+                       text.size, cex.main,
+                       cex.axis, cex.lab,
+                       vert.orien.main)
+}
+
+# SHINY: Low-level function to plot the Normal distribution highlighting P(X > q)
+plotpnormalltfshiny <- function(q, mu, sigma, rounding, porcentage,
+                                minimo, maximo, dec,
+                                long.segment, col,
+                                col2, lty, main,
+                                browser.shiny = getOption("shiny.launch.browser", interactive()),
+                                text.size, cex.main,
+                                cex.axis, cex.lab,
+                                vert.orien.main) {
+
+  # Arguments:
+  ############
+  # q                  -> Quantile or x-value to be highlighted.
+  # mu                 -> Mean of the Normal distribution.
+  # sigma              -> Standard deviation of the Normal distribution.
+  # rounding           -> Number of decimal places used in labels/results.
+  # porcentage         -> Convert the probability to percentage format.
+  # minimo             -> Minimum x-axis value for plotting.
+  # maximo             -> Maximum x-axis value for plotting.
+  # dec                -> Decimal separator style.
+  # long.segment       -> Logical value controlling segment extension.
+  # col                -> Main fill or polygon color.
+  # col2               -> Secondary color used in plot elements.
+  # lty                -> Line type specification.
+  # main               -> Main title of the plot.
+  # browser.shiny      -> Indicates whether the Shiny app should be launched in the browser.
+  # text.size          -> Size of additional text annotations.
+  # cex.main           -> Expansion factor for the main title.
+  # cex.axis           -> Expansion factor for axis labels.
+  # cex.lab            -> Expansion factor for axis titles.
+  # vert.orien.main    -> Logical value controlling vertical title orientation.
+
+  #################################################
+  # Probability calculation
+  #################################################
+
+  # Compute the cumulative probability associated
+  # with the Normal distribution.
+  #
+  # The function pnorm() returns:
+  # P(X <= q)
+  #
+  # where:
+  # q     -> quantile or cutoff value
+  # mu    -> mean of the Normal distribution
+  # sigma -> standard deviation
+  prob <- pnorm(
+    q = q,
+    mean = mu,
+    sd = sigma
+  )
+
+  # Convert the probability to percentage format
+  # if the user requested percentage output.
+  #
+  # Example:
+  # 0.95 -> 95
+  # if (porcentage == TRUE) {
+  #   probability <- probability * 100
+  # }
+
+  #################################################
+  # Create output object
+  #################################################
+
+  # Store all results in a list object.
+  #
+  # Elements:
+  #
+  # probability   -> Calculated cumulative probability.
+  #
+  # process_shiny -> Object generated by the internal
+  #                  Shiny plotting function responsible
+  #                  for building the interactive plot.
+  #
+  # browser.shiny -> Indicates whether the Shiny app
+  #                  should be launched in the browser.
+  listres <- list(
+    probability = prob,
+    #./shinyplotleem.R
+    process_shiny = .shinyplotleemltfnormal(
+      q, mu, sigma, rounding,
+      minimo, maximo, dec,
+      long.segment, col,
+      col2, lty, main,
+      text.size, cex.main,
+      cex.axis, cex.lab,
+      vert.orien.main
+    ),
+
+    browser.shiny = browser.shiny
+  )
+
+  #################################################
+  # Object metadata
+  #################################################
+
+  # Add an attribute identifying the type of output
+  # produced by this function.
+  attr(listres, "output") <- "pshiny"
+
+  # Assign the S3 class used internally by the package.
+  class(listres) <- "leem"
+
+  #################################################
+  # Return final object
+  #################################################
+
+  return(listres)
+}
+
+
 
 # Student's t distribution
 ## Plot

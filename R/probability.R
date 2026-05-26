@@ -123,7 +123,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
               rounding = 5, porcentage = FALSE,
               gui = c("none", "plot", "tcltk", "rstudio", "shiny"), main = NULL,
               browser.shiny = getOption("shiny.launch.browser", interactive()),
-              plot.type = c("pdf", "cdf", "pmf"),
+              plot.type = c("pdf", "pmf", "cdf", "sf"),
               dec = c(".", ","), long.segment = FALSE, col = "#8EC5E5",
               col2 = "#38A8E8", lty = 2,
               text.size = par("cex"), cex.main = par("cex.main"),
@@ -149,6 +149,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
   # - pdf -> probability density function
   # - cdf -> cumulative distribution function
   # - pmf -> probability mass function
+  # - sf  -> survival function
   plot.type <- match.arg(plot.type)
 
   # Validate the decimal separator used in
@@ -2383,32 +2384,107 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         mu <- argaddit$mean
         sigma <- argaddit$sd
         if (gui == "plot") {
-          plotpnormalltfplot(q, mu, sigma, rounding, dec,
-                             long.segment, col,
-                             col2, lty, main)
+          #################################################
+          # Base R plotting interface
+          #################################################
+
+          # Call the internal plotting function
+          # responsible for generating the static
+          # visualization of the Normal density curve
+          # using base R graphics.
+          #
+          # This interface produces a traditional plot
+          # highlighting the density curve associated
+          # with the Normal distribution.
+          #
+          # ./aux_probability.R
+          plotpnormalltfplot(q, mu, sigma, rounding,
+                             dec, long.segment, col,
+                             col2, lty, main,
+                             text.size, cex.main,
+                             cex.axis, cex.lab,
+                             vert.orien.main)
+
         }
+
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpnormalltfplot(q, mean, sd, rounding, dec,
-                                                    long.segment, col,
-                                                    col2, lty, main),
-                                 q = manipulate::slider(minimo, maximo, q, step = 0.1),
-                                 mean = manipulate::slider(minimo, maximo, mu, step = 0.1),
-                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+          #################################################
+          # RStudio graphical interface
+          #################################################
+
+          # Call the internal plotting function
+          # responsible for generating the interactive
+          # Normal distribution visualization in the
+          # RStudio environment.
+          #
+          # This interface was designed to provide an
+          # interactive graphical experience directly
+          # within RStudio.
+          #
+          # ./aux_probability.R
+          plotpnormalltfrstudio(
+            q, mu, sigma, rounding,
+            minimo, maximo, dec,
+            long.segment, col,
+            col2, lty, main,
+            text.size, cex.main,
+            cex.axis, cex.lab,
+            vert.orien.main
+          )
 
         }
 
         if (gui == "tcltk") {
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          war <- options(warn = - 1)
-          #on.exit(options(war))
+          #################################################
+          # Tcl/Tk graphical interface
+          #################################################
 
-          .tkplotleemnormal2(q, mu, sigma, rounding, main, minimo, maximo)
+          # Call the internal Tcl/Tk plotting function
+          # responsible for generating the interactive
+          # Normal distribution visualization.
+          #
+          # This graphical interface allows the user to
+          # explore the Normal density curve interactively
+          # using Tcl/Tk components.
+          #
+          # ./aux_probability.R
+          plotpnormalltftcltk(
+            q, mu, sigma, rounding,
+            minimo, maximo, dec,
+            long.segment, col,
+            col2, lty, main,
+            text.size, cex.main,
+            cex.axis, cex.lab,
+            vert.orien.main
+          )
+        }
 
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          #war <- options(warn = - 1)
-          on.exit(options(war))
+        if (gui == "shiny") {
+          #################################################
+          # Shiny graphical interface
+          #################################################
+
+          # Call the internal Shiny plotting function
+          # responsible for generating the interactive
+          # Normal distribution visualization.
+          #
+          # The returned object contains all information
+          # required for the S3 method print.leem() to
+          # launch the Shiny application automatically.
+          #
+          # ./aux_probability.R
+          return(
+            plotpnormalltfshiny(
+              q, mu, sigma, rounding, porcentage,
+              minimo, maximo, dec,
+              long.segment, col,
+              col2, lty, main,
+              browser.shiny,
+              text.size, cex.main,
+              cex.axis, cex.lab,
+              vert.orien.main
+            )
+          )
         }
         # Compute the desired probability
         prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
