@@ -86,16 +86,16 @@ P()
         -   [x] exportar svg
         -   [x] exportar pdf
 -   lower.tail = FALSE
-    -   [ ] TCLTK
-        -   [ ] quantil
-        -   [ ] média
-        -   [ ] desvio padrão
-        -   [ ] tamanho de texto
-        -   [ ] orientação do título
-        -   [ ] vírgula
-        -   [ ] exportar png
-        -   [ ] exportar svg
-        -   [ ] exportar pdf
+    -   [x] TCLTK
+        -   [x] quantil
+        -   [x] média
+        -   [x] desvio padrão
+        -   [x] tamanho de texto
+        -   [x] orientação do título
+        -   [x] vírgula
+        -   [x] exportar png
+        -   [x] exportar svg
+        -   [x] exportar pdf
     -   [x] RSTUDIO
         -   [x] quantil
         -   [x] média
