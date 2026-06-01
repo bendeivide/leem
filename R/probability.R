@@ -237,6 +237,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         
         #Region A Call
         prob <- normal_distrubution(q,
+          region = "Region A",
           argaddit,
           rounding,
           main,
@@ -257,12 +258,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
     }
 
-    # Region B
+    # Region B Call
     if (any(attr(q, "region") == regionb)) {
       if (dist == "normal") {
         
         # Region B Call
         prob <- normal_distrubution(q,
+          region = "Region B",
           argaddit,
           rounding,
           main,
@@ -368,7 +370,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
 
 
-normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, dec, col, col2, long.segment, lty,text.size, cex.main,
+normal_distrubution <- function(q, region, argaddit, rounding, main, gui, lower.tail, dec, col, col2, long.segment, lty,text.size, cex.main,
               cex.axis, cex.lab, vert.orien.main) {
 
   #################################################
@@ -584,36 +586,6 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
     return(prob)
   }
 
-  # If is region B
-  if (any(attr(q, "region") == regionb)){
-    # Auxiliar variables
-    minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-    maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
-    mu <- argaddit$mean
-    sigma <- argaddit$sd
-
-    if (gui == "plot") {
-        plotpnormalbrplot(q, mu, sigma, rounding, main)
-      }
-      if (gui == "rstudio") {
-        manipulate::manipulate(plotpnormalbrrstudio(q1, q2, mean, sd, rounding, main, q),
-                               q1 = manipulate::slider(minimo, q[2], q[1]),
-                               q2 = manipulate::slider(q[1], maximo, q[2]),
-                               mean = manipulate::slider(mu, mu + 2 * sigma, mu),
-                               sd = manipulate::slider(sigma, sigma * 1.8, sigma))
-      }
-      if (gui == "tcltk") {
-        # Desabilitar warnings global
-        #options(warn = - 1)
-        war <- options(warn = - 1)
-
-        .tkplotleemnormal4(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
-
-        # Desabilitar warnings global
-        on.exit(options(war))
-      }
-    }
-
   # If the lower.tail argument is set to "NULL"
   if(is.null(lower.tail)) {
     #################################################
@@ -788,39 +760,73 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
   }
 
 
+
   #########################################
   # Starting call the gui
   # where Lower tail is none and q > 1
   #########################################
   
-  if (gui == "plot") {
-    plotpnormalarplot(q, mu, sigma, rounding, main)
+  # Region A
+  if (region == "Region A") {
+    if (gui == "plot") {
+      plotpnormalarplot(q, mu, sigma, rounding, main)
+    }
+
+    if (gui == "rstudio") {
+      manipulate::manipulate(plotpnormalarrstudio(q1, q2, mean, sd, rounding, main, q),
+                             q1 = manipulate::slider(minimo, q[2], q[1]),
+                             q2 = manipulate::slider(q[1], maximo, q[2]),
+                             mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+                             sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+    }
+
+    if (gui == "tcltk") {
+      # Desabilitar warnings global
+      # options(warn = - 1)
+      war <- options(warn = - 1)
+
+     .tkplotleemnormal3(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
+
+      # Desabilitar warnings global
+      #options(warn = - 1)
+      #war <- options(warn = - 1)
+      on.exit(options(war))
+    }
+
+    # Calculates the desired probability
+    prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
+      pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
+
+    return(prob)
   }
 
-  if (gui == "rstudio") {
-    manipulate::manipulate(plotpnormalarrstudio(q1, q2, mean, sd, rounding, main, q),
-                           q1 = manipulate::slider(minimo, q[2], q[1]),
-                           q2 = manipulate::slider(q[1], maximo, q[2]),
-                           mean = manipulate::slider(mu, mu + 2 * sigma, mu),
-                           sd = manipulate::slider(sigma, sigma * 1.8, sigma))
-  }
+  # If is region B
+  if (region == "Region B"){
+    # Auxiliar variables
+    minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+    maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+    mu <- argaddit$mean
+    sigma <- argaddit$sd
 
-  if (gui == "tcltk") {
-    # Desabilitar warnings global
-    # options(warn = - 1)
-    war <- options(warn = - 1)
+    if (gui == "plot") {
+        plotpnormalbrplot(q, mu, sigma, rounding, main)
+      }
+      if (gui == "rstudio") {
+        manipulate::manipulate(plotpnormalbrrstudio(q1, q2, mean, sd, rounding, main, q),
+                               q1 = manipulate::slider(minimo, q[2], q[1]),
+                               q2 = manipulate::slider(q[1], maximo, q[2]),
+                               mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+                               sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+      }
+      if (gui == "tcltk") {
+        # Desabilitar warnings global
+        #options(warn = - 1)
+        war <- options(warn = - 1)
 
-   .tkplotleemnormal3(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
+        .tkplotleemnormal4(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
 
-    # Desabilitar warnings global
-    #options(warn = - 1)
-    #war <- options(warn = - 1)
-    on.exit(options(war))
-  }
-  
-  # Calculates the desired probability
-  prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
-    pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
-
-  return(prob)
+        # Desabilitar warnings global
+        on.exit(options(war))
+      }
+    }
 }

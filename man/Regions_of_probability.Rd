@@ -4,53 +4,53 @@
 \alias{Regions_of_probability}
 \alias{\%>x>\%}
 \alias{\%>X>\%}
-\alias{\%<X<\%}
 \alias{\%<x<\%}
-\alias{\%>=X>=\%}
+\alias{\%<X<\%}
 \alias{\%>=x>=\%}
-\alias{\%<=X<=\%}
+\alias{\%>=X>=\%}
 \alias{\%<=x<=\%}
-\alias{\%>=X>\%}
+\alias{\%<=X<=\%}
 \alias{\%>=x>\%}
-\alias{\%>X>=\%}
+\alias{\%>=X>\%}
 \alias{\%>x>=\%}
-\alias{\%<=X<\%}
+\alias{\%>X>=\%}
 \alias{\%<=x<\%}
-\alias{\%<X<=\%}
+\alias{\%<=X<\%}
 \alias{\%<x<=\%}
+\alias{\%<X<=\%}
 \title{Regions of probability}
 \usage{
 a \%>x>\% b
 
 a \%>X>\% b
 
-a \%<X<\% b
-
 a \%<x<\% b
 
-a \%>=X>=\% b
+a \%<X<\% b
 
 a \%>=x>=\% b
 
-a \%<=X<=\% b
+a \%>=X>=\% b
 
 a \%<=x<=\% b
 
-a \%>=X>\% b
+a \%<=X<=\% b
 
 a \%>=x>\% b
 
-a \%>X>=\% b
+a \%>=X>\% b
 
 a \%>x>=\% b
 
-a \%<=X<\% b
+a \%>X>=\% b
 
 a \%<=x<\% b
 
-a \%<X<=\% b
+a \%<=X<\% b
 
 a \%<x<=\% b
+
+a \%<X<=\% b
 }
 \arguments{
 \item{a}{scalar. when referring to a discrete random variable, use the syntax "\code{L}" after the number.}
