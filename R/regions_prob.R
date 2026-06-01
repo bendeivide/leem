@@ -48,15 +48,7 @@
 #' @name Regions_of_probability
 #' @return A vector of lenght 2.
 `%>x>%` <- function(a, b) {
-  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
-  x <- c(a, b)
-  x <- structure(x, class = "leem", region = "region1", output = "rprob")
-  if (is.double(x)) return(x)
-  if (is.integer(x)) {
-    x <- c(x[1] - 1, x[2] + 1)
-    x <- structure(x, class = "leem", region = "region1", output = "rprob")
-    return(x)
-  }
+    return(a %>X>% b)
 }
 
 #' @rdname Regions_of_probability

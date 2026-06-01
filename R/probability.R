@@ -235,6 +235,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       # Verifying if the distrubution is a Normal shape 
       if (dist == "normal") {
         
+        #Region A Call
         prob <- normal_distrubution(q,
           argaddit,
           rounding,
@@ -260,26 +261,29 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
     if (any(attr(q, "region") == regionb)) {
       if (dist == "normal") {
         
-        if (gui == "plot") {
-          plotpnormalbrplot(q, mu, sigma, rounding, main)
-        }
-        if (gui == "rstudio") {
-          manipulate::manipulate(plotpnormalbrrstudio(q1, q2, mean, sd, rounding, main, q),
-                                 q1 = manipulate::slider(minimo, q[2], q[1]),
-                                 q2 = manipulate::slider(q[1], maximo, q[2]),
-                                 mean = manipulate::slider(mu, mu + 2 * sigma, mu),
-                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma))
-        }
-        if (gui == "tcltk") {
-          # Desabilitar warnings global
-          #options(warn = - 1)
-          war <- options(warn = - 1)
+        # Region B Call
+        prob <- normal_distrubution(q,
+          argaddit,
+          rounding,
+          main,
+          gui,
+          lower.tail,
+          dec,
+          col,
+          col2,
+          long.segment,
+          lty,
+          text.size,
+          cex.main,
+          cex.axis,
+          cex.lab,
+          vert.orien.main
+        )
 
-          .tkplotleemnormal4(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
 
-          # Desabilitar warnings global
-          on.exit(options(war))
-        }
+
+
+        
         # Compute the desired probability
         prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
       }
@@ -579,6 +583,36 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
 
     return(prob)
   }
+
+  # If is region B
+  if (any(attr(q, "region") == regionb)){
+    # Auxiliar variables
+    minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+    maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+    mu <- argaddit$mean
+    sigma <- argaddit$sd
+
+    if (gui == "plot") {
+        plotpnormalbrplot(q, mu, sigma, rounding, main)
+      }
+      if (gui == "rstudio") {
+        manipulate::manipulate(plotpnormalbrrstudio(q1, q2, mean, sd, rounding, main, q),
+                               q1 = manipulate::slider(minimo, q[2], q[1]),
+                               q2 = manipulate::slider(q[1], maximo, q[2]),
+                               mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+                               sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+      }
+      if (gui == "tcltk") {
+        # Desabilitar warnings global
+        #options(warn = - 1)
+        war <- options(warn = - 1)
+
+        .tkplotleemnormal4(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
+
+        # Desabilitar warnings global
+        on.exit(options(war))
+      }
+    }
 
   # If the lower.tail argument is set to "NULL"
   if(is.null(lower.tail)) {
