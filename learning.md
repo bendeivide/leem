@@ -103,7 +103,7 @@ P()
         -   [x] tamanho de texto
         -   [x] orientação do título
         -   [x] vírgula
-    -   [ ] SHINY
+    -   [x] SHINY
         -   [x] quantil
         -   [x] média
         -   [x] desvio padrão
@@ -113,19 +113,19 @@ P()
         -   [x] exportar png
         -   [x] exportar svg
         -   [x] exportar pdf
-            -   [ ] Eixo x não aparece
+            -   [x] Eixo x não aparece
 -   lower.tail = NULL
     -   [ ] TCLTK
-        -   [ ] quantil
-        -   [ ] média
-        -   [ ] desvio padrão
-        -   [ ] tamanho de texto
-        -   [ ] orientação do título
-        -   [ ] vírgula
+        -   [x] quantil
+        -   [x] média
+        -   [x] desvio padrão
+        -   [x] tamanho de texto
+        -   [x] orientação do título
+        -   [x] vírgula
         -   [ ] exportar png
         -   [ ] exportar svg
         -   [ ] exportar pdf
-            -   [ ] Gráfico não é gerado
+            -   [x] Gráfico não é gerado
     -   [x] RSTUDIO
         -   [x] quantil
         -   [x] média
