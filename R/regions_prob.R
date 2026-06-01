@@ -48,7 +48,8 @@
 #' @name Regions_of_probability
 #' @return A vector of lenght 2.
 `%>x>%` <- function(a, b) {
-    return(a %>X>% b)
+  
+  return(a %>X>% b)
 }
 
 #' @rdname Regions_of_probability
@@ -67,6 +68,13 @@
 
 #' @rdname Regions_of_probability
 #' @export
+`%<x<%` <- function(a, b) {
+  
+  return(a %<X<% b)
+}
+
+#' @rdname Regions_of_probability
+#' @export
 `%<X<%` <- function(a, b) {
   if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
@@ -81,18 +89,10 @@
 
 #' @rdname Regions_of_probability
 #' @export
-`%<x<%` <- function(a, b) {
-  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
-  x <- c(a, b)
-  x <- structure(x, class = "leem", region = "region2", output = "rprob")
-  if (is.double(x)) return(x)
-  if (is.integer(x)) {
-    x <- c(x[1] + 1, x[2] - 1)
-    x <- structure(x, class = "leem", region = "region2", output = "rprob")
-    return(x)
-  }
+`%>=x>=%` <- function(a, b) {
+  
+  return(a %>=X>=% b)
 }
-
 
 #' @rdname Regions_of_probability
 #' @export
@@ -105,11 +105,9 @@
 
 #' @rdname Regions_of_probability
 #' @export
-`%>=x>=%` <- function(a, b) {
-  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
-  x <- c(a, b)
-  x <- structure(x, class = "leem", region = "region3", output = "rprob")
-  return(x)
+`%<=x<=%` <- function(a, b) {
+  
+  return(a %<=X<=% b)
 }
 
 #' @rdname Regions_of_probability
@@ -123,11 +121,9 @@
 
 #' @rdname Regions_of_probability
 #' @export
-`%<=x<=%` <- function(a, b) {
-  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
-  x <- c(a, b)
-  x <- structure(x, class = "leem", region = "region4", output = "rprob")
-  return(x)
+`%>=x>%` <- function(a, b) {
+  
+  return(a %>=X>% b)
 }
 
 #' @rdname Regions_of_probability
@@ -146,16 +142,9 @@
 
 #' @rdname Regions_of_probability
 #' @export
-`%>=x>%` <- function(a, b) {
-  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
-  x <- c(a, b)
-  x <- structure(x, class = "leem", region = "region5", output = "rprob")
-  if (is.double(x)) return(x)
-  if (is.integer(x)) {
-    x <- c(x[1], x[2] + 1)
-    x <- structure(x, class = "leem", region = "region5", output = "rprob")
-    return(x)
-  }
+`%>x>=%` <- function(a, b) {
+  
+  return(a %>X>=% b)
 }
 
 #' @rdname Regions_of_probability
@@ -174,18 +163,10 @@
 
 #' @rdname Regions_of_probability
 #' @export
-`%>x>=%` <- function(a, b) {
-  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
-  x <- c(a, b)
-  x <- structure(x, class = "leem", region = "region6", output = "rprob")
-  if (is.double(x)) return(x)
-  if (is.integer(x)) {
-    x <- c(x[1] - 1, x[2])
-    x <- structure(x, class = "leem", region = "region6", output = "rprob")
-    return(x)
-  }
-}
+`%<=x<%` <- function(a, b) {
 
+  return(a %<=X<% b)
+}
 
 #' @rdname Regions_of_probability
 #' @export
@@ -203,35 +184,14 @@
 
 #' @rdname Regions_of_probability
 #' @export
-`%<=x<%` <- function(a, b) {
-  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
-  x <- c(a, b)
-  x <- structure(x, class = "leem", region = "region7", output = "rprob")
-  if (is.double(x)) return(x)
-  if (is.integer(x)) {
-    x <- c(x[1], x[2] - 1)
-    x <- structure(x, class = "leem", region = "region7", output = "rprob")
-    return(x)
-  }
+`%<x<=%` <- function(a, b) {
+  
+  return(a %<X<=% b)
 }
 
 #' @rdname Regions_of_probability
 #' @export
 `%<X<=%` <- function(a, b) {
-  if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
-  x <- c(a, b)
-  x <- structure(x, class = "leem", region = "region8", output = "rprob")
-  if (is.double(x)) return(x)
-  if (is.integer(x)) {
-    x <- c(x[1] + 1, x[2])
-    x <- structure(x, class = "leem", region = "region8", output = "rprob")
-    return(x)
-  }
-}
-
-#' @rdname Regions_of_probability
-#' @export
-`%<x<=%` <- function(a, b) {
   if (b <= a) stop("The 'b' argument must be greater than 'a' argument!", call. = FALSE, domain = "R-leem")
   x <- c(a, b)
   x <- structure(x, class = "leem", region = "region8", output = "rprob")
