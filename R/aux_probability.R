@@ -6137,6 +6137,17 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
           c(fy, rep(0, length(fy))),
           col=col)
 
+  # X-axis
+
+  # Generate pretty x-axis values
+  z <- pretty(minimo:maximo)
+
+  # Draw x-axis
+  axis(
+    side = 1,
+    at = z
+  )
+
   # Insert vertical line over the mean
   qq <- round(q, digits=2)
   qqaux <-round(q, digits=2)
