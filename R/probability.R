@@ -247,15 +247,53 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
     # Region A
     if (any(attr(q, "region") == regiona)) {
+      # If the dist argument is set to "normal"
       if (dist == "normal") {
+        #################################################
+        # Interactive input for distribution parameters
+        #################################################
+
+        # Check whether the user supplied the 'mean'
+        # argument inside the additional arguments list.
+        #
+        # If the argument is missing, request the value
+        # interactively through the console using
+        # readline().
+        #
+        # The entered value is converted to numeric
+        # format and stored back into 'argaddit' to
+        # preserve a consistent structure for subsequent
+        # computations inside the package workflow.
         if (!any(names(argaddit) == "mean")) {
           mean <- readline(gettext("Insert the value of 'mean' argument: ", domain = "R-leem"))
           argaddit$mean <- as.numeric(mean)
         }
+        # Check whether the user supplied the 'sd'
+        # (standard deviation) argument.
+        #
+        # If the argument is not available, request
+        # the value interactively from the user.
+        #
+        # The value is converted to numeric format
+        # before being stored in 'argaddit'.
         if (!any(names(argaddit) == "sd")) {
           sd <- readline(gettext("Insert the value of 'sd' argument: ", domain = "R-leem"))
           argaddit$sd <- as.numeric(sd)
         }
+        #################################################
+        # Validation of the standard deviation parameter
+        #################################################
+
+        # Ensure that the standard deviation parameter
+        # is strictly greater than zero.
+        #
+        # The Normal distribution requires a positive
+        # standard deviation. Therefore, keep requesting
+        # a new value until the user provides a valid
+        # numeric input.
+        #
+        # gettext() is used to support package
+        # internationalization and translation files.
         while (argaddit$sd <= 0) {
           arg1 <- gettext("Please, Insert the value of 'sd' greater then 0:", domain = "R-leem")
           sd <- readline(paste0(arg1, " "))
@@ -268,15 +306,52 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         minimo <- if (q[1] <= argaddit$mean - 3 * argaddit$sd) q[1] - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
         maximo <- if (q[2] > argaddit$mean + 3 * argaddit$sd) q[2] + 3 * argaddit$sd else argaddit$mean + 3 * argaddit$sd
 
+
         if (gui == "plot") {
-          plotpnormalarplot(q, mu, sigma, rounding, main)
+          #################################################
+          # Base R plotting interface
+          #################################################
+
+          # Call the internal plotting function
+          # responsible for generating the static
+          # visualization of the Normal density curve
+          # using base R graphics.
+          #
+          # This interface produces a traditional plot
+          # highlighting the density curve associated
+          # with the Normal distribution.
+          #
+          # ./aux_probability.R
+          plotpnormalraplot(q, mu, sigma, rounding,
+                             dec, long.segment, col,
+                             col2, lty, main,
+                             text.size, cex.main,
+                             cex.axis, cex.lab,
+                             vert.orien.main)
         }
+
         if (gui == "rstudio") {
-          manipulate::manipulate(plotpnormalarrstudio(q1, q2, mean, sd, rounding, main, q),
-                                 q1 = manipulate::slider(minimo, q[2], q[1]),
-                                 q2 = manipulate::slider(q[1], maximo, q[2]),
-                                 mean = manipulate::slider(mu, mu + 2 * sigma, mu),
-                                 sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+          #################################################
+          # RStudio graphical interface
+          #################################################
+
+          # Call the internal plotting function
+          # responsible for generating the interactive
+          # Normal distribution visualization in the
+          # RStudio environment.
+          #
+          # This interface was designed to provide an
+          # interactive graphical experience directly
+          # within RStudio.
+          #
+          # ./aux_probability.R
+          plotpnormalrarstudio(q[1], q[2], q, mu, sigma, rounding,
+                               minimo, maximo, dec,
+                               long.segment, col,
+                               col2, lty, main,
+                               text.size, cex.main,
+                               cex.axis, cex.lab,
+                               vert.orien.main)
         }
         if (gui == "tcltk") {
           # Desabilitar warnings global

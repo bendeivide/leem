@@ -158,6 +158,22 @@ P()
 
 ### Implementação/organização dos argumentos
 
+-  Region A
+  -  [ ] gui
+    -  [ ] "plot"
+      -   [x] title
+      -   [x] decimals
+      -   [x] long.segment
+      -   [x] A gui recebe o gráfico no estado determinado. Ex.:
+                Se foi plotado com segmentos longos, o gráfico aparece
+                como tal, e assim, com os demais
+    -  [ ] "rstudio"
+      -   [x] title
+      -   [x] decimals
+      -   [x] long.segment
+      -   [x] A gui recebe o gráfico no estado determinado. Ex.:
+                Se foi plotado com segmentos longos, o gráfico aparece
+                como tal, e assim, com os demais
 -   lower.tail = TRUE
     -   [X] gui
         -   [x] "plot"
