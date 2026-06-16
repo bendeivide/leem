@@ -682,40 +682,23 @@ plot(objeto, type = "hist", col = "lightblue", main = "Sample Histogram")
     return(msg_frame)
   }
 
-  # Funcao para executar codigo e mostrar saida (com deteccao por arquivo)
+  # Funcao para executar codigo e mostrar saida (com suporte a pipe)
   execute_and_show <- function(code) {
     idioma <- tclvalue(idioma_var)
 
     # Armazenar todas as saidas
     all_output <- character(0)
 
-    # Criar arquivo temporario para possivel grafico
-    temp_plot <- tempfile(fileext = ".png")
-    plot_gerado <- FALSE
-
-    # Abrir dispositivo PNG
-    png(temp_plot, width = 550, height = 450, res = 72, bg = "white")
-
-    # Garantir que o dispositivo seja fechado ao sair da funcao
-    on.exit({
-      # Fechar dispositivo se ainda estiver aberto
-      if (dev.cur() != 1) {
-        dev.off()
-      }
-    }, add = TRUE)
-
     # Parsear o codigo em expressoes completas
+    # O parse ja lida com expressoes de multiplas linhas automaticamente
     expressoes <- tryCatch({
       parse(text = code, keep.source = FALSE)
     }, error = function(e) {
-      # Fechar dispositivo antes de mostrar erro
-      if (dev.cur() != 1) dev.off()
       add_message(paste("Erro de sintaxe:", e$message), is_user = FALSE)
       return(NULL)
     })
 
     if (is.null(expressoes) || length(expressoes) == 0) {
-      if (dev.cur() != 1) dev.off()
       add_message("Nenhuma expressao valida para executar", is_user = FALSE)
       return()
     }
@@ -724,10 +707,12 @@ plot(objeto, type = "hist", col = "lightblue", main = "Sample Histogram")
     for (i in seq_along(expressoes)) {
       expr <- expressoes[i]
 
+      # Verificar se eh uma expressao de atribuicao
       expr_str <- paste(deparse(expr), collapse = " ")
       eh_atribuicao <- grepl("<-", expr_str, fixed = TRUE) ||
         grepl("=", expr_str, fixed = TRUE) && !grepl("==", expr_str, fixed = TRUE)
 
+      # Verificar se tem output explicito
       tem_output_explicito <- grepl("print\\(", expr_str) ||
         grepl("cat\\(", expr_str) ||
         grepl("message\\(", expr_str) ||
@@ -742,6 +727,7 @@ plot(objeto, type = "hist", col = "lightblue", main = "Sample Histogram")
           NULL
         })
 
+        # Mostrar resultado se nao for atribuicao e nao tiver output explicito
         if (!eh_atribuicao && !tem_output_explicito) {
           if (!is.null(result)) {
             print(result)
@@ -749,28 +735,15 @@ plot(objeto, type = "hist", col = "lightblue", main = "Sample Histogram")
         }
       })
 
+      # Adicionar saida capturada
       if (length(output_lines) > 0) {
         all_output <- c(all_output, output_lines)
       }
     }
 
-    # FECHAR O DISPOSITIVO APENAS UMA VEZ, DEPOIS DE TODAS AS EXPRESSOES
-    if (dev.cur() != 1) {
-      dev.off()
-    }
-
-    # Verificar se um grafico foi gerado (arquivo > 1KB)
-    if (file.exists(temp_plot) && file.size(temp_plot) > 1024) {
-      plot_gerado <- TRUE
-      # Adicionar grafico na conversa
-      add_plot_to_conversation_file(temp_plot)
-    } else {
-      # Remover arquivo se nao ha grafico
-      if (file.exists(temp_plot)) unlink(temp_plot)
-    }
-
     # Formatar saida final
     if (length(all_output) > 0) {
+      # Remover linhas vazias
       all_output <- all_output[all_output != ""]
       if (length(all_output) > 0) {
         output_text <- paste(all_output, collapse = "\n")
@@ -781,72 +754,14 @@ plot(objeto, type = "hist", col = "lightblue", main = "Sample Histogram")
       output_text <- "Codigo executado com sucesso (sem saida)"
     }
 
-    # So adicionar mensagem de saida se nao for apenas um grafico sem texto
-    if (!plot_gerado || (plot_gerado && output_text != "Codigo executado com sucesso (sem saida)")) {
-      output_msg <- paste("--- Saida ---\n", output_text, sep = "")
-      add_message(output_msg, is_user = FALSE)
-    }
+    # Adiciona saida como mensagem do assistente
+    output_msg <- paste("--- Saida ---\n", output_text, sep = "")
+    add_message(output_msg, is_user = FALSE)
 
     tcl("after", 50, function() {
       configure_canvas()
       scroll_to_bottom()
       tcl("update", "idletasks")
-    })
-  }
-
-  # Funcao para adicionar grafico a partir de arquivo
-  add_plot_to_conversation_file <- function(temp_file, caption = NULL) {
-    # Criar frame para a mensagem do grafico
-    msg_frame <- tkframe(conversation_frame, bg = "white")
-
-    idioma <- tclvalue(idioma_var)
-    lbl <- tklabel(msg_frame, text = paste0(respostas[[idioma]]$assistant_label, " "),
-                   font = tkfont.create(weight = "bold"),
-                   foreground = "green", bg = "white")
-    tkpack(lbl, side = "left", anchor = "nw")
-
-    plot_frame <- tkframe(msg_frame, bg = "white")
-    tkpack(plot_frame, side = "left", anchor = "nw", padx = 5)
-
-    # Carregar imagem
-    img <- tkimage.create("photo", file = temp_file)
-    img_label <- tklabel(plot_frame, image = img, bg = "white")
-    tkpack(img_label, pady = 5)
-
-    if (!is.null(caption)) {
-      cap_label <- tklabel(plot_frame, text = caption,
-                           font = tkfont.create(size = 9),
-                           fg = "gray40", bg = "white")
-      tkpack(cap_label, pady = 2)
-    }
-
-    # Botao para salvar
-    save_btn <- tkbutton(msg_frame, text = "💾 Save Plot",
-                         command = function() {
-                           save_file <- tclvalue(tkgetSaveFile(
-                             defaultextension = ".png",
-                             initialfile = "leem_plot.png",
-                             filetypes = '{"PNG" {.png}}'
-                           ))
-                           if (save_file != "") {
-                             file.copy(temp_file, save_file, overwrite = TRUE)
-                             add_message(paste("Plot saved to:", save_file), is_user = FALSE)
-                           }
-                         })
-    tkpack(save_btn, side = "right", anchor = "ne", padx = 5)
-
-    tkpack(msg_frame, side = "top", anchor = "nw", fill = "x", pady = 10)
-
-    # Armazenar para nao perder referencia
-    .GlobalEnv$.tk_plots[[length(.GlobalEnv$.tk_plots) + 1]] <- img
-
-    configure_canvas()
-    scroll_to_bottom()
-    tcl("update", "idletasks")
-
-    # Agendar limpeza do arquivo original (apos a imagem ser carregada)
-    tcl("after", 5000, function() {
-      if (file.exists(temp_file)) unlink(temp_file)
     })
   }
 
@@ -1008,18 +923,6 @@ plot(objeto, type = "hist", col = "lightblue", main = "Sample Histogram")
 
   # Funcao para limpar a conversa (mesma acao do botao Clear)
   limpar_conversa <- function() {
-    # Limpar arquivos temporarios pendentes
-    temp_files <- list.files(tempdir(), pattern = "^file[a-z0-9]+\\.png$", full.names = TRUE)
-    for (f in temp_files) {
-      tryCatch(unlink(f), error = function(e) {})
-    }
-
-    # Limpar referencias de imagens
-    .GlobalEnv$.tk_plots <- list()
-    all_plot_frames <<- list()
-    all_text_widgets <<- list()
-
-    # Recriar conversation frame
     tkdestroy(conversation_frame)
     conversation_frame <<- tkframe(canvas, bg = "white")
     canvas_window <<- tkcreate(canvas, "window", 0, 0,
@@ -1029,7 +932,6 @@ plot(objeto, type = "hist", col = "lightblue", main = "Sample Histogram")
     configure_canvas()
     scroll_to_bottom()
   }
-
   clear_button <- tkbutton(input_frame, text = gettext("Clear", domain = "R-leem"),
                            command = limpar_conversa,
                            width = 10, bg = "lightgray")
@@ -1106,4 +1008,42 @@ configure_r_highlight <- function(txt_edit, hcolors, highlight = c("r", "roxygen
   }
 }
 
+
+# Funcao para atualizar wraplength de todos os labels existentes
+atualizar_todos_wraplength <- function() {
+  # Obtem a largura atual do canvas
+  canvas_width <- as.numeric(tkwinfo("width", canvas))
+  if (is.na(canvas_width) || canvas_width == 0) return()
+
+  # Calcula o novo wraplength
+  novo_wraplength <- max(100, canvas_width - 100)
+
+  # Atualiza todos os text widgets armazenados
+  if (exists("all_text_widgets") && length(all_text_widgets) > 0) {
+    for (widget in all_text_widgets) {
+      tryCatch({
+        tkconfigure(widget, wraplength = novo_wraplength)
+      }, error = function(e) {})
+    }
+  }
+
+  # Metodo alternativo: percorre todos os frames do conversation_frame
+  # (mais robusto, nao depende da lista all_text_widgets)
+  tryCatch({
+    msg_frames <- as.character(tkwinfo("children", conversation_frame))
+    for (frame_id in msg_frames) {
+      filhos <- as.character(tkwinfo("children", frame_id))
+      for (filho in filhos) {
+        classe <- tryCatch(tclvalue(tkwinfo("class", filho)), error = function(e) "")
+        if (classe == "Label") {
+          texto <- tryCatch(tclvalue(tkget(filho, "-text")), error = function(e) "")
+          # Atualiza apenas labels com texto longo (ignora labels de identificacao "Voce:" e "Assistente:")
+          if (!is.null(texto) && nchar(texto) > 20) {
+            tkconfigure(filho, wraplength = novo_wraplength)
+          }
+        }
+      }
+    }
+  }, error = function(e) {})
+}
 

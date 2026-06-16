@@ -61,4 +61,15 @@
 }
 
 
+# In your package's R/zzz.R file
+.onLoad <- function(libname, pkgname) {
+  # Build the path to your Tcl package directory
+  libdir <- file.path(libname, pkgname, "tklibs")
+
+  # Add the path to Tcl's auto_path
+  addTclPath(libdir)
+
+}
+
+
 

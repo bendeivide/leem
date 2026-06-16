@@ -761,3 +761,14 @@ msgstr "Exportar SVG"
 msgid "Note: the returned value is the height of the Normal density curve at x = q and not a probability."
 msgstr "Nota: o valor retornado representa a altura da curva de densidade Normal em x = q e não uma probabilidade."
 
+msgid "Font Size:"
+msgstr "Tamanho da fonte:"
+
+msgid "Reset"
+msgstr "Redefinir"
+
+msgid "Send"
+msgstr "Enviar"
+
+msgid "Clear"
+msgstr "Limpar"

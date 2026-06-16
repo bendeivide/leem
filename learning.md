@@ -113,7 +113,7 @@ P()
         -   [x] exportar png
         -   [x] exportar svg
         -   [x] exportar pdf
-            -   [x] Eixo x não aparece
+            -   [x]  ~~Eixo x não aparece~~ (Corrigido!!!)
 -   lower.tail = NULL
     -   [ ] TCLTK
         -   [x] quantil
@@ -125,7 +125,7 @@ P()
         -   [ ] exportar png
         -   [ ] exportar svg
         -   [ ] exportar pdf
-            -   [x] Gráfico não é gerado
+            -   [x]  ~~Gráfico não é gerado~~ (Corrigido!!!)
     -   [x] RSTUDIO
         -   [x] quantil
         -   [x] média
@@ -159,7 +159,7 @@ P()
 ### Implementação/organização dos argumentos
 
 -   lower.tail = TRUE
-    -   [ ] gui
+    -   [X] gui
         -   [x] "plot"
             -   [x] title
             -   [x] decimals
@@ -177,7 +177,7 @@ P()
                 como tal, e assim, com os demais
             -   [x] amplitude dos sliders (0,1 a 0,1)
 -   lower.tail = NULL
-    -   [ ] gui
+    -   [X] gui
         -   [x] Mensagem reforçando que o output é uma f(x) e não
             probabilidade
         -   [x] "plot"
@@ -187,20 +187,20 @@ P()
             -   [x] A gui recebe o gráfico no estado determinado. Ex.:
                 Se foi plotado com segmentos longos, o gráfico aparece
                 como tal, e assim, com os demais
-        -   [ ] tcltk
+        -   [X] tcltk
             -   [x] Mensagem reforçando que o output é uma f(x) e não
                 probabilidade
             -   [x] A gui recebe o gráfico no estado determinado. Ex.:
                 Se foi plotado com segmentos longos, o gráfico aparece
                 como tal, e assim, com os demais
-        -   [ ] "rstudio"
+        -   [X] "rstudio"
             -   [x] Mensagem reforçando que o output é uma f(x) e não
                 probabilidade
             -   [x] janela de argumentos reformulada
             -   [x] A gui recebe o gráfico no estado determinado. Ex.:
                 Se foi plotado com segmentos longos, o gráfico aparece
                 como tal, e assim, com os demais
-        -   [ ] shiny
+        -   [X] shiny
             -   [x] Mensagem reforçando que o output é uma f(x) e não
                 probabilidade
             -   [x] A gui recebe o gráfico no estado determinado. Ex.:
@@ -211,13 +211,13 @@ P()
     -   [x] decimals
 -   [ ] Cor azul
     -   [x] `q = 1`
-        -   lower.tail = TRUE
+        -   [ ] lower.tail = TRUE
         -   [ ] lower.tail = FALSE
         -   [ ] região B (`a <X< b`)
         -   [ ] região A (`a >X> b`)
 -   [ ] Apresentar a informação da pdf
     -   [x] `q = 1`
-        -   lower.tail = TRUE
+        -   [ ] lower.tail = TRUE
         -   [ ] lower.tail = FALSE
         -   [ ] região B (`a <X< b`)
         -   [ ] região A (`a >X> b`)

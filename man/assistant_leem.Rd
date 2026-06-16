@@ -6,6 +6,11 @@
 \usage{
 assistant_leem(interface = c("tcltk", "console"))
 }
+\arguments{
+\item{interface}{Character string indicating the interface used by the
+assistant. Possible values are \code{"tcltk"} for a graphical Tcl/Tk interface
+and \code{"console"} for a text-based interaction in the R console.}
+}
 \value{
 NULL (interactive function called for side effects)
 }

@@ -1535,7 +1535,7 @@
     # Generate plot
     # =========================
 
-    plotdnormallttplot(
+    plotdnormalltnplot(
 
       q = as.numeric(tclvalue(q_var)),
 
