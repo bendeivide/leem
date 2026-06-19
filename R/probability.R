@@ -258,7 +258,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
       }
     }
 
-    # Region B Call
+    # Region B
     if (any(attr(q, "region") == regionb)) {
       if (dist == "normal") {
         
@@ -281,16 +281,13 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           cex.lab,
           vert.orien.main
         )
-
-
-
-
         
         # Compute the desired probability
-        prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
+        prob <- pnorm(q = q[2], mean = mu, sd=sigma) - 
+          pnorm(q = q[1], mean = mu, sd=sigma)
       }
     }
-  } else { # If the q argument is set to 1
+  } else { # If the q argument length is 1
 
     #########################
     # Check the dist argument
@@ -466,7 +463,7 @@ normal_distrubution <- function(q, region, argaddit, rounding, main, gui, lower.
   }
 
   #########################################
-  # Starting call the gui
+  # Verifying Lower Tail parameter
   #########################################
 
   # If the lower.tail argument is set to "TRUE"
@@ -769,15 +766,50 @@ normal_distrubution <- function(q, region, argaddit, rounding, main, gui, lower.
   # Region A
   if (region == "Region A") {
     if (gui == "plot") {
-      plotpnormalarplot(q, mu, sigma, rounding, main)
+      #################################################
+      # Base R plotting interface
+      #################################################
+
+       # Call the internal plotting function
+      # responsible for generating the static
+      # visualization of the Normal density curve
+      # using base R graphics.
+      #
+      # This interface produces a traditional plot
+      # highlighting the density curve associated
+      # with the Normal distribution.
+      #
+      # ./aux_probability.R
+      plotpnormalraplot(q, mu, sigma, rounding,
+                         dec, long.segment, col,
+                         col2, lty, main,
+                         text.size, cex.main,
+                         cex.axis, cex.lab,
+                         vert.orien.main)
     }
 
     if (gui == "rstudio") {
-      manipulate::manipulate(plotpnormalarrstudio(q1, q2, mean, sd, rounding, main, q),
-                             q1 = manipulate::slider(minimo, q[2], q[1]),
-                             q2 = manipulate::slider(q[1], maximo, q[2]),
-                             mean = manipulate::slider(mu, mu + 2 * sigma, mu),
-                             sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+      #################################################
+      # RStudio graphical interface
+      #################################################
+
+      # Call the internal plotting function
+      # responsible for generating the interactive
+      # Normal distribution visualization in the
+      # RStudio environment.
+      #
+      # This interface was designed to provide an
+      # interactive graphical experience directly
+      # within RStudio.
+      #
+      # ./aux_probability.R
+      plotpnormalrarstudio(q[1], q[2], q, mu, sigma, rounding,
+                           minimo, maximo, dec,
+                           long.segment, col,
+                           col2, lty, main,
+                           text.size, cex.main,
+                           cex.axis, cex.lab,
+                           vert.orien.main)
     }
 
     if (gui == "tcltk") {
@@ -803,30 +835,34 @@ normal_distrubution <- function(q, region, argaddit, rounding, main, gui, lower.
   # If is region B
   if (region == "Region B"){
     # Auxiliar variables
-    minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-    maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
-    mu <- argaddit$mean
-    sigma <- argaddit$sd
+    # minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+    # maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+    # mu <- argaddit$mean
+    # sigma <- argaddit$sd
 
     if (gui == "plot") {
-        plotpnormalbrplot(q, mu, sigma, rounding, main)
-      }
-      if (gui == "rstudio") {
-        manipulate::manipulate(plotpnormalbrrstudio(q1, q2, mean, sd, rounding, main, q),
-                               q1 = manipulate::slider(minimo, q[2], q[1]),
-                               q2 = manipulate::slider(q[1], maximo, q[2]),
-                               mean = manipulate::slider(mu, mu + 2 * sigma, mu),
-                               sd = manipulate::slider(sigma, sigma * 1.8, sigma))
-      }
-      if (gui == "tcltk") {
-        # Desabilitar warnings global
-        #options(warn = - 1)
-        war <- options(warn = - 1)
-
-        .tkplotleemnormal4(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
-
-        # Desabilitar warnings global
-        on.exit(options(war))
-      }
+      plotpnormalbrplot(q, mu, sigma, rounding, main)
     }
+
+    if (gui == "rstudio") {
+      manipulate::manipulate(plotpnormalbrrstudio(q1, q2, mean, sd, rounding, main, q),
+                             q1 = manipulate::slider(minimo, q[2], q[1]),
+                             q2 = manipulate::slider(q[1], maximo, q[2]),
+                             mean = manipulate::slider(mu, mu + 2 * sigma, mu),
+                             sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+    }
+    
+    if (gui == "tcltk") {
+      # Desabilitar warnings global
+      #options(warn = - 1)
+      war <- options(warn = - 1)
+
+      .tkplotleemnormal4(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
+
+      # Desabilitar warnings global
+      on.exit(options(war))
+    }
+
+    prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
+  }
 }
