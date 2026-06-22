@@ -237,7 +237,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         
         #Region A Call
         prob <- normal_distrubution(q,
-          region = "Region A",
           argaddit,
           rounding,
           main,
@@ -252,7 +251,10 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           cex.main,
           cex.axis,
           cex.lab,
-          vert.orien.main
+          vert.orien.main,
+          porcentage,
+          browser.shiny,
+          region = "Region A"
         )
 
       }
@@ -264,7 +266,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         
         # Region B Call
         prob <- normal_distrubution(q,
-          region = "Region B",
           argaddit,
           rounding,
           main,
@@ -279,12 +280,11 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           cex.main,
           cex.axis,
           cex.lab,
-          vert.orien.main
+          vert.orien.main,
+          porcentage,
+          browser.shiny,
+          region = "Region B"
         )
-        
-        # Compute the desired probability
-        prob <- pnorm(q = q[2], mean = mu, sd=sigma) - 
-          pnorm(q = q[1], mean = mu, sd=sigma)
       }
     }
   } else { # If the q argument length is 1
@@ -310,7 +310,9 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         cex.main,
         cex.axis,
         cex.lab,
-        vert.orien.main
+        vert.orien.main,
+        porcentage,
+        browser.shiny
       )
 
     }
@@ -367,8 +369,8 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
 
 
-normal_distrubution <- function(q, region, argaddit, rounding, main, gui, lower.tail, dec, col, col2, long.segment, lty,text.size, cex.main,
-              cex.axis, cex.lab, vert.orien.main) {
+normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, dec, col, col2, long.segment, lty,text.size, cex.main,
+              cex.axis, cex.lab, vert.orien.main, porcentage, browser.shiny, region) {
 
   #################################################
   # Interactive input for distribution parameters
@@ -468,6 +470,7 @@ normal_distrubution <- function(q, region, argaddit, rounding, main, gui, lower.
 
   # If the lower.tail argument is set to "TRUE"
   if(isTRUE(lower.tail)) {
+    
     #################################################
     # Base R plotting interface
     #################################################
@@ -493,29 +496,84 @@ normal_distrubution <- function(q, region, argaddit, rounding, main, gui, lower.
     }
 
     if (gui == "rstudio") {
-      manipulate::manipulate(plotpnormallttplot(q, mean, sd, rounding, dec, long.segment, col, col2, lty, main),
-                                q = manipulate::slider(minimo, maximo, q, step = 0.1),
-                                mean = manipulate::slider(minimo, maximo, mu, step = 0.1),
-                                sd = manipulate::slider(sigma, sigma * 1.8, sigma , step = 0.1)
+      #################################################
+      # RStudio graphical interface
+      #################################################
+
+      # Call the internal plotting function
+      # responsible for generating the interactive
+      # Normal distribution visualization in the
+      # RStudio environment.
+      #
+      # This interface was designed to provide an
+      # interactive graphical experience directly
+      # within RStudio.
+      #
+      # ./aux_probability.R
+      plotpnormallttrstudio(
+        q, mu, sigma, rounding,
+        minimo, maximo, dec,
+        long.segment, col,
+        col2, lty, main,
+        text.size, cex.main,
+        cex.axis, cex.lab,
+        vert.orien.main
       )
     }
 
     if (gui == "tcltk") {
-      # Desabilitar warnings global
-      #options(warn = - ufs1)
-      war <- options(warn = - 1)
-      #on.exit(options(war))
+      #################################################
+      # Tcl/Tk graphical interface
+      #################################################
 
-      # Plot tk da dist normal com q de comp 1 (~/tkplotleem.R)
-      .tkplotleemnormal(q, mu, sigma, rounding, minimo, maximo, dec, long.segment, col,
-                          col2, lty, main)
-
-
-      # Desabilitar warnings global
-      #options(warn = - 1)
-      #war <- options(warn = - 1)
-      on.exit(options(war))
+      # Call the internal Tcl/Tk plotting function
+      # responsible for generating the interactive
+      # Normal distribution visualization.
+      #
+      # This graphical interface allows the user to
+      # explore the Normal density curve interactively
+      # using Tcl/Tk components.
+      #
+      # ./aux_probability.R
+      plotpnormalltttcltk(
+        q, mu, sigma, rounding,
+        minimo, maximo, dec,
+        long.segment, col,
+        col2, lty, main,
+        text.size, cex.main,
+        cex.axis, cex.lab,
+        vert.orien.main
+      )
     }
+
+    if (gui == "shiny" ) {
+      #################################################
+      # Shiny graphical interface
+      #################################################
+
+      # Call the internal Shiny plotting function
+      # responsible for generating the interactive
+      # Normal distribution visualization.
+      #
+      # The returned object contains all information
+      # required for the S3 method print.leem() to
+      # launch the Shiny application automatically.
+      #
+      # ./aux_probability.R
+      return(
+        plotpnormallttshiny(
+          q, mu, sigma, rounding, porcentage,
+          minimo, maximo, dec,
+          long.segment, col,
+          col2, lty, main,
+          browser.shiny,
+          text.size, cex.main,
+          cex.axis, cex.lab,
+          vert.orien.main
+        )
+      )
+    }
+
     # Compute the desired probability
     prob <- pnorm(q = q, mean = mu, sd = sigma)
     return(prob)
@@ -863,6 +921,7 @@ normal_distrubution <- function(q, region, argaddit, rounding, main, gui, lower.
       on.exit(options(war))
     }
 
-    prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
+    prob <- pnorm(q = q[2], mean = mu, sd=sigma) - 
+    pnorm(q = q[1], mean = mu, sd=sigma)
   }
 }

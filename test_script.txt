@@ -1,0 +1,5 @@
+Lista de chamadas para testar as interfaces da solução
+
+Verificar a chamada da distribuição normal, lower.tail true:
+
+P(1.5, mean = 0.8, sd = 1.2, gui = "rstudio", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
