@@ -772,3 +772,9 @@ msgstr "Enviar"
 
 msgid "Clear"
 msgstr "Limpar"
+
+msgid "Quantile 1"
+msgstr "Quantil 1"
+
+msgid "Quantile 2"
+msgstr "Quantil 2"
