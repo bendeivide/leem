@@ -18,15 +18,31 @@
 
 # Normal distribution
 ## Plot
+# q: Quantil
+# mu: Mean (mi)
+# sigma: Satandard Desviation
+# rounding: 
+# main:  
 plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
+  # max., min., calculation ---
   minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
   maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
+  #------------------------------
+
+  # Creating a sequence of terms. from the min. til the q
+  # or from q to max. By x dt
   x <- seq(minimo, q[1], by = 0.01)
   z <- seq(q[2], maximo, by = 0.01)
-  y <-seq(minimo, maximo, by = 0.01)
+  y <- seq(minimo, maximo, by = 0.01)
+  #------------------------------
+  
+  # Geting the density of the point of the 
+  # normal distribution
   fx <- dnorm(x, mean = mu, sd = sigma)
   fz <- dnorm(z,mean = mu, sd = sigma)
   fy <- dnorm(y, mean = mu, sd = sigma)
+  #------------------------------
+  
   if (is.null(main)) {
     if (attr(q, "region") == "region1") {
       titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
