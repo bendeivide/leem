@@ -24,7 +24,8 @@
 # rounding: 
 # main:  
 plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
-  # max., min., calculation ---
+  
+  # max., min., calculation -----
   minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
   maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
   #------------------------------
@@ -43,6 +44,8 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
   fy <- dnorm(y, mean = mu, sd = sigma)
   #------------------------------
   
+  # Ploting the formula (depending on the region) on
+  # the top of the figure.
   if (is.null(main)) {
     if (attr(q, "region") == "region1") {
       titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
@@ -61,12 +64,22 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
       main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
     }
   }
-  curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-        ylim = c(0, 1.2 * max(fx,fy,fz)),xlab="X",
+  # ------------------------------------------------------------------------------------------------
+
+  # Creating a curve 
+  curve(dnorm(x, mean = mu, sd = sigma),
+        minimo,
+        maximo,
+        ylim = c(0, 1.2 * max(fx,fy,fz)),
+        xlab="X",
         ylab = expression(f[X](X)),
         panel.first = grid(col="gray90"),
         main = main,
-        cex=0.8)
+        cex=0.8
+      )
+  # ------------------------------------------------------------------------------------------------
+
+  # Creating a polygon
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
           col="gray90")
@@ -75,12 +88,22 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
           col="red")
   polygon(c(z,rev(z)), c(fz,rep(0,length(fz))),
           col="red" )
+  # ------------------------------------------------------------------------------------------------
+
+  # geting value of q, rounded with 2 digits
   qq <- round(q, digits=2)
-  qqaux <- qq
+
+  qqaux <- qq # used in abline function
+
+  # # Probability result: P(q[1] > X > q[2])
   Pr <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
+  
   #Pr <- gsub("\\.", ",", Pr)
   ##qq <- gsub("\\.", ",", qq)
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20
+
+  
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20 # getting coordinate to plot
+  
   axis(side=1, at=qq, lwd = 0,
        col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
   axis(side=1, at=as.character(c(minimo, qq[1])), tick = TRUE, lwd = 1,
@@ -130,6 +153,7 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
                                     parametros = parametros)))
   }
 } # plotcurve (older)
+
 ## RStudio
 plotpnormalarrstudio <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
   q[1] <- q1
