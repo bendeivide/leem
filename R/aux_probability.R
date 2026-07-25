@@ -66,20 +66,27 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
   }
   # ------------------------------------------------------------------------------------------------
 
-  # Creating a curve 
+  # Creating a Normal Distribution curve
+  # this function can create a Normal Distribution curve
+  # allows de use of certain parameters 
   curve(dnorm(x, mean = mu, sd = sigma),
         minimo,
         maximo,
         ylim = c(0, 1.2 * max(fx,fy,fz)),
         xlab="X",
-        ylab = expression(f[X](X)),
+        ylab = expression(f[X](X)), # Draw a beautiful notation.
         panel.first = grid(col="gray90"),
         main = main,
-        cex=0.8
+        cex=0.8 # Text proportion related to the curve
       )
   # ------------------------------------------------------------------------------------------------
 
   # Creating a polygon
+  # 'polygon' is a function that can create a form over the Normal curve
+  # previosly created by 'curve' function. 'polygon' needs coordinates over
+  # the curve line (y1, fy1),(yn, fyn), and its return way ((yn, 0),(y1, 0).
+  # 
+  # arguments: (((y1, fy1),(yn, fyn)), ((yn, 0),(y1, 0)), fullfill_color)
   polygon(c(y, rev(y)),
           c(fy, rep(0, length(fy))),
           col="gray90")
