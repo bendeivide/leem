@@ -23,7 +23,12 @@
 # sigma: Satandard Desviation
 # rounding: 
 # main:  
-plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
+plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
+                               long.segment = FALSE, col = "#8EC5E5",
+                               col2 = "#38A8E8", lty = 2, main = NULL,
+                               text.size = 1, cex.main = 1.2,
+                               cex.axis = 1, cex.lab = 1,
+                               vert.orien.main = TRUE) {
   
   # max., min., calculation -----
   minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
@@ -102,17 +107,20 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
 
   qqaux <- qq # used in abline function
 
-  # # Probability result: P(q[1] > X > q[2])
+  # Probability result: P(q[1] > X > q[2])
   Pr <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
   
   #Pr <- gsub("\\.", ",", Pr)
   ##qq <- gsub("\\.", ",", qq)
 
+  # Creating details on the X axis.
+  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20 # getting coordinates to plot
   
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20 # getting coordinate to plot
-  
+  # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts 
   axis(side=1, at=qq, lwd = 0,
-       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2) 
+  
+  # Creating a line under the fulfilled area of the graphic
   axis(side=1, at=as.character(c(minimo, qq[1])), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   axis(side=1, at=as.character(qq[1]), tick = TRUE, lwd = 1,
@@ -121,7 +129,10 @@ plotpnormalarplot <- function(q, mu, sigma, rounding, main = NULL) {
        col="red", font = 2, lwd.ticks = 0, labels = FALSE)
   axis(side=1, at=as.character(qq[2]), tick = TRUE, lwd = 1,
        col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # ------------------------------------------------------------------------------------------------
+
   abline(v = qqaux, lty=2, col = "red")
+
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   if (attr(q, "region") == "region1") {
     legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,

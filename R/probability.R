@@ -469,7 +469,7 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
   #########################################
   # Verifying regions parameter
   #########################################
-  if (region != NULL){
+  if (!is.null(region)) {
 
     #########################################
     # Starting call the gui
@@ -478,7 +478,6 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
   
     # Region A
     if (region == "Region A") {
-      print("região A");
       if (gui == "plot") {
         #################################################
         # Base R plotting interface
@@ -587,7 +586,6 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
   
   # Region A
   if (region == "Region A") {
-    print("região A");
     if (gui == "plot") {
       #################################################
       # Base R plotting interface
@@ -713,7 +711,6 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
       #
       # ./aux_probability.R
       if (gui == "plot") {
-        print("llt")
         plotpnormallttplot(q, mu, sigma, rounding,
                            dec, long.segment, col,
                            col2, lty, main,
