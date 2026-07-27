@@ -131,40 +131,64 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
        col="red", font = 2, lwd.ticks = 1, labels = FALSE)
   # ------------------------------------------------------------------------------------------------
 
+  # Create a vertical line at the q point. Is a red and dashed line 
   abline(v = qqaux, lty=2, col = "red")
-
+  
+  # Creating a gray rectangle above the plot to hightlight the text over it
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  
   if (attr(q, "region") == "region1") {
+    # 'legend' function creates a dinamic legend if matematic notation:
+    # - topleft: Location of the legend;
+    # - bty (Box Type): "n" removes the bordes of the retangle around the legend;
+    # - fill: creates a red square with the legend;
+    # - cex: the relative size of the legend;
+    # - legend: the matematic notation.
+    # the fucntion returns the legend coordinates
     legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    
+    # gettext returns the text. "Parameters:" is the original text, domain determines
+    # the language base to search the translated word. 
     parametros <- gettext("Parameters:", domain = "R-leem")
+    
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma, parametros = parametros)))
   }
+
   if (attr(q, "region") == "region3") {
     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    
+    #Where's the 'parametros' variable???
+
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma)))
   }
+
   if (attr(q, "region") == "region5") {
     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    
     parametros <- gettext("Parameters:", domain = "R-leem")
+    
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma, parametros = parametros)))
   }
+
   if ( attr(q, "region") == "region6") {
     legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
                                          list(t1=qq[1],t2=qq[2], Pr = Pr)))
+    
     parametros <- gettext("Parameters:", domain = "R-leem")
+    
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = mu, varen = sigma,
