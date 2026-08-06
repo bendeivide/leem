@@ -30,43 +30,109 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                cex.axis = 1, cex.lab = 1,
                                vert.orien.main = TRUE) {
   
-  # max., min., calculation -----
+  # Define the minimum x-axis limit
   minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
+  # Define the maximum x-axis limit
   maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
-  #------------------------------
-
+  
+  
+  
   # Creating a sequence of terms. from the min. til the q
-  # or from q to max. By x dt
+  # or from q to max. By 0.01 steps
+  # Sequence of x values from minimum to q[1]
   x <- seq(minimo, q[1], by = 0.01)
+  # Sequence of x values from q[2] to maximum
   z <- seq(q[2], maximo, by = 0.01)
-  y <- seq(minimo, maximo, by = 0.01)
+  # Sequence of values from minimum to maximum
+  y <-seq(minimo, maximo, by = 0.01)
   #------------------------------
   
   # Geting the density of the point of the 
   # normal distribution
+  # Density values for the left region
   fx <- dnorm(x, mean = mu, sd = sigma)
+  # Density values for the right region
   fz <- dnorm(z,mean = mu, sd = sigma)
+  # Density values for the background region
   fy <- dnorm(y, mean = mu, sd = sigma)
   #------------------------------
+
+  # Density value at q
+  pdf <- dnorm(q, mu, sigma)
+
+  # Rounded value of q for display
+  qq <- round(q, digits=2)
+  qqaux <- qq #???
+
+  # Probability P(q[1] > X > q[2])
+  Pr <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
+
+
+  # *** NEW BLOCK ***
+  # Replace decimal separator if comma format is requested
+  if (dec == ",") {
+    Pr_text <- gsub("\\.", ",", Pr)
+    qq_text <- gsub("\\.", ",", qq)
+    mu_text <- gsub("\\.", ",", mu)
+    sigma_text <- gsub("\\.", ",", sigma)
+    pdf_text <- gsub("\\.", ",", round(pdf, 3))
+  } else {
+    # Keep default decimal separator
+    Pr_text <- Pr
+    qq_text <- qq
+    pdf_text <- round(pdf, 3)
+    mu_text <- mu
+    sigma_text <- sigma
+  }
+
+  # *** NEW LINE ***
+  # Localized title text
   
   # Ploting the formula (depending on the region) on
   # the top of the figure.
   if (is.null(main)) {
-    if (attr(q, "region") == "region1") {
-      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
-      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
-    }
-    if (attr(q, "region") == "region3") {
-      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
-      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
-    }
-    if (attr(q, "region") == "region5") {
-      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
-      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
-    }
-    if (attr(q, "region") == "region6") {
-      titulo <- gettext("Probability function plot: Normal", domain = "R-leem")
-      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q[1], t2 = q[2], x = "x", titulo = titulo))
+  
+    # Localized title text
+    titulo <- gettext("Normal Distribution", domain = "R-leem")
+
+    if (vert.orien.main) { # *** NEW LINE ***
+      # P(a > X > b)
+      if (attr(q, "region") == "region1") {
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+      # P(a >= X >= b)
+      if (attr(q, "region") == "region3") {
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+      # P(a >= X > b)
+      if (attr(q, "region") == "region5") {
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+      # P(a > X >= b)
+      if (attr(q, "region") == "region6") {
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+    } else {
+      # P(a > X > b)
+      if (attr(q, "region") == "region1") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+      # P(a >= X >= b)
+      if (attr(q, "region") == "region3") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+      # P(a >= X > b)
+      if (attr(q, "region") == "region5") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+      # P(a > X >= b)
+      if (attr(q, "region") == "region6") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
     }
   }
   # ------------------------------------------------------------------------------------------------
@@ -74,17 +140,60 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # Creating a Normal Distribution curve
   # this function can create a Normal Distribution curve
   # allows de use of certain parameters 
-  curve(dnorm(x, mean = mu, sd = sigma),
-        minimo,
-        maximo,
-        ylim = c(0, 1.2 * max(fx,fy,fz)),
-        xlab="X",
-        ylab = expression(f[X](X)), # Draw a beautiful notation.
-        panel.first = grid(col="gray90"),
-        main = main,
-        cex=0.8 # Text proportion related to the curve
-      )
+  curve(
+      dnorm(x, mean = mu, sd = sigma),
+      minimo,
+      maximo,
+      ylim = c(0, 1.2 * max(fx,fy,fz)),
+      xlab="X",
+      ylab = expression(f[X](X)), # Draw a beautiful notation.
+      panel.first = grid(col="gray90"),
+      main = main,
+      xaxt = "n", # Standard X-axis = none
+      yaxt = "n", # Standard Y-axis = none
+      cex.main = cex.main # Text proportion related to the curve
+    )
   # ------------------------------------------------------------------------------------------------
+
+  # Generate pretty x-axis values
+  eixox <- pretty(minimo:maximo) # *** NEW LINE ***
+
+  # *** NEW BLOCK ***
+  # Draw x-axis
+  axis(
+    side = 1,
+    at = eixox
+  )
+
+  # Generate pretty values for the y-axis
+  ## dec of P()
+  ypretty <- pretty(dnorm(minimo:maximo, mu, sigma)) # *** NEW LINE ***
+
+  # *** NEW BLOCK ***
+  # Format y-axis labels with comma decimal separator
+  if (dec == ",") {
+    # Y-axis
+    axis(
+      side = 2,
+      at = ypretty,
+      cex.axis = cex.axis,
+      labels = format(
+        ypretty,
+        decimal.mark = ",",
+        nsmall = 2
+      )
+    )
+  } else {
+    # Default y-axis labels
+    # Y-axis
+    axis(
+      side = 2,
+      at = ypretty,
+      cex.axis = cex.axis
+    )
+  }
+
+  # Area  P(q[1] > X > q[2])
 
   # Creating a polygon
   # 'polygon' is a function that can create a form over the Normal curve
@@ -92,52 +201,105 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # the curve line (y1, fy1),(yn, fyn), and its return way ((yn, 0),(y1, 0).
   # 
   # arguments: (((y1, fy1),(yn, fyn)), ((yn, 0),(y1, 0)), fullfill_color)
-  polygon(c(y, rev(y)),
+  
+  # Background
+  polygon(
+          c(y, rev(y)),
           c(fy, rep(0, length(fy))),
-          col="gray90")
-  polygon(c(x, rev(x)),
+          col = "gray90"
+        )
+
+  # Shade the cumulative probability region
+  # col1 of P(X < q[1])
+  polygon(
+          c(x, rev(x)),
           c(fx, rep(0, length(fx))),
-          col="red")
-  polygon(c(z,rev(z)), c(fz,rep(0,length(fz))),
-          col="red" )
+          col = col
+        )
+  
+  # col1 of P(X > q[2])
+  polygon(
+          c(z,rev(z)),
+          c(fz,rep(0,length(fz))),
+          col = col
+        )
   # ------------------------------------------------------------------------------------------------
 
   # geting value of q, rounded with 2 digits
-  qq <- round(q, digits=2)
+  #qq <- round(q, digits=2)
 
-  qqaux <- qq # used in abline function
+  #qqaux <- qq # used in abline function
 
   # Probability result: P(q[1] > X > q[2])
   Pr <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
   
-  #Pr <- gsub("\\.", ",", Pr)
+  Pr <- gsub("\\.", ",", Pr)
   ##qq <- gsub("\\.", ",", qq)
 
-  # Creating details on the X axis.
-  aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20 # getting coordinates to plot
+
+
+  # Creating details on the X axis ----------------------------------------------------------------------
+  
+  # Highlight q on the x-axis 
+  ## X-axis
+  # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts
+  mtext(qq_text, side = 1, at = qq, line = 2, col = col2, font = 2, cex = text.size) # *** NEW LINE ***
+  
+  #aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20 # getting coordinates to plot
   
   # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts 
-  axis(side=1, at=qq, lwd = 0,
-       col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2) 
+  #axis(side=1, at=qq, lwd = 0, col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2) 
   
-  # Creating a line under the fulfilled area of the graphic
-  axis(side=1, at=as.character(c(minimo, qq[1])), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-  axis(side=1, at=as.character(qq[1]), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+  # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
+  axis(side = 1, at = as.character(c(minimo, qq[1])), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
+  
   axis(side=1, at=as.character(c(qq[2], maximo)), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 0, labels = FALSE)
-  axis(side=1, at=as.character(qq[2]), tick = TRUE, lwd = 1,
-       col="red", font = 2, lwd.ticks = 1, labels = FALSE)
+       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
+  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  # Creating a tiny line under the values of q +++++++++++++++++++++++++++++++++++++++
+  axis(side = 1, at = as.character(qq[1]), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
+    
+  axis(side = 1, at = as.character(qq[2]), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
+  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   # ------------------------------------------------------------------------------------------------
 
-  # Create a vertical line at the q point. Is a red and dashed line 
-  abline(v = qqaux, lty=2, col = "red")
+  # Long segment and type --------------------------------------------------------------------------
+  # Create a vertical line at the q point. Is a red and dashed line
+  #abline(v = qqaux, lty=2, col = "red")
+
+  # Draw full or partial guide lines
+  # col2 and lty of P()
+  if (isTRUE(long.segment)) {
+    abline(v = qqaux, col = col2, lty = lty)
+    abline(h = pdf, col = col2, lty = lty)
+  } else {
+    segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty)
+    segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty)
+  }
+  # ------------------------------------------------------------------------------------------------
+
+  # Add point at (q, density)
+  # Point inserted
+  points(qqaux, pdf, pch = 19)
+
+  # Legends ----------------------------------------------------------------------------------------
   
   # Creating a gray rectangle above the plot to hightlight the text over it
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   
+  ## Localized parameter label
+  # gettext returns the text. "Parameters:" is the original text, domain determines
+  # the language base to search the translated word. 
+  parametros <- gettext("Parameters:", domain = "R-leem")
+
+  ## P(q[1] > X > q[2])
   if (attr(q, "region") == "region1") {
+    # Display cumulative probability legend
+    
     # 'legend' function creates a dinamic legend if matematic notation:
     # - topleft: Location of the legend;
     # - bty (Box Type): "n" removes the bordes of the retangle around the legend;
@@ -145,54 +307,41 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     # - cex: the relative size of the legend;
     # - legend: the matematic notation.
     # the fucntion returns the legend coordinates
-    legaux <- legend("topleft", bty="n", fill="red",cex = 0.8,
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
-                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
+                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
     
-    # gettext returns the text. "Parameters:" is the original text, domain determines
-    # the language base to search the translated word. 
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+    # Display parameter legend
+    # legaux$text$y is a coordinate
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma, parametros = parametros)))
+                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
   }
-
   if (attr(q, "region") == "region3") {
-    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    
-    #Where's the 'parametros' variable???
-
+                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma)))
+                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
   }
-
   if (attr(q, "region") == "region5") {
-    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
-                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    
+                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
-    
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma, parametros = parametros)))
+                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
   }
-
   if ( attr(q, "region") == "region6") {
-    legaux <- legend("topleft", bty="n", fill="red",  cex = 0.8,
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
-                                         list(t1=qq[1],t2=qq[2], Pr = Pr)))
-    
+                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
-    
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu, varen = sigma,
-                                    parametros = parametros)))
+                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
   }
 } # plotcurve (older)
 
@@ -476,15 +625,20 @@ plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
   # Shade the cumulative probability region
   ## col1 of P()
-  polygon(c(x, rev(x)),
+  polygon(
+          c(x, rev(x)),
           c(fx, rep(0, length(fx))),
-          col = col)
+          col = col
+        )
 
   # Shade the remaining area in gray
   # Background
-  polygon(c(y, rev(y)),
+  polygon(
+          c(y, rev(y)),
           c(fy, rep(0, length(fy))),
-          col="gray90")
+          col="gray90"
+        )
+
 
 
   # Insert red q point
