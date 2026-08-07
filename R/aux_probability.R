@@ -23,12 +23,17 @@
 # sigma: Satandard Desviation
 # rounding: 
 # main:  
-plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
+plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec = c(".", ","),
                                long.segment = FALSE, col = "#8EC5E5",
                                col2 = "#38A8E8", lty = 2, main = NULL,
                                text.size = 1, cex.main = 1.2,
                                cex.axis = 1, cex.lab = 1,
                                vert.orien.main = TRUE) {
+  
+  if (!is.null(q1)){
+    q[1] <- q1
+    q[2] <- q2
+  } 
   
   # Define the minimum x-axis limit
   minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
@@ -343,19 +348,171 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = mu_text, varen = sigma_text, parametros = parametros)))
   }
-} # plotcurve (older)
+}
 
 ## RStudio
-plotpnormalarrstudio <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
-  q[1] <- q1
-  q[2] <- q2
-  plotpnormalarplot(q, mu, sigma, rounding, main)
+plotpnormalrarstudio <- function(q, mu, sigma, rounding,
+                                 minimo, maximo, dec,
+                                 long.segment, col,
+                                 col2, lty, main,
+                                 text.size, cex.main,
+                                 cex.axis, cex.lab,
+                                 vert.orien.main) {
+
+  q1 <- q[1]
+  q2 <- q[2]
+                                  
+  # Ensure the interval is at least 0.02 (2 * step)
+  if (maximo - q2 < 0.02) {
+    maximo <- q2 + 0.02
+  }
+  if (q1 - minimo < 0.02) {
+    minimo <- q1 - 0.02
+  }
+
+  # Create an interactive Normal distribution plot using the
+  # 'manipulate' package available in RStudio.
+  #
+  # The interface allows the user to dynamically modify
+  # distribution parameters and graphical settings through
+  # sliders and checkboxes.
+  manipulate::manipulate(
+
+    # Main plotting function responsible for drawing the
+    # Normal distribution graph.
+
+    # Arguments:
+    # q1 and q2          -> Quantile or x-value to be highlighted.
+    # mu                 -> Mean of the Normal distribution.
+    # sigma              -> Standard deviation of the Normal distribution.
+    # rounding           -> Number of decimal places used in labels/results.
+    # minimo             -> Minimum x-axis value for plotting.
+    # maximo             -> Maximum x-axis value for plotting.
+    # dec                -> Decimal separator style.
+    # long.segment       -> Logical value controlling segment extension.
+    # col                -> Main fill or polygon color.
+    # col2               -> Secondary color used in plot elements.
+    # lty                -> Line type specification.
+    # main               -> Main title of the plot.
+    # text.size          -> Size of additional text annotations.
+    # cex.main           -> Expansion factor for the main title.
+    # cex.axis           -> Expansion factor for axis labels.
+    # cex.lab            -> Expansion factor for axis titles.
+    # vert.orien.main    -> Logical value controlling vertical title orientation.
+
+    plotpnormalraplot(q1, q2, q, mu, sigma, rounding,
+                      # Define the decimal separator according to the
+                      # checkbox state selected by the user.
+                      dec = if (isTRUE(decimals)) "," else ".",
+                      long.segment, col,
+                      col2, lty, main,
+                      # Text size used in annotations and graphical elements.
+                      text.size,
+                      # Main title size follows the same value chosen
+                      # for the general text size.
+                      cex.main = text.size,
+                      cex.axis, cex.lab,
+                      vert.orien.main),
+    #################################################
+    # Interactive controls
+    #################################################
+
+    # Slider used to control the x-value (quantile)
+    # highlighted in the Normal distribution plot.
+    q1 = manipulate::slider(
+      minimo, q1, q1,
+      step = 0.01,
+      label = gettext(
+        "Quantile 1",
+        domain = "R-leem"
+      )
+    ),
+
+    # Slider used to control the x-value (quantile)
+    # highlighted in the Normal distribution plot.
+    q2 = manipulate::slider(
+      q2, maximo, q2,
+      step = 0.01,
+      label = gettext(
+        "Quantile 2",
+        domain = "R-leem"
+      )
+    ),
+
+    # Slider controlling the mean of the
+    # Normal distribution.
+    mu = manipulate::slider(
+      minimo, maximo, mu,
+      step = 0.01,
+      label = gettext(
+        "Mean",
+        domain = "R-leem"
+      )
+    ),
+
+    # Slider controlling the standard deviation.
+    #
+    # The upper limit is defined as 1.8 times the
+    # initial standard deviation value.
+    sigma = manipulate::slider(
+      sigma, sigma * 1.8, sigma,
+      step = 0.01,
+      label = gettext(
+        "Standard Deviation",
+        domain = "R-leem"
+      )
+    ),
+
+    # Slider controlling the size of texts displayed
+    # in the graph, including labels and annotations.
+    text.size = manipulate::slider(
+      0.8, 3, text.size,
+      step = 0.01,
+      label = gettext(
+        "Text Size",
+        domain = "R-leem"
+      )
+    ),
+
+    # Checkbox that enables or disables vertical
+    # orientation for the main plot title.
+    vert.orien.main = checkbox(
+      vert.orien.main,
+      gettext(
+        "Vertical Title Orientation",
+        domain = "R-leem"
+      )
+    ),
+
+    # Checkbox controlling whether the highlighted
+    # segment should be extended.
+    long.segment = checkbox(
+      long.segment,
+      gettext(
+        "Long segment",
+        domain = "R-leem"
+      )
+    ),
+
+    # Checkbox used to select the decimal separator.
+    #
+    # TRUE  -> comma (,)
+    # FALSE -> period (.)
+    decimals = checkbox(
+      if (dec == ",") TRUE else FALSE,
+      gettext(
+        "Comma",
+        domain = "R-leem"
+      )
+    )
+  )
 }
+
 ## Tcl/tk
 plotpnormalartcltk <- function(q1, q2, mu, sigma, rounding, main = NULL, q) {
   q[1] <- q1
   q[2] <- q2
-  plotpnormalarplot(q, mu, sigma, rounding, main)
+  plotpnormalraplot(q, mu, sigma, rounding, main)
 }
 
 # Auxiliar functions of P()
