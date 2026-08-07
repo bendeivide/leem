@@ -368,7 +368,7 @@ madev <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
         return(meandev)
       }
     } else {
-      meandev <- round(sum(abs(x$statistics$raw_data - mean(x = x, na.rm = na.rm, , grouped = FALSE))), digits = rounding)
+      meandev <- round(sum(abs(x$statistics$raw_data - mean(x = x, na.rm = na.rm, grouped = FALSE))), digits = rounding)
       resume <- list(`mean absolute deviation` = meandev, table = x$table, rawdata = x$statistics$raw_data)
       if (details) {
         return(resume)
@@ -378,11 +378,169 @@ madev <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
       }
     }
   }
+}
+
+#' Mean deviation
+#'
+#' Compute the sample mean deviation
+#'
+#' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param na.rm a logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
+#' @param details Logical object. Details of data (default \code{FALSE}).
+#' @param grouped Logical object. Determines whether the measure of position result will be based on grouped data or not (default \code{TRUE}).
+#'
+#' @examples
+#' # Example 1: Poisson data
+#' set.seed(10)
+#' rpois(30, 2.5) |>
+#'   new_leem() |>
+#'   mdev(grouped = FALSE)
+#' # Example 2: Normal data
+#' rnorm(50, 100, 2.5) |>
+#'   new_leem(variable = 2) |>
+#'   mdev()
+#' @export
+mdev <- function(x, na.rm = FALSE, details = FALSE,
+                  grouped = TRUE) {
+  if (!is.logical(details)) stop("The 'details' argument must be logical!",
+                                 call. = FALSE, domain = "R-leem")
+  if (!is.logical(grouped)) stop("The 'grouped' argument must be logical!",
+                                 call. = FALSE, domain = "R-leem")
+  if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
+                               call. = FALSE, domain = "R-leem")
+  if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!",
+                           call. = FALSE, domain = "R-leem")
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
+  if (!is.null(attr(x, "NA"))) return(NA)
+  if (attr(x, "variable") == "discrete") {
+    numchar <- is.numeric(x$statistics$raw_data)
+    if (numchar) {
+      data_round <- round(na.omit(x$statistics$raw_data), 0)
+      meandev <- round(sum(data_round - mean(data_round)), 0)
+      resume <- list(`mean deviation` = meandev, table = x$table, rawdata = data_round)
+      if (details) {
+        return(resume)
+      } else {
+        return(meandev)
+      }
+
+    } else {
+      stop("Measure not used for this data type!", call. = FALSE,
+           domain = "R-leem")
+    }
+  }
+  if (attr(x, "variable") == "continuous") {
+    if (grouped == TRUE) {
+      data_round <- round(na.omit(x$statistics$raw_data), 0)
+      pm <- round(x$table$PM, 0)
+      fi <- x$table$Fi
+      media <- sum(pm * fi) / sum(fi)
+      meandev <- round(sum((pm - media) * fi),0)
+      tabela <- x$table; tabela[, 3] <- pm
+
+      resume <- list(`mean deviation` = meandev, table = tabela, rawdata = data_round)
+
+      if (details) {
+        warning("Due to the finite binary representation of floating-point numbers in computers, the sum of deviations from the mean may not be exactly zero, even though theoretically it should be. The result has been rounded to 'zero' decimal places to mitigate this numerical artifact.",
+          call. = FALSE, domain = "R-leem")
+        return(resume)
+      }
+      else {
+        warning("Due to the finite binary representation of floating-point numbers in computers, the sum of deviations from the mean may not be exactly zero, even though theoretically it should be. The result has been rounded to 'zero' decimal places to mitigate this numerical artifact.",
+                call. = FALSE, domain = "R-leem")
+        return(meandev)
+      }
+    } else {
+      data_round <- round(na.omit(x$statistics$raw_data), 0)
+      meandev <- round(sum(data_round - mean(data_round)), 0)
+      resume <- list(`mean deviation` = meandev, table = x$table, rawdata = x$statistics$raw_data)
+      if (details) {
+        warning("Due to the finite binary representation of floating-point numbers in computers, the sum of deviations from the mean may not be exactly zero, even though theoretically it should be. The result has been rounded to 'zero' decimal places to mitigate this numerical artifact.",
+                call. = FALSE, domain = "R-leem")
+        return(resume)
+      }
+      else {
+        warning("Due to the finite binary representation of floating-point numbers in computers, the sum of deviations from the mean may not be exactly zero, even though theoretically it should be. The result has been rounded to 'zero' decimal places to mitigate this numerical artifact.",
+                call. = FALSE, domain = "R-leem")
+        return(meandev)
+      }
+    }
   }
 
+}
 
+#' Mean square
+#'
+#' Compute the sample mean square
+#'
+#' @param x R object (list) of class leem. Use \code{new_leem()} function.
+#' @param rounding Numerical object. Rounds the values in its first argument to the specified number of decimal places (default \code{2}).
+#' @param na.rm a logical value indicating whether \code{NA} values should be stripped before the computation proceeds.
+#' @param details Logical object. Details of data (default \code{FALSE}).
+#' @param grouped Logical object. Determines whether the measure of position result will be based on grouped data or not (default \code{TRUE}).
+#'
+#' @examples
+#' # Example 1: Poisson data
+#' set.seed(10)
+#' rpois(30, 2.5) |>
+#'   new_leem() |>
+#'   ms(grouped = FALSE)
+#' # Example 2: Normal data
+#' rnorm(50, 100, 2.5) |>
+#'   new_leem(variable = 2) |>
+#'   ms()
+#' @export
+ms <- function(x, rounding = 2, na.rm = FALSE, details = FALSE,
+                 grouped = TRUE) {
+  if (!is.logical(details)) stop("The 'details' argument must be logical!",
+                                 call. = FALSE, domain = "R-leem")
+  if (!is.logical(grouped)) stop("The 'grouped' argument must be logical!",
+                                 call. = FALSE, domain = "R-leem")
+  if (!is.logical(na.rm)) stop("The 'na.rm' argument must be logical!",
+                               call. = FALSE, domain = "R-leem")
+  if (!is(x, "leem")) stop("Use the 'new_leem()' function to create an object of class leem!",
+                           call. = FALSE, domain = "R-leem")
+  if (is(x, "leem") & attr(x, "output") == "newleem") x <- tabfreq(x, na.rm = na.rm)
+  if (!is.null(attr(x, "NA"))) return(NA)
+  if (attr(x, "variable") == "discrete") {
+    numchar <- is.numeric(x$statistics$raw_data)
+    if (numchar) {
+      msquare <- round(sum((x$statistics$raw_data - mean(x = x, na.rm = na.rm))^2), digits = rounding)
+      resume <- list(`mean square` = msquare, table = x$table, rawdata = x$statistics$raw_data)
+      if (details) {
+        return(resume)
+      } else {
+        return(msquare)
+      }
 
+    } else {
+      stop("Measure not used for this data type!", call. = FALSE,
+           domain = "R-leem")
+    }
+  }
+  if (attr(x, "variable") == "continuous") {
+    if (grouped == TRUE) {
+      msquare <- round(sum((x$table$PM - mean(x = x, na.rm = na.rm, grouped = TRUE))^2 * x$table$Fi), digits = rounding)
+      resume <- list(`mean square` = msquare, table = x$table, rawdata = x$statistics$raw_data)
 
+      if (details) {
+        return(resume)
+      }
+      else {
+        return(msquare)
+      }
+    } else {
+      msquare <- round(sum((x$statistics$raw_data - mean(x = x, na.rm = na.rm, grouped = FALSE))^2), digits = rounding)
+      resume <- list(`mean square` = msquare, table = x$table, rawdata = x$statistics$raw_data)
+      if (details) {
+        return(resume)
+      }
+      else {
+        return(msquare)
+      }
+    }
+  }
+}
 
 #' Median absolute deviation
 #'

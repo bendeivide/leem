@@ -57,6 +57,62 @@ P()
 
 ### Checagem de Marko sobre as interfaces
 
+-   Region A
+    -   [x] TCLTK
+        -   [x] quantil
+        -   [x] média
+        -   [x] desvio padrão
+        -   [x] tamanho de texto
+        -   [x] orientação do título
+        -   [x] vírgula
+        -   [x] exportar png
+        -   [x] exportar svg
+        -   [x] exportar pdf
+    -   [x] RSTUDIO
+        -   [x] quantil
+        -   [x] média
+        -   [x] desvio padrão
+        -   [x] tamanho de texto
+        -   [x] orientação do título
+        -   [x] vírgula
+    -   [x] SHINY
+        -   [x] quantil
+        -   [x] média
+        -   [x] desvio padrão
+        -   [x] tamanho de texto
+        -   [x] orientação do título
+        -   [x] vírgula
+        -   [x] exportar png
+        -   [x] exportar svg
+        -   [x] exportar pdf
+-   Region B
+    -   [x] TCLTK
+        -   [x] quantil
+        -   [x] média
+        -   [x] desvio padrão
+        -   [x] tamanho de texto
+        -   [x] orientação do título
+        -   [x] vírgula
+        -   [x] exportar png
+        -   [x] exportar svg
+        -   [x] exportar pdf
+    -   [x] RSTUDIO
+        -   [x] quantil
+        -   [x] média
+        -   [x] desvio padrão
+        -   [x] tamanho de texto
+        -   [x] orientação do título
+        -   [x] vírgula
+    -   [x] SHINY
+        -   [x] quantil
+        -   [x] média
+        -   [x] desvio padrão
+        -   [x] tamanho de texto
+        -   [x] orientação do título
+        -   [x] vírgula
+        -   [x] exportar png
+        -   [x] exportar svg
+        -   [x] exportar pdf
 -   lower.tail = TRUE
     -   [x] TCLTK
         -   [x] quantil
@@ -113,7 +169,6 @@ P()
         -   [x] exportar png
         -   [x] exportar svg
         -   [x] exportar pdf
-            -   [x]  ~~Eixo x não aparece~~ (Corrigido!!!)
 -   lower.tail = NULL
     -   [ ] TCLTK
         -   [x] quantil
@@ -122,10 +177,9 @@ P()
         -   [x] tamanho de texto
         -   [x] orientação do título
         -   [x] vírgula
-        -   [ ] exportar png
-        -   [ ] exportar svg
-        -   [ ] exportar pdf
-            -   [x]  ~~Gráfico não é gerado~~ (Corrigido!!!)
+        -   [x] exportar png
+        -   [x] exportar svg
+        -   [x] exportar pdf
     -   [x] RSTUDIO
         -   [x] quantil
         -   [x] média

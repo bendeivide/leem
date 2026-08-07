@@ -778,3 +778,6 @@ msgstr "Quantil 1"
 
 msgid "Quantile 2"
 msgstr "Quantil 2"
+
+msgid "Due to the finite binary representation of floating-point numbers in computers, the sum of deviations from the mean may not be exactly zero, even though theoretically it should be. The result has been rounded to 'zero' decimal places to mitigate this numerical artifact."
+msgstr "Devido à representação binária finita de números de ponto flutuante nos computadores, a soma dos desvios em relação à média pode não ser exatamente zero, mesmo que teoricamente devesse ser. O resultado foi arredondado para 'zero' casas decimais para mitigar este artefato numérico."
