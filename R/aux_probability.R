@@ -9,6 +9,56 @@
 #########################################################################
 
 
+plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
+  if (is.null(main)) {
+  
+    # Localized title text
+    titulo <- gettext("Normal Distribution", domain = "R-leem")
+
+    if (vert.orien.main) { # *** NEW LINE ***
+      # P(a > X > b)
+      if (attr(q, "region") == "region1") {
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+      # P(a >= X >= b)
+      if (attr(q, "region") == "region3") {
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+      # P(a >= X > b)
+      if (attr(q, "region") == "region5") {
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+      # P(a > X >= b)
+      if (attr(q, "region") == "region6") {
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+    } else {
+      # P(a > X > b)
+      if (attr(q, "region") == "region1") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+      # P(a >= X >= b)
+      if (attr(q, "region") == "region3") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+      # P(a >= X > b)
+      if (attr(q, "region") == "region5") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+      # P(a > X >= b)
+      if (attr(q, "region") == "region6") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+      }
+    }
+  }
+
+  return(main)
+}
+
 # Auxiliar functions of P()
 # Observations:
 #    - `%>X>%`() internal function
@@ -98,57 +148,16 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # Localized title text
   
   # Ploting the formula (depending on the region) on
-  # the top of the figure.
-  if (is.null(main)) {
-  
-    # Localized title text
-    titulo <- gettext("Normal Distribution", domain = "R-leem")
+  # the top of the figure.--------------------------------------------------------------------------
 
-    if (vert.orien.main) { # *** NEW LINE ***
-      # P(a > X > b)
-      if (attr(q, "region") == "region1") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a >= X >= b)
-      if (attr(q, "region") == "region3") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a >= X > b)
-      if (attr(q, "region") == "region5") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a > X >= b)
-      if (attr(q, "region") == "region6") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-    } else {
-      # P(a > X > b)
-      if (attr(q, "region") == "region1") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-      # P(a >= X >= b)
-      if (attr(q, "region") == "region3") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-      # P(a >= X > b)
-      if (attr(q, "region") == "region5") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-      # P(a > X >= b)
-      if (attr(q, "region") == "region6") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-    }
-  }
+  main <- plot_top_text(q, main, vert.orien.main, mu, sigma, q_text)
+
+  
   # ------------------------------------------------------------------------------------------------
 
   # Creating a Normal Distribution curve
   # this function can create a Normal Distribution curve
-  # allows de use of certain parameters 
+  # allows de use of certain parameters ------------------------------------------------------------ 
   curve(
       dnorm(x, mean = mu, sd = sigma),
       minimo,
