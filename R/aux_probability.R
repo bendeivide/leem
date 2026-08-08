@@ -59,6 +59,93 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
   return(main)
 }
 
+create_curve_and_axis <- function (mu, sigma, fx, fy, fz, main, cex.main, cex.axis, dec, minimo, maximo) {
+  # this function can create a Normal Distribution curve
+  # allows de use of certain parameters ------------------------------------------------------------
+  curve(
+      dnorm(x, mean = mu, sd = sigma),
+      minimo,
+      maximo,
+      ylim = c(0, 1.2 * max(fx,fy,fz)),
+      xlab = "X",
+      ylab = expression(f[X](X)), # Draw a beautiful notation.
+      panel.first = grid(col = "gray90"),
+      main = main,
+      xaxt = "n", # Standard X-axis = none
+      yaxt = "n", # Standard Y-axis = none
+      cex.main = cex.main # Text proportion related to the curve
+    )
+  # ------------------------------------------------------------------------------------------------
+
+  # Generate pretty x-axis values
+  axis_x <- pretty(minimo:maximo) # *** NEW LINE ***
+
+  # *** NEW BLOCK ***
+  # Draw x-axis
+  axis(
+    side = 1,
+    at = axis_x
+  )
+
+  # Generate pretty values for the y-axis
+  ## dec of P()
+  axis_y <- pretty(dnorm(minimo:maximo, mu, sigma)) # *** NEW LINE ***
+
+  # *** NEW BLOCK ***
+  # Format y-axis labels with comma decimal separator
+  if (dec == ",") {
+    # Y-axis
+    axis(
+      side = 2,
+      at = axis_y,
+      cex.axis = cex.axis,
+      labels = format(
+        axis_y,
+        decimal.mark = ",",
+        nsmall = 2
+      )
+    )
+  } else {
+    # Default y-axis labels
+    # Y-axis
+    axis(
+      side = 2,
+      at = axis_y,
+      cex.axis = cex.axis
+    )
+  }
+}
+
+create_polygon <- function(x, fx, y, fy,z, fz, col){
+  # 'polygon' is a function that can create a form over the Normal curve
+  # previosly created by 'curve' function. 'polygon' needs coordinates over
+  # the curve line (y1, fy1),(yn, fyn), and its return way ((yn, 0),(y1, 0).
+  # 
+  # arguments: (((y1, fy1),(yn, fyn)), ((yn, 0),(y1, 0)), fullfill_color)
+  
+  # Background
+  polygon(
+          c(y, rev(y)),
+          c(fy, rep(0, length(fy))),
+          col = "gray90"
+        )
+
+  # Shade the cumulative probability region
+  # col1 of P(X < q[1])
+  polygon(
+          c(x, rev(x)),
+          c(fx, rep(0, length(fx))),
+          col = col
+        )
+  
+  # col1 of P(X > q[2])
+  polygon(
+          c(z,rev(z)),
+          c(fz,rep(0,length(fz))),
+          col = col
+        )
+}
+
 # Auxiliar functions of P()
 # Observations:
 #    - `%>X>%`() internal function
@@ -149,100 +236,21 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   
   # Ploting the formula (depending on the region) on
   # the top of the figure.--------------------------------------------------------------------------
-
   main <- plot_top_text(q, main, vert.orien.main, mu, sigma, q_text)
+  # ------------------------------------------------------------------------------------------------
 
+  # Creating a Normal Distribution curve ------------------------------------------------------------ 
+  create_curve_and_axis(mu, sigma, fx, fy, fz, main, cex.main, cex.axis, dec, minimo, maximo)
+  #-------------------------------------------------------------------------------------------------
   
-  # ------------------------------------------------------------------------------------------------
-
-  # Creating a Normal Distribution curve
-  # this function can create a Normal Distribution curve
-  # allows de use of certain parameters ------------------------------------------------------------ 
-  curve(
-      dnorm(x, mean = mu, sd = sigma),
-      minimo,
-      maximo,
-      ylim = c(0, 1.2 * max(fx,fy,fz)),
-      xlab = "X",
-      ylab = expression(f[X](X)), # Draw a beautiful notation.
-      panel.first = grid(col = "gray90"),
-      main = main,
-      xaxt = "n", # Standard X-axis = none
-      yaxt = "n", # Standard Y-axis = none
-      cex.main = cex.main # Text proportion related to the curve
-    )
-  # ------------------------------------------------------------------------------------------------
-
-  # Generate pretty x-axis values
-  axis_x <- pretty(minimo:maximo) # *** NEW LINE ***
-
-  # *** NEW BLOCK ***
-  # Draw x-axis
-  axis(
-    side = 1,
-    at = axis_x
-  )
-
-  # Generate pretty values for the y-axis
-  ## dec of P()
-  axis_y <- pretty(dnorm(minimo:maximo, mu, sigma)) # *** NEW LINE ***
-
-  # *** NEW BLOCK ***
-  # Format y-axis labels with comma decimal separator
-  if (dec == ",") {
-    # Y-axis
-    axis(
-      side = 2,
-      at = axis_y,
-      cex.axis = cex.axis,
-      labels = format(
-        axis_y,
-        decimal.mark = ",",
-        nsmall = 2
-      )
-    )
-  } else {
-    # Default y-axis labels
-    # Y-axis
-    axis(
-      side = 2,
-      at = axis_y,
-      cex.axis = cex.axis
-    )
-  }
 
   # Area  P(q[1] > X > q[2])
 
-  # Creating a polygon
-  # 'polygon' is a function that can create a form over the Normal curve
-  # previosly created by 'curve' function. 'polygon' needs coordinates over
-  # the curve line (y1, fy1),(yn, fyn), and its return way ((yn, 0),(y1, 0).
-  # 
-  # arguments: (((y1, fy1),(yn, fyn)), ((yn, 0),(y1, 0)), fullfill_color)
-  
-  # Background
-  polygon(
-          c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
-          col = "gray90"
-        )
-
-  # Shade the cumulative probability region
-  # col1 of P(X < q[1])
-  polygon(
-          c(x, rev(x)),
-          c(fx, rep(0, length(fx))),
-          col = col
-        )
-  
-  # col1 of P(X > q[2])
-  polygon(
-          c(z,rev(z)),
-          c(fz,rep(0,length(fz))),
-          col = col
-        )
+  # Creating a polygon -----------------------------------------------------------------------------
+  create_polygon(x, fx, y, fy,z, fz, col)
   # ------------------------------------------------------------------------------------------------
 
+  #create_plot_details(q_text, q_rounded_value, col2, text.size, minimo, maximo, q_density_text, q_density_value, long.segment, )
 
   # Creating details on the X axis -----------------------------------------------------------------
   
@@ -302,6 +310,7 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # Add point at (q, density)
   # Point inserted
   points(q_rounded_value, q_density_value, pch = 19)
+
 
   # Legends ----------------------------------------------------------------------------------------
   
