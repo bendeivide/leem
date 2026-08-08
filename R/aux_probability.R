@@ -23,12 +23,12 @@
 # sigma: Satandard Desviation
 # rounding: 
 # main:  
-plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec = c(".", ","),
+plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                long.segment = FALSE, col = "#8EC5E5",
                                col2 = "#38A8E8", lty = 2, main = NULL,
                                text.size = 1, cex.main = 1.2,
                                cex.axis = 1, cex.lab = 1,
-                               vert.orien.main = TRUE) {
+                               vert.orien.main = TRUE, maximo, minimo, q1 = NULL, q2 = NULL) {
   
   if (!is.null(q1)){
     q[1] <- q1
@@ -36,9 +36,9 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
   } 
   
   # Define the minimum x-axis limit
-  minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
+  #minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
   # Define the maximum x-axis limit
-  maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
+  #maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
   
   
   
@@ -63,29 +63,33 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
   #------------------------------
 
   # Density value at q
-  pdf <- dnorm(q, mu, sigma)
-
+  #pdf <- dnorm(q, mu, sigma)
+  q_density_value <- dnorm(q, mu, sigma)
+  
   # Rounded value of q for display
-  qq <- round(q, digits=2)
-  qqaux <- qq #???
+  #qq <- round(q, digits=2)
+  q_rounded_value <- round(q, digits=2)
+  
+  #qqaux <- qq #???
 
   # Probability P(q[1] > X > q[2])
-  Pr <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
+  probability_value <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
 
 
   # *** NEW BLOCK ***
   # Replace decimal separator if comma format is requested
   if (dec == ",") {
-    Pr_text <- gsub("\\.", ",", Pr)
-    qq_text <- gsub("\\.", ",", qq)
+    prob_text <- gsub("\\.", ",", probability_value)
+    q_text <- gsub("\\.", ",", q_rounded_value)
     mu_text <- gsub("\\.", ",", mu)
     sigma_text <- gsub("\\.", ",", sigma)
-    pdf_text <- gsub("\\.", ",", round(pdf, 3))
+    q_density_text <- gsub("\\.", ",", round(q_density_value, 3))
+
   } else {
     # Keep default decimal separator
-    Pr_text <- Pr
-    qq_text <- qq
-    pdf_text <- round(pdf, 3)
+    prob_text <- probability_value
+    q_text <- q_rounded_value
+    q_density_text <- round(q_density_value, 3)
     mu_text <- mu
     sigma_text <- sigma
   }
@@ -150,9 +154,9 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
       minimo,
       maximo,
       ylim = c(0, 1.2 * max(fx,fy,fz)),
-      xlab="X",
+      xlab = "X",
       ylab = expression(f[X](X)), # Draw a beautiful notation.
-      panel.first = grid(col="gray90"),
+      panel.first = grid(col = "gray90"),
       main = main,
       xaxt = "n", # Standard X-axis = none
       yaxt = "n", # Standard Y-axis = none
@@ -161,18 +165,18 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
   # ------------------------------------------------------------------------------------------------
 
   # Generate pretty x-axis values
-  eixox <- pretty(minimo:maximo) # *** NEW LINE ***
+  axis_x <- pretty(minimo:maximo) # *** NEW LINE ***
 
   # *** NEW BLOCK ***
   # Draw x-axis
   axis(
     side = 1,
-    at = eixox
+    at = axis_x
   )
 
   # Generate pretty values for the y-axis
   ## dec of P()
-  ypretty <- pretty(dnorm(minimo:maximo, mu, sigma)) # *** NEW LINE ***
+  axis_y <- pretty(dnorm(minimo:maximo, mu, sigma)) # *** NEW LINE ***
 
   # *** NEW BLOCK ***
   # Format y-axis labels with comma decimal separator
@@ -180,10 +184,10 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
     # Y-axis
     axis(
       side = 2,
-      at = ypretty,
+      at = axis_y,
       cex.axis = cex.axis,
       labels = format(
-        ypretty,
+        axis_y,
         decimal.mark = ",",
         nsmall = 2
       )
@@ -193,7 +197,7 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
     # Y-axis
     axis(
       side = 2,
-      at = ypretty,
+      at = axis_y,
       cex.axis = cex.axis
     )
   }
@@ -230,25 +234,13 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
         )
   # ------------------------------------------------------------------------------------------------
 
-  # geting value of q, rounded with 2 digits
-  #qq <- round(q, digits=2)
 
-  #qqaux <- qq # used in abline function
-
-  # Probability result: P(q[1] > X > q[2])
-  Pr <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
-  
-  Pr <- gsub("\\.", ",", Pr)
-  ##qq <- gsub("\\.", ",", qq)
-
-
-
-  # Creating details on the X axis ----------------------------------------------------------------------
+  # Creating details on the X axis -----------------------------------------------------------------
   
   # Highlight q on the x-axis 
   ## X-axis
   # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts
-  mtext(qq_text, side = 1, at = qq, line = 2, col = col2, font = 2, cex = text.size) # *** NEW LINE ***
+  mtext(q_text, side = 1, at = q_rounded_value, line = 2, col = col2, font = 2, cex = text.size) # *** NEW LINE ***
   
   #aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20 # getting coordinates to plot
   
@@ -256,18 +248,18 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
   #axis(side=1, at=qq, lwd = 0, col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2) 
   
   # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
-  axis(side = 1, at = as.character(c(minimo, qq[1])), tick = TRUE, lwd = 1,
+  axis(side = 1, at = as.character(c(minimo, q_rounded_value[1])), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
   
-  axis(side=1, at=as.character(c(qq[2], maximo)), tick = TRUE, lwd = 1,
+  axis(side=1, at=as.character(c(q_rounded_value[2], maximo)), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   # Creating a tiny line under the values of q +++++++++++++++++++++++++++++++++++++++
-  axis(side = 1, at = as.character(qq[1]), tick = TRUE, lwd = 1,
+  axis(side = 1, at = as.character(q_rounded_value[1]), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
     
-  axis(side = 1, at = as.character(qq[2]), tick = TRUE, lwd = 1,
+  axis(side = 1, at = as.character(q_rounded_value[2]), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   # ------------------------------------------------------------------------------------------------
@@ -279,17 +271,17 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
   # Draw full or partial guide lines
   # col2 and lty of P()
   if (isTRUE(long.segment)) {
-    abline(v = qqaux, col = col2, lty = lty)
-    abline(h = pdf, col = col2, lty = lty)
+    abline(v = q_rounded_value, col = col2, lty = lty)
+    abline(h = q_density_value, col = col2, lty = lty)
   } else {
-    segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty)
-    segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty)
+    segments(q_rounded_value, 0, q_rounded_value, q_density_value, col = col2, lty = lty)
+    segments(par("usr")[1], q_density_value, q_rounded_value, q_density_value, col = col2, lty = lty)
   }
   # ------------------------------------------------------------------------------------------------
 
   # Add point at (q, density)
   # Point inserted
-  points(qqaux, pdf, pch = 19)
+  points(q_rounded_value, q_density_value, pch = 19)
 
   # Legends ----------------------------------------------------------------------------------------
   
@@ -314,7 +306,7 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
     # the fucntion returns the legend coordinates
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
-                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
+                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
     
     # Display parameter legend
     # legaux$text$y is a coordinate
@@ -325,7 +317,7 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
   if (attr(q, "region") == "region3") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
+                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu_text, varen = sigma_text, parametros = parametros)))
@@ -333,7 +325,7 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
   if (attr(q, "region") == "region5") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
-                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
+                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
@@ -342,7 +334,7 @@ plotpnormalraplot <- function(q1 = NULL, q2 = NULL, q, mu, sigma, rounding, dec 
   if ( attr(q, "region") == "region6") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
-                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
+                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
@@ -400,7 +392,7 @@ plotpnormalrarstudio <- function(q, mu, sigma, rounding,
     # cex.lab            -> Expansion factor for axis titles.
     # vert.orien.main    -> Logical value controlling vertical title orientation.
 
-    plotpnormalraplot(q1, q2, q, mu, sigma, rounding,
+    plotpnormalraplot(q, mu, sigma, rounding,
                       # Define the decimal separator according to the
                       # checkbox state selected by the user.
                       dec = if (isTRUE(decimals)) "," else ".",
@@ -412,7 +404,7 @@ plotpnormalrarstudio <- function(q, mu, sigma, rounding,
                       # for the general text size.
                       cex.main = text.size,
                       cex.axis, cex.lab,
-                      vert.orien.main),
+                      vert.orien.main, maximo, minimo, q1, q2),
     #################################################
     # Interactive controls
     #################################################

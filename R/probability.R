@@ -457,12 +457,12 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
 
   if (length(q) > 1){
     # Auxiliar variables
-    minimo <- if (q[1] <= argaddit$mean - 3 * argaddit$sd) q[1] - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
-    maximo <- if (q[2] > argaddit$mean + 3 * argaddit$sd) q[2] + 3 * argaddit$sd else argaddit$mean + 3 * argaddit$sd
+    minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+    maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
 
   } else {
-    minimo <- if (q <=  argaddit$mean - 3 * argaddit$sd) q - 3 * argaddit$sd else argaddit$mean - 3 * argaddit$sd
-    maximo <- if (q > argaddit$mean + 3 * argaddit$sd) q + 3 * argaddit$sd else argaddit$mean + 3 * argaddit$sd
+    minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+    maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
   
   }
 
@@ -498,7 +498,7 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
                            col2, lty, main,
                            text.size, cex.main,
                            cex.axis, cex.lab,
-                           vert.orien.main)
+                           vert.orien.main, maximo, minimo)
       }
 
       if (gui == "rstudio") {
