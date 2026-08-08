@@ -107,19 +107,19 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     if (vert.orien.main) { # *** NEW LINE ***
       # P(a > X > b)
       if (attr(q, "region") == "region1") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
       # P(a >= X >= b)
       if (attr(q, "region") == "region3") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
       # P(a >= X > b)
       if (attr(q, "region") == "region5") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
       # P(a > X >= b)
       if (attr(q, "region") == "region6") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
     } else {
       # P(a > X > b)
@@ -264,6 +264,17 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   # ------------------------------------------------------------------------------------------------
 
+
+  # Creating details on the Y axis -----------------------------------------------------------------
+  # Highlight density value at q on the y-axis
+  mtext(q_density_text, side = 2, at = q_density_value, line = 2, col = col2, font = 2, cex = text.size)
+
+  # Draw tick mark at density value
+  axis(side = 2, at = q_density_value, labels = FALSE,
+       col = col2, font = 2, col.axis = col2, tick = TRUE, lwd.ticks = 1)
+  # ------------------------------------------------------------------------------------------------
+
+
   # Long segment and type --------------------------------------------------------------------------
   # Create a vertical line at the q point. Is a red and dashed line
   #abline(v = qqaux, lty=2, col = "red")
@@ -317,7 +328,7 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   if (attr(q, "region") == "region3") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
+                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text[])))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = mu_text, varen = sigma_text, parametros = parametros)))
