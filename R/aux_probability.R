@@ -36,22 +36,22 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
       # P(a > X > b)
       if (attr(q, "region") == "region1") {
         main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
       # P(a >= X >= b)
       if (attr(q, "region") == "region3") {
         main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
       # P(a >= X > b)
       if (attr(q, "region") == "region5") {
         main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
       # P(a > X >= b)
       if (attr(q, "region") == "region6") {
         main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
     }
   }
@@ -144,6 +144,128 @@ create_polygon <- function(x, fx, y, fy,z, fz, col){
           c(fz,rep(0,length(fz))),
           col = col
         )
+}
+
+create_plot_details <- function(lty, q_text, q_rounded_value,
+                       col2, text.size, minimo,
+                       maximo, q_density_text,
+                       q_density_value, long.segment
+                      ) {
+
+  # Highlight q on the x-axis 
+  ## X-axis
+  # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts
+  mtext(q_text, side = 1, at = q_rounded_value, line = 2, col = col2, font = 2, cex = text.size) # *** NEW LINE ***
+  
+  #aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20 # getting coordinates to plot
+  
+  # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts 
+  #axis(side=1, at=qq, lwd = 0, col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2) 
+  
+  # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
+  axis(side = 1, at = as.character(c(minimo, q_rounded_value[1])), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
+  
+  axis(side=1, at=as.character(c(q_rounded_value[2], maximo)), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
+  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  # Creating a tiny line under the values of q +++++++++++++++++++++++++++++++++++++++
+  axis(side = 1, at = as.character(q_rounded_value[1]), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
+    
+  axis(side = 1, at = as.character(q_rounded_value[2]), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
+  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  # ------------------------------------------------------------------------------------------------
+
+
+  # Creating details on the Y axis -----------------------------------------------------------------
+  # Highlight density value at q on the y-axis
+  mtext(q_density_text, side = 2, at = q_density_value, line = 2, col = col2, font = 2, cex = text.size)
+
+  # Draw tick mark at density value
+  axis(side = 2, at = q_density_value, labels = FALSE,
+       col = col2, font = 2, col.axis = col2, tick = TRUE, lwd.ticks = 1)
+  # ------------------------------------------------------------------------------------------------
+
+
+  # Long segment and type --------------------------------------------------------------------------
+  # Create a vertical line at the q point. Is a red and dashed line
+  #abline(v = qqaux, lty=2, col = "red")
+
+  # Draw full or partial guide lines
+  # col2 and lty of P()
+  if (isTRUE(long.segment)) {
+    abline(v = q_rounded_value, col = col2, lty = lty)
+    abline(h = q_density_value, col = col2, lty = lty)
+  } else {
+    segments(q_rounded_value, 0, q_rounded_value, q_density_value, col = col2, lty = lty)
+    segments(par("usr")[1], q_density_value, q_rounded_value, q_density_value, col = col2, lty = lty)
+  }
+  # ------------------------------------------------------------------------------------------------
+
+  # Add point at (q, density)
+  # Point inserted
+  points(q_rounded_value, q_density_value, pch = 19)
+}
+
+write_legend <- function(q, col, text.size, q_text, prob_text, minimo, mu_text, sigma_text, fx, fy) {
+  # Creating a gray rectangle above the plot to hightlight the text over it
+  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  
+  ## Localized parameter label
+  # gettext returns the text. "Parameters:" is the original text, domain determines
+  # the language base to search the translated word. 
+  parametros <- gettext("Parameters:", domain = "R-leem")
+
+  ## P(q[1] > X > q[2])
+  if (attr(q, "region") == "region1") {
+    # Display cumulative probability legend
+    
+    # 'legend' function creates a dinamic legend if matematic notation:
+    # - topleft: Location of the legend;
+    # - bty (Box Type): "n" removes the bordes of the retangle around the legend;
+    # - fill: creates a red square with the legend;
+    # - cex: the relative size of the legend;
+    # - legend: the matematic notation.
+    # the fucntion returns the legend coordinates
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                     legend = substitute(P(X<t1)+P(X>t2)==Pr,
+                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
+    
+    # Display parameter legend
+    # legaux$text$y is a coordinate
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
+  }
+  if (attr(q, "region") == "region3") {
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text[])))
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
+  }
+  if (attr(q, "region") == "region5") {
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                     legend = substitute(P(X<=t1)+P(X>t2)==Pr,
+                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
+    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
+  }
+  if ( attr(q, "region") == "region6") {
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                     legend = substitute(P(X<t1)+P(X>=t2)==Pr,
+                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
+    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
+  }
 }
 
 # Auxiliar functions of P()
@@ -250,125 +372,16 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   create_polygon(x, fx, y, fy,z, fz, col)
   # ------------------------------------------------------------------------------------------------
 
-  #create_plot_details(q_text, q_rounded_value, col2, text.size, minimo, maximo, q_density_text, q_density_value, long.segment, )
 
   # Creating details on the X axis -----------------------------------------------------------------
+  create_plot_details(lty, q_text, q_rounded_value,
+                       col2, text.size, minimo,
+                       maximo, q_density_text,
+                       q_density_value, long.segment
+                      )
   
-  # Highlight q on the x-axis 
-  ## X-axis
-  # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts
-  mtext(q_text, side = 1, at = q_rounded_value, line = 2, col = col2, font = 2, cex = text.size) # *** NEW LINE ***
-  
-  #aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20 # getting coordinates to plot
-  
-  # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts 
-  #axis(side=1, at=qq, lwd = 0, col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2) 
-  
-  # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
-  axis(side = 1, at = as.character(c(minimo, q_rounded_value[1])), tick = TRUE, lwd = 1,
-       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
-  
-  axis(side=1, at=as.character(c(q_rounded_value[2], maximo)), tick = TRUE, lwd = 1,
-       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
-  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
-  # Creating a tiny line under the values of q +++++++++++++++++++++++++++++++++++++++
-  axis(side = 1, at = as.character(q_rounded_value[1]), tick = TRUE, lwd = 1,
-       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
-    
-  axis(side = 1, at = as.character(q_rounded_value[2]), tick = TRUE, lwd = 1,
-       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
-  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  # ------------------------------------------------------------------------------------------------
-
-
-  # Creating details on the Y axis -----------------------------------------------------------------
-  # Highlight density value at q on the y-axis
-  mtext(q_density_text, side = 2, at = q_density_value, line = 2, col = col2, font = 2, cex = text.size)
-
-  # Draw tick mark at density value
-  axis(side = 2, at = q_density_value, labels = FALSE,
-       col = col2, font = 2, col.axis = col2, tick = TRUE, lwd.ticks = 1)
-  # ------------------------------------------------------------------------------------------------
-
-
-  # Long segment and type --------------------------------------------------------------------------
-  # Create a vertical line at the q point. Is a red and dashed line
-  #abline(v = qqaux, lty=2, col = "red")
-
-  # Draw full or partial guide lines
-  # col2 and lty of P()
-  if (isTRUE(long.segment)) {
-    abline(v = q_rounded_value, col = col2, lty = lty)
-    abline(h = q_density_value, col = col2, lty = lty)
-  } else {
-    segments(q_rounded_value, 0, q_rounded_value, q_density_value, col = col2, lty = lty)
-    segments(par("usr")[1], q_density_value, q_rounded_value, q_density_value, col = col2, lty = lty)
-  }
-  # ------------------------------------------------------------------------------------------------
-
-  # Add point at (q, density)
-  # Point inserted
-  points(q_rounded_value, q_density_value, pch = 19)
-
-
   # Legends ----------------------------------------------------------------------------------------
-  
-  # Creating a gray rectangle above the plot to hightlight the text over it
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-  
-  ## Localized parameter label
-  # gettext returns the text. "Parameters:" is the original text, domain determines
-  # the language base to search the translated word. 
-  parametros <- gettext("Parameters:", domain = "R-leem")
-
-  ## P(q[1] > X > q[2])
-  if (attr(q, "region") == "region1") {
-    # Display cumulative probability legend
-    
-    # 'legend' function creates a dinamic legend if matematic notation:
-    # - topleft: Location of the legend;
-    # - bty (Box Type): "n" removes the bordes of the retangle around the legend;
-    # - fill: creates a red square with the legend;
-    # - cex: the relative size of the legend;
-    # - legend: the matematic notation.
-    # the fucntion returns the legend coordinates
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(X<t1)+P(X>t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
-    
-    # Display parameter legend
-    # legaux$text$y is a coordinate
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
-  }
-  if (attr(q, "region") == "region3") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text[])))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
-  }
-  if (attr(q, "region") == "region5") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(X<=t1)+P(X>t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
-  }
-  if ( attr(q, "region") == "region6") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(X<t1)+P(X>=t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
-  }
+  write_legend(q, col, text.size, q_text, prob_text, minimo, mu_text, sigma_text, fx, fy)  
 }
 
 ## RStudio
