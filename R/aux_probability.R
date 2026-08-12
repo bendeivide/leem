@@ -15,6 +15,7 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
     # Localized title text
     titulo <- gettext("Normal Distribution", domain = "R-leem")
 
+    # Region A -------------------------------------------------------------
     if (vert.orien.main) { # *** NEW LINE ***
       # P(a > X > b)
       if (attr(q, "region") == "region1") {
@@ -54,7 +55,9 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
           bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
     }
+    # ------------------------------------------------------------------------------------------------
   }
+
 
   return(main)
 }
@@ -146,16 +149,15 @@ create_polygon <- function(x, fx, y, fy,z, fz, col){
         )
 }
 
-create_plot_details <- function(lty, q_text, q_rounded_value,
+create_plot_details <- function(lty, q_rounded_value,
                        col2, text.size, minimo,
-                       maximo, q_density_text,
-                       q_density_value, long.segment
+                       maximo, q_density_value, long.segment,
+                       text_list
                       ) {
-
   # Highlight q on the x-axis 
   ## X-axis
   # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts
-  mtext(q_text, side = 1, at = q_rounded_value, line = 2, col = col2, font = 2, cex = text.size) # *** NEW LINE ***
+  mtext(text_list$q_text, side = 1, at = q_rounded_value, line = 2, col = col2, font = 2, cex = text.size) # *** NEW LINE ***
   
   #aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20 # getting coordinates to plot
   
@@ -182,7 +184,7 @@ create_plot_details <- function(lty, q_text, q_rounded_value,
 
   # Creating details on the Y axis -----------------------------------------------------------------
   # Highlight density value at q on the y-axis
-  mtext(q_density_text, side = 2, at = q_density_value, line = 2, col = col2, font = 2, cex = text.size)
+  mtext(text_list$q_density_text, side = 2, at = q_density_value, line = 2, col = col2, font = 2, cex = text.size)
 
   # Draw tick mark at density value
   axis(side = 2, at = q_density_value, labels = FALSE,
@@ -210,7 +212,8 @@ create_plot_details <- function(lty, q_text, q_rounded_value,
   points(q_rounded_value, q_density_value, pch = 19)
 }
 
-write_legend <- function(q, col, text.size, q_text, prob_text, minimo, mu_text, sigma_text, fx, fy) {
+#write_legend <- function(q, col, text.size, q_text, prob_text, minimo, mu_text, sigma_text, fx, fy) {
+write_legend <- function(q, col, minimo, fx, fy, text.size, text_list) {
   # Creating a gray rectangle above the plot to hightlight the text over it
   rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
   
@@ -232,13 +235,13 @@ write_legend <- function(q, col, text.size, q_text, prob_text, minimo, mu_text, 
     # the fucntion returns the legend coordinates
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
+                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
     
     # Display parameter legend
     # legaux$text$y is a coordinate
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
+                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
   if (attr(q, "region") == "region3") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
@@ -246,7 +249,7 @@ write_legend <- function(q, col, text.size, q_text, prob_text, minimo, mu_text, 
                                          list(t1=q_text[1],t2=q_text[2], Pr = prob_text[])))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
+                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
   if (attr(q, "region") == "region5") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
@@ -255,16 +258,16 @@ write_legend <- function(q, col, text.size, q_text, prob_text, minimo, mu_text, 
     parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
+                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
   if ( attr(q, "region") == "region6") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
+                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = prob_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
+                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
 }
 
@@ -292,7 +295,10 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   if (!is.null(q1)){
     q[1] <- q1
     q[2] <- q2
-  } 
+  }
+
+  # Creating a list that gather all the text variables
+  text_list <- list()
   
   # Define the minimum x-axis limit
   #minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
@@ -338,19 +344,19 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # *** NEW BLOCK ***
   # Replace decimal separator if comma format is requested
   if (dec == ",") {
-    prob_text <- gsub("\\.", ",", probability_value)
-    q_text <- gsub("\\.", ",", q_rounded_value)
-    mu_text <- gsub("\\.", ",", mu)
-    sigma_text <- gsub("\\.", ",", sigma)
-    q_density_text <- gsub("\\.", ",", round(q_density_value, 3))
+    text_list$prob_text <- gsub("\\.", ",", probability_value)
+    text_list$q_text <- gsub("\\.", ",", q_rounded_value)
+    text_list$mu_text <- gsub("\\.", ",", mu)
+    text_list$sigma_text <- gsub("\\.", ",", sigma)
+    text_list$q_density_text <- gsub("\\.", ",", round(q_density_value, 3))
 
   } else {
     # Keep default decimal separator
-    prob_text <- probability_value
-    q_text <- q_rounded_value
-    q_density_text <- round(q_density_value, 3)
-    mu_text <- mu
-    sigma_text <- sigma
+    text_list$prob_text <- probability_value
+    text_list$q_text <- q_rounded_value
+    text_list$q_density_text <- round(q_density_value, 3)
+    text_list$mu_text <- mu
+    text_list$sigma_text <- sigma
   }
 
   # *** NEW LINE ***
@@ -358,7 +364,7 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   
   # Ploting the formula (depending on the region) on
   # the top of the figure.--------------------------------------------------------------------------
-  main <- plot_top_text(q, main, vert.orien.main, mu, sigma, q_text)
+  main <- plot_top_text(q, main, vert.orien.main, mu, sigma, text_list$q_text)
   # ------------------------------------------------------------------------------------------------
 
   # Creating a Normal Distribution curve ------------------------------------------------------------ 
@@ -374,14 +380,14 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
 
   # Creating details on the X axis -----------------------------------------------------------------
-  create_plot_details(lty, q_text, q_rounded_value,
+  create_plot_details(lty, q_rounded_value,
                        col2, text.size, minimo,
-                       maximo, q_density_text,
-                       q_density_value, long.segment
+                       maximo, q_density_value, 
+                       long.segment, text_list
                       )
   
   # Legends ----------------------------------------------------------------------------------------
-  write_legend(q, col, text.size, q_text, prob_text, minimo, mu_text, sigma_text, fx, fy)  
+  write_legend(q, col, minimo, fx, fy, text.size, text_list)  
 }
 
 ## RStudio
