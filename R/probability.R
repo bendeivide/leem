@@ -516,13 +516,13 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
         # within RStudio.
         #
         # ./aux_probability.R
-        plotpnormalrarstudio(q, mu, sigma, rounding,
+        plot_p_normal_rstudio(q, mu, sigma, rounding,
                              minimo, maximo, dec,
                              long.segment, col,
                              col2, lty, main,
                              text.size, cex.main,
                              cex.axis, cex.lab,
-                             vert.orien.main)
+                             vert.orien.main, region = "region A")
       }
 
       if (gui == "tcltk") {
@@ -558,11 +558,27 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
       }
 
       if (gui == "rstudio") {
-        manipulate::manipulate(plotpnormalbrrstudio(q1, q2, mean, sd, rounding, main, q),
-                               q1 = manipulate::slider(minimo, q[2], q[1]),
-                               q2 = manipulate::slider(q[1], maximo, q[2]),
-                               mean = manipulate::slider(mu, mu + 2 * sigma, mu),
-                               sd = manipulate::slider(sigma, sigma * 1.8, sigma))
+        #################################################
+          # RStudio graphical interface
+          #################################################
+
+          # Call the internal plotting function
+          # responsible for generating the interactive
+          # Normal distribution visualization in the
+          # RStudio environment.
+          #
+          # This interface was designed to provide an
+          # interactive graphical experience directly
+          # within RStudio.
+          #
+          # ./aux_probability.R
+          plot_p_normal_rstudio(q[1], q[2], q, mu, sigma, rounding,
+                               minimo, maximo, dec,
+                               long.segment, col,
+                               col2, lty, main,
+                               text.size, cex.main,
+                               cex.axis, cex.lab,
+                               vert.orien.main, region = "region B")
       }
 
       if (gui == "tcltk") {

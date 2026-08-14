@@ -521,13 +521,13 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 }
 
 ## RStudio
-plotpnormalrarstudio <- function(q, mu, sigma, rounding,
+plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
                                  minimo, maximo, dec,
                                  long.segment, col,
                                  col2, lty, main,
                                  text.size, cex.main,
                                  cex.axis, cex.lab,
-                                 vert.orien.main) {
+                                 vert.orien.main, region) {
 
   q1 <- q[1]
   q2 <- q[2]
@@ -582,7 +582,7 @@ plotpnormalrarstudio <- function(q, mu, sigma, rounding,
                       # for the general text size.
                       cex.main = text.size,
                       cex.axis, cex.lab,
-                      vert.orien.main, maximo, minimo, q1, q2),
+                      vert.orien.main, maximo, minimo, q1, q2, region),
     #################################################
     # Interactive controls
     #################################################
