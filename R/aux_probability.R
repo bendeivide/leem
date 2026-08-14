@@ -296,20 +296,23 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
+
   if (attr(q, "region") == "region3") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = text_list$prob_text[])))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
+                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text[])))
+
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
+
   if (attr(q, "region") == "region5") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = text_list$prob_text)))
+                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
@@ -318,7 +321,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
@@ -341,7 +344,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(t1<=~X<=~t2)==Pr,
                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
@@ -351,7 +354,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
                      legend = substitute(P(t1<=~X<~t2)==Pr,
                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
@@ -361,7 +364,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
                      legend = substitute(P(t1<~X<=~t2)==Pr,
                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
