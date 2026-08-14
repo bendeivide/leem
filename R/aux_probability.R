@@ -56,6 +56,58 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
       }
     }
     # ------------------------------------------------------------------------------------------------
+
+    # Region B -------------------------------------------------------------
+    if (vert.orien.main) {
+      # P(a < X < b)
+      if (attr(q, "region") == "region2") {
+        main <- substitute(atop(bold(titulo),
+                                f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+      # P(a <= X <= b)
+      if (attr(q, "region") == "region4") {
+        main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+      # P(a <= X < b)
+      if (attr(q, "region") == "region7") {
+        main <- substitute(atop(bold(titulo),
+                                f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+      # P(a < X <= b)
+      if (attr(q, "region") == "region8") {
+        main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+    } else {
+      # P(a < X < b)
+      if (attr(q, "region") == "region2") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2),
+                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+      # P(a <= X <= b)
+      if (attr(q, "region") == "region4") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2),
+                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+      ## P(a <= X < b)
+      if (attr(q, "region") == "region7") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2),
+                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+      # P(a < X <= b)
+      if (attr(q, "region") == "region8") {
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2),
+                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+      }
+    }
+    # ------------------------------------------------------------------------------------------------
   }
 
 
@@ -222,6 +274,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
   # the language base to search the translated word. 
   parametros <- gettext("Parameters:", domain = "R-leem")
 
+  # Region A ------------------------------------------------------------
   ## P(q[1] > X > q[2])
   if (attr(q, "region") == "region1") {
     # Display cumulative probability legend
@@ -246,7 +299,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
   if (attr(q, "region") == "region3") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text[])))
+                                         list(t1=q_text[1],t2=q_text[2], Pr = text_list$prob_text[])))
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
@@ -254,7 +307,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
   if (attr(q, "region") == "region5") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
-                                         list(t1=q_text[1],t2=q_text[2], Pr = prob_text)))
+                                         list(t1=q_text[1],t2=q_text[2], Pr = text_list$prob_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
@@ -263,12 +316,56 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
   if ( attr(q, "region") == "region6") {
     legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
-                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = prob_text)))
+                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
     parametros <- gettext("Parameters:", domain = "R-leem")
     legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
   }
+  # -----------------------------------------------------------------------------------------------
+
+  # Region B ------------------------------------------------------------
+  ## P(a < X < b)
+  if (attr(q, "region") == "region2") {
+    # Display cumulative probability legend
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                     legend = substitute(P(t1<~X<~t2)==Pr,
+                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+    # Display parameter legend
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+  }
+  # P(a <= X <= b)
+  if (attr(q, "region") == "region4") {
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                     legend = substitute(P(t1<=~X<=~t2)==Pr,
+                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
+           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
+                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+  }
+  ## P(a <= X < b)
+  if (attr(q, "region") == "region7") {
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                     legend = substitute(P(t1<=~X<~t2)==Pr,
+                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
+    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+  }
+  # P(a < X <= b)
+  if (attr(q, "region") == "region8") {
+    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                     legend = substitute(P(t1<~X<=~t2)==Pr,
+                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+    parametros <- gettext("Parameters:", domain = "R-leem")
+    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
+           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+  }
+  # -----------------------------------------------------------------------------------------------
 }
 
 # Auxiliar functions of P()
@@ -285,12 +382,12 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
 # sigma: Satandard Desviation
 # rounding: 
 # main:  
-plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
+plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                long.segment = FALSE, col = "#8EC5E5",
                                col2 = "#38A8E8", lty = 2, main = NULL,
                                text.size = 1, cex.main = 1.2,
                                cex.axis = 1, cex.lab = 1,
-                               vert.orien.main = TRUE, maximo, minimo, q1 = NULL, q2 = NULL) {
+                               vert.orien.main = TRUE, maximo, minimo, q1 = NULL, q2 = NULL, region) {
   
   if (!is.null(q1)){
     q[1] <- q1
@@ -307,28 +404,46 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # Creating a list that gather all the sequences terms
   sequence_terms_list <- list()
 
-  # Creating a sequence of terms. from the min. til the q
-  # or from q to max. By 0.01 steps
-  # Sequence of x values from minimum to q[1]
-  sequence_terms_list$x <- seq(minimo, q[1], by = 0.01)
-  # Sequence of x values from q[2] to maximum
-  sequence_terms_list$z <- seq(q[2], maximo, by = 0.01)
-  # Sequence of values from minimum to maximum
-  sequence_terms_list$y <-seq(minimo, maximo, by = 0.01)
-  #------------------------------
+  # Creating a sequence of terms.
+  if (region == "region A") {
+    # from the min. til the q
+    # or from q to max. By 0.01 steps
+    # Sequence of x values from minimum to q[1]
+    sequence_terms_list$x <- seq(minimo, q[1], by = 0.01)
+    # Sequence of x values from q[2] to maximum
+    sequence_terms_list$z <- seq(q[2], maximo, by = 0.01)
+    # Sequence of values from minimum to maximum
+    sequence_terms_list$y <-seq(minimo, maximo, by = 0.01)
+    #------------------------------
+
+  } else if (region == "region B") {
+    # Sequence of x values from q[1] to q[2], by 0.01 steps
+    sequence_terms_list$x <- seq(q[1], q[2], by = 0.01)
+    # Sequence of values from minimum to maximum
+    sequence_terms_list$y <- seq(minimo, maximo, by = 0.01)
+  }
   
   # Creating a list that gather all the density terms
   density_terms_list <- list()
 
   # Geting the density of the point of the 
   # normal distribution
-  # Density values for the left region
-  density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
-  # Density values for the right region
-  density_terms_list$fz <- dnorm(sequence_terms_list$z,mean = mu, sd = sigma)
-  # Density values for the background region
-  density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
-  #------------------------------
+  if (region == "region A") {
+    # Density values for the left region
+    density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
+    # Density values for the right region
+    density_terms_list$fz <- dnorm(sequence_terms_list$z,mean = mu, sd = sigma)
+    # Density values for the background region
+    density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
+    #------------------------------
+  } else if (region == "region B") {
+    # Density values for region from q[1] to q[2]
+    density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
+    # Density values for the background region
+    density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
+    #------------------------------
+  }
+
 
   # Density value at q
   #pdf <- dnorm(q, mu, sigma)
@@ -340,8 +455,14 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   
   #qqaux <- qq #???
 
-  # Probability P(q[1] > X > q[2])
-  probability_value <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
+  if (region == "region A") {
+    # Probability P(q[1] > X > q[2])
+    probability_value <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
+
+  } else if (region == "region B") {
+    # Probability P(q[1] < X < q[2])
+    probability_value <- round(pnorm(q[2], mean = mu,sd = sigma) - pnorm(q[1], mean = mu, sd=sigma), digits=rounding)
+  }
 
 
   # Creating a list that gather all the text variables
@@ -571,46 +692,7 @@ plotpnormalrbplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                               text.size = 1, cex.main = 1.2,
                               cex.axis = 1, cex.lab = 1,
                               vert.orien.main = TRUE) {
-  # Define the minimum x-axis limit
-  minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
-  # Define the maximum x-axis limit
-  maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
-
-  # Sequence of x values from q[1] to q[2]
-  x <- seq(q[1], q[2], by = 0.01)
-  # Sequence of values from minimum to maximum
-  y <- seq(minimo, maximo, by = 0.01)
-  # Density values for region from q[1] to q[2]
-  fx <- dnorm(x, mean = mu, sd = sigma)
-  # Density values for the background region
-  fy <- dnorm(y, mean = mu, sd = sigma)
-
-  # Density value at q
-  pdf <- dnorm(q, mu, sigma)
-
-  # Rounded value of q for display
-  qq <- round(q, digits=2)
-  qqaux <- qq
-
-  # Probability P(q[1] < X < q[2])
-  Pr <- round(pnorm(q[2], mean = mu,sd = sigma) - pnorm(q[1], mean = mu, sd=sigma), digits=rounding)
-
-
-  # Replace decimal separator if comma format is requested
-  if (dec == ",") {
-    Pr_text <- gsub("\\.", ",", Pr)
-    qq_text <- gsub("\\.", ",", qq)
-    mu_text <- gsub("\\.", ",", mu)
-    sigma_text <- gsub("\\.", ",", sigma)
-    pdf_text <- gsub("\\.", ",", round(pdf, 3))
-  } else {
-    # Keep default decimal separator
-    Pr_text <- Pr
-    qq_text <- qq
-    pdf_text <- round(pdf, 3)
-    mu_text <- mu
-    sigma_text <- sigma
-  }
+ 
 
   # Create default title if none is provided
   if (is.null(main)) {
@@ -618,55 +700,7 @@ plotpnormalrbplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     # Localized title text
     titulo <- gettext("Normal Distribution", domain = "R-leem")
 
-    if (vert.orien.main) {
-      # P(a < X < b)
-      if (attr(q, "region") == "region2") {
-        main <- substitute(atop(bold(titulo),
-                                f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
-                           list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-      # P(a <= X <= b)
-      if (attr(q, "region") == "region4") {
-        main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
-                           list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-      # P(a <= X < b)
-      if (attr(q, "region") == "region7") {
-        main <- substitute(atop(bold(titulo),
-                                f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
-                           list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-      # P(a < X <= b)
-      if (attr(q, "region") == "region8") {
-        main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
-                           list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-    } else {
-      # P(a < X < b)
-      if (attr(q, "region") == "region2") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2),
-                           list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-      # P(a <= X <= b)
-      if (attr(q, "region") == "region4") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2),
-                           list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-      ## P(a <= X < b)
-      if (attr(q, "region") == "region7") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2),
-                           list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-      # P(a < X <= b)
-      if (attr(q, "region") == "region8") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2),
-                           list(t1 = qq_text[1], t2 = qq_text[2], x = "x", titulo = titulo))
-      }
-    }
+    
   }
 
   # Draw the Normal density curve

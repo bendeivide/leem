@@ -254,7 +254,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           vert.orien.main,
           porcentage,
           browser.shiny,
-          region = "Region A"
+          region = "region A"
         )
 
       }
@@ -283,7 +283,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
           vert.orien.main,
           porcentage,
           browser.shiny,
-          region = "Region B"
+          region = "region B"
         )
       }
     }
@@ -477,7 +477,7 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
     #########################################
   
     # Region A
-    if (region == "Region A") {
+    if (region == "region A") {
       if (gui == "plot") {
         #################################################
         # Base R plotting interface
@@ -493,12 +493,12 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
         # with the Normal distribution.
         
         # ./aux_probability.R
-        plotpnormalraplot(q, mu, sigma, rounding,
+        plot_p_normal_plot(q, mu, sigma, rounding,
                            dec, long.segment, col,
                            col2, lty, main,
                            text.size, cex.main,
                            cex.axis, cex.lab,
-                           vert.orien.main, maximo, minimo)
+                           vert.orien.main, maximo, minimo, region = "region A")
       }
 
       if (gui == "rstudio") {
@@ -546,15 +546,15 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
     }
 
     # If is region B
-    if (region == "Region B"){
-      # Auxiliar variables
-      # minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-      # maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
-      # mu <- argaddit$mean
-      # sigma <- argaddit$sd
-
+    if (region == "region B"){
+  
       if (gui == "plot") {
-        plotpnormalbrplot(q, mu, sigma, rounding, main)
+        plot_p_normal_plot(q, mu, sigma, rounding,
+                           dec, long.segment, col,
+                           col2, lty, main,
+                           text.size, cex.main,
+                           cex.axis, cex.lab,
+                           vert.orien.main, maximo, minimo, region = "region B")
       }
 
       if (gui == "rstudio") {
@@ -576,8 +576,9 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
         on.exit(options(war))
       }
 
-      prob <- pnorm(q = q[2], mean = mu, sd=sigma) - 
-      pnorm(q = q[1], mean = mu, sd=sigma)
+      prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
+
+      return(prob)
     }
   }
   
