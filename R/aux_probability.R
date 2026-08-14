@@ -62,14 +62,14 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
   return(main)
 }
 
-create_curve_and_axis <- function (mu, sigma, fx, fy, fz, main, cex.main, cex.axis, dec, minimo, maximo) {
+create_curve_and_axis <- function (mu, sigma, density_terms_list, main, cex.main, cex.axis, dec, minimo, maximo) {
   # this function can create a Normal Distribution curve
   # allows de use of certain parameters ------------------------------------------------------------
   curve(
       dnorm(x, mean = mu, sd = sigma),
       minimo,
       maximo,
-      ylim = c(0, 1.2 * max(fx,fy,fz)),
+      ylim = c(0, 1.2 * max(density_terms_list$fx, density_terms_list$fy, density_terms_list$fz)),
       xlab = "X",
       ylab = expression(f[X](X)), # Draw a beautiful notation.
       panel.first = grid(col = "gray90"),
@@ -119,7 +119,7 @@ create_curve_and_axis <- function (mu, sigma, fx, fy, fz, main, cex.main, cex.ax
   }
 }
 
-create_polygon <- function(x, fx, y, fy,z, fz, col){
+create_polygon <- function(density_terms_list, sequence_terms_list, col){
   # 'polygon' is a function that can create a form over the Normal curve
   # previosly created by 'curve' function. 'polygon' needs coordinates over
   # the curve line (y1, fy1),(yn, fyn), and its return way ((yn, 0),(y1, 0).
@@ -128,23 +128,23 @@ create_polygon <- function(x, fx, y, fy,z, fz, col){
   
   # Background
   polygon(
-          c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
+          c(sequence_terms_list$y, rev(sequence_terms_list$y)),
+          c(density_terms_list$fy, rep(0, length(density_terms_list$fy))),
           col = "gray90"
         )
 
   # Shade the cumulative probability region
   # col1 of P(X < q[1])
   polygon(
-          c(x, rev(x)),
-          c(fx, rep(0, length(fx))),
+          c(sequence_terms_list$x, rev(sequence_terms_list$x)),
+          c(density_terms_list$fx, rep(0, length(density_terms_list$fx))),
           col = col
         )
   
   # col1 of P(X > q[2])
   polygon(
-          c(z,rev(z)),
-          c(fz,rep(0,length(fz))),
+          c(sequence_terms_list$z,rev(sequence_terms_list$z)),
+          c(density_terms_list$fz,rep(0,length(density_terms_list$fz))),
           col = col
         )
 }
@@ -213,9 +213,9 @@ create_plot_details <- function(lty, q_rounded_value,
 }
 
 #write_legend <- function(q, col, text.size, q_text, prob_text, minimo, mu_text, sigma_text, fx, fy) {
-write_legend <- function(q, col, minimo, fx, fy, text.size, text_list) {
+write_legend <- function(q, col, minimo, density_terms_list, text.size, text_list) {
   # Creating a gray rectangle above the plot to hightlight the text over it
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  rect(par("usr")[1], 1.03 * max(density_terms_list$fx, density_terms_list$fy), par("usr")[2], par("usr")[4], col = "gray")
   
   ## Localized parameter label
   # gettext returns the text. "Parameters:" is the original text, domain determines
@@ -297,8 +297,6 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     q[2] <- q2
   }
 
-  # Creating a list that gather all the text variables
-  text_list <- list()
   
   # Define the minimum x-axis limit
   #minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
@@ -306,25 +304,30 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   #maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
   
   
-  
+  # Creating a list that gather all the sequences terms
+  sequence_terms_list <- list()
+
   # Creating a sequence of terms. from the min. til the q
   # or from q to max. By 0.01 steps
   # Sequence of x values from minimum to q[1]
-  x <- seq(minimo, q[1], by = 0.01)
+  sequence_terms_list$x <- seq(minimo, q[1], by = 0.01)
   # Sequence of x values from q[2] to maximum
-  z <- seq(q[2], maximo, by = 0.01)
+  sequence_terms_list$z <- seq(q[2], maximo, by = 0.01)
   # Sequence of values from minimum to maximum
-  y <-seq(minimo, maximo, by = 0.01)
+  sequence_terms_list$y <-seq(minimo, maximo, by = 0.01)
   #------------------------------
   
+  # Creating a list that gather all the density terms
+  density_terms_list <- list()
+
   # Geting the density of the point of the 
   # normal distribution
   # Density values for the left region
-  fx <- dnorm(x, mean = mu, sd = sigma)
+  density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
   # Density values for the right region
-  fz <- dnorm(z,mean = mu, sd = sigma)
+  density_terms_list$fz <- dnorm(sequence_terms_list$z,mean = mu, sd = sigma)
   # Density values for the background region
-  fy <- dnorm(y, mean = mu, sd = sigma)
+  density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
   #------------------------------
 
   # Density value at q
@@ -340,6 +343,9 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # Probability P(q[1] > X > q[2])
   probability_value <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
 
+
+  # Creating a list that gather all the text variables
+  text_list <- list()
 
   # *** NEW BLOCK ***
   # Replace decimal separator if comma format is requested
@@ -368,14 +374,14 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # ------------------------------------------------------------------------------------------------
 
   # Creating a Normal Distribution curve ------------------------------------------------------------ 
-  create_curve_and_axis(mu, sigma, fx, fy, fz, main, cex.main, cex.axis, dec, minimo, maximo)
+  create_curve_and_axis(mu, sigma, density_terms_list, main, cex.main, cex.axis, dec, minimo, maximo)
   #-------------------------------------------------------------------------------------------------
   
 
   # Area  P(q[1] > X > q[2])
 
   # Creating a polygon -----------------------------------------------------------------------------
-  create_polygon(x, fx, y, fy,z, fz, col)
+  create_polygon(density_terms_list, sequence_terms_list, col)
   # ------------------------------------------------------------------------------------------------
 
 
@@ -387,7 +393,7 @@ plotpnormalraplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                       )
   
   # Legends ----------------------------------------------------------------------------------------
-  write_legend(q, col, minimo, fx, fy, text.size, text_list)  
+  write_legend(q, col, minimo, density_terms_list, text.size, text_list)  
 }
 
 ## RStudio
