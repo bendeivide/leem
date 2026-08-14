@@ -570,7 +570,7 @@ plotpnormalrarstudio <- function(q, mu, sigma, rounding,
     # cex.lab            -> Expansion factor for axis titles.
     # vert.orien.main    -> Logical value controlling vertical title orientation.
 
-    plotpnormalraplot(q, mu, sigma, rounding,
+    plot_p_normal_plot(q, mu, sigma, rounding,
                       # Define the decimal separator according to the
                       # checkbox state selected by the user.
                       dec = if (isTRUE(decimals)) "," else ".",
