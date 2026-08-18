@@ -572,7 +572,7 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
           # within RStudio.
           #
           # ./aux_probability.R
-          plot_p_normal_rstudio(q[1], q[2], q, mu, sigma, rounding,
+          plot_p_normal_rstudio(q, mu, sigma, rounding,
                                minimo, maximo, dec,
                                long.segment, col,
                                col2, lty, main,
