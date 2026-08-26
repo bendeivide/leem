@@ -347,49 +347,25 @@
     # Generate plot
     # =========================
 
-    plotpnormalratcltk_aux(
-
-      q1 = as.numeric(tclvalue(q1_var)),
-
-      q2 = as.numeric(tclvalue(q2_var)),
-
+    plot_p_normal_plot(
       q = q,
-
+      q1 = as.numeric(tclvalue(q1_var)),
+      q2 = as.numeric(tclvalue(q2_var)),
       mu = as.numeric(tclvalue(media_var)),
-
       sigma = as.numeric(tclvalue(sd_var)),
-
       rounding = rounding,
-
       dec = if (tclvalue(comma_var) == "0") "." else ",",
-
-      long.segment = as.logical(
-        as.numeric(tclvalue(segment_var))
-      ),
-
+      long.segment = as.logical(as.numeric(tclvalue(segment_var))),
       col = col,
-
       col2 = col2,
-
       lty = lty,
-
       main = main,
-
-      text.size = as.numeric(
-        tclvalue(text.size_var)
-      ),
-
-      cex.main = as.numeric(
-        tclvalue(text.size_var)
-      ),
-
+      text.size = as.numeric(tclvalue(text.size_var)),
+      cex.main = as.numeric(tclvalue(text.size_var)),
       cex.axis = cex.axis,
-
       cex.lab = cex.lab,
-
-      vert.orien.main = as.logical(
-        as.numeric(tclvalue(title_var))
-      )
+      vert.orien.main = as.logical(as.numeric(tclvalue(title_var))),
+      region = "region A"
     )
 
     # Close graphics device
@@ -479,8 +455,12 @@
     png(filename = temporary_file, width = width, height = height, units = "px")
     
     try(# Generate the normal distribution plot
-      plotpnormalratcltk_aux(
-        q1 = quantil1, q2 = quantil2, q, mu = media, sigma = desvpad,
+      plot_p_normal_plot(
+        q = q,
+        q1 = quantil1,
+        q2 = quantil2, 
+        mu = media, 
+        sigma = desvpad,
         rounding = rounding,
         dec = if (tclvalue(comma_var) == "0") "." else ",",
         long.segment = segment,
@@ -492,8 +472,11 @@
         cex.main = textsize,
         cex.axis = cex.axis,
         cex.lab = cex.lab,
-        vert.orien.main = orienttext
-      ), silent = TRUE)
+        vert.orien.main = orienttext,
+        region = "region A"
+      ),
+      silent = TRUE
+    )
 
     dev.off() # Close the process
 

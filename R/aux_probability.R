@@ -390,7 +390,8 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                col2 = "#38A8E8", lty = 2, main = NULL,
                                text.size = 1, cex.main = 1.2,
                                cex.axis = 1, cex.lab = 1,
-                               vert.orien.main = TRUE, maximo, minimo, q1 = NULL, q2 = NULL, region) {
+                               vert.orien.main = TRUE, maximo, minimo,
+                               q1 = NULL, q2 = NULL, region) {
   
   if (!is.null(q1)){
     q[1] <- q1
@@ -674,25 +675,6 @@ plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
   )
 }
 
-
-# TCLTK: Low-level function to plot the Normal distribution highlighting P(a > X > b)
-plotpnormalratcltk_aux <- function(q1, q2, q, mu, sigma, rounding,
-                               dec, long.segment, col,
-                               col2, lty, main,
-                               text.size, cex.main,
-                               cex.axis, cex.lab,
-                               vert.orien.main) {
-  q[1] <- q1
-  q[2] <- q2
-  plotpnormalraplot(q, mu, sigma, rounding,
-                    dec, long.segment, col,
-                    col2, lty, main,
-                    text.size, cex.main,
-                    cex.axis, cex.lab,
-                    vert.orien.main)
-
-
-}
 
 
 plotpnormalratcltk <- function(q1, q2, q, mu, sigma, rounding,
