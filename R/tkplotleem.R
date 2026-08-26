@@ -30,7 +30,7 @@
   .Tcl("option clear")
 
   # Main Window
-  base <- tktoplevel(padx=10, pady=10)
+  base <- tktoplevel(padx = 10, pady = 10)
 
   tkwm.geometry(base, "600x700")
 
@@ -349,8 +349,6 @@
 
     plot_p_normal_plot(
       q = q,
-      q1 = as.numeric(tclvalue(q1_var)),
-      q2 = as.numeric(tclvalue(q2_var)),
       mu = as.numeric(tclvalue(media_var)),
       sigma = as.numeric(tclvalue(sd_var)),
       rounding = rounding,
@@ -365,6 +363,10 @@
       cex.axis = cex.axis,
       cex.lab = cex.lab,
       vert.orien.main = as.logical(as.numeric(tclvalue(title_var))),
+      maximo = maximo,
+      minimo = minimo,
+      q1 = as.numeric(tclvalue(q1_var)),
+      q2 = as.numeric(tclvalue(q2_var)),
       region = "region A"
     )
 
@@ -457,24 +459,26 @@
     try(# Generate the normal distribution plot
       plot_p_normal_plot(
         q = q,
-        q1 = quantil1,
-        q2 = quantil2, 
-        mu = media, 
-        sigma = desvpad,
+        mu = as.numeric(tclvalue(media_var)),
+        sigma = as.numeric(tclvalue(sd_var)),
         rounding = rounding,
         dec = if (tclvalue(comma_var) == "0") "." else ",",
-        long.segment = segment,
+        long.segment = as.logical(as.numeric(tclvalue(segment_var))),
         col = col,
         col2 = col2,
         lty = lty,
         main = main,
-        text.size = textsize,
-        cex.main = textsize,
+        text.size = as.numeric(tclvalue(text.size_var)),
+        cex.main = as.numeric(tclvalue(text.size_var)),
         cex.axis = cex.axis,
         cex.lab = cex.lab,
-        vert.orien.main = orienttext,
+        vert.orien.main = as.logical(as.numeric(tclvalue(title_var))),
+        maximo = maximo,
+        minimo = minimo,
+        q1 = as.numeric(tclvalue(q1_var)),
+        q2 = as.numeric(tclvalue(q2_var)),
         region = "region A"
-      ),
+        ),
       silent = TRUE
     )
 
