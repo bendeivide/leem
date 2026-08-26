@@ -114,7 +114,7 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
   return(main)
 }
 
-create_curve_and_axis <- function (mu, sigma, density_terms_list, main, cex.main, cex.axis, dec, minimo, maximo) {
+create_normal_curve_and_axis <- function (mu, sigma, density_terms_list, main, cex.main, cex.axis, dec, minimo, maximo) {
   # this function can create a Normal Distribution curve
   # allows de use of certain parameters ------------------------------------------------------------
   curve(
@@ -498,16 +498,12 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # ------------------------------------------------------------------------------------------------
 
   # Creating a Normal Distribution curve ------------------------------------------------------------ 
-  create_curve_and_axis(mu, sigma, density_terms_list, main, cex.main, cex.axis, dec, minimo, maximo)
+  create_normal_curve_and_axis(mu, sigma, density_terms_list, main, cex.main, cex.axis, dec, minimo, maximo)
   #-------------------------------------------------------------------------------------------------
   
-
-  # Area  P(q[1] > X > q[2])
-
   # Creating a polygon -----------------------------------------------------------------------------
   create_polygon(density_terms_list, sequence_terms_list, col)
   # ------------------------------------------------------------------------------------------------
-
 
   # Creating details on the X axis -----------------------------------------------------------------
   create_plot_details(lty, q_rounded_value,
@@ -678,186 +674,78 @@ plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
   )
 }
 
-# Auxiliar functions of P()
-# Observations:
-#    - `%<X<%`() internal function
-# B-region (name: plot+p+name_distribution+br+gui)
-# OBS.: br - B-region; gui: "plot", "rstudio", "tcltk"
 
-# Continuous Distributions
-
-# Normal distribution
-
-# PLOT: Low-level function to plot the Normal distribution highlighting P(a < X < b)
-plotpnormalrbplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
-                              long.segment = FALSE, col = "#8EC5E5",
-                              col2 = "#38A8E8", lty = 2, main = NULL,
-                              text.size = 1, cex.main = 1.2,
-                              cex.axis = 1, cex.lab = 1,
-                              vert.orien.main = TRUE) {
- 
-
-  # Create default title if none is provided
-  if (is.null(main)) {
-
-    # Localized title text
-    titulo <- gettext("Normal Distribution", domain = "R-leem")
-
-    
-  }
-
-  # Draw the Normal density curve
-  curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-        ylim = c(0, 1.2 * max(fx,fy)),xlab="X",
-        ylab = expression(f[X](X)),
-        panel.first = grid(col="gray90"),
-        main = main, xaxt = "n", yaxt = "n",
-        cex.main = cex.main)
-
-  # X-axis
-
-  # Generate pretty x-axis values
-  eixox <- pretty(minimo:maximo)
-
-  # Draw x-axis
-  axis(
-    side = 1,
-    at = eixox
-  )
+# TCLTK: Low-level function to plot the Normal distribution highlighting P(a > X > b)
+plotpnormalratcltk_aux <- function(q1, q2, q, mu, sigma, rounding,
+                               dec, long.segment, col,
+                               col2, lty, main,
+                               text.size, cex.main,
+                               cex.axis, cex.lab,
+                               vert.orien.main) {
+  q[1] <- q1
+  q[2] <- q2
+  plotpnormalraplot(q, mu, sigma, rounding,
+                    dec, long.segment, col,
+                    col2, lty, main,
+                    text.size, cex.main,
+                    cex.axis, cex.lab,
+                    vert.orien.main)
 
 
-  # Generate pretty values for the y-axis
-  ## dec of P()
-  ypretty <- pretty(dnorm(minimo:maximo, mu, sigma))
-
-  # Format y-axis labels with comma decimal separator
-  if (dec == ",") {
-
-    # Y-axis
-    axis(
-      side = 2,
-      at = ypretty,
-      cex.axis = cex.axis,
-      labels = format(
-        ypretty,
-        decimal.mark = ",",
-        nsmall = 2
-      )
-    )
-  } else {
-
-    # Default y-axis labels
-    # Y-axis
-    axis(
-      side = 2,
-      at = ypretty,
-      cex.axis = cex.axis
-    )
-  }
-
-  # Area  P(q[1] > X > q[2])
-
-  ## Background
-  polygon(c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
-          col = "gray90")
-
-  ## Shade the cumulative probability region
-  ### col1 of P(q[1] < X < q[2])
-  polygon(c(x, rev(x)),
-          c(fx, rep(0, length(fx))),
-          col = col)
-
-  # Highlight q on the x-axis
-
-  ## X-axis
-  mtext(qq_text, side = 1, at = qq, line = 2, col = col2, font = 2, cex = text.size)
-
-  axis(side=1, at=as.character(c(qq[1], qq[2])), tick = TRUE, lwd = 1,
-       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
-
-  axis(side = 1, at = as.character(c(qq[1], qq[2])), tick = TRUE, lwd = 1,
-       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
-
-  # Highlight density value at q on the y-axis
-  mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2, cex = text.size)
-
-  # Draw tick mark at density value
-  axis(side=2, at=pdf, labels=FALSE,
-       col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
-
-
-  # Long segment and type
-
-  # Draw full or partial guide lines
-  ## col2 and lty of P()
-  if (isTRUE(long.segment)) {
-    abline(v = qqaux, col = col2, lty = lty)
-    abline(h = pdf, col = col2, lty = lty)
-  } else {
-    segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty)
-    segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty)
-  }
-
-  # Add point at (q, density)
-  # Point inserted
-  points(qqaux, pdf, pch = 19)
-
-  # Draw legend background rectangle
-  ## Rectangle topleft (Legends)
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-
-  # Legends
-
-  ## Localized parameter label
-  parametros <- gettext("Parameters:", domain = "R-leem")
-
-  ## P(a < X < b)
-  if (attr(q, "region") == "region2") {
-    # Display cumulative probability legend
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(t1<~X<~t2)==Pr,
-                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
-    # Display parameter legend
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
-  }
-  # P(a <= X <= b)
-  if (attr(q, "region") == "region4") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(t1<=~X<=~t2)==Pr,
-                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = 0.8,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
-  }
-  ## P(a <= X < b)
-  if (attr(q, "region") == "region7") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(t1<=~X<~t2)==Pr,
-                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
-  }
-  # P(a < X <= b)
-  if (attr(q, "region") == "region8") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(t1<~X<=~t2)==Pr,
-                                         list(t1=qq_text[1],t2=qq_text[2], Pr = Pr_text)))
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = 0.8,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = mu_text, varen = sigma_text, parametros = parametros)))
-  }
 }
 
 
+plotpnormalratcltk <- function(q1, q2, q, mu, sigma, rounding,
+                                minimo, maximo, dec,
+                                long.segment, col,
+                                col2, lty, main,
+                                text.size, cex.main,
+                                cex.axis, cex.lab,
+                                vert.orien.main) {
 
+  # Temporarily suppress warning messages during the execution
+  # of the graphical interface function. This avoids displaying
+  # unnecessary warnings to the user while the plot is being generated.
+  #
+  # The current warning option is stored in 'war' so it can be
+  # restored later when the function finishes.
+  warning_message <- options(warn = -1)
 
+  # Ensure that the original warning configuration is restored
+  # after the function execution, even if an error occurs.
+  on.exit(options(warning_message))
 
+  # Call the low-level plotting function responsible for generating
+  # the Normal distribution graphical interface using Tcl/Tk.
+  #
+  # Arguments:
+  # q                  -> Quantile or x-value to be highlighted.
+  # mu                 -> Mean of the Normal distribution.
+  # sigma              -> Standard deviation of the Normal distribution.
+  # rounding           -> Number of decimal places used in labels/results.
+  # minimo             -> Minimum x-axis value for plotting.
+  # maximo             -> Maximum x-axis value for plotting.
+  # dec                -> Decimal separator style.
+  # long.segment       -> Logical value controlling segment extension.
+  # col                -> Main fill or polygon color.
+  # col2               -> Secondary color used in plot elements.
+  # lty                -> Line type specification.
+  # main               -> Main title of the plot.
+  # text.size          -> Size of additional text annotations.
+  # cex.main           -> Expansion factor for the main title.
+  # cex.axis           -> Expansion factor for axis labels.
+  # cex.lab            -> Expansion factor for axis titles.
+  # vert.orien.main    -> Logical value controlling vertical title orientation.
+
+  #./tkplotleem.R
+  .tkplotleemranormal(q1, q2, q, mu, sigma, rounding,
+                      minimo, maximo, dec,
+                      long.segment, col,
+                      col2, lty, main,
+                      text.size, cex.main,
+                      cex.axis, cex.lab,
+                      vert.orien.main)
+}
 
 
 
