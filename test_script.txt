@@ -18,6 +18,12 @@ P(1.5 %>=X>% 3, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = TRUE, long.seg
 P(1.5 %>X>=% 3, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
 P(1.5 %>=X>=% 3, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
 
+# regiao B com tcl/tk
+P(1.5 %<X<% 3, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+P(1.5 %<=X<% 3, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+P(1.5 %<X<=% 3, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+P(1.5 %<=X<=% 3, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
 # regiao B com plot
 P(1.5 %<X<% 3, mean = 0.8, sd = 1.2, gui = "plot", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
 P(1.5 %<=X<% 3, mean = 0.8, sd = 1.2, gui = "plot", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)

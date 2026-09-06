@@ -539,14 +539,14 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
         # using Tcl/Tk components.
         #
         # ./aux_probability.R
-        plotpnormalratcltk(
+        plot_p_normal_tcltk(
           q[1], q[2], q, mu, sigma, rounding,
           minimo, maximo, dec,
           long.segment, col,
           col2, lty, main,
           text.size, cex.main,
           cex.axis, cex.lab,
-          vert.orien.main
+          vert.orien.main, region = "region A"
         )
       }
 
@@ -594,14 +594,28 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
       }
 
       if (gui == "tcltk") {
-        # Desabilitar warnings global
-        #options(warn = - 1)
-        war <- options(warn = - 1)
+        #################################################
+        # Tcl/Tk graphical interface
+        #################################################
 
-        .tkplotleemnormal4(q[1], q[2], mu, sigma, rounding, main, minimo, maximo, q)
-
-        # Desabilitar warnings global
-        on.exit(options(war))
+        # Call the internal Tcl/Tk plotting function
+        # responsible for generating the interactive
+        # Normal distribution visualization.
+        #
+        # This graphical interface allows the user to
+        # explore the Normal density curve interactively
+        # using Tcl/Tk components.
+        #
+        # ./aux_probability.R
+        plot_p_normal_tcltk(
+          q[1], q[2], q, mu, sigma, rounding,
+          minimo, maximo, dec,
+          long.segment, col,
+          col2, lty, main,
+          text.size, cex.main,
+          cex.axis, cex.lab,
+          vert.orien.main, region = "region B"
+        )
       }
 
       prob <- pnorm(q = q[2], mean = mu, sd=sigma) - pnorm(q = q[1], mean = mu, sd=sigma)
