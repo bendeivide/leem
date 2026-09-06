@@ -1,51 +1,18 @@
-
-# Low-level Tcl/Tk GUI function for the leem package.
-# Generates the Normal Distribution interface associated with
-# P(a > X > b) (Region A) using gui = "tcltk"
-.tkplotleemranormal <- function(q1, q2, q, mu, sigma, rounding,
-                                minimo, maximo, dec,
-                                long.segment, col,
-                                col2, lty, main,
-                                text.size, cex.main,
-                                cex.axis, cex.lab,
-                                vert.orien.main) {
-
-  # Ensure the interval is at least 0.02 (2 * step)
-  if (maximo - q2 < 0.02) {
-    maximo <- q2 + 0.02
-  }
-  if (q1 - minimo < 0.02) {
-    minimo <- q1 - 0.02
-  }
-
-  # Disabled GUI (Type I)
-  # This line make the tcl/tk stop update the
-  # window until all the draw is completed
-  oldmode <- tclServiceMode(FALSE)
-
-  # # General configurations
-  #.Tcl("option add *Background #e1eff7")
-
-  # clear all
-  .Tcl("option clear")
+create_containers_and_panels <- function() {
+  
+  # Creating a list of containers and panels
+  # to be returned by this function and used by
+  # tk plot p normal function
+  windows_list <- list()
 
   # Main Window
-  base <- tktoplevel(padx = 10, pady = 10)
+  windows_list$base <- tktoplevel(padx = 10, pady = 10)
 
-  tkwm.geometry(base, "600x700")
+  tkwm.geometry(windows_list$base, "600x700")
 
   # Title
-  tkwm.title(base, gettext("leem package: Normal Distribution", domain = "R-leem"))
+  tkwm.title(windows_list$base, gettext("leem package: Normal Distribution", domain = "R-leem"))
 
-  # Variables for sliders
-  q1_var <- tclVar(q1)
-  q2_var <- tclVar(q2)
-  media_var <- tclVar(mu)
-  sd_var <- tclVar(sigma)
-  comma_var <- if (dec == ",") tclVar(TRUE) else tclVar(FALSE)
-  segment_var <- tclVar(long.segment)
-  title_var <- tclVar(vert.orien.main)
-  text.size_var <- tclVar(text.size)
 
   # =========================
   # Main panels
@@ -55,45 +22,56 @@
   
   # Creating a main window splited in two parts with one
   # movel bar separeting the divisions
-  main_container <- ttkpanedwindow(base, orient = "horizontal")
+  windows_list$main_container <- ttkpanedwindow(windows_list$base, orient = "horizontal")
 
   # ploting the main window and turn it in a responsive interface
-  # expand argument allow the window to be Resizable
-  # fill argument allow the window to resize both horizontally and vertically
-  tkpack(main_container, expand = TRUE, fill = "both")
+  # 'expand' argument allow the window to be Resizable
+  # 'fill' argument allow the window to resize both horizontally and vertically
+  tkpack(windows_list$main_container, expand = TRUE, fill = "both")
 
   # Left container (control area)
   # Building the left container within the main_container, splited by horizontal
-  # bar
-  left_container <- ttkpanedwindow(main_container, orient = "vertical")
+  # bars
+  windows_list$left_container <- ttkpanedwindow(windows_list$main_container, orient = "vertical")
 
   # Right container (plot area)
-  right_container <- ttkpanedwindow(main_container, orient = "vertical")
-
-  # Pack left container
-  # tkpack(
-  #   left_container,
-  #   side = "left",
-  #   fill = "y",
-  #   anchor = "n",
-  #   padx = 10,
-  #   pady = 10
-  # )
+  windows_list$right_container <- ttkpanedwindow(windows_list$main_container, orient = "vertical")
 
   # Adding the left_container into the main_container
-  tkadd(main_container, left_container)
-
-  # Pack right panel
-  # tkpack(
-  #   right_container,
-  #   side = "right",
-  #   fill = "both",
-  #   expand = TRUE
-  # )
+  tkadd(windows_list$main_container, windows_list$left_container)
 
   # Adding the right_container (next to the left) into the main_container
-  tkadd(main_container, right_container)
+  tkadd(windows_list$main_container, windows_list$right_container)
 
+
+  # =========================
+  # Input frame
+  # =========================
+  
+  # Creating the painel that gather all the slisers and checkbox
+  windows_list$left_panel <- ttklabelframe(
+    windows_list$left_container,
+    text = gettext(
+      "Input(s):",
+      domain = "R-leem"
+    )
+  )
+
+  # Adding left_panel into the left_container, and anchoring it
+  # at northwest position of the left_container 
+  tkpack(
+    windows_list$left_panel,
+    side = "top",
+    fill = "x",
+    anchor = "nw",
+    pady = 5
+  )
+
+  return(windows_list)
+}
+
+create_logo <- function(left_container) {
+  
   # =========================
   # Logo frame
   # =========================
@@ -109,29 +87,7 @@
     fill = "x",
     pady = 5
   )
-
-  # =========================
-  # Input frame
-  # =========================
-  
-  # Creating the painel that gather all the slisers and checkbox
-  left_panel <- ttklabelframe(
-    left_container,
-    text = gettext(
-      "Input(s):",
-      domain = "R-leem"
-    )
-  )
-
-  # Adding left_panel into the left_container, and anchoring it
-  # at northwest position of the left_container 
-  tkpack(
-    left_panel,
-    side = "top",
-    fill = "x",
-    anchor = "nw",
-    pady = 5
-  )
+ 
 
   # =========================
   # Logo
@@ -186,6 +142,153 @@
     fill = "x",
     pady = 5
   )
+}
+
+create_sliders_and_checkboxes <- function(left_container, left_panel, var_list) {
+  
+  # Creating a control object list
+  # to gather all the checkboxes and sliders
+  ctrl_obj_list <- list()
+  
+  # =========================
+  # Sliders
+  # =========================
+
+  ctrl_obj_list$q1_slider <- tkscale(left_panel,
+                       from = var_list$minimo,
+                       to = tclvalue(var_list$q2_var),
+                       orient = "horizontal",
+                       variable = var_list$q1_var,
+                       resolution = 0.1,
+                       label = gettext("Quantile 1", domain="R-leem"),
+                       showvalue = TRUE)
+
+  ctrl_obj_list$q2_slider <- tkscale(left_panel,
+                       from = tclvalue(var_list$q1_var),
+                       to = var_list$maximo,
+                       orient = "horizontal",
+                       variable = var_list$q2_var,
+                       resolution = 0.1,
+                       label = gettext("Quantile 2", domain="R-leem"),
+                       showvalue = TRUE)
+
+  ctrl_obj_list$mu_slider <- tkscale(left_panel,
+                       from = var_list$minimo,
+                       to = var_list$maximo,
+                       resolution = 0.1,
+                       orient = "horizontal",
+                       variable = var_list$media_var,
+                       label = gettext("Mean", domain = "R-leem"))
+
+  ctrl_obj_list$sigma_slider <- tkscale(left_panel,
+                         from = 0.1,
+                         to = 5,
+                         resolution = 0.1,
+                         orient = "horizontal",
+                         variable = var_list$sd_var,
+                         label = gettext("Standard Deviation", domain = "R-leem"))
+
+  ctrl_obj_list$text.size_slider <- tkscale(left_panel,
+                           from = 0.8,
+                           to = 3,
+                           resolution = 0.1,
+                           orient = "horizontal",
+                           variable = var_list$text.size_var,
+                           label = gettext("Text Size", domain = "R-leem"))
+
+
+  # =========================
+  # Checkboxes
+  # =========================
+
+  ctrl_obj_list$orientation_checkbox <- tkcheckbutton(
+    left_panel,
+    text = gettext("Vertical Title Orientation", domain = "R-leem"),
+    variable = var_list$title_var
+  )
+
+  ctrl_obj_list$long_segment_checkbox <- tkcheckbutton(
+    left_panel,
+    text = gettext("Long Segment", domain = "R-leem"),
+    variable = var_list$segment_var
+  )
+
+  ctrl_obj_list$comma_checkbox <- tkcheckbutton(
+    left_panel,
+    text = gettext("Comma", domain = "R-leem"),
+    variable = var_list$comma_var
+  )
+
+  # =========================
+  # Pack widgets
+  # =========================
+
+  # Adding the sliders
+  tkpack(ctrl_obj_list$q1_slider, fill = "x")
+  tkpack(ctrl_obj_list$q2_slider, fill = "x")
+  tkpack(ctrl_obj_list$mu_slider, fill = "x")
+  tkpack(ctrl_obj_list$sigma_slider, fill = "x")
+  tkpack(ctrl_obj_list$text.size_slider, fill = "x")
+
+  # Adding the checkboxes
+  tkpack(ctrl_obj_list$orientation_checkbox, anchor = "w")
+  tkpack(ctrl_obj_list$long_segment_checkbox, anchor = "w")
+  tkpack(ctrl_obj_list$comma_checkbox, anchor = "w")
+
+  return(ctrl_obj_list)
+}
+
+
+# Low-level Tcl/Tk GUI function for the leem package.
+# Generates the Normal Distribution interface associated with
+# P(a > X > b) (Region A) using gui = "tcltk"
+.tkplotleemranormal <- function(q1, q2, q, mu, sigma, rounding,
+                                minimo, maximo, dec,
+                                long.segment, col,
+                                col2, lty, main,
+                                text.size, cex.main,
+                                cex.axis, cex.lab,
+                                vert.orien.main) {
+  
+  # Creating a list of variables
+  var_list <- list()
+
+var_list$maximo <- maximo
+var_list$minimo <- minimo
+
+  # Ensure the interval is at least 0.02 (2 * step)
+  if (maximo - q2 < 0.02) {
+    var_list$maximo <- q2 + 0.02
+  }
+  if (q1 - minimo < 0.02) {
+    var_list$minimo <- q1 - 0.02
+  }
+
+  
+  # Variables for sliders
+  var_list$q1_var <- tclVar(q1)
+  var_list$q2_var <- tclVar(q2)
+  var_list$media_var <- tclVar(mu)
+  var_list$sd_var <- tclVar(sigma)
+  var_list$comma_var <- if (dec == ",") tclVar(TRUE) else tclVar(FALSE)
+  var_list$segment_var <- tclVar(long.segment)
+  var_list$title_var <- tclVar(vert.orien.main)
+  var_list$text.size_var <- tclVar(text.size)
+
+
+  # Disabled GUI (Type I)
+  # This line make the tcl/tk stop update the
+  # window until all the draw is completed
+  oldmode <- tclServiceMode(FALSE)
+
+  # clear all
+  .Tcl("option clear")
+
+  # Create panels
+  windows_list <- create_containers_and_panels()
+
+  # Create logos
+  create_logo(windows_list$left_container)
 
   # =========================
   # Plot area
@@ -193,7 +296,7 @@
   
   # Create a canvas object inside the right container, 
   # focussed on drawning graphics and geometries
-  canvas <- tkcanvas(right_container)
+  canvas <- tkcanvas(windows_list$right_container)
 
   # Adding the canvas 
   tkpack(
@@ -202,74 +305,16 @@
     expand = TRUE
   )
 
-  # =========================
-  # Sliders
-  # =========================
-
-  q1_slider <- tkscale(left_panel,
-                       from = minimo,
-                       to = tclvalue(q2_var),
-                       orient = "horizontal",
-                       variable = q1_var,
-                       resolution = 0.1,
-                       label = gettext("Quantile 1", domain="R-leem"),
-                       showvalue = TRUE)
-
-  q2_slider <- tkscale(left_panel,
-                       from = tclvalue(q1_var),
-                       to = maximo,
-                       orient = "horizontal",
-                       variable = q2_var,
-                       resolution = 0.1,
-                       label = gettext("Quantile 2", domain="R-leem"),
-                       showvalue = TRUE)
-
-  mu_slider <- tkscale(left_panel,
-                       from = minimo,
-                       to = maximo,
-                       resolution = 0.1,
-                       orient = "horizontal",
-                       variable = media_var,
-                       label = gettext("Mean", domain = "R-leem"))
-
-  sigma_slider <- tkscale(left_panel,
-                         from = 0.1,
-                         to = 5,
-                         resolution = 0.1,
-                         orient = "horizontal",
-                         variable = sd_var,
-                         label = gettext("Standard Deviation", domain = "R-leem"))
-
-  text.size_slider <- tkscale(left_panel,
-                           from = 0.8,
-                           to = 3,
-                           resolution = 0.1,
-                           orient = "horizontal",
-                           variable = text.size_var,
-                           label = gettext("Text Size", domain = "R-leem"))
-
-
-  # =========================
-  # Checkboxes
-  # =========================
-
-  orientation_checkbox <- tkcheckbutton(
-    left_panel,
-    text = gettext("Vertical Title Orientation", domain = "R-leem"),
-    variable = title_var
-  )
-
-  long_segment_checkbox <- tkcheckbutton(
-    left_panel,
-    text = gettext("Long Segment", domain = "R-leem"),
-    variable = segment_var
-  )
-
-  comma_checkbox <- tkcheckbutton(
-    left_panel,
-    text = gettext("Comma", domain = "R-leem"),
-    variable = comma_var
-  )
+  # Creating a list to gather all the control
+  # objects
+  ctrl_obj_list <- list()
+  
+  # create sliders and checkboxes
+  ctrl_obj_list <- create_sliders_and_checkboxes(
+                      windows_list$left_container,
+                      windows_list$left_panel,
+                      var_list
+                    )
 
   # =========================
   # Generic export function
@@ -349,24 +394,24 @@
 
     plot_p_normal_plot(
       q = q,
-      mu = as.numeric(tclvalue(media_var)),
-      sigma = as.numeric(tclvalue(sd_var)),
+      mu = as.numeric(tclvalue(var_list$media_var)),
+      sigma = as.numeric(tclvalue(var_list$sd_var)),
       rounding = rounding,
-      dec = if (tclvalue(comma_var) == "0") "." else ",",
-      long.segment = as.logical(as.numeric(tclvalue(segment_var))),
+      dec = if (tclvalue(var_list$comma_var) == "0") "." else ",",
+      long.segment = as.logical(as.numeric(tclvalue(var_list$segment_var))),
       col = col,
       col2 = col2,
       lty = lty,
       main = main,
-      text.size = as.numeric(tclvalue(text.size_var)),
-      cex.main = as.numeric(tclvalue(text.size_var)),
+      text.size = as.numeric(tclvalue(var_list$text.size_var)),
+      cex.main = as.numeric(tclvalue(var_list$text.size_var)),
       cex.axis = cex.axis,
       cex.lab = cex.lab,
-      vert.orien.main = as.logical(as.numeric(tclvalue(title_var))),
+      vert.orien.main = as.logical(as.numeric(tclvalue(var_list$title_var))),
       maximo = maximo,
       minimo = minimo,
-      q1 = as.numeric(tclvalue(q1_var)),
-      q2 = as.numeric(tclvalue(q2_var)),
+      q1 = as.numeric(tclvalue(var_list$q1_var)),
+      q2 = as.numeric(tclvalue(var_list$q2_var)),
       region = "region A"
     )
 
@@ -392,43 +437,28 @@
   # =========================
 
   png_button <- tkbutton(
-    left_panel,
+    windows_list$left_panel,
     text = gettext("Export PNG", domain = "R-leem"),
     command = function() save_plot("png")
   )
 
   pdf_button <- tkbutton(
-    left_panel,
+    windows_list$left_panel,
     text = gettext("Export PDF", domain = "R-leem"),
     command = function() save_plot("pdf")
   )
 
   svg_button <- tkbutton(
-    left_panel,
+    windows_list$left_panel,
     text = gettext("Export SVG", domain = "R-leem"),
     command = function() save_plot("svg")
   )
-
-  # =========================
-  # Pack widgets
-  # =========================
-
-  # Adding the sliders
-  tkpack(q1_slider, fill = "x")
-  tkpack(q2_slider, fill = "x")
-  tkpack(mu_slider, fill = "x")
-  tkpack(sigma_slider, fill = "x")
-  tkpack(text.size_slider, fill = "x")
-
-  # Adding the checkboxes
-  tkpack(orientation_checkbox, anchor = "w")
-  tkpack(long_segment_checkbox, anchor = "w")
-  tkpack(comma_checkbox, anchor = "w")
-
+  
   # Adding the buttons
   tkpack(png_button, fill = "x", pady = 2)
   tkpack(pdf_button, fill = "x", pady = 2)
   tkpack(svg_button, fill = "x", pady = 2)
+
 
   # Draw plot
   drawGraph <- function() {
@@ -437,17 +467,17 @@
     options(warn = -1) # Set the messages of warning to not appear during the code execution  
 
     # Canvas dimentions
-    height <- as.numeric(tclvalue(tkwinfo("height", right_container)))
-    width <- as.numeric(tclvalue(tkwinfo("width", right_container)))
+    height <- as.numeric(tclvalue(tkwinfo("height", windows_list$right_container)))
+    width <- as.numeric(tclvalue(tkwinfo("width", windows_list$right_container)))
 
     # Getting the sliders values
-    quantil1 <- as.numeric(tclvalue(q1_var))
-    quantil2 <- as.numeric(tclvalue(q2_var))
-    media <- as.numeric(tclvalue(media_var))
-    desvpad <- as.numeric(tclvalue(sd_var))
-    segment <- as.logical(as.numeric(tclvalue(segment_var)))
-    textsize <- as.numeric(tclvalue(text.size_var))
-    orienttext <- as.logical(as.numeric(tclvalue(title_var)))
+    quantil1 <- as.numeric(tclvalue(var_list$q1_var))
+    quantil2 <- as.numeric(tclvalue(var_list$q2_var))
+    media <- as.numeric(tclvalue(var_list$media_var))
+    desvpad <- as.numeric(tclvalue(var_list$sd_var))
+    segment <- as.logical(as.numeric(tclvalue(var_list$segment_var)))
+    textsize <- as.numeric(tclvalue(var_list$text.size_var))
+    orienttext <- as.logical(as.numeric(tclvalue(var_list$title_var)))
 
     # Creating a temporary file to save
     # pattern = "leem.": Set a prefix term to help to identifying the file 
@@ -459,24 +489,24 @@
     try(# Generate the normal distribution plot
       plot_p_normal_plot(
         q = q,
-        mu = as.numeric(tclvalue(media_var)),
-        sigma = as.numeric(tclvalue(sd_var)),
+        mu = as.numeric(tclvalue(var_list$media_var)),
+        sigma = as.numeric(tclvalue(var_list$sd_var)),
         rounding = rounding,
-        dec = if (tclvalue(comma_var) == "0") "." else ",",
-        long.segment = as.logical(as.numeric(tclvalue(segment_var))),
+        dec = if (tclvalue(var_list$comma_var) == "0") "." else ",",
+        long.segment = as.logical(as.numeric(tclvalue(var_list$segment_var))),
         col = col,
         col2 = col2,
         lty = lty,
         main = main,
-        text.size = as.numeric(tclvalue(text.size_var)),
-        cex.main = as.numeric(tclvalue(text.size_var)),
+        text.size = as.numeric(tclvalue(var_list$text.size_var)),
+        cex.main = as.numeric(tclvalue(var_list$text.size_var)),
         cex.axis = cex.axis,
         cex.lab = cex.lab,
-        vert.orien.main = as.logical(as.numeric(tclvalue(title_var))),
-        maximo = maximo,
-        minimo = minimo,
-        q1 = as.numeric(tclvalue(q1_var)),
-        q2 = as.numeric(tclvalue(q2_var)),
+        vert.orien.main = as.logical(as.numeric(tclvalue(var_list$title_var))),
+        maximo = var_list$maximo,
+        minimo = var_list$minimo,
+        q1 = as.numeric(tclvalue(var_list$q1_var)),
+        q2 = as.numeric(tclvalue(var_list$q2_var)),
         region = "region A"
         ),
       silent = TRUE
@@ -503,24 +533,24 @@
 
   #tkconfigure(q1_slider, command = function(...) drawGraph())
   #tkconfigure(q2_slider, command = function(...) drawGraph())
-  tkconfigure(mu_slider, command = function(...) drawGraph())
-  tkconfigure(sigma_slider, command = function(...) drawGraph())
-  tkconfigure(text.size_slider, command = function(...) drawGraph())
-  tkconfigure(orientation_checkbox, command = function(...) drawGraph())
-  tkconfigure(long_segment_checkbox, command = function(...) drawGraph())
-  tkconfigure(comma_checkbox, command = function(...) drawGraph())
+  tkconfigure(ctrl_obj_list$mu_slider, command = function(...) drawGraph())
+  tkconfigure(ctrl_obj_list$sigma_slider, command = function(...) drawGraph())
+  tkconfigure(ctrl_obj_list$text.size_slider, command = function(...) drawGraph())
+  tkconfigure(ctrl_obj_list$orientation_checkbox, command = function(...) drawGraph())
+  tkconfigure(ctrl_obj_list$long_segment_checkbox, command = function(...) drawGraph())
+  tkconfigure(ctrl_obj_list$comma_checkbox, command = function(...) drawGraph())
 
   # Update slider_q1 to have the current value of q2 as its maximum
-  tkconfigure(q1_slider, command = function(...) {
-    novo_q2 <- as.numeric(tclvalue(q2_var))
-    tkconfigure(q1_slider, to = novo_q2)
+  tkconfigure(ctrl_obj_list$q1_slider, command = function(...) {
+    novo_q2 <- as.numeric(tclvalue(var_list$q2_var))
+    tkconfigure(ctrl_obj_list$q1_slider, to = novo_q2)
     drawGraph()
   })
 
   # Update slider_q2 to have the current value of q1 as its minimum
-  tkconfigure(q2_slider, command = function(...) {
-    novo_q1 <- as.numeric(tclvalue(q1_var))
-    tkconfigure(q2_slider, from = novo_q1)
+  tkconfigure(ctrl_obj_list$q2_slider, command = function(...) {
+    novo_q1 <- as.numeric(tclvalue(var_list$q1_var))
+    tkconfigure(ctrl_obj_list$q2_slider, from = novo_q1)
     drawGraph()
   })
 
@@ -530,7 +560,7 @@
   }
 
   # Update the graphic when the the window is resized
-  tkbind(base, '<Configure>', onResize)
+  tkbind(windows_list$base, '<Configure>', onResize)
 
   drawGraph() # First call of the draw function
 
@@ -538,7 +568,7 @@
   finish <- tclServiceMode(oldmode)
 
   # Window of end
-  tkwm.protocol(base, "WM_DELETE_WINDOW", function() {
+  tkwm.protocol(windows_list$base, "WM_DELETE_WINDOW", function() {
     response <- tk_messageBox(
       title = gettext("Tell me something:", domain = "R-leem"),
       message = gettext("Do you want to close?", domain = "R-leem"),
@@ -546,7 +576,7 @@
       type = "yesno"
     )
     if (response == "yes") {
-      tkdestroy(base)
+      tkdestroy(windows_list$base)
     }
   })
 }
@@ -2164,6 +2194,7 @@
     }
   })
 }
+
 # Plot tk dist normal para q > 1, regionb
 .tkplotleemnormal4 <- function(q1, q2, mu, sigma, rounding, main, minimo, maximo, q) {
   # Disabled GUI (Type I)
