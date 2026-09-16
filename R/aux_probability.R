@@ -17,112 +17,114 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
     # Localized title text
     titulo <- gettext("Normal Distribution", domain = "R-leem")
 
-    # Region A -------------------------------------------------------------
-    if (vert.orien.main) { # *** NEW LINE ***
-      # P(a > X > b)
-      if (attr(q, "region") == "region1") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a >= X >= b)
-      if (attr(q, "region") == "region3") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a >= X > b)
-      if (attr(q, "region") == "region5") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a > X >= b)
-      if (attr(q, "region") == "region6") {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
+    if(length(q) > 1){
+      # Region A -------------------------------------------------------------
+      if (vert.orien.main) { # *** NEW LINE ***
+        # P(a > X > b)
+        if (attr(q, "region") == "region1") {
+          main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a >= X >= b)
+        if (attr(q, "region") == "region3") {
+          main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a >= X > b)
+        if (attr(q, "region") == "region5") {
+          main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a > X >= b)
+        if (attr(q, "region") == "region6") {
+          main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
 
-    } else {
-      # P(a > X > b)
-      if (attr(q, "region") == "region1") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a >= X >= b)
-      if (attr(q, "region") == "region3") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a >= X > b)
-      if (attr(q, "region") == "region5") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a > X >= b)
-      if (attr(q, "region") == "region6") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
+      } else {
+        # P(a > X > b)
+        if (attr(q, "region") == "region1") {
+          main <- substitute(
+            bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a >= X >= b)
+        if (attr(q, "region") == "region3") {
+          main <- substitute(
+            bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a >= X > b)
+        if (attr(q, "region") == "region5") {
+          main <- substitute(
+            bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X <= t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X > t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a > X >= b)
+        if (attr(q, "region") == "region6") {
+          main <- substitute(
+            bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
 
+      }
+      # ------------------------------------------------------------------------------------------------
+
+      # Region B ---------------------------------------------------------------------------------------
+      if (vert.orien.main) {
+        # P(a < X < b)
+        if (attr(q, "region") == "region2") {
+          main <- substitute(atop(bold(titulo),
+                                  f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                            list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a <= X <= b)
+        if (attr(q, "region") == "region4") {
+          main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                            list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a <= X < b)
+        if (attr(q, "region") == "region7") {
+          main <- substitute(atop(bold(titulo),
+                                  f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
+                            list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a < X <= b)
+        if (attr(q, "region") == "region8") {
+          main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
+                            list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+
+      } else {
+        # P(a < X < b)
+        if (attr(q, "region") == "region2") {
+          main <- substitute(
+            bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2),
+                            list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a <= X <= b)
+        if (attr(q, "region") == "region4") {
+          main <- substitute(
+            bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2),
+                            list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        ## P(a <= X < b)
+        if (attr(q, "region") == "region7") {
+          main <- substitute(
+            bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2),
+                            list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+        # P(a < X <= b)
+        if (attr(q, "region") == "region8") {
+          main <- substitute(
+            bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2),
+                            list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
+        }
+      }
+      # ------------------------------------------------------------------------------------------------
     }
-    # ------------------------------------------------------------------------------------------------
-
-    # Region B ---------------------------------------------------------------------------------------
-    if (vert.orien.main) {
-      # P(a < X < b)
-      if (attr(q, "region") == "region2") {
-        main <- substitute(atop(bold(titulo),
-                                f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
-                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a <= X <= b)
-      if (attr(q, "region") == "region4") {
-        main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
-                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a <= X < b)
-      if (attr(q, "region") == "region7") {
-        main <- substitute(atop(bold(titulo),
-                                f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2)),
-                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a < X <= b)
-      if (attr(q, "region") == "region8") {
-        main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
-                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-
-    } else {
-      # P(a < X < b)
-      if (attr(q, "region") == "region2") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<~t2)== integral(f[X](x)*"dx", t1, t2),
-                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a <= X <= b)
-      if (attr(q, "region") == "region4") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<=~t2)== integral(f[X](x)*"dx", t1, t2),
-                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      ## P(a <= X < b)
-      if (attr(q, "region") == "region7") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<=~X<~t2)== integral(f[X](x)*"dx", t1, t2),
-                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-      # P(a < X <= b)
-      if (attr(q, "region") == "region8") {
-        main <- substitute(
-          bold(titulo)~~"|"~~f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2),
-                           list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
-      }
-    }
-    # ------------------------------------------------------------------------------------------------
 
     # Lower Tail = True ------------------------------------------------------------------------------
     # Vertical orientation of the mathematical title
     if (vert.orien.main) {
-      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = qq_text, x = "x", titulo = titulo))
+      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q_text, x = "x", titulo = titulo))
 
     } else {
       # Horizontal orientation of the mathematical title
       main <- substitute(
-        bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), list(t1 = qq_text, x = "x", titulo = titulo)
+        bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), list(t1 = q_text, x = "x", titulo = titulo)
       )
 
     }
@@ -189,14 +191,14 @@ create_normal_curve_and_axis <- function (mu, sigma, density_terms_list, main, c
   }
 }
 
-create_polygon <- function(density_terms_list, sequence_terms_list, col, lower.tail){
+create_polygon <- function(density_terms_list, sequence_terms_list, col, region = NULL, lower.tail){
   # 'polygon' is a function that can create a form over the Normal curve
   # previosly created by 'curve' function. 'polygon' needs coordinates over
   # the curve line (y1, fy1),(yn, fyn), and its return way ((yn, 0),(y1, 0).
   # 
   # arguments: (((y1, fy1),(yn, fyn)), ((yn, 0),(y1, 0)), fullfill_color)
   
-  if(region == "region A" || region == "region B"){
+  if(!is.null(region)){
     # Background
     polygon(
             c(sequence_terms_list$y, rev(sequence_terms_list$y)),
@@ -224,7 +226,7 @@ create_polygon <- function(density_terms_list, sequence_terms_list, col, lower.t
     ## col1 of P()
     polygon(
             c(sequence_terms_list$x, rev(sequence_terms_list$x)),
-            c(sequence_terms_list$fx, rep(0, length(sequence_terms_list$fx))),
+            c(density_terms_list$fx, rep(0, length(density_terms_list$fx))),
             col = col
           )
 
@@ -232,7 +234,7 @@ create_polygon <- function(density_terms_list, sequence_terms_list, col, lower.t
     # Background
     polygon(
             c(sequence_terms_list$y, rev(sequence_terms_list$y)),
-            c(sequence_terms_list$fy, rep(0, length(sequence_terms_list$fy))),
+            c(density_terms_list$fy, rep(0, length(density_terms_list$fy))),
             col="gray90"
           )
   }
@@ -241,10 +243,9 @@ create_polygon <- function(density_terms_list, sequence_terms_list, col, lower.t
 create_plot_details <- function(lty, q_rounded_value,
                        col2, text.size, minimo,
                        maximo, q_density_value, long.segment,
-                       text_list
+                       text_list, region = NULL
                       ) {
   # Creating details on the X axis -----------------------------------------------------------------
-  ## X-axis
   # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts
   mtext(text_list$q_text, side = 1, at = q_rounded_value, line = 2, col = col2, font = 2, cex = text.size) # *** NEW LINE ***
   
@@ -253,7 +254,7 @@ create_plot_details <- function(lty, q_rounded_value,
   # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts 
   #axis(side=1, at=qq, lwd = 0, col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2) 
   
-  if(region == "region A" || region == "region B"){
+  if(!is.null(region)){
   # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
   axis(side = 1, at = as.character(c(minimo, q_rounded_value[1])), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
@@ -262,6 +263,13 @@ create_plot_details <- function(lty, q_rounded_value,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
+  # Creating a tiny line under the values of q +++++++++++++++++++++++++++++++++++++++
+  axis(side = 1, at = as.character(q_rounded_value[1]), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
+    
+  axis(side = 1, at = as.character(q_rounded_value[2]), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
+
   } else { # lower tail = true
   # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
   axis(side = 1, at = q_rounded_value, tick = TRUE, lwd = 1,
@@ -271,15 +279,12 @@ create_plot_details <- function(lty, q_rounded_value,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-  } 
   # Creating a tiny line under the values of q +++++++++++++++++++++++++++++++++++++++
-  axis(side = 1, at = as.character(q_rounded_value[1]), tick = TRUE, lwd = 1,
-       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
-    
-  axis(side = 1, at = as.character(q_rounded_value[2]), tick = TRUE, lwd = 1,
+  axis(side = 1, at = as.character(q_rounded_value), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  print("q=1")
+  }
   # ------------------------------------------------------------------------------------------------
 
 
@@ -426,7 +431,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
     # Display cumulative probability legend
     legaux <- legend("topleft", bty="n", fill=col, cex=text.size,
                     legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
-                                        list(t1 = qq_text, Pr = Pr_text)))
+                                        list(t1 = text_list$q_text, Pr = text_list$prob_text)))
 
     # Localized parameter label
     paramet <- gettext("Parameters:", domain = "R-leem")
@@ -434,7 +439,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
     # Display parameter legend
     legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
           legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
-                              list(media = mu_text, varen = sigma_text, paramet = paramet)))
+                              list(media = text_list$mu_text, varen = text_list$sigma_text, paramet = parametros)))
     # --------------------------------------------------------------------------------------------------------
   }
 }
@@ -477,23 +482,26 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   sequence_terms_list <- list()
 
   # Creating a sequence of terms.
-  if (region == "region A") {
-    # from the min. til the q
-    # or from q to max. By 0.01 steps
-    # Sequence of x values from minimum to q[1]
-    sequence_terms_list$x <- seq(minimo, q[1], by = 0.01)
-    # Sequence of x values from q[2] to maximum
-    sequence_terms_list$z <- seq(q[2], maximo, by = 0.01)
-    # Sequence of values from minimum to maximum
-    sequence_terms_list$y <-seq(minimo, maximo, by = 0.01)
-    #------------------------------
+  if(!is.null(region)) {
+    if (region == "region A") {
+      # from the min. til the q
+      # or from q to max. By 0.01 steps
+      # Sequence of x values from minimum to q[1]
+      sequence_terms_list$x <- seq(minimo, q[1], by = 0.01)
+      # Sequence of x values from q[2] to maximum
+      sequence_terms_list$z <- seq(q[2], maximo, by = 0.01)
+      # Sequence of values from minimum to maximum
+      sequence_terms_list$y <-seq(minimo, maximo, by = 0.01)
+      #------------------------------
 
-  } else if (region == "region B") {
-    # Sequence of x values from q[1] to q[2], by 0.01 steps
-    sequence_terms_list$x <- seq(q[1], q[2], by = 0.01)
-    # Sequence of values from minimum to maximum
-    sequence_terms_list$y <- seq(minimo, maximo, by = 0.01)
-    #------------------------------
+    } else if (region == "region B") {
+      # Sequence of x values from q[1] to q[2], by 0.01 steps
+      sequence_terms_list$x <- seq(q[1], q[2], by = 0.01)
+      # Sequence of values from minimum to maximum
+      sequence_terms_list$y <- seq(minimo, maximo, by = 0.01)
+      #------------------------------
+
+    }
 
   } else if (isTRUE(lower.tail)) {
     # Sequence of x values from minimum to q
@@ -501,29 +509,35 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     # Sequence of x values from q to maximum
     sequence_terms_list$y <- seq(q, maximo, by = 0.01)
     #------------------------------
+  
   }
+
+  cat("O valor de x é:", length(sequence_terms_list$x), "\n")
+  cat("O valor de y é:", length(sequence_terms_list$y), "\n")
   
   # Creating a list that gather all the density terms
   density_terms_list <- list()
 
   # Geting the density of the point of the 
   # normal distribution
-  if (region == "region A") {
-    # Density values for the left region
-    density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
-    # Density values for the right region
-    density_terms_list$fz <- dnorm(sequence_terms_list$z,mean = mu, sd = sigma)
-    # Density values for the background region
-    density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
-    #------------------------------
+  if(!is.null(region)) {
+    if (region == "region A") {
+      # Density values for the left region
+      density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
+      # Density values for the right region
+      density_terms_list$fz <- dnorm(sequence_terms_list$z,mean = mu, sd = sigma)
+      # Density values for the background region
+      density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
+      #------------------------------
 
-  } else if (region == "region B") {
-    # Density values for region from q[1] to q[2]
-    density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
-    # Density values for the background region
-    density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
-    #------------------------------
-    
+    } else if (region == "region B") {
+      # Density values for region from q[1] to q[2]
+      density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
+      # Density values for the background region
+      density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
+      #------------------------------
+    }
+
   } else if (isTRUE(lower.tail)) {
     # Density values for the left region
     density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
@@ -532,6 +546,10 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     #------------------------------
 
   }
+
+
+  cat("O valor de fx é:", length(sequence_terms_list$fx), "\n")
+  cat("O valor de fy é:", length(sequence_terms_list$fy), "\n")
 
   # Density value at q
   #pdf <- dnorm(q, mu, sigma)
@@ -542,18 +560,19 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   q_rounded_value <- round(q, digits=2)
   
   #qqaux <- qq #???
+  if(!is.null(region)) {
+    if (region == "region A") {
+      # Probability P(q[1] > X > q[2])
+      probability_value <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
 
-  if (region == "region A") {
-    # Probability P(q[1] > X > q[2])
-    probability_value <- round(pnorm(q[1], mean = mu,sd = sigma, lower.tail = T) + pnorm(q[2], mean = mu, sd=sigma, lower.tail = F), digits=rounding)
-
-  } else if (region == "region B") {
-    # Probability P(q[1] < X < q[2])
-    probability_value <- round(pnorm(q[2], mean = mu,sd = sigma) - pnorm(q[1], mean = mu, sd=sigma), digits=rounding)
-  
+    } else if (region == "region B") {
+      # Probability P(q[1] < X < q[2])
+      probability_value <- round(pnorm(q[2], mean = mu,sd = sigma) - pnorm(q[1], mean = mu, sd=sigma), digits=rounding)
+    
+    }
   } else if (isTRUE(lower.tail)) {
     # Cumulative probability P(X <= q)
-    Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE),
+    probability_value <- round(pnorm(q,  mean = mu, sd=sigma, lower.tail = TRUE),
                 digits=rounding)
 
     # w <- pretty(dnorm(minimo:maximo, mu, sigma))????????
@@ -594,14 +613,15 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   #-------------------------------------------------------------------------------------------------
   
   # Creating a polygon -----------------------------------------------------------------------------
-  create_polygon(density_terms_list, sequence_terms_list, col, lower.tail)
+  create_polygon(density_terms_list, sequence_terms_list, col, region, lower.tail)
   # ------------------------------------------------------------------------------------------------
 
   # Creating details on the X axis -----------------------------------------------------------------
   create_plot_details(lty, q_rounded_value,
                        col2, text.size, minimo,
                        maximo, q_density_value, 
-                       long.segment, text_list
+                       long.segment, text_list,
+                       region
                       )
   
   # Legends ----------------------------------------------------------------------------------------
