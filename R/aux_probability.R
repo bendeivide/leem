@@ -10,6 +10,8 @@
 
 
 plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
+  
+  # Create default title if none is provided
   if (is.null(main)) {
   
     # Localized title text
@@ -33,6 +35,7 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
       if (attr(q, "region") == "region6") {
         main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity)), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
+
     } else {
       # P(a > X > b)
       if (attr(q, "region") == "region1") {
@@ -54,10 +57,11 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
         main <- substitute(
           bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(X < t1)== integral(f[X](x)*"dx", -infinity, t1)*","~~P(X >= t2)== integral(f[X](x)*"dx", t2, infinity), list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
+
     }
     # ------------------------------------------------------------------------------------------------
 
-    # Region B -------------------------------------------------------------
+    # Region B ---------------------------------------------------------------------------------------
     if (vert.orien.main) {
       # P(a < X < b)
       if (attr(q, "region") == "region2") {
@@ -81,6 +85,7 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
         main <- substitute(atop(bold(titulo), f[X](x) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~P(t1<~X<=~t2)== integral(f[X](x)*"dx", t1, t2)),
                            list(t1 = q_text[1], t2 = q_text[2], x = "x", titulo = titulo))
       }
+
     } else {
       # P(a < X < b)
       if (attr(q, "region") == "region2") {
@@ -108,8 +113,21 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
       }
     }
     # ------------------------------------------------------------------------------------------------
-  }
 
+    # Lower Tail = True ------------------------------------------------------------------------------
+    # Vertical orientation of the mathematical title
+    if (vert.orien.main) {
+      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = qq_text, x = "x", titulo = titulo))
+
+    } else {
+      # Horizontal orientation of the mathematical title
+      main <- substitute(
+        bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), list(t1 = qq_text, x = "x", titulo = titulo)
+      )
+
+    }
+    #------------------------------------------------------------------------------------------------
+  }
 
   return(main)
 }
@@ -171,34 +189,53 @@ create_normal_curve_and_axis <- function (mu, sigma, density_terms_list, main, c
   }
 }
 
-create_polygon <- function(density_terms_list, sequence_terms_list, col){
+create_polygon <- function(density_terms_list, sequence_terms_list, col, lower.tail){
   # 'polygon' is a function that can create a form over the Normal curve
   # previosly created by 'curve' function. 'polygon' needs coordinates over
   # the curve line (y1, fy1),(yn, fyn), and its return way ((yn, 0),(y1, 0).
   # 
   # arguments: (((y1, fy1),(yn, fyn)), ((yn, 0),(y1, 0)), fullfill_color)
   
-  # Background
-  polygon(
-          c(sequence_terms_list$y, rev(sequence_terms_list$y)),
-          c(density_terms_list$fy, rep(0, length(density_terms_list$fy))),
-          col = "gray90"
-        )
+  if(region == "region A" || region == "region B"){
+    # Background
+    polygon(
+            c(sequence_terms_list$y, rev(sequence_terms_list$y)),
+            c(density_terms_list$fy, rep(0, length(density_terms_list$fy))),
+            col = "gray90"
+          )
 
-  # Shade the cumulative probability region
-  # col1 of P(X < q[1])
-  polygon(
-          c(sequence_terms_list$x, rev(sequence_terms_list$x)),
-          c(density_terms_list$fx, rep(0, length(density_terms_list$fx))),
-          col = col
-        )
+    # Shade the cumulative probability region
+    # col1 of P(X < q[1])
+    polygon(
+            c(sequence_terms_list$x, rev(sequence_terms_list$x)),
+            c(density_terms_list$fx, rep(0, length(density_terms_list$fx))),
+            col = col
+          )
+    
+    # col1 of P(X > q[2])
+    polygon(
+            c(sequence_terms_list$z,rev(sequence_terms_list$z)),
+            c(density_terms_list$fz,rep(0,length(density_terms_list$fz))),
+            col = col
+          )
   
-  # col1 of P(X > q[2])
-  polygon(
-          c(sequence_terms_list$z,rev(sequence_terms_list$z)),
-          c(density_terms_list$fz,rep(0,length(density_terms_list$fz))),
-          col = col
-        )
+  } else {
+    # Shade the cumulative probability region
+    ## col1 of P()
+    polygon(
+            c(sequence_terms_list$x, rev(sequence_terms_list$x)),
+            c(sequence_terms_list$fx, rep(0, length(sequence_terms_list$fx))),
+            col = col
+          )
+
+    # Shade the remaining area in gray
+    # Background
+    polygon(
+            c(sequence_terms_list$y, rev(sequence_terms_list$y)),
+            c(sequence_terms_list$fy, rep(0, length(sequence_terms_list$fy))),
+            col="gray90"
+          )
+  }
 }
 
 create_plot_details <- function(lty, q_rounded_value,
@@ -206,7 +243,7 @@ create_plot_details <- function(lty, q_rounded_value,
                        maximo, q_density_value, long.segment,
                        text_list
                       ) {
-  # Highlight q on the x-axis 
+  # Creating details on the X axis -----------------------------------------------------------------
   ## X-axis
   # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts
   mtext(text_list$q_text, side = 1, at = q_rounded_value, line = 2, col = col2, font = 2, cex = text.size) # *** NEW LINE ***
@@ -216,6 +253,7 @@ create_plot_details <- function(lty, q_rounded_value,
   # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts 
   #axis(side=1, at=qq, lwd = 0, col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2) 
   
+  if(region == "region A" || region == "region B"){
   # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
   axis(side = 1, at = as.character(c(minimo, q_rounded_value[1])), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
@@ -224,6 +262,17 @@ create_plot_details <- function(lty, q_rounded_value,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
+  } else { # lower tail = true
+  # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
+  axis(side = 1, at = q_rounded_value, tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
+  
+  axis(side=1, at=as.character(c(minimo, q_rounded_value)), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
+  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+  } 
   # Creating a tiny line under the values of q +++++++++++++++++++++++++++++++++++++++
   axis(side = 1, at = as.character(q_rounded_value[1]), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
@@ -264,8 +313,8 @@ create_plot_details <- function(lty, q_rounded_value,
   points(q_rounded_value, q_density_value, pch = 19)
 }
 
-#write_legend <- function(q, col, text.size, q_text, prob_text, minimo, mu_text, sigma_text, fx, fy) {
-write_legend <- function(q, col, minimo, density_terms_list, text.size, text_list) {
+
+write_legend <- function(q, col, minimo, density_terms_list, text.size, text_list, lower.tail) {
   # Creating a gray rectangle above the plot to hightlight the text over it
   rect(par("usr")[1], 1.03 * max(density_terms_list$fx, density_terms_list$fy), par("usr")[2], par("usr")[4], col = "gray")
   
@@ -273,102 +322,121 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
   # gettext returns the text. "Parameters:" is the original text, domain determines
   # the language base to search the translated word. 
   parametros <- gettext("Parameters:", domain = "R-leem")
+  
+  if (length(q) > 1) {
+    # Region A ------------------------------------------------------------
+    ## P(q[1] > X > q[2])
+    if (attr(q, "region") == "region1") {
+      # Display cumulative probability legend
+      
+      # 'legend' function creates a dinamic legend if matematic notation:
+      # - topleft: Location of the legend;
+      # - bty (Box Type): "n" removes the bordes of the retangle around the legend;
+      # - fill: creates a red square with the legend;
+      # - cex: the relative size of the legend;
+      # - legend: the matematic notation.
+      # the fucntion returns the legend coordinates
+      legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                      legend = substitute(P(X<t1)+P(X>t2)==Pr,
+                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+      
+      # Display parameter legend
+      # legaux$text$y is a coordinate
+      legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
+            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+    }
 
-  # Region A ------------------------------------------------------------
-  ## P(q[1] > X > q[2])
-  if (attr(q, "region") == "region1") {
-    # Display cumulative probability legend
+    if (attr(q, "region") == "region3") {
+      legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                      legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
+                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text[])))
+
+      legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
+            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+    }
+
+    if (attr(q, "region") == "region5") {
+      legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                      legend = substitute(P(X<=t1)+P(X>t2)==Pr,
+                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+      parametros <- gettext("Parameters:", domain = "R-leem")
+      legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
+            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+    }
+    if ( attr(q, "region") == "region6") {
+      legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                      legend = substitute(P(X<t1)+P(X>=t2)==Pr,
+                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+      parametros <- gettext("Parameters:", domain = "R-leem")
+      legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
+            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+    }
+    # -----------------------------------------------------------------------------------------------
     
-    # 'legend' function creates a dinamic legend if matematic notation:
-    # - topleft: Location of the legend;
-    # - bty (Box Type): "n" removes the bordes of the retangle around the legend;
-    # - fill: creates a red square with the legend;
-    # - cex: the relative size of the legend;
-    # - legend: the matematic notation.
-    # the fucntion returns the legend coordinates
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(X<t1)+P(X>t2)==Pr,
-                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
-    
-    # Display parameter legend
-    # legaux$text$y is a coordinate
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
-  }
-
-  if (attr(q, "region") == "region3") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(X<=t1)+P(X>=t2)==Pr,
-                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text[])))
-
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
-  }
-
-  if (attr(q, "region") == "region5") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(X<=t1)+P(X>t2)==Pr,
-                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
-  }
-  if ( attr(q, "region") == "region6") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(X<t1)+P(X>=t2)==Pr,
-                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
-  }
-  # -----------------------------------------------------------------------------------------------
-
-  # Region B ------------------------------------------------------------
-  ## P(a < X < b)
-  if (attr(q, "region") == "region2") {
+    # Region B --------------------------------------------------------------------------------------
+    ## P(a < X < b)
+    if (attr(q, "region") == "region2") {
+      # Display cumulative probability legend
+      legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                      legend = substitute(P(t1<~X<~t2)==Pr,
+                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+      # Display parameter legend
+      legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
+            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+    }
+    # P(a <= X <= b)
+    if (attr(q, "region") == "region4") {
+      legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                      legend = substitute(P(t1<=~X<=~t2)==Pr,
+                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+      legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
+            legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+    }
+    ## P(a <= X < b)
+    if (attr(q, "region") == "region7") {
+      legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                      legend = substitute(P(t1<=~X<~t2)==Pr,
+                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+      parametros <- gettext("Parameters:", domain = "R-leem")
+      legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
+            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+    }
+    # P(a < X <= b)
+    if (attr(q, "region") == "region8") {
+      legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
+                      legend = substitute(P(t1<~X<=~t2)==Pr,
+                                          list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+      parametros <- gettext("Parameters:", domain = "R-leem")
+      legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
+            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+    }
+  # --------------------------------------------------------------------------------------------------------
+  
+  } else {
+    # Lower Tail = True --------------------------------------------------------------------------------------
+    if(isTRUE(lower.tail))
     # Display cumulative probability legend
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(t1<~X<~t2)==Pr,
-                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+    legaux <- legend("topleft", bty="n", fill=col, cex=text.size,
+                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
+                                        list(t1 = qq_text, Pr = Pr_text)))
+
+    # Localized parameter label
+    paramet <- gettext("Parameters:", domain = "R-leem")
+
     # Display parameter legend
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
+    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
+          legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
+                              list(media = mu_text, varen = sigma_text, paramet = paramet)))
+    # --------------------------------------------------------------------------------------------------------
   }
-  # P(a <= X <= b)
-  if (attr(q, "region") == "region4") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(t1<=~X<=~t2)==Pr,
-                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
-           legend = substitute("Parameters:"~mu == media ~ "," ~ sigma == varen,
-                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
-  }
-  ## P(a <= X < b)
-  if (attr(q, "region") == "region7") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(t1<=~X<~t2)==Pr,
-                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
-  }
-  # P(a < X <= b)
-  if (attr(q, "region") == "region8") {
-    legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
-                     legend = substitute(P(t1<~X<=~t2)==Pr,
-                                         list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
-    parametros <- gettext("Parameters:", domain = "R-leem")
-    legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
-           legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                               list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
-  }
-  # -----------------------------------------------------------------------------------------------
 }
 
 # Auxiliar functions of P()
@@ -391,7 +459,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                text.size = 1, cex.main = 1.2,
                                cex.axis = 1, cex.lab = 1,
                                vert.orien.main = TRUE, maximo, minimo,
-                               q1 = NULL, q2 = NULL, region) {
+                               q1 = NULL, q2 = NULL, region = NULL, lower.tail = NULL) {
   
   if (!is.null(q1)){
     q[1] <- q1
@@ -425,6 +493,14 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     sequence_terms_list$x <- seq(q[1], q[2], by = 0.01)
     # Sequence of values from minimum to maximum
     sequence_terms_list$y <- seq(minimo, maximo, by = 0.01)
+    #------------------------------
+
+  } else if (isTRUE(lower.tail)) {
+    # Sequence of x values from minimum to q
+    sequence_terms_list$x <- seq(minimo, q, by = 0.01)
+    # Sequence of x values from q to maximum
+    sequence_terms_list$y <- seq(q, maximo, by = 0.01)
+    #------------------------------
   }
   
   # Creating a list that gather all the density terms
@@ -440,14 +516,22 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     # Density values for the background region
     density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
     #------------------------------
+
   } else if (region == "region B") {
     # Density values for region from q[1] to q[2]
     density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
     # Density values for the background region
     density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
     #------------------------------
-  }
+    
+  } else if (isTRUE(lower.tail)) {
+    # Density values for the left region
+    density_terms_list$fx <- dnorm(sequence_terms_list$x, mean = mu, sd = sigma)
+    # Density values for the right region
+    density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
+    #------------------------------
 
+  }
 
   # Density value at q
   #pdf <- dnorm(q, mu, sigma)
@@ -466,6 +550,13 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   } else if (region == "region B") {
     # Probability P(q[1] < X < q[2])
     probability_value <- round(pnorm(q[2], mean = mu,sd = sigma) - pnorm(q[1], mean = mu, sd=sigma), digits=rounding)
+  
+  } else if (isTRUE(lower.tail)) {
+    # Cumulative probability P(X <= q)
+    Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE),
+                digits=rounding)
+
+    # w <- pretty(dnorm(minimo:maximo, mu, sigma))????????
   }
 
 
@@ -503,7 +594,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   #-------------------------------------------------------------------------------------------------
   
   # Creating a polygon -----------------------------------------------------------------------------
-  create_polygon(density_terms_list, sequence_terms_list, col)
+  create_polygon(density_terms_list, sequence_terms_list, col, lower.tail)
   # ------------------------------------------------------------------------------------------------
 
   # Creating details on the X axis -----------------------------------------------------------------
@@ -514,8 +605,20 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                       )
   
   # Legends ----------------------------------------------------------------------------------------
-  write_legend(q, col, minimo, density_terms_list, text.size, text_list)  
+  write_legend(q, col, minimo, density_terms_list, text.size, text_list, lower.tail)  
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## RStudio
 plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
@@ -1326,6 +1429,7 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
 
 
 
+
 ##################################################################
 # lower.tail = TRUE
 ## (name: plot+p+dist+aux+gui)
@@ -1344,210 +1448,6 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
 
 # Low-level function to plot the Normal distribution highlighting P(X <= q)
 # ===> This is the interface reference! <===
-plotpnormallttplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
-                               long.segment = FALSE, col = "#8EC5E5",
-                               col2 = "#38A8E8", lty = 2, main = NULL,
-                               text.size = 1, cex.main = 1.2,
-                               cex.axis = 1, cex.lab = 1,
-                               vert.orien.main = TRUE) {
-
-  # Define the minimum x-axis limit
-  minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
-
-  # Define the maximum x-axis limit
-  maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
-
-  # Sequence of x values from minimum to q
-  x <- seq(minimo, q, by = 0.01)
-
-  # Sequence of x values from q to maximum
-  y <- seq(q, maximo, by = 0.01)
-
-  # Density values for the left region
-  fx <- dnorm(x, mean = mu, sd = sigma)
-
-  # Density values for the right region
-  fy <- dnorm(y, mean = mu, sd = sigma)
-
-  # Density value at q
-  pdf <- dnorm(q, mu, sigma)
-
-  # Insert vertical line over the mean
-
-  # Rounded value of q for display
-  qq <- round(q, digits=2)
-
-  # Auxiliary rounded value of q
-  qqaux <-round(q, digits=2)
-
-  # Cumulative probability P(X <= q)
-  Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE),
-              digits=rounding)
-
-  # Decimals in plot
-
-  # Generate pretty values for the y-axis
-  ## dec of P()
-  w <- pretty(dnorm(minimo:maximo, mu, sigma))
-
-  # Replace decimal separator if comma format is requested
-  if (dec == ",") {
-    Pr_text <- gsub("\\.", ",", Pr)
-    qq_text <- gsub("\\.", ",", qq)
-    mu_text <- gsub("\\.", ",", mu)
-    sigma_text <- gsub("\\.", ",", sigma)
-    pdf_text <- gsub("\\.", ",", round(pdf, 3))
-  } else {
-
-    # Keep default decimal separator
-    Pr_text <- Pr
-    qq_text <- qq
-    pdf_text <- round(pdf, 3)
-    mu_text <- mu
-    sigma_text <- sigma
-  }
-
-  # Create default title if none is provided
-  if (is.null(main)) {
-
-    # Localized title text
-    titulo <- gettext("Normal Distribution", domain = "R-leem")
-
-    # Vertical orientation of the mathematical title
-    if (vert.orien.main) {
-      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = qq_text, x = "x", titulo = titulo))
-    } else {
-
-      # Horizontal orientation of the mathematical title
-      main <- substitute(
-        bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), list(t1 = qq_text, x = "x", titulo = titulo)
-      )
-    }
-
-  }
-
-  # Draw the Normal density curve
-  curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-        ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
-        panel.first = grid(col = "gray90"),
-        main = main, xaxt = "n", yaxt = "n",
-        cex.main = cex.main)
-
-  # X-axis
-
-  # Generate pretty x-axis values
-  z <- pretty(minimo:maximo)
-
-  # Draw x-axis
-  axis(
-    side = 1,
-    at = z
-  )
-
-  # Format y-axis labels with comma decimal separator
-  if (dec == ",") {
-
-    # Y-axis
-    axis(
-      side = 2,
-      at = w,
-      cex.axis = cex.axis,
-      labels = format(
-        w,
-        decimal.mark = ",",
-        nsmall = 2
-      )
-    )
-  } else {
-
-    # Default y-axis labels
-    # Y-axis
-    axis(
-      side = 2,
-      at = w,
-      cex.axis = cex.axis
-    )
-  }
-
-  # Area  P(X<= q)
-
-  # Shade the cumulative probability region
-  ## col1 of P()
-  polygon(
-          c(x, rev(x)),
-          c(fx, rep(0, length(fx))),
-          col = col
-        )
-
-  # Shade the remaining area in gray
-  # Background
-  polygon(
-          c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
-          col="gray90"
-        )
-
-
-
-  # Insert red q point
-
-  # Highlight q on the x-axis
-  ## col2 of P()
-  #X-axis
-  mtext(qq_text, side = 1, at = qq, line = 2, col = col2, font = 2, cex = text.size)
-
-  # Draw tick mark at q
-  axis(side=1, at=qqaux, labels=FALSE,
-       col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
-
-  # Insert red horizontal and vertical line (X-axis)
-  axis(side=1, at=as.character(c(minimo, qqaux)), tick = TRUE, lwd = 1,
-       col=col2, font = 2, lwd.ticks = 0, labels = FALSE)
-
-  # Y-axis
-
-  # Highlight density value at q on the y-axis
-  mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2, cex = text.size)
-
-  # Draw tick mark at density value
-  axis(side=2, at=pdf, labels=FALSE,
-       col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
-
-  # Long segment and type
-
-  # Draw full or partial guide lines
-  ## col2 and lty of P()
-  if (isTRUE(long.segment)) {
-    abline(v = qqaux, col = col2, lty = lty)
-    abline(h = pdf, col = col2, lty = lty)
-  } else {
-    segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty)
-    segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty)
-  }
-
-  # Add point at (q, density)
-  # Point inserted
-  points(qqaux, pdf, pch = 19)
-
-  # Draw legend background rectangle
-  # Rectangle topleft (Legends)
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
-
-  # Legends
-
-  # Display cumulative probability legend
-  legaux <- legend("topleft", bty="n", fill=col, cex=text.size,
-                   legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
-                                       list(t1 = qq_text, Pr = Pr_text)))
-
-  # Localized parameter label
-  paramet <- gettext("Parameters:", domain = "R-leem")
-
-  # Display parameter legend
-  legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
-         legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
-                             list(media = mu_text, varen = sigma_text, paramet = paramet)))
-}
 
 # RSTUDIO: Low-level function to plot the Normal distribution highlighting P(X <= q)
 plotpnormallttrstudio <- function(q, mu, sigma, rounding,
