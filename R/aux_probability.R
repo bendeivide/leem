@@ -9,7 +9,7 @@
 #########################################################################
 
 
-plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
+plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tail = NULL) {
   
   # Create default title if none is provided
   if (is.null(main)) {
@@ -116,22 +116,24 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text) {
       # ------------------------------------------------------------------------------------------------
     }
 
-    # Lower Tail = True ------------------------------------------------------------------------------
-    # Vertical orientation of the mathematical title
-    if (vert.orien.main) {
-      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q_text, x = "x", titulo = titulo))
+    if(isTRUE(lower.tail)) {
+      # Lower Tail = True ------------------------------------------------------------------------------
+      # Vertical orientation of the mathematical title
+      if (vert.orien.main) {
+        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q_text, x = "x", titulo = titulo))
 
-      main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
-                        list(t = qq_text, titulo = titulo))
+      } else {
+        # Horizontal orientation of the mathematical title
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), list(t1 = q_text, x = "x", titulo = titulo)
+        )
 
-    } else {
-      # Horizontal orientation of the mathematical title
-      main <- substitute(
-        bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), list(t1 = q_text, x = "x", titulo = titulo)
-      )
+      }
+      #------------------------------------------------------------------------------------------------
+      
+    } else if(!isTRUE(lower.tail)) {
 
     }
-    #------------------------------------------------------------------------------------------------
   }
 
   return(main)
@@ -598,7 +600,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   
   # Ploting the formula (depending on the region) on
   # the top of the figure.--------------------------------------------------------------------------
-  main <- plot_top_text(q, main, vert.orien.main, mu, sigma, text_list$q_text)
+  main <- plot_top_text(q, main, vert.orien.main, mu, sigma, text_list$q_text, lower.tail)
   # ------------------------------------------------------------------------------------------------
 
   # Creating a Normal Distribution curve ------------------------------------------------------------ 
