@@ -120,19 +120,33 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tai
       # Lower Tail = True ------------------------------------------------------------------------------
       # Vertical orientation of the mathematical title
       if (vert.orien.main) {
-        main <- substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), list(t1 = q_text, x = "x", titulo = titulo))
+        main <- substitute(
+          atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), 
+                            list(t1 = q_text, x = "x", titulo = titulo))
 
       } else {
         # Horizontal orientation of the mathematical title
         main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), list(t1 = q_text, x = "x", titulo = titulo)
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), 
+                          list(t1 = q_text, x = "x", titulo = titulo)
         )
 
       }
       #------------------------------------------------------------------------------------------------
       
     } else if(!isTRUE(lower.tail)) {
+      # Vertical orientation of the mathematical title
+      if (vert.orien.main) {
+        main = substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
+                          list(t = q_text, titulo = titulo))
+      } else {
 
+        # Horizontal orientation of the mathematical title
+        main <- substitute(
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity), 
+                          list(t = q_text, x = "x", titulo = titulo)
+        )
+      }
     }
   }
 
@@ -146,7 +160,7 @@ create_normal_curve_and_axis <- function (mu, sigma, density_terms_list, main, c
       dnorm(x, mean = mu, sd = sigma),
       minimo,
       maximo,
-      ylim = c(0, 1.2 * max(density_terms_list$fx, density_terms_list$fy, density_terms_list$fz)),
+      ylim = c(0, 1.2 * max(density_terms_list$fx, density_terms_list$fy, density_terms_list$fz)), # Lower Tail does not uses 'fz'
       xlab = "X",
       ylab = expression(f[X](X)), # Draw a beautiful notation.
       panel.first = grid(col = "gray90"),
@@ -422,7 +436,9 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
       legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                       legend = substitute(P(t1<~X<=~t2)==Pr,
                                           list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
+
       parametros <- gettext("Parameters:", domain = "R-leem")
+
       legend(minimo, legaux$text$y, bty="n", bg = "white",  cex = text.size,
             legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
                                 list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
@@ -431,20 +447,34 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
   
   } else {
     # Lower Tail = True --------------------------------------------------------------------------------------
-    if(isTRUE(lower.tail))
-    # Display cumulative probability legend
-    legaux <- legend("topleft", bty="n", fill=col, cex=text.size,
-                    legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
-                                        list(t1 = text_list$q_text, Pr = text_list$prob_text)))
+    if(isTRUE(lower.tail)){
+      # Display cumulative probability legend
+      legaux <- legend("topleft", bty="n", fill=col, cex=text.size,
+                      legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
+                                          list(t1 = text_list$q_text, Pr = text_list$prob_text)))
 
-    # Localized parameter label
-    paramet <- gettext("Parameters:", domain = "R-leem")
+      # Localized parameter label
+      parametros <- gettext("Parameters:", domain = "R-leem")
 
-    # Display parameter legend
-    legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
-          legend = substitute(paramet~mu == media ~ "," ~ sigma == varen,
-                              list(media = text_list$mu_text, varen = text_list$sigma_text, paramet = parametros)))
-    # --------------------------------------------------------------------------------------------------------
+      # Display parameter legend
+      legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
+            legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, paramet = parametros)))
+      # --------------------------------------------------------------------------------------------------------
+    }
+    # Lower Tail = False --------------------------------------------------------------------------------------
+    if(!isTRUE(lower.tail)){
+    
+      legaux <- legend("topleft", bty="n", fill = col, cex=text.size,
+                      legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
+                                          list(t1 = text_list$q_text, Pr = text_list$prob_text)))
+      
+      parametros <- gettext("Parameters:", domain = "R-leem")
+      legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
+            legend = substitute(parametros~mu ==  media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, paramet = parametros)))
+    
+    }
   }
 }
 
@@ -566,11 +596,12 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     
     }
 
-  } else if (isTRUE(lower.tail) || isFALSE(lower.tail)) {
+  } else if (isTRUE(lower.tail)) {
     # Cumulative probability P(X <= q)
-    probability_value <- round(pnorm(q,  mean = mu, sd=sigma, lower.tail = TRUE),
-                digits=rounding)
+    probability_value <- round(pnorm(q,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
 
+  } else if (isFALSE(lower.tail)) {
+    probability_value <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
   }
 
 
@@ -640,132 +671,186 @@ plotpnormalltfplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                text.size = 1, cex.main = 1.2,
                                cex.axis = 1, cex.lab = 1,
                                vert.orien.main = TRUE) {
+  # # Define the minimum x-axis limit
+  # minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
+
+  # # Define the maximum x-axis limit
+  # maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
+
+  # # Sequence of x values from minimum to q
+  # x <- seq(minimo, q, by = 0.01)
+
+  # # Sequence of x values from q to maximum
+  # y <- seq(q, maximo, by = 0.01)
+
+  # # Density values for the left region
+  # fx <- dnorm(x, mean = mu, sd = sigma)
+
+  # # Density values for the right region
+  # fy <- dnorm(y, mean = mu, sd = sigma)
+
+  # # Density value at q
+  # pdf <- dnorm(q, mu, sigma)
+
+  # # Insert vertical line over the mean
+
+  # # Rounded value of q for display
+  # qq <- round(q, digits=2)
+
+  # # Auxiliary rounded value of q
+  # qqaux <-round(q, digits=2)
+
+  # # Cumulative probability P(X <= q)
+  # Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE),
+  #             digits=rounding)
+
+  # Decimals in plot
+
+  # Generate pretty values for the y-axis
+  ## dec of P()
+  # w <- pretty(dnorm(minimo:maximo, mu, sigma))
+
+  # # Replace decimal separator if comma format is requested
+  # if (dec == ",") {
+  #   Pr_text <- gsub("\\.", ",", Pr)
+  #   qq_text <- gsub("\\.", ",", qq)
+  #   mu_text <- gsub("\\.", ",", mu)
+  #   sigma_text <- gsub("\\.", ",", sigma)
+  #   pdf_text <- gsub("\\.", ",", round(pdf, 3))
+  # } else {
+
+  #   # Keep default decimal separator
+  #   Pr_text <- Pr
+  #   qq_text <- qq
+  #   pdf_text <- round(pdf, 3)
+  #   mu_text <- mu
+  #   sigma_text <- sigma
+  # }
+
+  # # Create default title if none is provided
+  # if (is.null(main)) {
+
+  #   # Localized title text
+  #   titulo <- gettext("Normal Distribution", domain = "R-leem")
+
+  #   # Vertical orientation of the mathematical title
+  #   if (vert.orien.main) {
+  #     main = substitute(atop(bold(titulo),
+  #                            f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
+  #                       list(t = qq_text, titulo = titulo))
+  #   } else {
+
+  #     # Horizontal orientation of the mathematical title
+  #     main <- substitute(
+  #       bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity), list(t = qq_text, x = "x", titulo = titulo)
+  #     )
+  #   }
+
+  # }
+  # if (is.null(main)) {
+  #   titulo <- gettext("Normal Distribution", domain = "R-leem")
+  #   main = substitute(atop(bold(titulo),
+  #                          f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
+  #                     list(t = q, titulo = titulo))
+  # }
+
+
+  # curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
+  #       ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
+  #       panel.first = grid(col = "gray90"),
+  #       main = main, xaxt = "n", yaxt = "n",
+  #       cex.main = cex.main)
   
-  # Cumulative probability P(X <= q)
-  Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = TRUE),#???????????????????????????
-              digits=rounding)
+  # polygon(c(x, rev(x)),
+  #         c(fx, rep(0, length(fx))),
+  #         col="gray90")
+  
+  # polygon(c(y, rev(y)),
+  #         c(fy, rep(0, length(fy))),
+  #         col=col)
 
- 
+  # # X-axis
 
-  # Create default title if none is provided
-  if (is.null(main)) {
+  # # Generate pretty x-axis values
+  # z <- pretty(minimo:maximo)
 
-    # Localized title text
-    titulo <- gettext("Normal Distribution", domain = "R-leem")
+  # # Draw x-axis
+  # axis(
+  #   side = 1,
+  #   at = z
+  # )
 
-    # Vertical orientation of the mathematical title
-    if (vert.orien.main) {
-      main = substitute(atop(bold(titulo),
-                             f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
-                        list(t = qq_text, titulo = titulo))
-    } else {
-
-      # Horizontal orientation of the mathematical title
-      main <- substitute(
-        bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity), list(t = qq_text, x = "x", titulo = titulo)
-      )
-    }
-
-  }
-  if (is.null(main)) {
-    titulo <- gettext("Normal Distribution", domain = "R-leem")
-    main = substitute(atop(bold(titulo),
-                           f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
-                      list(t = q, titulo = titulo))
-  }
-  curve(dnorm(x, mean = mu, sd = sigma), minimo, maximo,
-        ylim = c(0, 1.2*max(fx,fy)), ylab = expression(f[X](x)), xlab="X",
-        panel.first = grid(col = "gray90"),
-        main = main, xaxt = "n", yaxt = "n",
-        cex.main = cex.main)
-  polygon(c(x, rev(x)),
-          c(fx, rep(0, length(fx))),
-          col="gray90")
-  polygon(c(y, rev(y)),
-          c(fy, rep(0, length(fy))),
-          col=col)
-
-  # X-axis
-
-  # Generate pretty x-axis values
-  z <- pretty(minimo:maximo)
-
-  # Draw x-axis
-  axis(
-    side = 1,
-    at = z
-  )
-
-  # Insert vertical line over the mean
-  qq <- round(q, digits=2)
-  qqaux <-round(q, digits=2)
-  Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
+  # # Insert vertical line over the mean
+  # qq <- round(q, digits=2)
+  # qqaux <-round(q, digits=2)
+  # Pr <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
 
   # Decimals in plot
   ## dec of P()
-  w <- pretty(dnorm(minimo:maximo, mu, sigma))
-  if (dec == ",") {
-    Pr_text <- gsub("\\.", ",", Pr)
-    qq_text <- gsub("\\.", ",", qq)
-    pdf_text <- gsub("\\.", ",", round(pdf, 3))
-    # Y-axis
-    axis(
-      side = 2,
-      at = w,
-      cex.axis = cex.axis,
-      labels = format(
-        w,
-        decimal.mark = ",",
-        nsmall = 2
-      )
-    )
-  } else {
-    Pr_text <- Pr
-    qq_text <- qq
-    pdf_text <- round(pdf, 3)
-    # Y-axis
-    axis(
-      side = 2,
-      at = w,
-      cex.axis = cex.axis,
-    )
-  }
+  # w <- pretty(dnorm(minimo:maximo, mu, sigma))
+  # if (dec == ",") {
+  #   Pr_text <- gsub("\\.", ",", Pr)
+  #   qq_text <- gsub("\\.", ",", qq)
+  #   pdf_text <- gsub("\\.", ",", round(pdf, 3))
+  #   # Y-axis
+  #   axis(
+  #     side = 2,
+  #     at = w,
+  #     cex.axis = cex.axis,
+  #     labels = format(
+  #       w,
+  #       decimal.mark = ",",
+  #       nsmall = 2
+  #     )
+  #   )
+  # } else {
+  #   Pr_text <- Pr
+  #   qq_text <- qq
+  #   pdf_text <- round(pdf, 3)
+  #   # Y-axis
+  #   axis(
+  #     side = 2,
+  #     at = w,
+  #     cex.axis = cex.axis,
+  #   )
+  # }
 
   # Insert red q point
   #X-axis
-  mtext(qq_text, side = 1, at = qqaux, line = 2, col = col2, font = 2, cex = text.size)
-  axis(side=1, at=as.character(qqaux), tick = TRUE, lwd = 1,
-       col=col2, font = 2, lwd.ticks = 1, labels = FALSE)
+  # mtext(qq_text, side = 1, at = qqaux, line = 2, col = col2, font = 2, cex = text.size)
+  # axis(side=1, at=as.character(qqaux), tick = TRUE, lwd = 1,
+  #     col=col2, font = 2, lwd.ticks = 1, labels = FALSE)
 
   # Y-axis
-  mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2, cex = text.size)
-  axis(side=2, at=pdf, labels=FALSE,
-       col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
+  # mtext(pdf_text, side = 2, at = pdf, line = 2, col = col2, font = 2, cex = text.size)
+  
+  # axis(side=2, at=pdf, labels=FALSE,
+  #      col=col2, font = 2, col.axis = col2, tick = TRUE,lwd.ticks = 1)
 
   # Long segment and type
   ## col2 and lty of P()
-  if (isTRUE(long.segment)) {
-    abline(v = qqaux, col = col2, lty = lty)
-    abline(h = pdf, col = col2, lty = lty)
-  } else {
-    segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty)
-    segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty)
-  }
-  # Point inserted
-  points(qqaux, pdf, pch = 19)
+  # if (isTRUE(long.segment)) {
+  #   abline(v = qqaux, col = col2, lty = lty)
+  #   abline(h = pdf, col = col2, lty = lty)
+  # } else {
+  #   segments(qqaux, 0, qqaux, pdf, col = col2, lty = lty)
+  #   segments(par("usr")[1], pdf, qqaux, pdf, col = col2, lty = lty)
+  # }
+  # # Point inserted
+  # points(qqaux, pdf, pch = 19)
 
   # Rectangle topleft (Legends)
-  rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
+  # rect(par("usr")[1], 1.03 * max(fx,fy), par("usr")[2], par("usr")[4], col = "gray")
 
-  # Legends
-  legaux <- legend("topleft", bty="n", fill = col, cex=text.size,
-                   legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
-                                       list(q = qq_text, Pr = Pr_text)))
-  parametro <- gettext("Parameters:", domain = "R-leem")
-  legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
-         legend = substitute(parametro~mu ==  mean ~ "," ~ sigma == varen,
-                             list(mean = mu_text, varen = sigma_text,
-                                  parametro = parametro)))
+  # # Legends
+  # legaux <- legend("topleft", bty="n", fill = col, cex=text.size,
+  #                  legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
+  #                                      list(q = qq_text, Pr = Pr_text)))
+  # parametro <- gettext("Parameters:", domain = "R-leem")
+  # legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
+  #        legend = substitute(parametro~mu ==  mean ~ "," ~ sigma == varen,
+  #                            list(mean = mu_text, varen = sigma_text,
+  #                                 parametro = parametro)))
 }
 
 
