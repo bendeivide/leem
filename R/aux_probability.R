@@ -283,7 +283,6 @@ create_plot_details <- function(lty, q_rounded_value,
   axis(side = 1, at = as.character(q_rounded_value), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  print("q=1")
   }
   # ------------------------------------------------------------------------------------------------
 
@@ -512,9 +511,6 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   
   }
 
-  cat("O valor de x é:", length(sequence_terms_list$x), "\n")
-  cat("O valor de y é:", length(sequence_terms_list$y), "\n")
-  
   # Creating a list that gather all the density terms
   density_terms_list <- list()
 
@@ -547,16 +543,10 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
   }
 
-
-  cat("O valor de fx é:", length(sequence_terms_list$fx), "\n")
-  cat("O valor de fy é:", length(sequence_terms_list$fy), "\n")
-
   # Density value at q
-  #pdf <- dnorm(q, mu, sigma)
   q_density_value <- dnorm(q, mu, sigma)
   
   # Rounded value of q for display
-  #qq <- round(q, digits=2)
   q_rounded_value <- round(q, digits=2)
   
   #qqaux <- qq #???
