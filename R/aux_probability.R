@@ -359,8 +359,10 @@ create_plot_details <- function(lty, q_rounded_value,
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   } else if(isFALSE(lower.tail)){
+    # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
     axis(side=1, at=as.character(c(q_rounded_value, maximo)), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   } else if(lower.tail == NULL){
     
