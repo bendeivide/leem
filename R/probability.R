@@ -742,9 +742,14 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
 
   if(isFALSE(lower.tail)) {
     if (gui == "plot") {
-      plotpnormalltfplot(q, mu, sigma, rounding, dec,
-                             long.segment, col,
-                             col2, lty, main)
+      plot_p_normal_plot(q, mu, sigma, rounding,
+                         dec, long.segment, col,
+                         col2, lty, main,
+                         text.size, cex.main,
+                         cex.axis, cex.lab,
+                         vert.orien.main, maximo,
+                         minimo, lower.tail = lower.tail
+                        )
     }
 
     if (gui == "rstudio") {

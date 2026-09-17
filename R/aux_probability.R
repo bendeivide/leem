@@ -134,7 +134,7 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tai
       }
       #------------------------------------------------------------------------------------------------
       
-    } else if(!isTRUE(lower.tail)) {
+    } else if(isFALSE(lower.tail)) {
       # Vertical orientation of the mathematical title
       if (vert.orien.main) {
         main = substitute(atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity)),
@@ -240,7 +240,7 @@ create_polygon <- function(density_terms_list, sequence_terms_list, col, region 
             col = col
           )
   
-  } else {
+  } else if(isTRUE(lower.tail)){
     # Shade the cumulative probability region
     ## col1 of P()
     polygon(
@@ -256,13 +256,32 @@ create_polygon <- function(density_terms_list, sequence_terms_list, col, region 
             c(density_terms_list$fy, rep(0, length(density_terms_list$fy))),
             col="gray90"
           )
+  
+  #} else if (!isTRUE(lower.tail)) {
+  } else {
+    # Shade the cumulative probability region
+    ## col1 of P()
+    polygon(
+            c(sequence_terms_list$x, rev(sequence_terms_list$x)),
+            c(density_terms_list$fx, rep(0, length(density_terms_list$fx))),
+            col = "gray90"
+          )
+
+    # Shade the remaining area in gray
+    # Background
+    polygon(
+            c(sequence_terms_list$y, rev(sequence_terms_list$y)),
+            c(density_terms_list$fy, rep(0, length(density_terms_list$fy))),
+            col = col
+          )
+     
   }
 }
 
 create_plot_details <- function(lty, q_rounded_value,
                        col2, text.size, minimo,
                        maximo, q_density_value, long.segment,
-                       text_list, region = NULL
+                       text_list, region = NULL, lower.tail
                       ) {
   # Creating details on the X axis -----------------------------------------------------------------
   # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts
@@ -289,7 +308,7 @@ create_plot_details <- function(lty, q_rounded_value,
   axis(side = 1, at = as.character(q_rounded_value[2]), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
 
-  } else { # lower tail = true
+  } else if(isTRUE(lower.tail)) {
   # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
   axis(side = 1, at = q_rounded_value, tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
@@ -302,6 +321,10 @@ create_plot_details <- function(lty, q_rounded_value,
   axis(side = 1, at = as.character(q_rounded_value), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  } else { # lower tail = false
+    axis(side=1, at=as.character(c(q_rounded_value, maximo)), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
   }
   # ------------------------------------------------------------------------------------------------
 
@@ -450,11 +473,8 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
     if(isTRUE(lower.tail)){
       # Display cumulative probability legend
       legaux <- legend("topleft", bty="n", fill=col, cex=text.size,
-                      legend = substitute(Fx(t1)==P(X<=t1)*"="~Pr,
-                                          list(t1 = text_list$q_text, Pr = text_list$prob_text)))
-
-      # Localized parameter label
-      parametros <- gettext("Parameters:", domain = "R-leem")
+                      legend = substitute(Fx(q)==P(X<=q)*"="~Pr,
+                                          list(q = text_list$q_text, Pr = text_list$prob_text)))
 
       # Display parameter legend
       legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
@@ -463,16 +483,15 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
       # --------------------------------------------------------------------------------------------------------
     }
     # Lower Tail = False --------------------------------------------------------------------------------------
-    if(!isTRUE(lower.tail)){
+    if(isFALSE(lower.tail)){
     
       legaux <- legend("topleft", bty="n", fill = col, cex=text.size,
                       legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
-                                          list(t1 = text_list$q_text, Pr = text_list$prob_text)))
-      
-      parametros <- gettext("Parameters:", domain = "R-leem")
+                                          list(q = text_list$q_text, Pr = text_list$prob_text)))
+
       legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
             legend = substitute(parametros~mu ==  media ~ "," ~ sigma == varen,
-                                list(media = text_list$mu_text, varen = text_list$sigma_text, paramet = parametros)))
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
     
     }
   }
@@ -504,7 +523,6 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     q[1] <- q1
     q[2] <- q2
   }
-
   
   # Define the minimum x-axis limit
   #minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
@@ -601,7 +619,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     probability_value <- round(pnorm(q,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
 
   } else if (isFALSE(lower.tail)) {
-    probability_value <- round(pnorm(qq,  mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
+    probability_value <- round(pnorm(q,  mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
   }
 
 
@@ -647,7 +665,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                        col2, text.size, minimo,
                        maximo, q_density_value, 
                        long.segment, text_list,
-                       region
+                       region, lower.tail
                       )
   
   # Legends ----------------------------------------------------------------------------------------
