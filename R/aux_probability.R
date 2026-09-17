@@ -10,10 +10,10 @@
 
 
 plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tail = NULL) {
-  
+
   # Create default title if none is provided
   if (is.null(main)) {
-  
+
     # Localized title text
     titulo <- gettext("Normal Distribution", domain = "R-leem")
 
@@ -61,7 +61,7 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tai
 
       }
       # ------------------------------------------------------------------------------------------------
-      
+
       # Region B ---------------------------------------------------------------------------------------
       if (vert.orien.main) {
         # P(a < X < b)
@@ -114,7 +114,7 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tai
         }
       }
       # ------------------------------------------------------------------------------------------------
-      
+
       return(main)
 
     }
@@ -124,21 +124,21 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tai
       # Vertical orientation of the mathematical title
       if (vert.orien.main) {
         main <- substitute(
-          atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)), 
+          atop(bold(titulo), f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1)),
                             list(t1 = q_text, x = "x", titulo = titulo))
 
       } else {
         # Horizontal orientation of the mathematical title
         main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1), 
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~Fx(t1)== integral(f[X](x)*"dx", -infinity, t1),
                           list(t1 = q_text, x = "x", titulo = titulo)
         )
 
       }
       #------------------------------------------------------------------------------------------------
-      
-      return(main) 
-      
+
+      return(main)
+
     } else if(isFALSE(lower.tail)) {
       # Vertical orientation of the mathematical title
       if (vert.orien.main) {
@@ -148,12 +148,12 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tai
 
         # Horizontal orientation of the mathematical title
         main <- substitute(
-          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity), 
+          bold(titulo)~~"|"~~f[X](x*";"~mu*","~sigma) == frac(1, symbol(sigma)*root(2*symbol(pi)))*~e^-frac(1,2)(frac(x-symbol(mu),sigma))^2*","~~S[X](t)~"="~1 - F[X](t)~"="*1 - integral(f[X](x)*"dx", -infinity, t)~"="*P(X > t) == integral(f[X](x)*"dx", t, infinity),
                           list(t = q_text, x = "x", titulo = titulo))
       }
-    
-      return(main) 
-    
+
+      return(main)
+
     } else if (lower.tail == NULL) {
       # If the user did not provide a custom title,
       # automatically create one
@@ -178,7 +178,7 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tai
         }
       }
 
-      return(main) 
+      return(main)
     }
   }
 }
@@ -191,7 +191,7 @@ create_normal_curve_and_axis <- function (mu, sigma, density_terms_list, main, c
       dnorm(x, mean = mu, sd = sigma),
       minimo,
       maximo,
-      ylim = c(0, 1.2 * max(density_terms_list$fx, density_terms_list$fy, density_terms_list$fz)), 
+      ylim = c(0, 1.2 * max(density_terms_list$fx, density_terms_list$fy, density_terms_list$fz)),
       xlab = "X",
       ylab = expression(f[X](X)), # Draw a beautiful notation.
       panel.first = grid(col = "gray90"),
@@ -245,9 +245,9 @@ create_polygon <- function(density_terms_list, sequence_terms_list, col, region 
   # 'polygon' is a function that can create a form over the Normal curve
   # previosly created by 'curve' function. 'polygon' needs coordinates over
   # the curve line (y1, fy1),(yn, fyn), and its return way ((yn, 0),(y1, 0).
-  # 
+  #
   # arguments: (((y1, fy1),(yn, fyn)), ((yn, 0),(y1, 0)), fullfill_color)
-  
+
   if(!is.null(region)){
     # Background
     polygon(
@@ -263,14 +263,14 @@ create_polygon <- function(density_terms_list, sequence_terms_list, col, region 
             c(density_terms_list$fx, rep(0, length(density_terms_list$fx))),
             col = col
           )
-    
+
     # col1 of P(X > q[2])
     polygon(
             c(sequence_terms_list$z,rev(sequence_terms_list$z)),
             c(density_terms_list$fz,rep(0,length(density_terms_list$fz))),
             col = col
           )
-  
+
   } else if(isTRUE(lower.tail)){
     # Shade the cumulative probability region
     ## col1 of P()
@@ -287,7 +287,7 @@ create_polygon <- function(density_terms_list, sequence_terms_list, col, region 
             c(density_terms_list$fy, rep(0, length(density_terms_list$fy))),
             col="gray90"
           )
-  
+
   } else if (isFALSE(lower.tail)) {
     # Shade the cumulative probability region
     ## col1 of P()
@@ -304,7 +304,7 @@ create_polygon <- function(density_terms_list, sequence_terms_list, col, region 
             c(density_terms_list$fy, rep(0, length(density_terms_list$fy))),
             col = col
           )
-     
+
   } else if (lower.tail == NULL) {
     polygon(
             c(sequence_terms_list$y, rev(sequence_terms_list$y)),
@@ -322,25 +322,25 @@ create_plot_details <- function(lty, q_rounded_value,
   # Creating details on the X axis -----------------------------------------------------------------
   # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts
   mtext(text_list$q_text, side = 1, at = q_rounded_value, line = 2, col = col2, font = 2, cex = text.size) # *** NEW LINE ***
-  
+
   #aux2 <- par("usr")[3]-(par("usr")[4] - par("usr")[3])/20 # getting coordinates to plot
-  
-  # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts 
-  #axis(side=1, at=qq, lwd = 0, col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2) 
-  
+
+  # Ploting the values of q on x axis and hightlighting then by bold and colorful fonts
+  #axis(side=1, at=qq, lwd = 0, col="red", font = 2, tick = FALSE, col.axis = "red", pos = aux2)
+
   if(!is.null(region)){
   # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
   axis(side = 1, at = as.character(c(minimo, q_rounded_value[1])), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
-  
+
   axis(side=1, at=as.character(c(q_rounded_value[2], maximo)), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
+
   # Creating a tiny line under the values of q +++++++++++++++++++++++++++++++++++++++
   axis(side = 1, at = as.character(q_rounded_value[1]), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
-    
+
   axis(side = 1, at = as.character(q_rounded_value[2]), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
 
@@ -348,7 +348,7 @@ create_plot_details <- function(lty, q_rounded_value,
   # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
   axis(side = 1, at = q_rounded_value, tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
-  
+
   axis(side=1, at=as.character(c(minimo, q_rounded_value)), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -357,15 +357,15 @@ create_plot_details <- function(lty, q_rounded_value,
   axis(side = 1, at = as.character(q_rounded_value), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
   # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
+
   } else if(isFALSE(lower.tail)){
     # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
     axis(side=1, at=as.character(c(q_rounded_value, maximo)), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
+
   } else if(lower.tail == NULL){
-    
+
   }
   # ------------------------------------------------------------------------------------------------
 
@@ -404,18 +404,18 @@ create_plot_details <- function(lty, q_rounded_value,
 write_legend <- function(q, col, minimo, density_terms_list, text.size, text_list, lower.tail) {
   # Creating a gray rectangle above the plot to hightlight the text over it
   rect(par("usr")[1], 1.03 * max(density_terms_list$fx, density_terms_list$fy), par("usr")[2], par("usr")[4], col = "gray")
-  
+
   ## Localized parameter label
   # gettext returns the text. "Parameters:" is the original text, domain determines
-  # the language base to search the translated word. 
+  # the language base to search the translated word.
   parametros <- gettext("Parameters:", domain = "R-leem")
-  
+
   if (length(q) > 1) {
     # Region A ------------------------------------------------------------
     ## P(q[1] > X > q[2])
     if (attr(q, "region") == "region1") {
       # Display cumulative probability legend
-      
+
       # 'legend' function creates a dinamic legend if matematic notation:
       # - topleft: Location of the legend;
       # - bty (Box Type): "n" removes the bordes of the retangle around the legend;
@@ -426,7 +426,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
       legaux <- legend("topleft", bty = "n", fill = col,cex = text.size,
                       legend = substitute(P(X<t1)+P(X>t2)==Pr,
                                           list(t1=text_list$q_text[1],t2=text_list$q_text[2], Pr = text_list$prob_text)))
-      
+
       # Display parameter legend
       # legaux$text$y is a coordinate
       legend(minimo, legaux$text$y, bty="n", bg = "white", cex = text.size,
@@ -463,7 +463,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
                                 list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
     }
     # -----------------------------------------------------------------------------------------------
-    
+
     # Region B --------------------------------------------------------------------------------------
     ## P(a < X < b)
     if (attr(q, "region") == "region2") {
@@ -508,7 +508,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
                                 list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
     }
   # --------------------------------------------------------------------------------------------------------
-  
+
   } else {
     # Lower Tail = True --------------------------------------------------------------------------------------
     if(isTRUE(lower.tail)){
@@ -525,7 +525,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
     }
     # Lower Tail = False --------------------------------------------------------------------------------------
     if(isFALSE(lower.tail)){
-    
+
       legaux <- legend("topleft", bty="n", fill = col, cex=text.size,
                       legend = substitute(S[X](q)~"="~1-F[X](q)~"="~P(X > q) == Pr,
                                           list(q = text_list$q_text, Pr = text_list$prob_text)))
@@ -533,7 +533,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
       legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
             legend = substitute(parametros~mu ==  media ~ "," ~ sigma == varen,
                                 list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
-    
+
     }
   }
 }
@@ -550,8 +550,8 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
 # q: Quantil
 # mu: Mean (mi)
 # sigma: Satandard Desviation
-# rounding: 
-# main:  
+# rounding:
+# main:
 plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                long.segment = FALSE, col = "#8EC5E5",
                                col2 = "#38A8E8", lty = 2, main = NULL,
@@ -559,18 +559,18 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                cex.axis = 1, cex.lab = 1,
                                vert.orien.main = TRUE, maximo, minimo,
                                q1 = NULL, q2 = NULL, region = NULL, lower.tail = NULL) {
-  
+
   if (!is.null(q1)){
     q[1] <- q1
     q[2] <- q2
   }
-  
+
   # Define the minimum x-axis limit
   #minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
   # Define the maximum x-axis limit
   #maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
-  
-  
+
+
   # Creating a list that gather all the sequences terms
   sequence_terms_list <- list()
 
@@ -602,17 +602,18 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     # Sequence of x values from q to maximum
     sequence_terms_list$y <- seq(q, maximo, by = 0.01)
     #------------------------------
-  
-  } else if(lower.tail == NULL) {
+
+  } else if(is.null(lower.tail)) {
     # Create a sequence of x values used to draw the density curve
     sequence_terms_list$y <- seq(minimo, maximo, by = 0.01)
     #------------------------------
+    
   }
 
   # Creating a list that gather all the density terms
   density_terms_list <- list()
 
-  # Geting the density of the point of the 
+  # Geting the density of the point of the
   # normal distribution
   if(!is.null(region)) {
     if (region == "region A") {
@@ -646,10 +647,10 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
   # Density value at q
   q_density_value <- dnorm(q, mu, sigma)
-  
+
   # Rounded value of q for display
   q_rounded_value <- round(q, digits=2)
-  
+
   #qqaux <- qq #???
 
   if(!is.null(region)) {
@@ -660,7 +661,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     } else if (region == "region B") {
       # Probability P(q[1] < X < q[2])
       probability_value <- round(pnorm(q[2], mean = mu,sd = sigma) - pnorm(q[1], mean = mu, sd=sigma), digits=rounding)
-    
+
     }
 
   } else if (isTRUE(lower.tail) || lower.tail == NULL) {
@@ -669,7 +670,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
   } else if (isFALSE(lower.tail)) {
     probability_value <- round(pnorm(q,  mean = mu, sd=sigma, lower.tail = FALSE), digits=rounding)
-  
+
   }
 
 
@@ -696,16 +697,16 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
   # *** NEW LINE ***
   # Localized title text
-  
+
   # Ploting the formula (depending on the region) on
   # the top of the figure.--------------------------------------------------------------------------
   main <- plot_top_text(q, main, vert.orien.main, mu, sigma, text_list$q_text, lower.tail)
   # ------------------------------------------------------------------------------------------------
 
-  # Creating a Normal Distribution curve ------------------------------------------------------------ 
+  # Creating a Normal Distribution curve ------------------------------------------------------------
   create_normal_curve_and_axis(mu, sigma, density_terms_list, main, cex.main, cex.axis, dec, minimo, maximo)
   #-------------------------------------------------------------------------------------------------
-  
+
   # Creating a polygon -----------------------------------------------------------------------------
   create_polygon(density_terms_list, sequence_terms_list, col, region, lower.tail)
   # ------------------------------------------------------------------------------------------------
@@ -713,13 +714,13 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
   # Creating details on the X axis -----------------------------------------------------------------
   create_plot_details(lty, q_rounded_value,
                        col2, text.size, minimo,
-                       maximo, q_density_value, 
+                       maximo, q_density_value,
                        long.segment, text_list,
                        region, lower.tail
                       )
-  
+
   # Legends ----------------------------------------------------------------------------------------
-  write_legend(q, col, minimo, density_terms_list, text.size, text_list, lower.tail)  
+  write_legend(q, col, minimo, density_terms_list, text.size, text_list, lower.tail)
 }
 
 
@@ -1222,7 +1223,7 @@ plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
 
   q1 <- q[1]
   q2 <- q[2]
-                                  
+
   # Ensure the interval is at least 0.02 (2 * step)
   if (maximo - q2 < 0.02) {
     maximo <- q2 + 0.02
@@ -1385,7 +1386,7 @@ plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
 
 
 create_containers_and_panels <- function() {
-  
+
   # Creating a list of containers and panels
   # to be returned by this function and used by
   # tk plot p normal function
@@ -1405,7 +1406,7 @@ create_containers_and_panels <- function() {
   # =========================
 
   # All
-  
+
   # Creating a main window splited in two parts with one
   # movel bar separeting the divisions
   windows_list$main_container <- ttkpanedwindow(windows_list$base, orient = "horizontal")
@@ -1433,7 +1434,7 @@ create_containers_and_panels <- function() {
   # =========================
   # Input frame
   # =========================
-  
+
   # Creating the painel that gather all the slisers and checkbox
   windows_list$left_panel <- ttklabelframe(
     windows_list$left_container,
@@ -1444,7 +1445,7 @@ create_containers_and_panels <- function() {
   )
 
   # Adding left_panel into the left_container, and anchoring it
-  # at northwest position of the left_container 
+  # at northwest position of the left_container
   tkpack(
     windows_list$left_panel,
     side = "top",
@@ -1457,7 +1458,7 @@ create_containers_and_panels <- function() {
 }
 
 create_logo <- function(left_container) {
-  
+
   # =========================
   # Logo frame
   # =========================
@@ -1466,14 +1467,14 @@ create_logo <- function(left_container) {
   # Puting the logo_frame on the top of the container
   # using 100% of the horizontal space available
   # with 5 pixel of external padding on the top and
-  # the botton of the frame 
+  # the botton of the frame
   tkpack(
     logo_frame,
     side = "top",
     fill = "x",
     pady = 5
   )
- 
+
 
   # =========================
   # Logo
@@ -1531,11 +1532,11 @@ create_logo <- function(left_container) {
 }
 
 create_sliders_and_checkboxes <- function(left_container, left_panel, var_list) {
-  
+
   # Creating a control object list
   # to gather all the checkboxes and sliders
   ctrl_obj_list <- list()
-  
+
   # =========================
   # Sliders
   # =========================
@@ -1675,7 +1676,7 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
   #                     cex.axis, cex.lab,
   #                     vert.orien.main)
 
-  
+
   # Creating a list of variables
   var_list <- list()
 
@@ -1690,7 +1691,7 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
     var_list$minimo <- q1 - 0.02
   }
 
-  
+
   # Variables for sliders
   var_list$q1_var <- tclVar(q1)
   var_list$q2_var <- tclVar(q2)
@@ -1719,12 +1720,12 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
   # =========================
   # Plot area
   # =========================
-  
-  # Create a canvas object inside the right container, 
+
+  # Create a canvas object inside the right container,
   # focussed on drawning graphics and geometries
   canvas <- tkcanvas(windows_list$right_container)
 
-  # Adding the canvas 
+  # Adding the canvas
   tkpack(
     canvas,
     fill = "both",
@@ -1734,7 +1735,7 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
   # Creating a list to gather all the control
   # objects
   ctrl_obj_list <- list()
-  
+
   # create sliders and checkboxes
   ctrl_obj_list <- create_sliders_and_checkboxes(
                       windows_list$left_container,
@@ -1749,7 +1750,7 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
   save_plot <- function(type = c("png", "pdf", "svg")) {
 
     # Match output type
-    # This function verify if the argument is 
+    # This function verify if the argument is
     # a valid argument. if not, the program stops
     type <- match.arg(type)
 
@@ -1879,7 +1880,7 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
     text = gettext("Export SVG", domain = "R-leem"),
     command = function() save_plot("svg")
   )
-  
+
   # Adding the buttons
   tkpack(png_button, fill = "x", pady = 2)
   tkpack(pdf_button, fill = "x", pady = 2)
@@ -1889,8 +1890,8 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
   # Draw plot
   drawGraph <- function() {
     # Controling the warning messages
-    old_warning <- getOption("warn") 
-    options(warn = -1) # Set the messages of warning to not appear during the code execution  
+    old_warning <- getOption("warn")
+    options(warn = -1) # Set the messages of warning to not appear during the code execution
 
     # Canvas dimentions
     height <- as.numeric(tclvalue(tkwinfo("height", windows_list$right_container)))
@@ -1906,12 +1907,12 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
     orienttext <- as.logical(as.numeric(tclvalue(var_list$title_var)))
 
     # Creating a temporary file to save
-    # pattern = "leem.": Set a prefix term to help to identifying the file 
+    # pattern = "leem.": Set a prefix term to help to identifying the file
     temporary_file <- tempfile(pattern = "leem.", tmpdir = tempdir(), fileext = ".png")
 
     # Create the graphic image
     png(filename = temporary_file, width = width, height = height, units = "px")
-    
+
     try(# Generate the normal distribution plot
       plot_p_normal_plot(
         q = q,
