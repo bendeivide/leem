@@ -154,7 +154,7 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tai
 
       return(main)
 
-    } else if (lower.tail == NULL) {
+    } else if (is.null(lower.tail)) {
       # If the user did not provide a custom title,
       # automatically create one
       if (is.null(main)) {
@@ -305,7 +305,7 @@ create_polygon <- function(density_terms_list, sequence_terms_list, col, region 
             col = col
           )
 
-  } else if (lower.tail == NULL) {
+  } else if (is.null(lower.tail)) {
     polygon(
             c(sequence_terms_list$y, rev(sequence_terms_list$y)),
             c(density_terms_list$fy, rep(0, length(density_terms_list$fy))),
@@ -360,12 +360,18 @@ create_plot_details <- function(lty, q_rounded_value,
 
   } else if(isFALSE(lower.tail)){
     # Creating a line under the fulfilled area of the graphic ++++++++++++++++++++++++++
+    axis(side = 1, at = q_rounded_value, tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
+
     axis(side=1, at=as.character(c(q_rounded_value, maximo)), tick = TRUE, lwd = 1,
        col = col2, font = 2, lwd.ticks = 0, labels = FALSE)
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  } else if(lower.tail == NULL){
-
+  } else if(is.null(lower.tail)){
+    # Creating a tiny line under the values of q +++++++++++++++++++++++++++++++++++++++
+    axis(side = 1, at = as.character(q_rounded_value), tick = TRUE, lwd = 1,
+       col = col2, font = 2, lwd.ticks = 1, labels = FALSE)
+  # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   }
   # ------------------------------------------------------------------------------------------------
 
@@ -534,6 +540,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
             legend = substitute(parametros~mu ==  media ~ "," ~ sigma == varen,
                                 list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
 
+    # --------------------------------------------------------------------------------------------------------
     }
   }
 }
@@ -640,7 +647,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
     #------------------------------
 
-  } else if (lower.tail == NULL) {
+  } else if (is.null(lower.tail)) {
     # Compute the Normal density values for each point in y
     density_terms_list$fy <- dnorm(sequence_terms_list$y, mean = mu, sd = sigma)
   }
@@ -664,7 +671,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
     }
 
-  } else if (isTRUE(lower.tail) || lower.tail == NULL) {
+  } else if (isTRUE(lower.tail) || is.null(lower.tail)) {
     # Cumulative probability P(X <= q)
     probability_value <- round(pnorm(q,  mean = mu, sd=sigma, lower.tail = TRUE), digits=rounding)
 

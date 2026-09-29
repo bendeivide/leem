@@ -824,14 +824,14 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
     #
     # ./aux_probability.R
     if (gui == "plot") {
-      plotdnormalltnplot(
-        q, mu, sigma, rounding, dec,
-        long.segment, col,
-        col2, lty, main,
-        text.size, cex.main,
-        cex.axis, cex.lab,
-        vert.orien.main
-      )
+      plot_p_normal_plot(q, mu, sigma, rounding,
+                         dec, long.segment, col,
+                         col2, lty, main,
+                         text.size, cex.main,
+                         cex.axis, cex.lab,
+                         vert.orien.main, maximo,
+                         minimo, lower.tail = lower.tail
+                        )
     }
 
     # If the gui argument is set to "rstudio"
