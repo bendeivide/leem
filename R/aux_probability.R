@@ -165,7 +165,7 @@ plot_top_text <- function(q, main, vert.orien.main, mu, sigma, q_text, lower.tai
         #############################################################
 
           # Create a two-line title using mathematical notation
-         main <- substitute(atop(bold(titulo), f[X](x * ";" ~ mu * "," ~ sigma) == frac(1, symbol(sigma) * root(2 * symbol(pi))) * ~e^-frac(1, 2) * (frac(x - symbol(mu), sigma))^2),
+         main <- substitute(atop(bold(titulo), f[X](x * ";" ~ mu * "," ~ sigma) == frac(1, symbol(sigma) * root(2 * symbol(pi))) * ~e^-frac(1, 2)(frac(x - symbol(mu), sigma))^2),
                             list(t1 = q_text, x = "x", titulo = titulo))
 
         } else {
@@ -526,9 +526,10 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
       # Display parameter legend
       legend(minimo, legaux$text$y, bty="n", bg = "white", cex=text.size,
             legend = substitute(parametros~mu == media ~ "," ~ sigma == varen,
-                                list(media = text_list$mu_text, varen = text_list$sigma_text, paramet = parametros)))
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
       # --------------------------------------------------------------------------------------------------------
     }
+
     # Lower Tail = False --------------------------------------------------------------------------------------
     if(isFALSE(lower.tail)){
 
@@ -540,6 +541,19 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
             legend = substitute(parametros~mu ==  media ~ "," ~ sigma == varen,
                                 list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
 
+    # --------------------------------------------------------------------------------------------------------
+    }
+    
+    # Lower Tail = Null --------------------------------------------------------------------------------------
+    if(is.null(lower.tail)){
+
+      legaux <- legend("topleft", bty = "n", fill=col, cex = text.size,
+                      legend = substitute(f[X](q) == Pr,
+                                          list(q = text_list$q_text, Pr = text_list$prob_text)))
+
+      legend(minimo, legaux$text$y, bty = "n", bg = "white", cex = text.size,
+            legend = substitute(parametros ~ mu == media ~ "," ~ sigma == varen,
+                                list(media = text_list$mu_text, varen = text_list$sigma_text, parametros = parametros)))
     # --------------------------------------------------------------------------------------------------------
     }
   }
