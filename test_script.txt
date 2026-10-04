@@ -44,3 +44,12 @@ P(1.5, mean = 0.8, sd = 1.2, gui = "plot", lower.tail = FALSE, long.segment = TR
 
 #Lower Tail Null plot
 P(1.5, mean = 0.8, sd = 1.2, gui = "plot", lower.tail = NULL, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
+#Lower Tail True rstudio
+P(1.5, mean = 0.8, sd = 1.2, gui = "rstudio", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
+#Lower Tail False rstudio
+P(1.5, mean = 0.8, sd = 1.2, gui = "rstudio", lower.tail = FALSE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
+#Lower Tail Null rstudio
+P(1.5, mean = 0.8, sd = 1.2, gui = "rstudio", lower.tail = NULL, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)

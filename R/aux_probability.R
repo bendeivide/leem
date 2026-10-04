@@ -543,7 +543,7 @@ write_legend <- function(q, col, minimo, density_terms_list, text.size, text_lis
 
     # --------------------------------------------------------------------------------------------------------
     }
-    
+
     # Lower Tail = Null --------------------------------------------------------------------------------------
     if(is.null(lower.tail)){
 
@@ -582,6 +582,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                q1 = NULL, q2 = NULL, region = NULL, lower.tail = NULL) {
 
   if (!is.null(q1)){
+    
     q[1] <- q1
     q[2] <- q2
   }
@@ -628,7 +629,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     # Create a sequence of x values used to draw the density curve
     sequence_terms_list$y <- seq(minimo, maximo, by = 0.01)
     #------------------------------
-    
+
   }
 
   # Creating a list that gather all the density terms
@@ -755,482 +756,6 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
 
 
-plotdnormalltnplot <- function(q, mu, sigma, rounding, dec = c(".", ","),
-                               long.segment = FALSE, col = "#8EC5E5",
-                               col2 = "#38A8E8", lty = 2, main = NULL,
-                               text.size = 1, cex.main = 1.2,
-                               cex.axis = 1, cex.lab = 1,
-                               vert.orien.main = TRUE) {
-
-  # Arguments:
-  # q                  -> Quantile or x-value to be highlighted.
-  # mu                 -> Mean of the Normal distribution.
-  # sigma              -> Standard deviation of the Normal distribution.
-  # rounding           -> Number of decimal places used in labels/results.
-  # minimo             -> Minimum x-axis value for plotting.
-  # maximo             -> Maximum x-axis value for plotting.
-  # dec                -> Decimal separator style.
-  # long.segment       -> Logical value controlling segment extension.
-  # col                -> Main fill or polygon color.
-  # col2               -> Secondary color used in plot elements.
-  # lty                -> Line type specification.
-  # main               -> Main title of the plot.
-  # text.size          -> Size of additional text annotations.
-  # cex.main           -> Expansion factor for the main title.
-  # cex.axis           -> Expansion factor for axis labels.
-  # cex.lab            -> Expansion factor for axis titles.
-  # vert.orien.main    -> Logical value controlling vertical title orientation.
-
-
-  ###############################################################
-  # Definition of the plotting interval
-  ###############################################################
-
-  # Define the minimum value of the x-axis.
-  # If q is far to the left of the distribution center,
-  # expand the graph to include q.
-  # minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
-
-  # Define the maximum value of the x-axis.
-  # If q is far to the right of the distribution center,
-  # expand the graph to include q.
-  # maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
-
-  ###############################################################
-  # Generation of points for the Normal density curve
-  ###############################################################
-
-  # # Create a sequence of x values used to draw the density curve
-  # y <- seq(minimo, maximo, by = 0.01)
-
-  # # Compute the Normal density values for each point in y
-  # fy <- dnorm(y, mean = mu, sd = sigma)
-
-  # # Compute the density value at the specific point q
-  # pdf <- dnorm(q, mu, sigma)
-
-  # ###############################################################
-  # # Rounded values used for display in the graph
-  # ###############################################################
-
-  # # Rounded value of q for display purposes
-  # qq <- round(q, digits = 2)
-
-  # # Auxiliary rounded value of q used in axes and segments
-  # qqaux <- round(q, digits = 2)
-
-  # ###############################################################
-  # # Cumulative probability associated with q
-  # ###############################################################
-
-  # # Compute P(X <= q) using the Normal cumulative distribution
-  # # function and round the result according to the user input
-  # Pr <- round(
-  #   pnorm(
-  #     qq,
-  #     mean = mu,
-  #     sd = sigma,
-  #     lower.tail = TRUE
-  #   ),
-  #   digits = rounding
-  # )
-
-  # ###############################################################
-  # # Generation of pretty values for the y-axis
-  # ###############################################################
-
-  # # Generate aesthetically pleasant y-axis tick values
-  # w <- pretty(dnorm(minimo:maximo, mu, sigma))
-
-  ###############################################################
-  # Formatting decimal separator
-  ###############################################################
-
-  # If the user requests comma decimal notation,
-  # replace "." by "," in all displayed numeric values
-  # if (dec == ",") {
-
-  #   Pr_text <- gsub("\\.", ",", Pr)
-
-  #   qq_text <- gsub("\\.", ",", qq)
-
-  #   mu_text <- gsub("\\.", ",", mu)
-
-  #   sigma_text <- gsub("\\.", ",", sigma)
-
-  #   pdf_text <- gsub("\\.", ",", round(pdf, 3))
-
-  # } else {
-
-  #   # Keep default decimal notation using points
-  #   Pr_text <- Pr
-
-  #   qq_text <- qq
-
-  #   pdf_text <- round(pdf, 3)
-
-  #   mu_text <- mu
-
-  #   sigma_text <- sigma
-  # }
-
-  ###############################################################
-  # Main title generation
-  ###############################################################
-
-  # # If the user did not provide a custom title,
-  # # automatically create one
-  # if (is.null(main)) {
-
-  #   # Localized title obtained from translation files
-  #   titulo <- gettext("Normal Distribution", domain = "R-leem")
-
-  #   #############################################################
-  #   # Vertical mathematical title
-  #   #############################################################
-
-  #   if (vert.orien.main) {
-
-  #     # Create a two-line title using mathematical notation
-  #     main <- substitute(
-  #       atop(
-  #         bold(titulo),
-  #         f[X](x * ";" ~ mu * "," ~ sigma) ==
-  #           frac(
-  #             1,
-  #             symbol(sigma) * root(2 * symbol(pi))
-  #           ) *
-  #           ~e^-frac(
-  #             1,
-  #             2
-  #           )(
-  #             frac(
-  #               x - symbol(mu),
-  #               sigma
-  #             )
-  #           )^2
-  #       ),
-  #       list(
-  #         t1 = qq_text,
-  #         x = "x",
-  #         titulo = titulo
-  #       )
-  #     )
-
-  #   } else {
-
-  #     ###########################################################
-  #     # Horizontal mathematical title
-  #     ###########################################################
-
-  #     main <- substitute(
-  #       bold(titulo) ~~ "|" ~~
-  #         f[X](x * ";" ~ mu * "," ~ sigma) ==
-  #         frac(
-  #           1,
-  #           symbol(sigma) * root(2 * symbol(pi))
-  #         ) *
-  #         ~e^-frac(
-  #           1,
-  #           2
-  #         )(
-  #           frac(
-  #             x - symbol(mu),
-  #             sigma
-  #           )
-  #         )^2,
-  #       list(
-  #         t1 = qq_text,
-  #         x = "x",
-  #         titulo = titulo
-  #       )
-  #     )
-  #   }
-  # }
-
-  # ###############################################################
-  # # Draw the Normal density curve
-  # ###############################################################
-
-  # curve(
-  #   dnorm(x, mean = mu, sd = sigma),
-  #   minimo,
-  #   maximo,
-
-  #   # Limits of the y-axis
-  #   ylim = c(0, 1.2 * max(fy)),
-
-  #   # Axis labels
-  #   ylab = expression(f[X](x)),
-  #   xlab = "X",
-
-  #   # Background grid
-  #   panel.first = grid(col = "gray90"),
-
-  #   # Main title
-  #   main = main,
-
-  #   # Disable automatic axes
-  #   xaxt = "n",
-  #   yaxt = "n",
-
-  #   # title scaling
-  #   cex.main = cex.main
-  # )
-
-  ###############################################################
-  # X-axis creation
-  ###############################################################
-
-  # Generate aesthetically pleasant x-axis tick values
-  # z <- pretty(minimo:maximo)
-
-  # # Draw x-axis
-  # axis(
-  #   side = 1,
-  #   at = z
-  # )
-
-  ###############################################################
-  # Draw shaded polygon under the density curve
-  ###############################################################
-
-  # polygon(
-  #   c(y, rev(y)),
-  #   c(fy, rep(0, length(fy))),
-  #   col = "gray90"
-  # )
-
-  # ###############################################################
-  # # Y-axis formatting
-  # ###############################################################
-
-  # # If comma decimal separator is requested
-  # if (dec == ",") {
-
-  #   axis(
-  #     side = 2,
-  #     at = w,
-  #     cex.axis = cex.axis,
-
-  #     # Replace decimal separator in labels
-  #     labels = format(
-  #       w,
-  #       decimal.mark = ",",
-  #       nsmall = 2
-  #     )
-  #   )
-
-  # } else {
-
-  #   # Default y-axis
-  #   axis(
-  #     side = 2,
-  #     at = w,
-  #     cex.axis = cex.axis
-  #   )
-  # }
-
-  # ###############################################################
-  # # Redraw x-axis
-  # ###############################################################
-
-  # # Generate pretty x-axis values
-  # z <- pretty(minimo:maximo)
-
-  # # Draw x-axis
-  # axis(
-  #   side = 1,
-  #   at = z
-  # )
-
-  ###############################################################
-  # Highlight the value q on the x-axis
-  ###############################################################
-
-  # Add text label corresponding to q
-  # mtext(
-  #   qq_text,
-  #   side = 1,
-  #   at = qq,
-  #   line = 2,
-  #   col = col2,
-  #   font = 2,
-  #   cex = text.size
-  # )
-
-  ###############################################################
-  # Tick mark at q
-  ###############################################################
-
-  axis(
-    side = 1,
-    at = qqaux,
-    labels = FALSE,
-    col = col2,
-    font = 2,
-    col.axis = col2,
-    tick = TRUE,
-    lwd.ticks = 1
-  )
-
-  ###############################################################
-  # Additional auxiliary x-axis marks
-  ###############################################################
-
-  axis(
-    side = 1,
-    at = as.character(c(minimo, qqaux)),
-    tick = TRUE,
-    lwd = 1,
-    col = col2,
-    font = 2,
-    lwd.ticks = 0,
-    labels = FALSE
-  )
-
-  ###############################################################
-  # Highlight density value on the y-axis
-  ###############################################################
-
-  # Add density value label
-  mtext(
-    pdf_text,
-    side = 2,
-    at = pdf,
-    line = 2,
-    col = col2,
-    font = 2,
-    cex = text.size
-  )
-
-  ###############################################################
-  # Tick mark at the density value
-  ###############################################################
-
-  axis(
-    side = 2,
-    at = pdf,
-    labels = FALSE,
-    col = col2,
-    font = 2,
-    col.axis = col2,
-    tick = TRUE,
-    lwd.ticks = 1
-  )
-
-  ###############################################################
-  # Guide segments or complete lines
-  ###############################################################
-
-  # If long.segment = TRUE, draw full reference lines
-  if (isTRUE(long.segment)) {
-
-    # Vertical guide line
-    abline(v = qqaux, col = col2, lty = lty)
-
-    # Horizontal guide line
-    abline(h = pdf, col = col2, lty = lty)
-
-  } else {
-
-    # Draw only the segment from the x-axis to the point
-    segments(
-      qqaux,
-      0,
-      qqaux,
-      pdf,
-      col = col2,
-      lty = lty
-    )
-
-    # Draw only the segment from the y-axis to the point
-    segments(
-      par("usr")[1],
-      pdf,
-      qqaux,
-      pdf,
-      col = col2,
-      lty = lty
-    )
-  }
-
-  ###############################################################
-  # Highlight the point (q, f(q))
-  ###############################################################
-
-  points(q, pdf, pch = 19)
-
-  ###############################################################
-  # Draw background rectangle for legends
-  ###############################################################
-
-  rect(
-    par("usr")[1],
-    1.03 * max(fy),
-    par("usr")[2],
-    par("usr")[4],
-    col = "gray"
-  )
-
-  ###############################################################
-  # Legend displaying the density value
-  ###############################################################
-
-  legaux <- legend(
-    "topleft",
-    bty = "n",
-    pt.cex = 1.2,
-    pch = 19,
-    cex = text.size,
-
-    # Mathematical legend
-    legend = substitute(
-      f[X](t1) == pdf,
-      list(
-        t1 = qq_text,
-        pdf = pdf_text
-      )
-    )
-  )
-
-  ###############################################################
-  # Parameter legend
-  ###############################################################
-
-  # Localized label for parameters
-  paramet <- gettext("Parameters:", domain = "R-leem")
-
-  # Display parameters mu and sigma
-  legend(
-    par("usr")[1],
-    legaux$text$y,
-    bty = "n",
-    bg = "white",
-    cex = text.size,
-
-    legend = substitute(
-      paramet ~ mu == media ~ "," ~ sigma == varen,
-      list(
-        media = mu_text,
-        varen = sigma_text,
-        paramet = paramet
-      )
-    )
-  )
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ## RStudio
@@ -1240,169 +765,230 @@ plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
                                  col2, lty, main,
                                  text.size, cex.main,
                                  cex.axis, cex.lab,
-                                 vert.orien.main, region) {
-
-  q1 <- q[1]
-  q2 <- q[2]
-
-  # Ensure the interval is at least 0.02 (2 * step)
-  if (maximo - q2 < 0.02) {
-    maximo <- q2 + 0.02
-  }
-  if (q1 - minimo < 0.02) {
-    minimo <- q1 - 0.02
-  }
-
-  # Create an interactive Normal distribution plot using the
-  # 'manipulate' package available in RStudio.
-  #
-  # The interface allows the user to dynamically modify
-  # distribution parameters and graphical settings through
-  # sliders and checkboxes.
-  manipulate::manipulate(
-
-    # Main plotting function responsible for drawing the
-    # Normal distribution graph.
-
-    # Arguments:
-    # q1 and q2          -> Quantile or x-value to be highlighted.
-    # mu                 -> Mean of the Normal distribution.
-    # sigma              -> Standard deviation of the Normal distribution.
-    # rounding           -> Number of decimal places used in labels/results.
-    # minimo             -> Minimum x-axis value for plotting.
-    # maximo             -> Maximum x-axis value for plotting.
-    # dec                -> Decimal separator style.
-    # long.segment       -> Logical value controlling segment extension.
-    # col                -> Main fill or polygon color.
-    # col2               -> Secondary color used in plot elements.
-    # lty                -> Line type specification.
-    # main               -> Main title of the plot.
-    # text.size          -> Size of additional text annotations.
-    # cex.main           -> Expansion factor for the main title.
-    # cex.axis           -> Expansion factor for axis labels.
-    # cex.lab            -> Expansion factor for axis titles.
-    # vert.orien.main    -> Logical value controlling vertical title orientation.
-
-    plot_p_normal_plot(q, mu, sigma, rounding,
-                      # Define the decimal separator according to the
-                      # checkbox state selected by the user.
-                      dec = if (isTRUE(decimals)) "," else ".",
-                      long.segment, col,
-                      col2, lty, main,
-                      # Text size used in annotations and graphical elements.
-                      text.size,
-                      # Main title size follows the same value chosen
-                      # for the general text size.
-                      cex.main = text.size,
-                      cex.axis, cex.lab,
-                      vert.orien.main, maximo, minimo, q1, q2, region),
-    #################################################
-    # Interactive controls
-    #################################################
-
-    # Slider used to control the x-value (quantile)
-    # highlighted in the Normal distribution plot.
-    q1 = manipulate::slider(
-      minimo, q1, q1,
-      step = 0.01,
-      label = gettext(
-        "Quantile 1",
-        domain = "R-leem"
-      )
-    ),
-
-    # Slider used to control the x-value (quantile)
-    # highlighted in the Normal distribution plot.
-    q2 = manipulate::slider(
-      q2, maximo, q2,
-      step = 0.01,
-      label = gettext(
-        "Quantile 2",
-        domain = "R-leem"
-      )
-    ),
-
-    # Slider controlling the mean of the
-    # Normal distribution.
-    mu = manipulate::slider(
-      minimo, maximo, mu,
-      step = 0.01,
-      label = gettext(
-        "Mean",
-        domain = "R-leem"
-      )
-    ),
-
-    # Slider controlling the standard deviation.
+                                 vert.orien.main, region, lower.tail) {
+  
+  if (length(q) > 1) {
+    q1 <- q[1]
+    q2 <- q[2]
+    
+    # Ensure the interval is at least 0.02 (2 * step)
+    if (maximo - q2 < 0.02) {
+      maximo <- q2 + 0.02
+    }
+    if (q1 - minimo < 0.02) {
+      minimo <- q1 - 0.02
+    }
+    # Create an interactive Normal distribution plot using the
+    # 'manipulate' package available in RStudio.
     #
-    # The upper limit is defined as 1.8 times the
-    # initial standard deviation value.
-    sigma = manipulate::slider(
-      sigma, sigma * 1.8, sigma,
-      step = 0.01,
-      label = gettext(
-        "Standard Deviation",
-        domain = "R-leem"
-      )
-    ),
+    # The interface allows the user to dynamically modify
+    # distribution parameters and graphical settings through
+    # sliders and checkboxes.
+    manipulate::manipulate(
 
-    # Slider controlling the size of texts displayed
-    # in the graph, including labels and annotations.
-    text.size = manipulate::slider(
-      0.8, 3, text.size,
-      step = 0.01,
-      label = gettext(
-        "Text Size",
-        domain = "R-leem"
-      )
-    ),
+      # Main plotting function responsible for drawing the
+      # Normal distribution graph.
 
-    # Checkbox that enables or disables vertical
-    # orientation for the main plot title.
-    vert.orien.main = checkbox(
-      vert.orien.main,
-      gettext(
-        "Vertical Title Orientation",
-        domain = "R-leem"
-      )
-    ),
+      # Arguments:
+      # q1 and q2          -> Quantile or x-value to be highlighted.
+      # mu                 -> Mean of the Normal distribution.
+      # sigma              -> Standard deviation of the Normal distribution.
+      # rounding           -> Number of decimal places used in labels/results.
+      # minimo             -> Minimum x-axis value for plotting.
+      # maximo             -> Maximum x-axis value for plotting.
+      # dec                -> Decimal separator style.
+      # long.segment       -> Logical value controlling segment extension.
+      # col                -> Main fill or polygon color.
+      # col2               -> Secondary color used in plot elements.
+      # lty                -> Line type specification.
+      # main               -> Main title of the plot.
+      # text.size          -> Size of additional text annotations.
+      # cex.main           -> Expansion factor for the main title.
+      # cex.axis           -> Expansion factor for axis labels.
+      # cex.lab            -> Expansion factor for axis titles.
+      # vert.orien.main    -> Logical value controlling vertical title orientation.
 
-    # Checkbox controlling whether the highlighted
-    # segment should be extended.
-    long.segment = checkbox(
-      long.segment,
-      gettext(
-        "Long segment",
-        domain = "R-leem"
-      )
-    ),
+      plot_p_normal_plot(q, mu, sigma, rounding,
+                        # Define the decimal separator according to the
+                        # checkbox state selected by the user.
+                        dec = if (isTRUE(decimals)) "," else ".",
+                        long.segment, col,
+                        col2, lty, main,
+                        # Text size used in annotations and graphical elements.
+                        text.size,
+                        # Main title size follows the same value chosen
+                        # for the general text size.
+                        cex.main = text.size,
+                        cex.axis, cex.lab,
+                        vert.orien.main, maximo, minimo, q1, q2, region, lower.tail),
+      #################################################
+      # Interactive controls
+      #################################################
 
-    # Checkbox used to select the decimal separator.
-    #
-    # TRUE  -> comma (,)
-    # FALSE -> period (.)
-    decimals = checkbox(
-      if (dec == ",") TRUE else FALSE,
-      gettext(
-        "Comma",
-        domain = "R-leem"
+      # Slider used to control the x-value (quantile)
+      # highlighted in the Normal distribution plot.
+      q1 = manipulate::slider(
+        minimo, q1, q1,
+        step = 0.01,
+        label = gettext(
+          "Quantile 1",
+          domain = "R-leem"
+        )
+      ),
+      
+      # Slider used to control the x-value (quantile)
+      # highlighted in the Normal distribution plot.
+      q2 = manipulate::slider(
+        q2, maximo, q2,
+        step = 0.01,
+        label = gettext(
+          "Quantile 2",
+          domain = "R-leem"
+        )
+      ),
+
+      # Slider controlling the mean of the
+      # Normal distribution.
+      mu = manipulate::slider(
+        minimo, maximo, mu,
+        step = 0.01,
+        label = gettext(
+          "Mean",
+          domain = "R-leem"
+        )
+      ),
+
+      # Slider controlling the standard deviation.
+      #
+      # The upper limit is defined as 1.8 times the
+      # initial standard deviation value.
+      sigma = manipulate::slider(
+        sigma, sigma * 1.8, sigma,
+        step = 0.01,
+        label = gettext(
+          "Standard Deviation",
+          domain = "R-leem"
+        )
+      ),
+
+      # Slider controlling the size of texts displayed
+      # in the graph, including labels and annotations.
+      text.size = manipulate::slider(
+        0.8, 3, text.size,
+        step = 0.01,
+        label = gettext(
+          "Text Size",
+          domain = "R-leem"
+        )
+      ),
+
+      # Checkbox that enables or disables vertical
+      # orientation for the main plot title.
+      vert.orien.main = checkbox(
+        vert.orien.main,
+        gettext(
+          "Vertical Title Orientation",
+          domain = "R-leem"
+        )
+      ),
+
+      # Checkbox controlling whether the highlighted
+      # segment should be extended.
+      long.segment = checkbox(
+        long.segment,
+        gettext(
+          "Long segment",
+          domain = "R-leem"
+        )
+      ),
+
+      # Checkbox used to select the decimal separator.
+      #
+      # TRUE  -> comma (,)
+      # FALSE -> period (.)
+      decimals = checkbox(
+        if (dec == ",") TRUE else FALSE,
+        gettext(
+          "Comma",
+          domain = "R-leem"
+        )
       )
     )
-  )
+
+  } else {
+    manipulate::manipulate(
+      plot_p_normal_plot(q, mu, sigma, rounding,
+                        dec = if (isTRUE(decimals)) "," else ".",
+                        long.segment, col,
+                        col2, lty, main,
+                        text.size,
+                        cex.main = text.size,
+                        cex.axis, cex.lab,
+                        vert.orien.main, maximo, minimo, lower.tail = lower.tail),
+      
+      q = manipulate::slider(
+        minimo, maximo, q,
+        step = 0.01,
+        label = gettext(
+          "Quantile",
+          domain = "R-leem"
+        )
+      ),
+      
+      mu = manipulate::slider(
+        minimo, maximo, mu,
+        step = 0.01,
+        label = gettext(
+          "Mean",
+          domain = "R-leem"
+        )
+      ),
+
+      sigma = manipulate::slider(
+        sigma, sigma * 1.8, sigma,
+        step = 0.01,
+        label = gettext(
+          "Standard Deviation",
+          domain = "R-leem"
+        )
+      ),
+
+      text.size = manipulate::slider(
+        0.8, 3, text.size,
+        step = 0.01,
+        label = gettext(
+          "Text Size",
+          domain = "R-leem"
+        )
+      ),
+
+      vert.orien.main = checkbox(
+        vert.orien.main,
+        gettext(
+          "Vertical Title Orientation",
+          domain = "R-leem"
+        )
+      ),
+
+      long.segment = checkbox(
+        long.segment,
+        gettext(
+          "Long segment",
+          domain = "R-leem"
+        )
+      ),
+
+      decimals = checkbox(
+        if (dec == ",") TRUE else FALSE,
+        gettext(
+          "Comma",
+          domain = "R-leem"
+        )
+      )
+    )
+
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1652,7 +1238,7 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
                                 col2, lty, main,
                                 text.size, cex.main,
                                 cex.axis, cex.lab,
-                                vert.orien.main, region) {
+                                vert.orien.main, region, lower.tail) {
 
   # Temporarily suppress warning messages during the execution
   # of the graphical interface function. This avoids displaying
@@ -1705,6 +1291,7 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
   var_list$minimo <- minimo
 
   # Ensure the interval is at least 0.02 (2 * step)
+  print(maximo)
   if (maximo - q2 < 0.02) {
     var_list$maximo <- q2 + 0.02
   }
