@@ -542,13 +542,40 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
         #
         # ./aux_probability.R
         plot_p_normal_tcltk(
-          q[1], q[2], q, mu, sigma, rounding,
+          q, mu, sigma, rounding,
           minimo, maximo, dec,
           long.segment, col,
           col2, lty, main,
           text.size, cex.main,
           cex.axis, cex.lab,
           vert.orien.main, region = "region A"
+        )
+      }
+
+      if (gui == "shiny" ) {
+        #################################################
+        # Shiny graphical interface
+        #################################################
+        
+        # Call the internal Shiny plotting function
+        # responsible for generating the interactive
+        # Normal distribution visualization.
+        #
+        # The returned object contains all information
+        # required for the S3 method print.leem() to
+        # launch the Shiny application automatically.
+        #
+        # ./aux_probability.R
+        return(
+          plotpnormalrashiny(q, mu, sigma, rounding, porcentage,
+                             minimo, maximo, dec,
+                             long.segment, col,
+                             col2, lty, main,
+                             browser.shiny,
+                             text.size, cex.main,
+                             cex.axis, cex.lab,
+                             vert.orien.main, region = "region A"
+                            )
         )
       }
 
@@ -612,7 +639,7 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
         #
         # ./aux_probability.R
         plot_p_normal_tcltk(
-          q[1], q[2], q, mu, sigma, rounding,
+          q, mu, sigma, rounding,
           minimo, maximo, dec,
           long.segment, col,
           col2, lty, main,
@@ -626,6 +653,7 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
 
       return(prob)
     }
+
   } else {
 
     #########################################
@@ -699,7 +727,7 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
       #
       # ./aux_probability.R
       plot_p_normal_tcltk(
-         NULL, NULL, q, mu, sigma, rounding,
+         q, mu, sigma, rounding,
          minimo, maximo, dec,
          long.segment, col,
          col2, lty, main,
