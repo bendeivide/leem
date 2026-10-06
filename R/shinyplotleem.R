@@ -11,24 +11,21 @@
 # Generates the Normal Distribution interface associated with
 # P(a > X > b) (Region A) using gui = "shiny"
 # ===> This is the interface reference! <===
-.shinyplotleemranormal <- function(q, mu, sigma, rounding,
+.leem_plot_p_normal_shiny <- function(q, mu, sigma, rounding,
                                     minimo, maximo, dec,
                                     long.segment, col,
                                     col2, lty, main,
                                     text.size, cex.main,
                                     cex.axis, cex.lab,
-                                    vert.orien.main) {
+                                    vert.orien.main, region) {
 
   if (length(q) > 1) {
-    q1 <- q[1]
-    q2 <- q[2]
-
     # Ensure the interval is at least 0.02 (2 * step)
-    if (maximo - q2 < 0.02) {
-      maximo <- q2 + 0.02
+    if (maximo - q[2] < 0.02) {
+      maximo <- q[2] + 0.02
     }
-    if (q1 - minimo < 0.02) {
-      minimo <- q1 - 0.02
+    if (q[1] - minimo < 0.02) {
+      minimo <- q[1] - 0.02
     }
 
   }
@@ -260,9 +257,7 @@
     output$normPlot <- shiny::renderPlot({
 
       # Generate interactive plot using current inputs
-      plotpnormalrashiny_aux(
-        q1 = input$quantil1,
-        q2 = input$quantil2,
+      plot_p_normal_plot(
         q = q,
         mu = input$mu,
         sigma = input$sigma,
@@ -277,7 +272,12 @@
         cex.main = input$text.size,
         cex.axis = cex.axis,
         cex.lab = cex.lab,
-        vert.orien.main = input$titorient
+        vert.orien.main = input$titorient,
+        maximo = maximo,
+        minimo = minimo,
+        q1 = input$quantil1,
+        q2 = input$quantil2,
+        region = region
       )
 
     })

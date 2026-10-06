@@ -312,7 +312,7 @@ output_rprob <- function(x) {
 # Output for probability with shiny interface
 output_pshiny <- function(x) {
 
-  print(x$probability)
+  #print(x$probability)
 
   # Interface Shiny
 

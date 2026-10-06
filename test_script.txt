@@ -18,6 +18,12 @@ P(1.5 %>=X>% 3, mean = 0.8, sd = 1.2, gui = "tcltk", long.segment = TRUE, dec = 
 P(1.5 %>X>=% 3, mean = 0.8, sd = 1.2, gui = "tcltk", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
 P(1.5 %>=X>=% 3, mean = 0.8, sd = 1.2, gui = "tcltk", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
 
+# regiao A com shiny
+P(1.5 %>X>% 3, mean = 0.8, sd = 1.2, gui = "shiny", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+P(1.5 %>=X>% 3, mean = 0.8, sd = 1.2, gui = "shiny", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+P(1.5 %>X>=% 3, mean = 0.8, sd = 1.2, gui = "shiny", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+P(1.5 %>=X>=% 3, mean = 0.8, sd = 1.2, gui = "shiny", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
 # regiao B com tcl/tk
 P(1.5 %<X<% 3, mean = 0.8, sd = 1.2, gui = "tcltk", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
 P(1.5 %<=X<% 3, mean = 0.8, sd = 1.2, gui = "tcltk", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
@@ -35,6 +41,12 @@ P(1.5 %<X<% 3, mean = 0.8, sd = 1.2, gui = "rstudio", long.segment = TRUE, dec =
 P(1.5 %<=X<% 3, mean = 0.8, sd = 1.2, gui = "rstudio", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
 P(1.5 %<X<=% 3, mean = 0.8, sd = 1.2, gui = "rstudio", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
 P(1.5 %<=X<=% 3, mean = 0.8, sd = 1.2, gui = "rstudio", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
+# regiao B com shiny
+P(1.5 %<X<% 3, mean = 0.8, sd = 1.2, gui = "shiny", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+P(1.5 %<=X<% 3, mean = 0.8, sd = 1.2, gui = "shiny", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+P(1.5 %<X<=% 3, mean = 0.8, sd = 1.2, gui = "shiny", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+P(1.5 %<=X<=% 3, mean = 0.8, sd = 1.2, gui = "shiny", long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
 
 #Lower Tail True plot
 P(1.5, mean = 0.8, sd = 1.2, gui = "plot", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)

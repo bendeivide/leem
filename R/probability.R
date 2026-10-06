@@ -328,6 +328,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
   #
   # This step standardizes the numerical output
   # before returning the final result.
+
   prob <- round(prob, rounding)
 
   #################################################
@@ -566,8 +567,8 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
         # launch the Shiny application automatically.
         #
         # ./aux_probability.R
-        return(
-          plotpnormalrashiny(q, mu, sigma, rounding, porcentage,
+        print(
+          plot_p_normal_shiny(q, mu, sigma, rounding, porcentage,
                              minimo, maximo, dec,
                              long.segment, col,
                              col2, lty, main,
@@ -601,27 +602,27 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
 
       if (gui == "rstudio") {
         #################################################
-          # RStudio graphical interface
-          #################################################
+        # RStudio graphical interface
+        #################################################
 
-          # Call the internal plotting function
-          # responsible for generating the interactive
-          # Normal distribution visualization in the
-          # RStudio environment.
-          #
-          # This interface was designed to provide an
-          # interactive graphical experience directly
-          # within RStudio.
-          #
-          # ./aux_probability.R
-          plot_p_normal_rstudio(q, mu, sigma, rounding,
-                               minimo, maximo, dec,
-                               long.segment, col,
-                               col2, lty, main,
-                               text.size, cex.main,
-                               cex.axis, cex.lab,
-                               vert.orien.main, region = "region B"
-                              )
+        # Call the internal plotting function
+        # responsible for generating the interactive
+        # Normal distribution visualization in the
+        # RStudio environment.
+        #
+        # This interface was designed to provide an
+        # interactive graphical experience directly
+        # within RStudio.
+        #
+        # ./aux_probability.R
+        plot_p_normal_rstudio(q, mu, sigma, rounding,
+                             minimo, maximo, dec,
+                             long.segment, col,
+                             col2, lty, main,
+                             text.size, cex.main,
+                             cex.axis, cex.lab,
+                             vert.orien.main, region = "region B"
+                            )
       }
 
       if (gui == "tcltk") {
@@ -646,6 +647,33 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
           text.size, cex.main,
           cex.axis, cex.lab,
           vert.orien.main, region = "region B"
+        )
+      }
+
+      if (gui == "shiny" ) {
+        #################################################
+        # Shiny graphical interface
+        #################################################
+        
+        # Call the internal Shiny plotting function
+        # responsible for generating the interactive
+        # Normal distribution visualization.
+        #
+        # The returned object contains all information
+        # required for the S3 method print.leem() to
+        # launch the Shiny application automatically.
+        #
+        # ./aux_probability.R
+        print(
+          plot_p_normal_shiny(q, mu, sigma, rounding, porcentage,
+                             minimo, maximo, dec,
+                             long.segment, col,
+                             col2, lty, main,
+                             browser.shiny,
+                             text.size, cex.main,
+                             cex.axis, cex.lab,
+                             vert.orien.main, region = "region B"
+                            )
         )
       }
 

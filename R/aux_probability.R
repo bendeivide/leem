@@ -1706,7 +1706,7 @@ plot_p_normal_tcltk <- function(q, mu, sigma, rounding,
 
 
 
-plotpnormalrashiny <- function(q, mu, sigma, rounding, porcentage,
+plot_p_normal_shiny <- function(q, mu, sigma, rounding, porcentage,
                                 minimo, maximo, dec,
                                 long.segment, col,
                                 col2, lty, main,
@@ -1751,9 +1751,8 @@ plotpnormalrashiny <- function(q, mu, sigma, rounding, porcentage,
   # q     -> quantile or cutoff value
   # mu    -> mean of the Normal distribution
   # sigma -> standard deviation
-  prob <- pnorm(q = q[1], mean = mu, sd = sigma) + pnorm(q = q[2], mean = mu, sd = sigma,lower.tail = FALSE
-  )
-
+  
+  #prob <- pnorm(q = q[1], mean = mu, sd = sigma) + pnorm(q = q[2], mean = mu, sd = sigma,lower.tail = FALSE)
 
   #################################################
   # Create output object
@@ -1772,10 +1771,10 @@ plotpnormalrashiny <- function(q, mu, sigma, rounding, porcentage,
   # browser.shiny -> Indicates whether the Shiny app
   #                  should be launched in the browser.
   listres <- list(
-    probability = prob,
+    #probability = prob,
     #./shinyplotleem.R
-    process_shiny = .shinyplotleemranormal(
-      q1, q2, q, mu, sigma, rounding,
+    process_shiny = .leem_plot_p_normal_shiny(
+      q, mu, sigma, rounding,
       minimo, maximo, dec,
       long.segment, col,
       col2, lty, main,
@@ -1793,6 +1792,7 @@ plotpnormalrashiny <- function(q, mu, sigma, rounding, porcentage,
 
   # Add an attribute identifying the type of output
   # produced by this function.
+
   attr(listres, "output") <- "pshiny"
 
   # Assign the S3 class used internally by the package.
@@ -1801,6 +1801,5 @@ plotpnormalrashiny <- function(q, mu, sigma, rounding, porcentage,
   #################################################
   # Return final object
   #################################################
-
   return(listres)
 }
