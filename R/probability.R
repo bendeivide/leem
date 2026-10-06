@@ -699,13 +699,13 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
       #
       # ./aux_probability.R
       plot_p_normal_tcltk(
-         q[1], q[2], q, mu, sigma, rounding,
+         NULL, NULL, q, mu, sigma, rounding,
          minimo, maximo, dec,
          long.segment, col,
          col2, lty, main,
          text.size, cex.main,
          cex.axis, cex.lab,
-         vert.orien.main, , lower.tail = lower.tail
+         vert.orien.main, lower.tail = lower.tail
         )
     }
 

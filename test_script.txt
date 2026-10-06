@@ -38,7 +38,7 @@ P(1.5 %<=X<=% 3, mean = 0.8, sd = 1.2, gui = "rstudio", long.segment = TRUE, dec
 
 #Lower Tail True plot
 P(1.5, mean = 0.8, sd = 1.2, gui = "plot", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
-
+9
 #Lower Tail False plot
 P(1.5, mean = 0.8, sd = 1.2, gui = "plot", lower.tail = FALSE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
 
@@ -53,3 +53,12 @@ P(1.5, mean = 0.8, sd = 1.2, gui = "rstudio", lower.tail = FALSE, long.segment =
 
 #Lower Tail Null rstudio
 P(1.5, mean = 0.8, sd = 1.2, gui = "rstudio", lower.tail = NULL, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
+#Lower Tail True tcltk
+P(1.5, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
+#Lower Tail False tcltk
+P(1.5, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = FALSE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
+#Lower Tail Null tcltk
+P(1.5, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = NULL, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)

@@ -746,18 +746,6 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 ## RStudio
 plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
                                  minimo, maximo, dec,
@@ -991,7 +979,6 @@ plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
 }
 
 
-
 create_containers_and_panels <- function() {
 
   # Creating a list of containers and panels
@@ -1148,23 +1135,35 @@ create_sliders_and_checkboxes <- function(left_container, left_panel, var_list) 
   # Sliders
   # =========================
 
-  ctrl_obj_list$q1_slider <- tkscale(left_panel,
-                       from = var_list$minimo,
-                       to = tclvalue(var_list$q2_var),
-                       orient = "horizontal",
-                       variable = var_list$q1_var,
-                       resolution = 0.1,
-                       label = gettext("Quantile 1", domain="R-leem"),
-                       showvalue = TRUE)
+  if ("q1_var" %in% names(var_list)) {
+    ctrl_obj_list$q1_slider <- tkscale(left_panel,
+                         from = var_list$minimo,
+                         to = tclvalue(var_list$q2_var),
+                         orient = "horizontal",
+                         variable = var_list$q1_var,
+                         resolution = 0.1,
+                         label = gettext("Quantile 1", domain="R-leem"),
+                         showvalue = TRUE)
 
-  ctrl_obj_list$q2_slider <- tkscale(left_panel,
-                       from = tclvalue(var_list$q1_var),
-                       to = var_list$maximo,
-                       orient = "horizontal",
-                       variable = var_list$q2_var,
-                       resolution = 0.1,
-                       label = gettext("Quantile 2", domain="R-leem"),
-                       showvalue = TRUE)
+    ctrl_obj_list$q2_slider <- tkscale(left_panel,
+                         from = tclvalue(var_list$q1_var),
+                         to = var_list$maximo,
+                         orient = "horizontal",
+                         variable = var_list$q2_var,
+                         resolution = 0.1,
+                         label = gettext("Quantile 2", domain="R-leem"),
+                         showvalue = TRUE)
+  
+  } else {
+    ctrl_obj_list$q_slider <- tkscale(left_panel,
+                         from = var_list$minimo,
+                         to = var_list$maximo,
+                         orient = "horizontal",
+                         variable = var_list$q_var,
+                         resolution = 0.1,
+                         label = gettext("Quantile", domain="R-leem"),
+                         showvalue = TRUE)
+  }
 
   ctrl_obj_list$mu_slider <- tkscale(left_panel,
                        from = var_list$minimo,
@@ -1218,8 +1217,15 @@ create_sliders_and_checkboxes <- function(left_container, left_panel, var_list) 
   # =========================
 
   # Adding the sliders
-  tkpack(ctrl_obj_list$q1_slider, fill = "x")
-  tkpack(ctrl_obj_list$q2_slider, fill = "x")
+  if ("q1_var" %in% names(var_list)) {
+    tkpack(ctrl_obj_list$q1_slider, fill = "x")
+    tkpack(ctrl_obj_list$q2_slider, fill = "x")
+  
+  } else {
+    tkpack(ctrl_obj_list$q_slider, fill = "x")
+
+  }
+
   tkpack(ctrl_obj_list$mu_slider, fill = "x")
   tkpack(ctrl_obj_list$sigma_slider, fill = "x")
   tkpack(ctrl_obj_list$text.size_slider, fill = "x")
@@ -1239,7 +1245,7 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
                                 text.size, cex.main,
                                 cex.axis, cex.lab,
                                 vert.orien.main, region, lower.tail) {
-
+  
   # Temporarily suppress warning messages during the execution
   # of the graphical interface function. This avoids displaying
   # unnecessary warnings to the user while the plot is being generated.
@@ -1290,19 +1296,24 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
   var_list$maximo <- maximo
   var_list$minimo <- minimo
 
-  # Ensure the interval is at least 0.02 (2 * step)
-  print(maximo)
-  if (maximo - q2 < 0.02) {
-    var_list$maximo <- q2 + 0.02
-  }
-  if (q1 - minimo < 0.02) {
-    var_list$minimo <- q1 - 0.02
+  if(length(q) > 1){
+    # Ensure the interval is at least 0.02 (2 * step)
+    if (maximo - q2 < 0.02) {
+      var_list$maximo <- q2 + 0.02
+    }
+    if (q1 - minimo < 0.02) {
+      var_list$minimo <- q1 - 0.02
+    }
+
+    # Variables for sliders
+    var_list$q1_var <- tclVar(q1)
+    var_list$q2_var <- tclVar(q2)
+  
+  } else {
+    var_list$q_var <- tclVar(q)
+  
   }
 
-
-  # Variables for sliders
-  var_list$q1_var <- tclVar(q1)
-  var_list$q2_var <- tclVar(q2)
   var_list$media_var <- tclVar(mu)
   var_list$sd_var <- tclVar(sigma)
   var_list$comma_var <- if (dec == ",") tclVar(TRUE) else tclVar(FALSE)
@@ -1427,28 +1438,53 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
     # Generate plot
     # =========================
 
-    plot_p_normal_plot(
-      q = q,
-      mu = as.numeric(tclvalue(var_list$media_var)),
-      sigma = as.numeric(tclvalue(var_list$sd_var)),
-      rounding = rounding,
-      dec = if (tclvalue(var_list$comma_var) == "0") "." else ",",
-      long.segment = as.logical(as.numeric(tclvalue(var_list$segment_var))),
-      col = col,
-      col2 = col2,
-      lty = lty,
-      main = main,
-      text.size = as.numeric(tclvalue(var_list$text.size_var)),
-      cex.main = as.numeric(tclvalue(var_list$text.size_var)),
-      cex.axis = cex.axis,
-      cex.lab = cex.lab,
-      vert.orien.main = as.logical(as.numeric(tclvalue(var_list$title_var))),
-      maximo = maximo,
-      minimo = minimo,
-      q1 = as.numeric(tclvalue(var_list$q1_var)),
-      q2 = as.numeric(tclvalue(var_list$q2_var)),
-      region = region
-    )
+    if (length(q) > 1){
+      plot_p_normal_plot(
+        q = q,
+        mu = as.numeric(tclvalue(var_list$media_var)),
+        sigma = as.numeric(tclvalue(var_list$sd_var)),
+        rounding = rounding,
+        dec = if (tclvalue(var_list$comma_var) == "0") "." else ",",
+        long.segment = as.logical(as.numeric(tclvalue(var_list$segment_var))),
+        col = col,
+        col2 = col2,
+        lty = lty,
+        main = main,
+        text.size = as.numeric(tclvalue(var_list$text.size_var)),
+        cex.main = as.numeric(tclvalue(var_list$text.size_var)),
+        cex.axis = cex.axis,
+        cex.lab = cex.lab,
+        vert.orien.main = as.logical(as.numeric(tclvalue(var_list$title_var))),
+        maximo = maximo,
+        minimo = minimo,
+        q1 = as.numeric(tclvalue(var_list$q1_var)),
+        q2 = as.numeric(tclvalue(var_list$q2_var)),
+        region = region
+      )
+
+    } else {
+      plot_p_normal_plot(
+        q = as.numeric(tclvalue(var_list$q_var)),
+        mu = as.numeric(tclvalue(var_list$media_var)),
+        sigma = as.numeric(tclvalue(var_list$sd_var)),
+        rounding = rounding,
+        dec = if (tclvalue(var_list$comma_var) == "0") "." else ",",
+        long.segment = as.logical(as.numeric(tclvalue(var_list$segment_var))),
+        col = col,
+        col2 = col2,
+        lty = lty,
+        main = main,
+        text.size = as.numeric(tclvalue(var_list$text.size_var)),
+        cex.main = as.numeric(tclvalue(var_list$text.size_var)),
+        cex.axis = cex.axis,
+        cex.lab = cex.lab,
+        vert.orien.main = as.logical(as.numeric(tclvalue(var_list$title_var))),
+        maximo = maximo,
+        minimo = minimo,
+        lower.tail = lower.tail
+      )
+
+    }
 
     # Close graphics device
     dev.off()
@@ -1506,8 +1542,14 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
     width <- as.numeric(tclvalue(tkwinfo("width", windows_list$right_container)))
 
     # Getting the sliders values
-    quantil1 <- as.numeric(tclvalue(var_list$q1_var))
-    quantil2 <- as.numeric(tclvalue(var_list$q2_var))
+    if (length(q) > 1) {
+      quantil1 <- as.numeric(tclvalue(var_list$q1_var))
+      quantil2 <- as.numeric(tclvalue(var_list$q2_var))
+
+    } else {
+      quantil <- as.numeric(tclvalue(var_list$q_var))
+    }
+
     media <- as.numeric(tclvalue(var_list$media_var))
     desvpad <- as.numeric(tclvalue(var_list$sd_var))
     segment <- as.logical(as.numeric(tclvalue(var_list$segment_var)))
@@ -1521,32 +1563,60 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
     # Create the graphic image
     png(filename = temporary_file, width = width, height = height, units = "px")
 
-    try(# Generate the normal distribution plot
-      plot_p_normal_plot(
-        q = q,
-        mu = as.numeric(tclvalue(var_list$media_var)),
-        sigma = as.numeric(tclvalue(var_list$sd_var)),
-        rounding = rounding,
-        dec = if (tclvalue(var_list$comma_var) == "0") "." else ",",
-        long.segment = as.logical(as.numeric(tclvalue(var_list$segment_var))),
-        col = col,
-        col2 = col2,
-        lty = lty,
-        main = main,
-        text.size = as.numeric(tclvalue(var_list$text.size_var)),
-        cex.main = as.numeric(tclvalue(var_list$text.size_var)),
-        cex.axis = cex.axis,
-        cex.lab = cex.lab,
-        vert.orien.main = as.logical(as.numeric(tclvalue(var_list$title_var))),
-        maximo = var_list$maximo,
-        minimo = var_list$minimo,
-        q1 = as.numeric(tclvalue(var_list$q1_var)),
-        q2 = as.numeric(tclvalue(var_list$q2_var)),
-        region = region
-        ),
-      silent = TRUE
-    )
+    if (length(q) > 1) {
+      try(# Generate the normal distribution plot
+        plot_p_normal_plot(
+          q = q,
+          mu = as.numeric(tclvalue(var_list$media_var)),
+          sigma = as.numeric(tclvalue(var_list$sd_var)),
+          rounding = rounding,
+          dec = if (tclvalue(var_list$comma_var) == "0") "." else ",",
+          long.segment = as.logical(as.numeric(tclvalue(var_list$segment_var))),
+          col = col,
+          col2 = col2,
+          lty = lty,
+          main = main,
+          text.size = as.numeric(tclvalue(var_list$text.size_var)),
+          cex.main = as.numeric(tclvalue(var_list$text.size_var)),
+          cex.axis = cex.axis,
+          cex.lab = cex.lab,
+          vert.orien.main = as.logical(as.numeric(tclvalue(var_list$title_var))),
+          maximo = var_list$maximo,
+          minimo = var_list$minimo,
+          q1 = as.numeric(tclvalue(var_list$q1_var)),
+          q2 = as.numeric(tclvalue(var_list$q2_var)),
+          region = region
+          ),
+        silent = TRUE
+      )
 
+    } else {
+      try(# Generate the normal distribution plot
+        plot_p_normal_plot(
+          q = as.numeric(tclvalue(var_list$q_var)),
+          mu = as.numeric(tclvalue(var_list$media_var)),
+          sigma = as.numeric(tclvalue(var_list$sd_var)),
+          rounding = rounding,
+          dec = if (tclvalue(var_list$comma_var) == "0") "." else ",",
+          long.segment = as.logical(as.numeric(tclvalue(var_list$segment_var))),
+          col = col,
+          col2 = col2,
+          lty = lty,
+          main = main,
+          text.size = as.numeric(tclvalue(var_list$text.size_var)),
+          cex.main = as.numeric(tclvalue(var_list$text.size_var)),
+          cex.axis = cex.axis,
+          cex.lab = cex.lab,
+          vert.orien.main = as.logical(as.numeric(tclvalue(var_list$title_var))),
+          maximo = var_list$maximo,
+          minimo = var_list$minimo,
+          lower.tail = lower.tail
+          ),
+        silent = TRUE
+      )
+
+    }
+    
     dev.off() # Close the process
 
     # Create a image on Tk
@@ -1575,19 +1645,25 @@ plot_p_normal_tcltk <- function(q1, q2, q, mu, sigma, rounding,
   tkconfigure(ctrl_obj_list$long_segment_checkbox, command = function(...) drawGraph())
   tkconfigure(ctrl_obj_list$comma_checkbox, command = function(...) drawGraph())
 
-  # Update slider_q1 to have the current value of q2 as its maximum
-  tkconfigure(ctrl_obj_list$q1_slider, command = function(...) {
-    novo_q2 <- as.numeric(tclvalue(var_list$q2_var))
-    tkconfigure(ctrl_obj_list$q1_slider, to = novo_q2)
-    drawGraph()
-  })
+  if (length(q) > 1) {
+    # Update slider_q1 to have the current value of q2 as its maximum
+    tkconfigure(ctrl_obj_list$q1_slider, command = function(...) {
+      novo_q2 <- as.numeric(tclvalue(var_list$q2_var))
+      tkconfigure(ctrl_obj_list$q1_slider, to = novo_q2)
+      drawGraph()
+    })
+    
+    # Update slider_q2 to have the current value of q1 as its minimum
+    tkconfigure(ctrl_obj_list$q2_slider, command = function(...) {
+      novo_q1 <- as.numeric(tclvalue(var_list$q1_var))
+      tkconfigure(ctrl_obj_list$q2_slider, from = novo_q1)
+      drawGraph()
+    })
+    
+  } else {
+    tkconfigure(ctrl_obj_list$q_slider, command = function(...) drawGraph())
 
-  # Update slider_q2 to have the current value of q1 as its minimum
-  tkconfigure(ctrl_obj_list$q2_slider, command = function(...) {
-    novo_q1 <- as.numeric(tclvalue(var_list$q1_var))
-    tkconfigure(ctrl_obj_list$q2_slider, from = novo_q1)
-    drawGraph()
-  })
+  }
 
   # CALLBACKS
   onResize <- function() {
