@@ -27,8 +27,10 @@
     if (q[1] - minimo < 0.02) {
       minimo <- q[1] - 0.02
     }
-
+  
   }
+
+  
 
   # Path to package resources directory
   logo_path <- system.file("etc", package = "leem")
@@ -251,11 +253,43 @@
     # Properly stop the application when the session ends
     session$onSessionEnded(function() shiny::stopApp())
 
+    # Keep quantile values ordered when the user moves either slider.
+    shiny::observeEvent(input$quantil1, {
+      shiny::updateSliderInput(
+        session,
+        "quantil2",
+        min = (input$quantil1 - 0.1)
+      )
+
+      if (input$quantil1 > input$quantil2) {
+        shiny::updateSliderInput(
+          session,
+          "quantil2",
+          value = (input$quantil1 + 0.1)
+        )
+      }
+    })
+
+    shiny::observeEvent(input$quantil2, {
+      shiny::updateSliderInput(
+        session,
+        "quantil1",
+        max = (input$quantil2 + 0.1)
+      )
+
+      if (input$quantil2 < input$quantil1) {
+        shiny::updateSliderInput(
+          session,
+          "quantil1",
+          value = (input$quantil2 - 0.1)
+        )
+      }
+    })
+    
     # -------------------------
     # Render plot
     # -------------------------
     output$normPlot <- shiny::renderPlot({
-
       # Generate interactive plot using current inputs
       plot_p_normal_plot(
         q = q,

@@ -74,3 +74,12 @@ P(1.5, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = FALSE, long.segment = T
 
 #Lower Tail Null tcltk
 P(1.5, mean = 0.8, sd = 1.2, gui = "tcltk", lower.tail = NULL, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
+#Lower Tail True shiny
+P(1.5, mean = 0.8, sd = 1.2, gui = "shiny", lower.tail = TRUE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
+#Lower Tail False shiny
+P(1.5, mean = 0.8, sd = 1.2, gui = "shiny", lower.tail = FALSE, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)
+
+#Lower Tail Null shiny
+P(1.5, mean = 0.8, sd = 1.2, gui = "shiny", lower.tail = NULL, long.segment = TRUE, dec = ",", vert.orien.main = TRUE, text.size = 1, porcentage = TRUE)

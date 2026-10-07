@@ -779,17 +779,16 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
       # launch the Shiny application automatically.
       #
       # ./aux_probability.R
-      return(
-        plotpnormallttshiny(
-          q, mu, sigma, rounding, porcentage,
-          minimo, maximo, dec,
-          long.segment, col,
-          col2, lty, main,
-          browser.shiny,
-          text.size, cex.main,
-          cex.axis, cex.lab,
-          vert.orien.main
-        )
+      print(
+        plot_p_normal_shiny(q, mu, sigma, rounding, porcentage,
+                           minimo, maximo, dec,
+                           long.segment, col,
+                           col2, lty, main,
+                           browser.shiny,
+                           text.size, cex.main,
+                           cex.axis, cex.lab,
+                           vert.orien.main, region = "region B"
+                          )
       )
     }
 
