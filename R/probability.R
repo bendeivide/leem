@@ -407,6 +407,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         # Calculates the desired probability
         prob <- pnorm(q[1], mean = mu, sd = sigma, lower.tail = T) +
           pnorm(q[2], mean = mu, sd = sigma, lower.tail = F)
+
       }
       if (dist == "t-student") {
         if (!any(names(argaddit) == "ncp")) {
@@ -2421,7 +2422,11 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
 
         prob <-  round(psignrank(q = q[2], n) - psignrank(q = q[1], n), digits = rounding)
       }
-    }}
+    }
+
+    # Porcentage
+    if (porcentage) prob <- prob * 100
+    }
   else { # If the q argument is set to 1
 
     #########################
@@ -2621,6 +2626,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         # Compute the desired probability
         prob <- pnorm(q = q, mean = mu, sd = sigma)
+        if (porcentage) prob <- prob * 100
 
       }
 
@@ -2737,6 +2743,7 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
         }
         # Compute the desired probability
         prob <- pnorm(q = q, mean = mu, sd=sigma, lower.tail = F)
+        if (porcentage) prob <- prob * 100
       }
 
       # If the lower.tail argument is set to "NULL"
@@ -4114,33 +4121,6 @@ P <- function(q, dist = "normal", lower.tail = TRUE,
   # This step standardizes the numerical output
   # before returning the final result.
   prob <- round(prob, rounding)
-
-  #################################################
-  # Percentage conversion
-  #################################################
-
-  # Check whether the argument 'lower.tail'
-  # is NULL.
-  #
-  # If lower.tail is NULL, the returned value
-  # corresponds to the density function output
-  # produced by dnorm(), and therefore no
-  # percentage conversion is applied.
-  #
-  # Otherwise, convert the value to percentage
-  # format by multiplying it by 100.
-  #
-  # This structure was adopted to maintain
-  # compatibility between probability outputs
-  # and density outputs within the same function.
-  if (is.null(lower.tail)) {
-
-    prob
-
-  } else {
-
-    prob <- prob * 100
-  }
 
   #################################################
   # Return final result

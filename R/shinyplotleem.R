@@ -1276,6 +1276,42 @@
     # Properly stop the application when the session ends
     session$onSessionEnded(function() shiny::stopApp())
 
+
+    # ---------------------------------------------------------
+    # Quantil1 depende do limite inferior de quantil2
+    # ---------------------------------------------------------
+    shiny::observeEvent(input$quantil2, {
+      shiny::req(input$quantil2)
+
+      novo_max   <- input$quantil2
+      novo_valor <- min(input$quantil1, novo_max)   # evita valor > max
+
+      shiny::updateSliderInput(
+        session,
+        inputId = "quantil1",
+        max     = novo_max,
+        value   = novo_valor
+      )
+    }, ignoreInit = TRUE)
+
+    # ---------------------------------------------------------
+    # Quantil2 depende do limite superior de quantil1
+    # ---------------------------------------------------------
+    shiny::observeEvent(input$quantil1, {
+      shiny::req(input$quantil1)
+
+      novo_min   <- input$quantil1
+      novo_valor <- max(input$quantil2, novo_min)   # evita valor < min
+
+      shiny::updateSliderInput(
+        session,
+        inputId = "quantil2",
+        min     = novo_min,
+        value   = novo_valor
+      )
+    }, ignoreInit = TRUE)
+
+
     # -------------------------
     # Render plot
     # -------------------------
@@ -1647,6 +1683,40 @@
 
     # Properly stop the application when the session ends
     session$onSessionEnded(function() shiny::stopApp())
+
+    # ---------------------------------------------------------
+    # Quantil1 depende do limite inferior de quantil2
+    # ---------------------------------------------------------
+    shiny::observeEvent(input$quantil2, {
+      shiny::req(input$quantil2)
+
+      novo_max   <- input$quantil2
+      novo_valor <- min(input$quantil1, novo_max)   # evita valor > max
+
+      shiny::updateSliderInput(
+        session,
+        inputId = "quantil1",
+        max     = novo_max,
+        value   = novo_valor
+      )
+    }, ignoreInit = TRUE)
+
+    # ---------------------------------------------------------
+    # Quantil2 depende do limite superior de quantil1
+    # ---------------------------------------------------------
+    shiny::observeEvent(input$quantil1, {
+      shiny::req(input$quantil1)
+
+      novo_min   <- input$quantil1
+      novo_valor <- max(input$quantil2, novo_min)   # evita valor < min
+
+      shiny::updateSliderInput(
+        session,
+        inputId = "quantil2",
+        min     = novo_min,
+        value   = novo_valor
+      )
+    }, ignoreInit = TRUE)
 
     # -------------------------
     # Render plot
