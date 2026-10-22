@@ -787,7 +787,8 @@ normal_distrubution <- function(q, argaddit, rounding, main, gui, lower.tail, de
                            browser.shiny,
                            text.size, cex.main,
                            cex.axis, cex.lab,
-                           vert.orien.main, region = "region B"
+                           vert.orien.main,
+                           lower.tail = lower.tail
                           )
       )
     }

@@ -17,20 +17,19 @@
                                     col2, lty, main,
                                     text.size, cex.main,
                                     cex.axis, cex.lab,
-                                    vert.orien.main, region) {
+                                    vert.orien.main, region = NULL, lower.tail) {
 
   if (length(q) > 1) {
     # Ensure the interval is at least 0.02 (2 * step)
     if (maximo - q[2] < 0.02) {
       maximo <- q[2] + 0.02
     }
+
     if (q[1] - minimo < 0.02) {
       minimo <- q[1] - 0.02
     }
   
   }
-
-  
 
   # Path to package resources directory
   logo_path <- system.file("etc", package = "leem")
@@ -41,280 +40,700 @@
   # =========================
   # Central plotting function
   # =========================
-  make_plot <- function(q1, q2, q, mu, sigma, text.size, titorient, lsegment, comma) {
+  if (!is.null(region)) {
+    make_plot <- function(q1, q2, q, mu, sigma, text.size, titorient, lsegment, comma) {
 
-    # Generate the normal distribution plot
-    plot_p_normal_plot(
-      q, mu, sigma,
-      rounding,
-      dec = comma,
-      long.segment = lsegment,
-      col = col,
-      col2 = col2,
-      lty = lty,
-      main = main,
-      text.size = text.size,
-      cex.main = text.size,
-      cex.axis = cex.axis,
-      cex.lab = cex.lab,
-      vert.orien.main = titorient,
-      maximo = maximo,
-      minimo = minimo,
-      q1 = q1,
-      q2 = q2,
-      region = region
-    )
+      # Generate the normal distribution plot
+      plot_p_normal_plot(
+        q, mu, sigma,
+        rounding,
+        dec = comma,
+        long.segment = lsegment,
+        col = col,
+        col2 = col2,
+        lty = lty,
+        main = main,
+        text.size = text.size,
+        cex.main = text.size,
+        cex.axis = cex.axis,
+        cex.lab = cex.lab,
+        vert.orien.main = titorient,
+        maximo = maximo,
+        minimo = minimo,
+        q1 = q1,
+        q2 = q2,
+        region = region
+      )
+    }
+
+  } else {
+    make_plot <- function(q, mu, sigma, text.size, titorient, lsegment, comma, lower.tail) {
+
+      # Generate the normal distribution plot
+      plot_p_normal_plot(
+        q, mu, sigma,
+        rounding,
+        dec = comma,
+        long.segment = lsegment,
+        col = col,
+        col2 = col2,
+        lty = lty,
+        main = main,
+        text.size = text.size,
+        cex.main = text.size,
+        cex.axis = cex.axis,
+        cex.lab = cex.lab,
+        vert.orien.main = titorient,
+        maximo = maximo,
+        minimo = minimo,
+        lower.tail = lower.tail
+      )
+    }
   }
 
   # =========================
   # User Interface
   # =========================
-  ui <- shiny::fluidPage(
+  if(!is.null(region)) {
+    ui <- shiny::fluidPage(# PAREI AQUI
 
-    # Application title
-    shiny::titlePanel(
-      gettext("Normal Distribution", domain = "R-leem")
-    ),
-
-    # Sidebar and main panel layout
-    shiny::sidebarLayout(
-
-      # =========================
-      # Sidebar panel
-      # =========================
-      shiny::sidebarPanel(
-
-        # Package logo
-        shiny::div(
-
-          style = "display:flex;justify-content:center;margin-top:5px;",
-
-          shiny::tags$img(
-            src = "leemlogo/logo.png",
-            style = "width:80%;max-width:180px;height:auto;"
-          )
-        ),
-
-        # Section title for inputs
-        shiny::h4(
-          gettext(
-            "Input(s):",
-            domain = "R-leem"
-          )
-        ),
-
-        # Quantile slider
-        shiny::sliderInput(
-          inputId = "quantil1",
-          label = gettext(
-            "Quantile 1",
-            domain = "R-leem"
-          ),
-          min = minimo,
-          max = q[2],
-          value = q[1],
-          step = 0.1
-        ),
-
-        # Quantile slider
-        shiny::sliderInput(
-          inputId = "quantil2",
-
-          label = gettext(
-            "Quantile 2",
-            domain = "R-leem"
-          ),
-
-          min = q[1],
-          max = maximo,
-          value = q[2],
-          step = 0.1
-        ),
-
-        # Mean slider
-        shiny::sliderInput(
-          inputId = "mu",
-
-          label = gettext(
-            "Mean",
-            domain = "R-leem"
-          ),
-
-          min = minimo,
-          max = maximo,
-          value = mu,
-          step = 0.1
-        ),
-
-        # Standard deviation slider
-        shiny::sliderInput(
-          inputId = "sigma",
-
-          label = gettext(
-            "Standard Deviation",
-            domain = "R-leem"
-          ),
-
-          min = sigma,
-          max = sigma * 1.8,
-          value = sigma,
-          step = 0.01
-        ),
-
-        # Text size slider
-        shiny::sliderInput(
-          inputId = "text.size",
-
-          label = gettext(
-            "Text Size",
-            domain = "R-leem"
-          ),
-
-          min = 0.8,
-          max = 3,
-          value = text.size,
-          step = 0.01
-        ),
-
-        # Vertical title orientation option
-        shiny::checkboxInput(
-          "titorient",
-
-          gettext(
-            "Vertical Title Orientation",
-            domain = "R-leem"
-          ),
-
-          vert.orien.main
-        ),
-
-        # Long segment option
-        shiny::checkboxInput(
-          "lsegment",
-
-          gettext(
-            "Long segment",
-            domain = "R-leem"
-          ),
-
-          long.segment
-        ),
-
-        # Decimal separator option
-        shiny::checkboxInput(
-          "comma",
-
-          gettext(
-            "Comma",
-            domain = "R-leem"
-          ),
-
-          if (dec == ".") FALSE else TRUE,
-        ),
-
-        # Horizontal separator
-        shiny::hr(),
-
-        # Export section title
-        shiny::h4(gettext(
-          "Export",
-          domain = "R-leem"
-        )),
-
-        # Download buttons
-        shiny::downloadButton("dl_png", "Download PNG"),
-        shiny::downloadButton("dl_pdf", "Download PDF"),
-        shiny::downloadButton("dl_svg", "Download SVG")
-
-        #shiny::hr(),
-
-        # shiny::tags$img(
-        #   src = "leemlogo/logo.png",
-        #   style = "width:80%; max-width:180px;"
-        # )
+      # Application title
+      shiny::titlePanel(
+        gettext("Normal Distribution", domain = "R-leem")
       ),
 
-      # =========================
-      # Main panel
-      # =========================
-      shiny::mainPanel(
+      # Sidebar and main panel layout
+      shiny::sidebarLayout(
 
-        # Plot output area
-        shiny::plotOutput("normPlot", height = "600px")
+        # =========================
+        # Sidebar panel
+        # =========================
+        shiny::sidebarPanel(
+
+          # Package logo
+          shiny::div(
+
+            style = "display:flex;justify-content:center;margin-top:5px;",
+
+            shiny::tags$img(
+              src = "leemlogo/logo.png",
+              style = "width:80%;max-width:180px;height:auto;"
+            )
+          ),
+
+          # Section title for inputs
+          shiny::h4(
+            gettext(
+              "Input(s):",
+              domain = "R-leem"
+            )
+          ),
+
+          # Quantile slider
+          shiny::sliderInput(
+            inputId = "quantil1",
+            label = gettext(
+              "Quantile 1",
+              domain = "R-leem"
+            ),
+            min = minimo,
+            max = q[2],
+            value = q[1],
+            step = 0.1
+          ),
+
+          # Quantile slider
+          shiny::sliderInput(
+            inputId = "quantil2",
+
+            label = gettext(
+              "Quantile 2",
+              domain = "R-leem"
+            ),
+
+            min = q[1],
+            max = maximo,
+            value = q[2],
+            step = 0.1
+          ),
+
+          # Mean slider
+          shiny::sliderInput(
+            inputId = "mu",
+
+            label = gettext(
+              "Mean",
+              domain = "R-leem"
+            ),
+
+            min = minimo,
+            max = maximo,
+            value = mu,
+            step = 0.1
+          ),
+
+          # Standard deviation slider
+          shiny::sliderInput(
+            inputId = "sigma",
+
+            label = gettext(
+              "Standard Deviation",
+              domain = "R-leem"
+            ),
+
+            min = sigma,
+            max = sigma * 1.8,
+            value = sigma,
+            step = 0.01
+          ),
+
+          # Text size slider
+          shiny::sliderInput(
+            inputId = "text.size",
+
+            label = gettext(
+              "Text Size",
+              domain = "R-leem"
+            ),
+
+            min = 0.8,
+            max = 3,
+            value = text.size,
+            step = 0.01
+          ),
+
+          # Vertical title orientation option
+          shiny::checkboxInput(
+            "titorient",
+
+            gettext(
+              "Vertical Title Orientation",
+              domain = "R-leem"
+            ),
+
+            vert.orien.main
+          ),
+
+          # Long segment option
+          shiny::checkboxInput(
+            "lsegment",
+
+            gettext(
+              "Long segment",
+              domain = "R-leem"
+            ),
+
+            long.segment
+          ),
+
+          # Decimal separator option
+          shiny::checkboxInput(
+            "comma",
+
+            gettext(
+              "Comma",
+              domain = "R-leem"
+            ),
+
+            if (dec == ".") FALSE else TRUE,
+          ),
+
+          # Horizontal separator
+          shiny::hr(),
+
+          # Export section title
+          shiny::h4(gettext(
+            "Export",
+            domain = "R-leem"
+          )),
+
+          # Download buttons
+          shiny::downloadButton("dl_png", "Download PNG"),
+          shiny::downloadButton("dl_pdf", "Download PDF"),
+          shiny::downloadButton("dl_svg", "Download SVG")
+
+          #shiny::hr(),
+
+          # shiny::tags$img(
+          #   src = "leemlogo/logo.png",
+          #   style = "width:80%; max-width:180px;"
+          # )
+        ),
+
+        # =========================
+        # Main panel
+        # =========================
+        shiny::mainPanel(
+
+          # Plot output area
+          shiny::plotOutput("normPlot", height = "600px")
+        )
       )
     )
-  )
+
+  } else if(!is.null(lower.tail)) {
+    ui <- shiny::fluidPage(
+
+      # Application title
+      shiny::titlePanel(
+        gettext("Normal Distribution", domain = "R-leem")
+      ),
+
+      # Sidebar and main panel layout
+      shiny::sidebarLayout(
+
+        # =========================
+        # Sidebar panel
+        # =========================
+        shiny::sidebarPanel(
+
+          # Package logo
+          shiny::div(
+
+            style = "display:flex;justify-content:center;margin-top:5px;",
+
+            shiny::tags$img(
+              src = "leemlogo/logo.png",
+              style = "width:80%;max-width:180px;height:auto;"
+            )
+          ),
+
+          # Section title for inputs
+          shiny::h4(
+            gettext(
+              "Input(s):",
+              domain = "R-leem"
+            )
+          ),
+
+          # Quantile slider
+          shiny::sliderInput(
+            inputId = "quantil",
+
+            label = gettext(
+              "Quantile",
+              domain = "R-leem"
+            ),
+
+            min = minimo,
+            max = maximo,
+            value = q,
+            step = 0.1
+          ),
+
+          # Mean slider
+          shiny::sliderInput(
+            inputId = "mu",
+
+            label = gettext(
+              "Mean",
+              domain = "R-leem"
+            ),
+
+            min = minimo,
+            max = maximo,
+            value = mu,
+            step = 0.1
+          ),
+
+          # Standard deviation slider
+          shiny::sliderInput(
+            inputId = "sigma",
+
+            label = gettext(
+              "Standard Deviation",
+              domain = "R-leem"
+            ),
+
+            min = sigma,
+            max = sigma * 1.8,
+            value = sigma,
+            step = 0.01
+          ),
+
+          # Text size slider
+          shiny::sliderInput(
+            inputId = "text.size",
+
+            label = gettext(
+              "Text Size",
+              domain = "R-leem"
+            ),
+
+            min = 0.8,
+            max = 3,
+            value = text.size,
+            step = 0.01
+          ),
+
+          # Vertical title orientation option
+          shiny::checkboxInput(
+            "lower_tail",
+
+            gettext(
+              "Tail Orientation",
+              domain = "R-leem"
+            ),
+
+            lower.tail
+          ),
+
+          # Vertical title orientation option
+          shiny::checkboxInput(
+            "titorient",
+
+            gettext(
+              "Vertical Title Orientation",
+              domain = "R-leem"
+            ),
+
+            vert.orien.main
+          ),
+
+          # Long segment option
+          shiny::checkboxInput(
+            "lsegment",
+
+            gettext(
+              "Long segment",
+              domain = "R-leem"
+            ),
+
+            long.segment
+          ),
+
+          # Decimal separator option
+          shiny::checkboxInput(
+            "comma",
+
+            gettext(
+              "Comma",
+              domain = "R-leem"
+            ),
+
+            if (dec == ".") FALSE else TRUE,
+          ),
+
+          # Horizontal separator
+          shiny::hr(),
+
+          # Export section title
+          shiny::h4(gettext(
+            "Export",
+            domain = "R-leem"
+          )),
+
+          # Download buttons
+          shiny::downloadButton("dl_png", "Download PNG"),
+          shiny::downloadButton("dl_pdf", "Download PDF"),
+          shiny::downloadButton("dl_svg", "Download SVG")
+
+          #shiny::hr(),
+
+          # shiny::tags$img(
+          #   src = "leemlogo/logo.png",
+          #   style = "width:80%; max-width:180px;"
+          # )
+        ),
+
+        # =========================
+        # Main panel
+        # =========================
+        shiny::mainPanel(
+
+          # Plot output area
+          shiny::plotOutput("normPlot", height = "600px")
+        )
+      )
+    )
+  
+  } else {
+    ui <- shiny::fluidPage(
+
+      # Application title
+      shiny::titlePanel(
+        gettext("Normal Distribution", domain = "R-leem")
+      ),
+
+      # Sidebar and main panel layout
+      shiny::sidebarLayout(
+
+        # =========================
+        # Sidebar panel
+        # =========================
+        shiny::sidebarPanel(
+
+          # Package logo
+          shiny::div(
+
+            style = "display:flex;justify-content:center;margin-top:5px;",
+
+            shiny::tags$img(
+              src = "leemlogo/logo.png",
+              style = "width:80%;max-width:180px;height:auto;"
+            )
+          ),
+
+          # Section title for inputs
+          shiny::h4(
+            gettext(
+              "Input(s):",
+              domain = "R-leem"
+            )
+          ),
+
+          # Quantile slider
+          shiny::sliderInput(
+            inputId = "quantil",
+
+            label = gettext(
+              "Quantile",
+              domain = "R-leem"
+            ),
+
+            min = minimo,
+            max = maximo,
+            value = q,
+            step = 0.1
+          ),
+
+          # Mean slider
+          shiny::sliderInput(
+            inputId = "mu",
+
+            label = gettext(
+              "Mean",
+              domain = "R-leem"
+            ),
+
+            min = minimo,
+            max = maximo,
+            value = mu,
+            step = 0.1
+          ),
+
+          # Standard deviation slider
+          shiny::sliderInput(
+            inputId = "sigma",
+
+            label = gettext(
+              "Standard Deviation",
+              domain = "R-leem"
+            ),
+
+            min = sigma,
+            max = sigma * 1.8,
+            value = sigma,
+            step = 0.01
+          ),
+
+          # Text size slider
+          shiny::sliderInput(
+            inputId = "text.size",
+
+            label = gettext(
+              "Text Size",
+              domain = "R-leem"
+            ),
+
+            min = 0.8,
+            max = 3,
+            value = text.size,
+            step = 0.01
+          ),
+
+          # Vertical title orientation option
+          shiny::checkboxInput(
+            "titorient",
+
+            gettext(
+              "Vertical Title Orientation",
+              domain = "R-leem"
+            ),
+
+            vert.orien.main
+          ),
+
+          # Long segment option
+          shiny::checkboxInput(
+            "lsegment",
+
+            gettext(
+              "Long segment",
+              domain = "R-leem"
+            ),
+
+            long.segment
+          ),
+
+          # Decimal separator option
+          shiny::checkboxInput(
+            "comma",
+
+            gettext(
+              "Comma",
+              domain = "R-leem"
+            ),
+
+            if (dec == ".") FALSE else TRUE,
+          ),
+
+          # Horizontal separator
+          shiny::hr(),
+
+          # Export section title
+          shiny::h4(gettext(
+            "Export",
+            domain = "R-leem"
+          )),
+
+          # Download buttons
+          shiny::downloadButton("dl_png", "Download PNG"),
+          shiny::downloadButton("dl_pdf", "Download PDF"),
+          shiny::downloadButton("dl_svg", "Download SVG")
+
+          #shiny::hr(),
+
+          # shiny::tags$img(
+          #   src = "leemlogo/logo.png",
+          #   style = "width:80%; max-width:180px;"
+          # )
+        ),
+
+        # =========================
+        # Main panel
+        # =========================
+        shiny::mainPanel(
+
+          # Plot output area
+          shiny::plotOutput("normPlot", height = "600px")
+        )
+      )
+    )
+  }
 
   # =========================
   # Server
   # =========================
   server <- function(input, output, session) {
 
-    # Properly stop the application when the session ends
-    session$onSessionEnded(function() shiny::stopApp())
+    if (!is.null(region)) {
+      # Properly stop the application when the session ends
+      session$onSessionEnded(function() shiny::stopApp())
 
-    # Keep quantile values ordered when the user moves either slider.
-    shiny::observeEvent(input$quantil1, {
-      shiny::updateSliderInput(
-        session,
-        "quantil2",
-        min = (input$quantil1 - 0.1)
-      )
-
-      if (input$quantil1 > input$quantil2) {
+      # Keep quantile values ordered when the user moves either slider.
+      shiny::observeEvent(input$quantil1, {
         shiny::updateSliderInput(
           session,
           "quantil2",
-          value = (input$quantil1 + 0.1)
+          min = (input$quantil1 - 0.1)
         )
-      }
-    })
 
-    shiny::observeEvent(input$quantil2, {
-      shiny::updateSliderInput(
-        session,
-        "quantil1",
-        max = (input$quantil2 + 0.1)
-      )
+        if (input$quantil1 > input$quantil2) {
+          shiny::updateSliderInput(
+            session,
+            "quantil2",
+            value = (input$quantil1 + 0.1)
+          )
+        }
+      })
 
-      if (input$quantil2 < input$quantil1) {
+      shiny::observeEvent(input$quantil2, {
         shiny::updateSliderInput(
           session,
           "quantil1",
-          value = (input$quantil2 - 0.1)
+          max = (input$quantil2 + 0.1)
         )
-      }
-    })
-    
-    # -------------------------
-    # Render plot
-    # -------------------------
-    output$normPlot <- shiny::renderPlot({
-      # Generate interactive plot using current inputs
-      plot_p_normal_plot(
-        q = q,
-        mu = input$mu,
-        sigma = input$sigma,
-        rounding = rounding,
-        dec = if (isTRUE(input$comma)) "," else ".",
-        long.segment = input$lsegment,
-        col = col,
-        col2 = col2,
-        lty = lty,
-        main = main,
-        text.size = input$text.size,
-        cex.main = input$text.size,
-        cex.axis = cex.axis,
-        cex.lab = cex.lab,
-        vert.orien.main = input$titorient,
-        maximo = maximo,
-        minimo = minimo,
-        q1 = input$quantil1,
-        q2 = input$quantil2,
-        region = region
-      )
 
-    })
+        if (input$quantil2 < input$quantil1) {
+          shiny::updateSliderInput(
+            session,
+            "quantil1",
+            value = (input$quantil2 - 0.1)
+          )
+        }
+      })
+    
+
+      # -------------------------
+      # Render plot
+      # -------------------------
+      output$normPlot <- shiny::renderPlot({
+        # Generate interactive plot using current inputs
+        plot_p_normal_plot(
+          q = q,
+          mu = input$mu,
+          sigma = input$sigma,
+          rounding = rounding,
+          dec = if (isTRUE(input$comma)) "," else ".",
+          long.segment = input$lsegment,
+          col = col,
+          col2 = col2,
+          lty = lty,
+          main = main,
+          text.size = input$text.size,
+          cex.main = input$text.size,
+          cex.axis = cex.axis,
+          cex.lab = cex.lab,
+          vert.orien.main = input$titorient,
+          maximo = maximo,
+          minimo = minimo,
+          q1 = input$quantil1,
+          q2 = input$quantil2,
+          region = region
+        )
+      })
+
+    } else if(!is.null(lower.tail)) {
+      output$normPlot <- shiny::renderPlot({
+        # Generate interactive plot using current inputs
+        plot_p_normal_plot(
+          q = input$quantil,
+          mu = input$mu,
+          sigma = input$sigma,
+          rounding = rounding,
+          dec = if (isTRUE(input$comma)) "," else ".",
+          long.segment = input$lsegment,
+          col = col,
+          col2 = col2,
+          lty = lty,
+          main = main,
+          text.size = input$text.size,
+          cex.main = input$text.size,
+          cex.axis = cex.axis,
+          cex.lab = cex.lab,
+          vert.orien.main = input$titorient,
+          maximo = maximo,
+          minimo = minimo,
+          lower.tail = input$lower_tail
+          
+        )
+      })
+      
+    } else {
+      output$normPlot <- shiny::renderPlot({
+        # Generate interactive plot using current inputs
+        plot_p_normal_plot(
+          q = input$quantil,
+          mu = input$mu,
+          sigma = input$sigma,
+          rounding = rounding,
+          dec = if (isTRUE(input$comma)) "," else ".",
+          long.segment = input$lsegment,
+          col = col,
+          col2 = col2,
+          lty = lty,
+          main = main,
+          text.size = input$text.size,
+          cex.main = input$text.size,
+          cex.axis = cex.axis,
+          cex.lab = cex.lab,
+          vert.orien.main = input$titorient,
+          maximo = maximo,
+          minimo = minimo
+        )
+      })
+    }
 
     # =========================
     # PNG export
@@ -333,17 +752,43 @@
         png(file, width = 2000, height = 1400, res = 300)
 
         # Generate plot
-        make_plot(
-          input$quantil1,
-          input$quantil2,
-          q,
-          input$mu,
-          input$sigma,
-          input$text.size,
-          input$titorient,
-          input$lsegment,
-          if (input$comma) "," else "."
-        )
+        if(!is.null(region)) {
+          make_plot(
+            input$quantil1,
+            input$quantil2,
+            q,
+            input$mu,
+            input$sigma,
+            input$text.size,
+            input$titorient,
+            input$lsegment,
+            if (input$comma) "," else "."
+          )
+
+        } else if(!is.null(lower.tail)) {
+          make_plot(
+            input$quantil,
+            input$mu,
+            input$sigma,
+            input$text.size,
+            input$titorient,
+            input$lsegment,
+            if (input$comma) "," else ".",
+            input$lower_tail
+          )
+
+        } else {
+          make_plot(
+            input$quantil,
+            input$mu,
+            input$sigma,
+            input$text.size,
+            input$titorient,
+            input$lsegment,
+            if (input$comma) "," else ".",
+            lower.tail = NULL
+          )
+        }
 
         # Close graphics device
         dev.off()
@@ -367,17 +812,43 @@
         pdf(file, width = 8, height = 6)
 
         # Generate plot
-        make_plot(
-          input$quantil1,
-          input$quantil2,
-          q,
-          input$mu,
-          input$sigma,
-          input$text.size,
-          input$titorient,
-          input$lsegment,
-          if (input$comma) "," else "."
-        )
+        if(!is.null(region)) {
+          make_plot(
+            input$quantil1,
+            input$quantil2,
+            q,
+            input$mu,
+            input$sigma,
+            input$text.size,
+            input$titorient,
+            input$lsegment,
+            if (input$comma) "," else "."
+          )
+
+        } else if(!is.null(lower.tail)) {
+          make_plot(
+            input$quantil,
+            input$mu,
+            input$sigma,
+            input$text.size,
+            input$titorient,
+            input$lsegment,
+            if (input$comma) "," else ".",
+            input$lower_tail
+          )
+
+        } else {
+          make_plot(
+            input$quantil,
+            input$mu,
+            input$sigma,
+            input$text.size,
+            input$titorient,
+            input$lsegment,
+            if (input$comma) "," else ".",
+            lower.tail = NULL
+          )
+        }
 
         # Close graphics device
         dev.off()
@@ -401,17 +872,43 @@
         svg(file, width = 8, height = 6)
 
         # Generate plot
-        make_plot(
-          input$quantil1,
-          input$quantil2,
-          q,
-          input$mu,
-          input$sigma,
-          input$text.size,
-          input$titorient,
-          input$lsegment,
-          if (input$comma) "," else "."
-        )
+        if(!is.null(region)) {
+          make_plot(
+            input$quantil1,
+            input$quantil2,
+            q,
+            input$mu,
+            input$sigma,
+            input$text.size,
+            input$titorient,
+            input$lsegment,
+            if (input$comma) "," else "."
+          )
+
+        } else if(!is.null(lower.tail)) {
+          make_plot(
+            input$quantil,
+            input$mu,
+            input$sigma,
+            input$text.size,
+            input$titorient,
+            input$lsegment,
+            if (input$comma) "," else ".",
+            input$lower_tail
+          )
+
+        } else {
+          make_plot(
+            input$quantil,
+            input$mu,
+            input$sigma,
+            input$text.size,
+            input$titorient,
+            input$lsegment,
+            if (input$comma) "," else ".",
+            lower.tail = NULL
+          )
+        }
 
         # Close graphics device
         dev.off()

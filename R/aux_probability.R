@@ -1713,7 +1713,7 @@ plot_p_normal_shiny <- function(q, mu, sigma, rounding, porcentage,
                                 browser.shiny = getOption("shiny.launch.browser", interactive()),
                                 text.size, cex.main,
                                 cex.axis, cex.lab,
-                                vert.orien.main, region) {
+                                vert.orien.main, region = NULL, lower.tail) {
 
   # Arguments:
   ############
@@ -1770,21 +1770,39 @@ plot_p_normal_shiny <- function(q, mu, sigma, rounding, porcentage,
   #
   # browser.shiny -> Indicates whether the Shiny app
   #                  should be launched in the browser.
-  listres <- list(
-    #probability = prob,
-    #./shinyplotleem.R
-    process_shiny = .leem_plot_p_normal_shiny(
-      q, mu, sigma, rounding,
-      minimo, maximo, dec,
-      long.segment, col,
-      col2, lty, main,
-      text.size, cex.main,
-      cex.axis, cex.lab,
-      vert.orien.main, region
-    ),
+  if (!is.null(region)) {
+    listres <- list(
+      #probability = prob,
+      #./shinyplotleem.R
+      process_shiny = .leem_plot_p_normal_shiny(
+        q, mu, sigma, rounding,
+        minimo, maximo, dec,
+        long.segment, col,
+        col2, lty, main,
+        text.size, cex.main,
+        cex.axis, cex.lab,
+        vert.orien.main, region
+      ),
 
-    browser.shiny = browser.shiny
-  )
+      browser.shiny = browser.shiny
+    )
+  } else {
+    listres <- list(
+      #probability = prob,
+      #./shinyplotleem.R
+      process_shiny = .leem_plot_p_normal_shiny(
+        q, mu, sigma, rounding,
+        minimo, maximo, dec,
+        long.segment, col,
+        col2, lty, main,
+        text.size, cex.main,
+        cex.axis, cex.lab,
+        vert.orien.main, lower.tail = lower.tail
+      ),
+
+      browser.shiny = browser.shiny
+    )
+  }
 
   #################################################
   # Object metadata
