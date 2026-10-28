@@ -587,10 +587,16 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
     q[2] <- q2
   }
 
-  # Define the minimum x-axis limit
-  #minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
-  # Define the maximum x-axis limit
-  #maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
+  if (length(q) > 1){
+    # Auxiliar variables
+    minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+    maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+
+  } else {
+    minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
+    maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+
+  }
 
 
   # Creating a list that gather all the sequences terms
