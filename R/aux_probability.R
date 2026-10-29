@@ -589,12 +589,12 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
 
   if (length(q) > 1){
     # Auxiliar variables
-    minimo <- if (q[1] <= argaddit$mean - 4 * argaddit$sd) q[1] - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-    maximo <- if (q[2] > argaddit$mean + 4 * argaddit$sd) q[2] + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+    minimo <- if (q[1] <= mu - 4 * sigma) q[1] - 4 * sigma else mu - 4 * sigma
+    maximo <- if (q[2] > mu + 4 * sigma) q[2] + 4 * sigma else mu + 4 * sigma
 
   } else {
-    minimo <- if (q <=  argaddit$mean - 4 * argaddit$sd) q - 4 * argaddit$sd else argaddit$mean - 4 * argaddit$sd
-    maximo <- if (q > argaddit$mean + 4 * argaddit$sd) q + 4 * argaddit$sd else argaddit$mean + 4 * argaddit$sd
+    minimo <- if (q <=  mu - 4 * sigma) q - 4 * sigma else mu - 4 * sigma
+    maximo <- if (q > mu + 4 * sigma) q + 4 * sigma else mu + 4 * sigma
 
   }
 
@@ -1624,6 +1624,8 @@ plot_p_normal_tcltk <- function(q, mu, sigma, rounding,
     }
     
     dev.off() # Close the process
+
+    
 
     # Create a image on Tk
     # This function take the temporary file and put it on
