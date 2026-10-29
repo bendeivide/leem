@@ -1721,19 +1721,6 @@ plot_p_normal_tcltk <- function(q, mu, sigma, rounding,
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 plot_p_normal_shiny <- function(q, mu, sigma, rounding, porcentage,
                                 minimo, maximo, dec,
                                 long.segment, col,
