@@ -582,7 +582,7 @@ plot_p_normal_plot <- function(q, mu, sigma, rounding, dec = c(".", ","),
                                q1 = NULL, q2 = NULL, region = NULL, lower.tail = NULL) {
 
   if (!is.null(q1)){
-    
+
     q[1] <- q1
     q[2] <- q2
   }
@@ -760,11 +760,11 @@ plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
                                  text.size, cex.main,
                                  cex.axis, cex.lab,
                                  vert.orien.main, region, lower.tail) {
-  
+
   if (length(q) > 1) {
     q1 <- q[1]
     q2 <- q[2]
-    
+
     # Ensure the interval is at least 0.02 (2 * step)
     if (maximo - q2 < 0.02) {
       maximo <- q2 + 0.02
@@ -829,7 +829,7 @@ plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
           domain = "R-leem"
         )
       ),
-      
+
       # Slider used to control the x-value (quantile)
       # highlighted in the Normal distribution plot.
       q2 = manipulate::slider(
@@ -919,7 +919,7 @@ plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
                         cex.main = text.size,
                         cex.axis, cex.lab,
                         vert.orien.main, maximo, minimo, lower.tail = lower.tail),
-      
+
       q = manipulate::slider(
         minimo, maximo, q,
         step = 0.01,
@@ -928,7 +928,7 @@ plot_p_normal_rstudio <- function(q, mu, sigma, rounding,
           domain = "R-leem"
         )
       ),
-      
+
       mu = manipulate::slider(
         minimo, maximo, mu,
         step = 0.01,
@@ -1159,7 +1159,7 @@ create_sliders_and_checkboxes <- function(left_container, left_panel, var_list) 
                          resolution = 0.1,
                          label = gettext("Quantile 2", domain="R-leem"),
                          showvalue = TRUE)
-  
+
   } else {
     ctrl_obj_list$q_slider <- tkscale(left_panel,
                          from = var_list$minimo,
@@ -1218,6 +1218,14 @@ create_sliders_and_checkboxes <- function(left_container, left_panel, var_list) 
     variable = var_list$comma_var
   )
 
+  if(!is.null(var_list$lower.tail_var)) {
+    ctrl_obj_list$lower.tail_checkbox <- tkcheckbutton(
+      left_panel,
+      text = gettext("Lower Tail", domain = "R-leem"),
+      variable = var_list$lower.tail_var
+    )
+  }
+
   # =========================
   # Pack widgets
   # =========================
@@ -1226,7 +1234,7 @@ create_sliders_and_checkboxes <- function(left_container, left_panel, var_list) 
   if ("q1_var" %in% names(var_list)) {
     tkpack(ctrl_obj_list$q1_slider, fill = "x")
     tkpack(ctrl_obj_list$q2_slider, fill = "x")
-  
+
   } else {
     tkpack(ctrl_obj_list$q_slider, fill = "x")
 
@@ -1241,6 +1249,10 @@ create_sliders_and_checkboxes <- function(left_container, left_panel, var_list) 
   tkpack(ctrl_obj_list$long_segment_checkbox, anchor = "w")
   tkpack(ctrl_obj_list$comma_checkbox, anchor = "w")
 
+  if(!is.null(var_list$lower.tail_var)) {
+    tkpack(ctrl_obj_list$lower.tail_checkbox, anchor = "w")
+  }
+
   return(ctrl_obj_list)
 }
 
@@ -1250,8 +1262,8 @@ plot_p_normal_tcltk <- function(q, mu, sigma, rounding,
                                 col2, lty, main,
                                 text.size, cex.main,
                                 cex.axis, cex.lab,
-                                vert.orien.main, region, lower.tail) {
-  
+                                vert.orien.main, region, lower.tail = NULL) {
+
   # Temporarily suppress warning messages during the execution
   # of the graphical interface function. This avoids displaying
   # unnecessary warnings to the user while the plot is being generated.
@@ -1314,10 +1326,10 @@ plot_p_normal_tcltk <- function(q, mu, sigma, rounding,
     # Variables for sliders
     var_list$q1_var <- tclVar(q[1])
     var_list$q2_var <- tclVar(q[2])
-  
+
   } else {
     var_list$q_var <- tclVar(q)
-  
+
   }
 
   var_list$media_var <- tclVar(mu)
@@ -1327,6 +1339,9 @@ plot_p_normal_tcltk <- function(q, mu, sigma, rounding,
   var_list$title_var <- tclVar(vert.orien.main)
   var_list$text.size_var <- tclVar(text.size)
 
+  if(!is.null(lower.tail)) {
+    var_list$lower.tail_var <- tclVar(lower.tail)
+  }
 
   # Disabled GUI (Type I)
   # This line make the tcl/tk stop update the
@@ -1487,7 +1502,7 @@ plot_p_normal_tcltk <- function(q, mu, sigma, rounding,
         vert.orien.main = as.logical(as.numeric(tclvalue(var_list$title_var))),
         maximo = maximo,
         minimo = minimo,
-        lower.tail = lower.tail
+        lower.tail = if (!is.null(lower.tail)) as.logical(as.numeric(tclvalue(var_list$lower.tail_var))) else lower.tail
       )
 
     }
@@ -1616,16 +1631,16 @@ plot_p_normal_tcltk <- function(q, mu, sigma, rounding,
           vert.orien.main = as.logical(as.numeric(tclvalue(var_list$title_var))),
           maximo = var_list$maximo,
           minimo = var_list$minimo,
-          lower.tail = lower.tail
+          lower.tail = if (!is.null(lower.tail)) as.logical(as.numeric(tclvalue(var_list$lower.tail_var))) else lower.tail
           ),
         silent = TRUE
       )
 
     }
-    
+
     dev.off() # Close the process
 
-    
+
 
     # Create a image on Tk
     # This function take the temporary file and put it on
@@ -1660,16 +1675,21 @@ plot_p_normal_tcltk <- function(q, mu, sigma, rounding,
       tkconfigure(ctrl_obj_list$q1_slider, to = novo_q2)
       drawGraph()
     })
-    
+
     # Update slider_q2 to have the current value of q1 as its minimum
     tkconfigure(ctrl_obj_list$q2_slider, command = function(...) {
       novo_q1 <- as.numeric(tclvalue(var_list$q1_var))
       tkconfigure(ctrl_obj_list$q2_slider, from = novo_q1)
       drawGraph()
     })
-    
+
   } else {
     tkconfigure(ctrl_obj_list$q_slider, command = function(...) drawGraph())
+
+    if(!is.null(var_list$lower.tail_var)) {
+      tkconfigure(ctrl_obj_list$lower.tail_checkbox, command = function(...) drawGraph())
+
+    }
 
   }
 
@@ -1759,7 +1779,7 @@ plot_p_normal_shiny <- function(q, mu, sigma, rounding, porcentage,
   # q     -> quantile or cutoff value
   # mu    -> mean of the Normal distribution
   # sigma -> standard deviation
-  
+
   #prob <- pnorm(q = q[1], mean = mu, sd = sigma) + pnorm(q = q[2], mean = mu, sd = sigma,lower.tail = FALSE)
 
   #################################################
