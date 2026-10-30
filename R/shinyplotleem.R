@@ -541,7 +541,7 @@
                                     col2, lty, main,
                                     text.size, cex.main,
                                     cex.axis, cex.lab,
-                                    vert.orien.main, region, lower.tail) {
+                                    vert.orien.main, region = NULL, lower.tail) {
 
   if (length(q) > 1) {
     # Ensure the interval is at least 0.02 (2 * step)
@@ -638,7 +638,7 @@
         shiny::updateSliderInput(
           session,
           "quantil2",
-          min = (input$quantil1 - 0.1)
+          min = (input$quantil1)
         )
 
         if (input$quantil1 > input$quantil2) {
@@ -654,7 +654,7 @@
         shiny::updateSliderInput(
           session,
           "quantil1",
-          max = (input$quantil2 + 0.1)
+          max = (input$quantil2)
         )
 
         if (input$quantil2 < input$quantil1) {
