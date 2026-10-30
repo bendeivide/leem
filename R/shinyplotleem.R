@@ -761,7 +761,7 @@
       content = function(file) {
 
         # Open PNG graphics device
-        png(file, width = 2000, height = 1400, res = 300)
+        png(file, width = 2000, height = 1400, res = 220)
 
         # Generate plot
         if(!is.null(region)) {

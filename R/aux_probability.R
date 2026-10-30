@@ -1437,7 +1437,7 @@ plot_p_normal_tcltk <- function(q, mu, sigma, rounding,
         filename = file,
         width = 2000,
         height = 1400,
-        res = 300
+        res = 220
       )
 
     } else if (type == "pdf") {
